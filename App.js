@@ -12,7 +12,7 @@ App.prototype.run = function ()
 	svgLowLevel.subscribe(
 		'mousemove',
 		function (              [x,y]) {if (prevEl) this.updatePolygonChild(prevEl, [[x,y], [x+10,y], [x+10,y+10], [x,y+10]]);},
-		function (polygonChild, [x,y]) {if (polygonChild == prevEl) this.updatePolygonChild(prevEl, [[x,y], [x+10,y], [x+10,y+10], [x,y+10]]);}
+		function (polygonChild, [x,y]) {if (prevEl) this.updatePolygonChild(prevEl, [[x,y], [x+10,y], [x+10,y+10], [x,y+10]]);}
 	);
 	svgLowLevel.subscribe(
 		'mouseup',
