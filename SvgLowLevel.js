@@ -11,7 +11,6 @@ function SvgLowLevel(aDocument, rootCase, childCase)
 
 	this.rootCase  = rootCase;
 	this.childCase = childCase;
-	//this.svgRootElement.addEventListener('click', (event) => this.handleClick(event));
 };
 
 SvgLowLevel.prototype.eventPosition = function (event)
@@ -35,6 +34,8 @@ SvgLowLevel.prototype.updatePolygonChild = function (polygonChild, svgVertices)
 	var points   = pointsArgValue(svgVertices);
 	polygonChild.setAttribute('points', points);
 };
+
+SvgLowLevel.prototype.deletePolygonChild = function (polygonChild) {polygonChild.parentNode.removeChild(polygonChild);};  // childNode.remove() is easier, nicer, but not so portable
 
 SvgLowLevel.prototype.subscribe = function (typeName, rootCase, otherCase)
 {
