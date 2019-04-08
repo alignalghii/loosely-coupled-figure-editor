@@ -2,15 +2,12 @@ const svgNS = 'http://www.w3.org/2000/svg';
 const xmlns = 'http://www.w3.org/2000/xmlns/';
 const xlink = 'http://www.w3.org/1999/xlink';
 
-function SvgLowLevel(aDocument, rootCase, childCase)
+function SvgLowLevel(aDocument)
 {
 	this.document       = aDocument;
 	this.svgRootElement = aDocument.getElementById('svgRoot');//createElementWithAttributes('svg' , {id:'screen', width:svgWidth, height:svgHeight}, svgNS);
 	this.svgPoint       = this.svgRootElement.createSVGPoint();
 	this.conversor      = this.svgRootElement.getScreenCTM().inverse();
-
-	this.rootCase  = rootCase;
-	this.childCase = childCase;
 };
 
 SvgLowLevel.prototype.eventPosition = function (event)
