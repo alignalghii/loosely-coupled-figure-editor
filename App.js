@@ -26,8 +26,9 @@ App.prototype.run = function ()
 		},
 		function (polygonChild, [x,y])
 		{
-			if (prevEl                 && !Eq.eq([x, y], prevPos)) this.updatePolygonChild(prevEl, [[x,y], [x+10,y], [x+10,y+10], [x,y+10]]);
-			if (polygonChild == prevEl &&  Eq.eq([x, y], prevPos)) this.deletePolygonChild(polygonChild);
+			if ( prevEl                           && !Eq.eq([x, y], prevPos)) this.updatePolygonChild(prevEl      , [[x,y], [x+10,y], [x+10,y+10], [x,y+10]]);
+			if ( prevEl && polygonChild == prevEl &&  Eq.eq([x, y], prevPos)) this.deletePolygonChild(polygonChild                                          );
+			if (!prevEl                                                     ) this.createPolygonChild(              [[x,y], [x+10,y], [x+10,y+10], [x,y+10]]);
 			prevEl = prevPos = null;
 		}
 	);

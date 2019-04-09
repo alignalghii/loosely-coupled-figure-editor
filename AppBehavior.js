@@ -91,7 +91,7 @@ AppBehavior.prototype.shouldCreateFigIfClickingOnEmptyWhileStayingOnTheSamePlace
 	return flag_virgin && flag_run && flag_mousedownAtEmpty && flag_mouseupSamePlaceEffectsNewFigCreat;
 };
 
-// Create a figure by mousedown then mouseup on an empy place -- you can drag a mouse meanwhile, but you must end up on empty space, not on an existing figure @TODO change this last part behavior
+// Create a figure by mousedown then mouseup on an empy place -- down on emptym you drag a mouse meanwhile, but you still end up on empty space, not on an existing figure
 AppBehavior.prototype.shouldCreateFigIfClickingOnEmptyWhileDraggingButEndingUpAtEmpty = function ()
 {
 	var polygonChildToBeCreated0  = {};
@@ -116,7 +116,7 @@ AppBehavior.prototype.shouldCreateFigIfClickingOnEmptyWhileDraggingButEndingUpAt
 };
 
 
-// Try to create a figure by mousedown on empty then mouseup on an existing figure -- it will fail, and this is a bug! @TODO change this last part behavior
+// Try to create a figure by mousedown on empty then mouseup on an existing figure
 AppBehavior.prototype.shouldCreateFigIfClickingOnEmptyWhileDraggingButEndingUpAtEmpty = function ()
 {
 	var polygonChildToBeCreated0    = {};
@@ -134,7 +134,7 @@ AppBehavior.prototype.shouldCreateFigIfClickingOnEmptyWhileDraggingButEndingUpAt
 	var flag_mousedownAtEmpty = svgLowLevelMock.communication.length == 4;
 
 	svgLowLevelMock.communication[2].args[2].call(svgLowLevelMock, alreadyExistingPolygonChild, [11, 12]);
-	var flag_mouseupSamePlaceEffectsNewFigCreat = svgLowLevelMock.communication.length == 4; // fail to create a new figure, nor any method call at all
+	var flag_mouseupSamePlaceEffectsNewFigCreat = svgLowLevelMock.communication.length == 5 && svgLowLevelMock.communication[4].name == 'createPolygonChild'  && Eq.eq(svgLowLevelMock.communication[4].args, [[[11,12], [21,12], [21,22], [11,22]]]) && svgLowLevelMock.communication[4].result == polygonChildToBeCreated1;
 
 	return flag_virgin && flag_run && flag_mousedownAtEmpty && flag_mouseupSamePlaceEffectsNewFigCreat;
 };
