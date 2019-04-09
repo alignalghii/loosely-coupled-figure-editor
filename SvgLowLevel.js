@@ -24,6 +24,7 @@ SvgLowLevel.prototype.createPolygonChild = function (svgVertices)
 	var polygonChild = this.document.createElementNS(svgNS, 'polygon');
 	this.svgRootElement.appendChild(polygonChild);
 	this.updatePolygonChild(polygonChild, svgVertices);
+	return polygonChild;
 };
 
 SvgLowLevel.prototype.updatePolygonChild = function (polygonChild, svgVertices)

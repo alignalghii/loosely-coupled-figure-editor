@@ -10,7 +10,7 @@ App.prototype.run = function ()
 	this.svgLowLevel.subscribe(
 		'mousedown',
 		function (              [x,y]) {prevEl = prevPos = null;},
-		function (polygonChild, [x,y]) {prevEl = polygonChild; prevPos = [x, y]}
+		function (polygonChild, [x,y]) {prevEl = polygonChild; prevPos = [x, y];}
 	);
 	this.svgLowLevel.subscribe(
 		'mousemove',

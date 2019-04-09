@@ -6,4 +6,7 @@ onload = function (event)
 	var app                 = new App(svgLowLevel, coordSysTransformer);
 
 	app.run();
+
+	var behaviorRunner = new BehaviorRunner([{id: 'base',  modules: [AppBehavior]}]);
+	behaviorRunner.run();
 };
