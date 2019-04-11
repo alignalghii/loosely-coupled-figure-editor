@@ -7,6 +7,6 @@ onload = function (event)
 
 	app.run();
 
-	var behaviorRunner = new BehaviorRunner([{id: 'base',  modules: [AppBehavior, BijectionBehavior]}]);
+	var behaviorRunner = new BehaviorRunner([{id: 'base',  modules: [AppBehavior, BijectionBehavior, FigureBehavior]}]);
 	behaviorRunner.run();
 };
