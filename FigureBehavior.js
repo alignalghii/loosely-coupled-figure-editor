@@ -57,13 +57,13 @@ FigureBehavior.prototype.shouldDoTranslation = function()
 	var figure      = new Figure([0, 0], [[2, 1], [6, 2], [7, 5], [5, 7], [1, 6]], {fill: 'red'});
 	// var expectedFig = new Figure( ... @TODO methods should be compared too. See test/domain/FigureBehavior::translation TODO
 	figure.doTranslation([3, 2]);
-	return vecEq(figure, {grasp: [3, 2], vertices: [[5, 3], [9, 4], [10, 7], [8, 9], [4, 8]], fill: 'red'});
+	return vecEq(figure, {grasp: [3, 2], vertices: [[5, 3], [9, 4], [10, 7], [8, 9], [4, 8]], svgAttributes: {fill: 'red'}});
 }
 
 FigureBehavior.prototype.shouldTranslation = function()
 {
 	var figure1 = new Figure([0, 0], [[2, 1], [6, 2], [7, 5], [5, 7], [1, 6]], {fill: 'red'});
 	var figure2 = figure1.translation([3, 2]);
-	return	vecEq(figure1, {grasp: [0, 0], vertices: [[2, 1], [6, 2], [ 7, 5], [5, 7], [1, 6]], fill: 'red'}) &&
-		vecEq(figure2, {grasp: [3, 2], vertices: [[5, 3], [9, 4], [10, 7], [8, 9], [4, 8]], fill: 'red'});
+	return	vecEq(figure1, {grasp: [0, 0], vertices: [[2, 1], [6, 2], [ 7, 5], [5, 7], [1, 6]], svgAttributes: {fill: 'red'}}) &&
+		vecEq(figure2, {grasp: [3, 2], vertices: [[5, 3], [9, 4], [10, 7], [8, 9], [4, 8]], svgAttributes: {fill: 'red'}});
 }

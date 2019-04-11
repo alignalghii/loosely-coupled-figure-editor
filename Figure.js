@@ -12,13 +12,11 @@ function sampleFigureBank() { return [
 	(new Figure([0, 0], poly2_concave_ccw, {fill: 'orange'})).translation([-4,2.6])
 ];}
 
-function Figure(grasp, vertices, svgAttributes)
+function Figure(grasp, vertices, svgAttributes = {})
 {
-	this.grasp    = grasp;
-	this.vertices = vertices;
-	for (attrName in svgAttributes) {
-		this[attrName] = svgAttributes[attrName];
-	}
+	this.grasp         = grasp;
+	this.vertices      = vertices;
+	this.svgAttributes = svgAttributes;
 }
 
 Figure.prototype.translation = function ([dx, dy])
@@ -36,8 +34,8 @@ Figure.prototype.translation = function ([dx, dy])
 				case 'vertices':
 					vertices = this.vertices.map(displace);
 					break;
-				default:
-					svgAttributes[key] = this[key];
+				case 'svgAttributes':
+					for (let i in this.svgAttributes) svgAttributes[i] = this.svgAttributes[i];
 			}
 		}
 	}
@@ -56,11 +54,4 @@ Figure.prototype.doTranslation = function ([dx, dy])
 Figure.prototype.collidesTowards = function (figure) {return collidesTowards(this.vertices, figure.vertices);};
 Figure.prototype.collides        = function (figure) {return collides       (this.vertices, figure.vertices);};
 
-Figure.prototype.getSvgProperties = function ()
-{
-	var svgProperties = {};
-	for (var key in this)
-		if (this.hasOwnProperty(key) && key != 'vertices' && key != 'id')
-			svgProperties[key] = this[key];
-	return svgProperties;
-}
+Figure.prototype.getSvgProperties = function () {return this.svgProperties;}
