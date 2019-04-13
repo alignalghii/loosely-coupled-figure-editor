@@ -20,6 +20,7 @@ onload = function (event)
 		app.setOriginFigureFrom(selectedFigure);
 	}
 	selectList.addEventListener('change', changeAccu);
+	bank.namedFigures.map((namedFig) => app.createWidgetPillarFromHigh(namedFig.figure));
 
 	console.log('App: Live run')
 	app.run();

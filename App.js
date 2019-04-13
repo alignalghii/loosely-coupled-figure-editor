@@ -37,11 +37,17 @@ App.prototype.run = function ()
 			prevEl = prevPos = null; virgin = true;
 		}
 	);
-
-	this.createWidgetPillarFromLow(this.coordSysTransformer.highToLow([0, 0]));
 };
 
-App.prototype.createWidgetPillarFromLow = function (svgPosition)
+App.prototype.createWidgetPillarFromHigh = function (geomFigure)
+{
+	var geomNewFigure     = geomFigure.translation([0,0]); // @TODO make a `clone` function in `Figure` and resuse it the more occasions as possible
+	var svgVertices       = geomNewFigure.vertices.map((p) => this.coordSysTransformer.highToLow(p));//console.log('Origin figure: low-level (SVG) coordinates: {'+svgVertices.join(' | ')+'}');
+	var svgNewPolygonCild = this.svgLowLevel.createPolygonChild(svgVertices, geomNewFigure.svgAttributes); // @TODO consider `this.originFigure.svgAttributes`
+	this.bijectionUp.set(svgNewPolygonCild, geomNewFigure);
+};
+
+App.prototype.createWidgetPillarFromLow = function (svgPosition) // @TODO reuse `createWidgetPillar`
 {
 	//console.log('High-level figure: high-level (geometrical) coordinates: <'+highFigure.vertices.join(' | ')+'>');
 	var geomPosition      = this.coordSysTransformer.lowToHigh(svgPosition);
