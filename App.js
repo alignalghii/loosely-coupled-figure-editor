@@ -47,7 +47,7 @@ App.prototype.createWidgetPillarFromLow = function (svgPosition)
 	var geomPosition      = this.coordSysTransformer.lowToHigh(svgPosition);
 	var geomNewFigure     = this.originFigure.translation(geomPosition);
 	var svgVertices       = geomNewFigure.vertices.map((p) => this.coordSysTransformer.highToLow(p));//console.log('Origin figure: low-level (SVG) coordinates: {'+svgVertices.join(' | ')+'}');
-	var svgNewPolygonCild = this.svgLowLevel.createPolygonChild(svgVertices);
+	var svgNewPolygonCild = this.svgLowLevel.createPolygonChild(svgVertices, geomNewFigure.svgAttributes); // @TODO consider `this.originFigure.svgAttributes`
 	this.bijectionUp.set(svgNewPolygonCild, geomNewFigure);
 };
 

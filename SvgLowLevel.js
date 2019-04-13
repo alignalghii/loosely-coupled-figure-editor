@@ -19,9 +19,9 @@ SvgLowLevel.prototype.eventPosition = function (event)
 };
 
 
-SvgLowLevel.prototype.createPolygonChild = function (svgVertices)
+SvgLowLevel.prototype.createPolygonChild = function (svgVertices, svgAttributes)
 {
-	var polygonChild = this.document.createElementNS(svgNS, 'polygon');
+	var polygonChild = createElementWithAttributes('polygon', svgAttributes, svgNS); //this.document.createElementNS(svgNS, 'polygon');
 	this.svgRootElement.appendChild(polygonChild);
 	this.updatePolygonChild(polygonChild, svgVertices);
 	return polygonChild;
