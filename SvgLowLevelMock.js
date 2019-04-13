@@ -12,8 +12,12 @@ SvgLowLevelMock.prototype.set_return_for_createPolygonChild = function (polygonC
 
 SvgLowLevelMock.prototype.subscribe = function(typeName, rootCase, otherCase) {this.track('subscribe', [typeName, rootCase, otherCase], undefined);};
 
-SvgLowLevelMock.prototype.createPolygonChild = function(              svgVertices) {this.track('createPolygonChild', [              svgVertices], this.polygonChildToBeCreated);};
+SvgLowLevelMock.prototype.createPolygonChild = function(svgVertices)
+{
+	this.track('createPolygonChild', [svgVertices], this.polygonChildToBeCreated);
+	return this.polygonChildToBeCreated;
+};
 
-SvgLowLevelMock.prototype.updatePolygonChild = function(polygonChild, svgVertices) {this.track('updatePolygonChild', [polygonChild, svgVertices], undefined                   );};
+SvgLowLevelMock.prototype.updatePolygonChild = function(polygonChild, svgVertices) {this.track('updatePolygonChild', [polygonChild, svgVertices], undefined);};
 
-SvgLowLevelMock.prototype.deletePolygonChild = function(polygonChild             ) {this.track('deletePolygonChild', [polygonChild             ], undefined                   );};
+SvgLowLevelMock.prototype.deletePolygonChild = function(polygonChild             ) {this.track('deletePolygonChild', [polygonChild             ], undefined);};

@@ -1,7 +1,9 @@
-function App(svgLowLevel, coordSysTransformer)
+function App(svgLowLevel, coordSysTransformer, bijectionUp, originFigure)
 {
 	this.svgLowLevel         = svgLowLevel;
 	this.coordSysTransformer = coordSysTransformer;
+	this.bijectionUp         = bijectionUp;
+	this.originFigure        = originFigure;
 }
 
 App.prototype.run = function ()
@@ -32,5 +34,9 @@ App.prototype.run = function ()
 			prevEl = prevPos = null;
 		}
 	);
-	this.svgLowLevel.createPolygonChild([[300, 200], [310, 200], [310, 210], [300, 210]]);
+
+	console.log('Origin figure: high-level (geometrical) coordinates: <'+this.originFigure.vertices.join(' | ')+'>')
+	var svgVertices = this.originFigure.vertices.map((p) => this.coordSysTransformer.highToLow(p));console.log('Origin figure: low-level (SVG) coordinates: {'+svgVertices.join(' | ')+'}');
+	var origPoly = this.svgLowLevel.createPolygonChild(svgVertices);
+	this.bijectionUp.set(origPoly, this.originFigure);
 };
