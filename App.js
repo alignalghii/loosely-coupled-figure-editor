@@ -1,10 +1,12 @@
-function App(svgLowLevel, coordSysTransformer, bijectionUp, originFigure)
+function App(svgLowLevel, coordSysTransformer, bijectionUp, figure)
 {
 	this.svgLowLevel         = svgLowLevel;
 	this.coordSysTransformer = coordSysTransformer;
 	this.bijectionUp         = bijectionUp;
-	this.originFigure        = originFigure;
+	this.setOriginFigureFrom(figure);
 }
+
+App.prototype.setOriginFigureFrom = function (figure) {this.originFigure = figure.centering();}
 
 App.prototype.run = function ()
 {

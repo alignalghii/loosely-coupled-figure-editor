@@ -58,3 +58,13 @@ function svgToDomainFactory(svgSize, scale)
 	}
 	return svgToDomain;
 }
+
+/************************/
+
+function centroid(points)
+{
+	var count = points.length;
+	var xSum = 0, ySum = 0;
+	for (i = 0; i < count; i++) {xSum += points[i][0]; ySum += points[i][1];}
+	return [xSum / count, ySum / count];
+}

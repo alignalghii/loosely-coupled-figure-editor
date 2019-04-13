@@ -2,19 +2,22 @@
  * Geometric transformations (translation, reflection, rotation)
  **************************/
 
-function sampleFigureBank() { return [
-	(new Figure([0, 0], [[ 2,  3], [ 6,  3], [ 5,  5]          ], {fill: 'red' })).translation([-6,5]),
-	(new Figure([0, 0], [[ 1, -1], [ 1,  1], [-1,  1], [-1, -1]], {fill: 'blue'})).translation([-8,-4,]),
-	(new Figure([0, 0], poly1_convex_ccw, {fill: 'magenta'})).translation([-18,0]),
-	(new Figure([0, 0], poly1_concave_ccw, {fill: 'green'})).translation([8,-7]),
-	(new Figure([0, 0], poly2_convex_ccw, {fill: 'black'})).translation([0,-4]),
-	(new Figure([0, 0], poly2_degen_ccw, {fill: 'gray'})).translation([-2.3,-0.7]),
-	(new Figure([0, 0], poly2_concave_ccw, {fill: 'orange'})).translation([-4,2.6])
-];}
+function sampleFigureBank() { return {
+	selected: 1,
+	namedFigures: [
+		{name: 'Piros háromszög' , figure: (new Figure([[ 2,  3], [ 6,  3], [ 5,  5]          ], {fill: 'red'    })).translation([ -6  ,  5  ])},
+		{name: 'Kék négyzet'     , figure: (new Figure([[ 1, -1], [ 1,  1], [-1,  1], [-1, -1]], {fill: 'blue'   })).translation([ -8  , -4  ])},
+		{name: 'Bíbor konvex 1'  , figure: (new Figure(poly1_convex_ccw,                         {fill: 'magenta'})).translation([-18  ,  0  ])},
+		{name: 'Zöld konkáv 1'   , figure: (new Figure(poly1_concave_ccw,                        {fill: 'green'  })).translation([  8  , -7  ])},
+		{name: 'Fekete konvex 2' , figure: (new Figure(poly2_convex_ccw,                         {fill: 'black'  })).translation([  0  , -4  ])},
+		{name: 'Szürke elfajult' , figure: (new Figure(poly2_degen_ccw,                          {fill: 'gray'   })).translation([ -2.3, -0.7])},
+		{name: 'Narancs konkáv 2', figure: (new Figure(poly2_concave_ccw,                        {fill: 'orange' })).translation([ -4  ,  2.6])}
+	]
+};}
 
-function Figure(grasp, vertices, svgAttributes = {})
+function Figure(vertices, svgAttributes = {}, grasp)
 {
-	this.grasp         = grasp;
+	this.grasp         = grasp || (vertices.length > 0 ? centroid(vertices) : [0,0]);
 	this.vertices      = vertices;
 	this.svgAttributes = svgAttributes;
 }
@@ -39,7 +42,7 @@ Figure.prototype.translation = function ([dx, dy])
 			}
 		}
 	}
-	return new Figure(grasp, vertices, svgAttributes);
+	return new Figure( vertices, svgAttributes, grasp);
 	// @TODO make `testTranslation` stricter, it should fail if this implementation returned a naked literal object instead of a Figure instance with methods
 }
 
@@ -55,3 +58,22 @@ Figure.prototype.collidesTowards = function (figure) {return collidesTowards(thi
 Figure.prototype.collides        = function (figure) {return collides       (this.vertices, figure.vertices);};
 
 Figure.prototype.getSvgProperties = function () {return this.svgProperties;}
+
+Figure.prototype.doCentering = function ()
+{
+	for (let i = 0; i < this.vertices.length; i++) {
+		this.vertices[i][0] -= this.grasp[0];
+		this.vertices[i][1] -= this.grasp[1];
+		this.grasp[0] = 0; this.grasp[1] = 1;
+	}
+};
+
+Figure.prototype.centering = function ()
+{
+	var newFig = new Figure([], {}, [0,0]);
+	for (let i = 0; i < this.vertices.length; i++) {
+		newFig.vertices.push([ this.vertices[i][0]-this.grasp[0], this.vertices[i][1]-this.grasp[1] ]);
+	}
+	for (let at in this.svgAttributes) if (this.svgAttributes.hasOwnProperty(at)) newFig.svgAttributes[at] = this.svgAttributes[at];
+	return newFig;
+};

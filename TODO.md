@@ -1,1 +1,4 @@
  - *Undo* functionality!
+ - test `centroid` math vector function
+ - test `Figure.prototype.centering()` method
+ - last grasped figure should be made visibly distict (coloring blur?). Problem: For focusing, a figure must be moved slightly, no way of intact focusing.
