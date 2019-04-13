@@ -9,10 +9,11 @@ AppBehavior.prototype.shouldCreateTheOriginFigure = function ()
 {
 	var polygonChildToBeCreated  = {};
 	var svgLowLevelMock          = new SvgLowLevelMock(polygonChildToBeCreated);
-	var coordSysTransformerMock  = new CoordSysTransformerMock([[260, 120], [300, 120], [290, 100]]);
+	var coordSysTransformerMock  = new CoordSysTransformerMock([[260, 120], [300, 120], [290, 100]], [[300, 200]]);
 	var bijectionUpMock          = new BijectionMock();
-	var originFigure             = new FigureMock([[ -4,  8], [ 0,  8], [-1, 10]]);
-	var app                      = new App(svgLowLevelMock, coordSysTransformerMock, bijectionUpMock, originFigure);
+	var originFigureTranslatedBy00 = new FigureMock([[ -4,  8], [ 0,  8], [-1, 10]]);
+	var originFigure               = new FigureMock([[ -4,  8], [ 0,  8], [-1, 10]], originFigureTranslatedBy00); console.log(originFigure);
+	var app                        = new App(svgLowLevelMock, coordSysTransformerMock, bijectionUpMock, originFigure); console.log(app)
 
 	var flag_virgin = svgLowLevelMock.communication.length == 0;
 	app.run();
@@ -42,7 +43,8 @@ AppBehavior.prototype.shouldDeleteFigIfClickingOnItWhileStayingOnTheSamePlace = 
 	var svgLowLevelMock          = new SvgLowLevelMock(polygonChildToBeCreated0);
 	var coordSysTransformerMock  = new CoordSysTransformerMock([[260, 120], [300, 120], [290, 100]]);
 	var bijectionUpMock          = new BijectionMock();
-	var originFigure             = new FigureMock([[ -4,  8], [ 0,  8], [-1, 10]]);
+	var originFigureTranslatedBy00 = new FigureMock([[ -4,  8], [ 0,  8], [-1, 10]]);
+	var originFigure               = new FigureMock([[ -4,  8], [ 0,  8], [-1, 10]], originFigureTranslatedBy00);
 	var app                      = new App(svgLowLevelMock, coordSysTransformerMock, bijectionUpMock, originFigure);
 
 	var flag_virgin = svgLowLevelMock.communication.length == 0;
@@ -57,7 +59,10 @@ AppBehavior.prototype.shouldDeleteFigIfClickingOnItWhileStayingOnTheSamePlace = 
 		svgLowLevelMock.communication.length == 5 &&
 		svgLowLevelMock.communication[4].name == 'deletePolygonChild' && svgLowLevelMock.communication[4].args.length == 1 && svgLowLevelMock.communication[4].args[0] == anotherPolygonChild; // @TODO check whether also the origin polygon can be deleted this way
 
-	return flag_virgin && flag_run && flag_mousedownAtAFig && flag_mouseupSamePlaceEffectsFigDel;
+	var communicationBij = bijectionUpMock.communication;
+	var flag_bijection = communicationBij.length = 1 && communicationBij[0].name == 'delete' && communicationBij[0].args[0] == anotherPolygonChild;
+
+	return flag_virgin && flag_run && flag_mousedownAtAFig && flag_mouseupSamePlaceEffectsFigDel// && flag_bijection;
 };
 
 // Drag a figure a little further by mouseup then mousedown on it while moving the mouse a little  further
