@@ -14,3 +14,4 @@
  - Járjunk utána, milyen rokon JavaScript alkalmazások, könytárak léteznek alakzatszerkesztés, ütközésvizsgálat, widgetek terén
  - Jobb egérgomb kattintásának kihasználása nagyon modern, felhasználóbarát, gazdag, kifejező és tömör használati módot tenne lehetővé. Gondolom `preventDefault` kell hozzá.
  - Az alakzatok ,,típusbabkjába'' a felhasználó is menthesse be az általa épp megszerkesztett, ezáltal újfajta alakzatokat.
+ - Vezessünk be magasszintű eseményeket és eseménykezelést! A JavaScript natív eseménykezelése mintájára, de attól függetlenül! Amelyek pl. ütközés- és közelség-eseményeket vizsgálnak a geometriai figurákon, vagy esetleg még magasabb szinten is majd a lakáselemeken!

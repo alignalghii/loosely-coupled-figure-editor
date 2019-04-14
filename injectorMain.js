@@ -9,9 +9,10 @@ onload = function (event)
 	var svgLowLevel         = new SvgLowLevel(document); // [600, 400]
 	var coordSysTransformer = new CoordSysTransformer([300, 200], 10, [true, false]);
 	var bijectionUp         = new Bijection();
+	var board               = new Board(bijectionUp);
 	var originFigure        = bank.namedFigures[bank.selected].figure;
 
-	var app                 = new App(svgLowLevel, coordSysTransformer, bijectionUp, originFigure);
+	var app                 = new App(svgLowLevel, coordSysTransformer, bijectionUp, board, originFigure);
 
 	function changeAccu(event)
 	{

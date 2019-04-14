@@ -1,8 +1,9 @@
-function App(svgLowLevel, coordSysTransformer, bijectionUp, figure)
+function App(svgLowLevel, coordSysTransformer, bijectionUp, board, figure)
 {
 	this.svgLowLevel         = svgLowLevel;
 	this.coordSysTransformer = coordSysTransformer;
 	this.bijectionUp         = bijectionUp;
+	this.board               = board;
 	this.setOriginFigureFrom(figure);
 }
 
@@ -19,8 +20,34 @@ App.prototype.run = function ()
 	);
 	this.svgLowLevel.subscribe(
 		'mousemove',
-		function (           currentPos) {if (prevEl) {app.updateWidgetPillarFromLow(prevEl, prevPos, currentPos); prevPos = currentPos; virgin = false;}},
-		function (currentEl, currentPos) {if (prevEl) {app.updateWidgetPillarFromLow(prevEl, prevPos, currentPos); prevPos = currentPos; virgin = false;}}
+		function (           currentPos)
+		{
+			if (prevEl) {
+				var geomPrevPos      = app.coordSysTransformer.lowToHigh(prevPos);
+				var geomCurrentPos   = app.coordSysTransformer.lowToHigh(currentPos);
+				var geomDisplacement = fromTo(geomPrevPos, geomCurrentPos);
+				var prevFigure = app.bijectionUp.get(prevEl);
+				var hypotheticFigureClone = prevFigure.translation(geomDisplacement);
+				if (app.board.wouldCollideAny(prevFigure, hypotheticFigureClone)) console.log('Bang!');
+
+				app.updateWidgetPillarFromLow(prevEl, prevPos, currentPos);
+				prevPos = currentPos; virgin = false;
+			}
+		},
+		function (currentEl, currentPos)
+		{
+			if (prevEl) {
+				var geomPrevPos      = app.coordSysTransformer.lowToHigh(prevPos);
+				var geomCurrentPos   = app.coordSysTransformer.lowToHigh(currentPos);
+				var geomDisplacement = fromTo(geomPrevPos, geomCurrentPos);
+				var prevFigure = app.bijectionUp.get(prevEl);
+				var hypotheticFigureClone = prevFigure.translation(geomDisplacement);
+				if (app.board.wouldCollideAny(prevFigure, hypotheticFigureClone)) console.log('Bang!');
+
+				app.updateWidgetPillarFromLow(prevEl, prevPos, currentPos);
+				prevPos = currentPos; virgin = false;
+			}
+		}
 	);
 	this.svgLowLevel.subscribe(
 		'mouseup',
@@ -67,6 +94,7 @@ App.prototype.updateWidgetPillarFromLow = function (lowElem, svgPosition1, svgPo
 	var svgVertices = geomFigure.vertices.map((p) => this.coordSysTransformer.highToLow(p));
 	this.svgLowLevel.updatePolygonChild(lowElem, svgVertices);
 	//svgPosition1 = svgPosition2;
+	//return geomFigure; // `lowElem` úgyis elérhető a hívó számára, `geomFigure`-t érdemes visszaadni
 };
 
 App.prototype.deleteWidgetPillarFromLow = function (lowElem)
