@@ -28,7 +28,11 @@ App.prototype.run = function ()
 				var geomDisplacement = fromTo(geomPrevPos, geomCurrentPos);
 				var prevFigure = app.bijectionUp.get(prevEl);
 				var hypotheticFigureClone = prevFigure.translation(geomDisplacement);
-				if (app.board.wouldCollideAny(prevFigure, hypotheticFigureClone)) hasCollided = true;
+				if (app.board.wouldCollideAny(prevFigure, hypotheticFigureClone)) {
+					app.board.doInterpolateCollision(prevFigure, hypotheticFigureClone);
+					app.updateWidgetPillarFromHigh(prevFigure);
+					hasCollided = true;
+				}
 				else app.updateWidgetPillarFromLow(prevEl, prevPos, currentPos);
 				prevPos = currentPos; virgin = false;
 			}
@@ -41,7 +45,11 @@ App.prototype.run = function ()
 				var geomDisplacement = fromTo(geomPrevPos, geomCurrentPos);
 				var prevFigure = app.bijectionUp.get(prevEl);
 				var hypotheticFigureClone = prevFigure.translation(geomDisplacement);
-				if (app.board.wouldCollideAny(prevFigure, hypotheticFigureClone)) hasCollided = true;
+				if (app.board.wouldCollideAny(prevFigure, hypotheticFigureClone)) {
+					app.board.doInterpolateCollision(prevFigure, hypotheticFigureClone);
+					app.updateWidgetPillarFromHigh(prevFigure);
+					hasCollided = true;
+				}
 				else app.updateWidgetPillarFromLow(prevEl, prevPos, currentPos);
 				prevPos = currentPos; virgin = false;
 			}
@@ -70,6 +78,13 @@ App.prototype.createWidgetPillarFromHigh = function (geomFigure)
 	var svgVertices       = geomNewFigure.vertices.map((p) => this.coordSysTransformer.highToLow(p));//console.log('Origin figure: low-level (SVG) coordinates: {'+svgVertices.join(' | ')+'}');
 	var svgNewPolygonCild = this.svgLowLevel.createPolygonChild(svgVertices, geomNewFigure.svgAttributes); // @TODO consider `this.originFigure.svgAttributes`
 	this.bijectionUp.set(svgNewPolygonCild, geomNewFigure);
+};
+
+App.prototype.updateWidgetPillarFromHigh = function (geomFigure)
+{
+	var lowEl = this.bijectionUp.getInverse(geomFigure);
+	var svgVertices = geomFigure.vertices.map((p) => this.coordSysTransformer.highToLow(p));
+	this.svgLowLevel.updatePolygonChild(lowEl, svgVertices);
 };
 
 App.prototype.createWidgetPillarFromLow = function (svgPosition) // @TODO reuse `createWidgetPillar`
