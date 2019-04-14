@@ -11,8 +11,9 @@ onload = function (event)
 	var bijectionUp         = new Bijection();
 	var board               = new Board(bijectionUp);
 	var originFigure        = bank.namedFigures[bank.selected].figure;
+	var audio               = new MyAudio(new Audio('sonar.ogg'));
 
-	var app                 = new App(svgLowLevel, coordSysTransformer, bijectionUp, board, originFigure);
+	var app                 = new App(svgLowLevel, coordSysTransformer, bijectionUp, board, originFigure, audio);
 
 	function changeAccu(event)
 	{

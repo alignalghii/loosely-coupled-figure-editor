@@ -1,10 +1,11 @@
-function App(svgLowLevel, coordSysTransformer, bijectionUp, board, figure)
+function App(svgLowLevel, coordSysTransformer, bijectionUp, board, figure, audio)
 {
 	this.svgLowLevel         = svgLowLevel;
 	this.coordSysTransformer = coordSysTransformer;
 	this.bijectionUp         = bijectionUp;
 	this.board               = board;
 	this.setOriginFigureFrom(figure);
+	this.audio               = audio;
 }
 
 App.prototype.setOriginFigureFrom = function (figure) {this.originFigure = figure.centering();}
@@ -33,6 +34,7 @@ App.prototype.run = function ()
 					app.updateWidgetPillarFromHigh(prevFigure);
 					hasCollided = true;
 					app.svgLowLevel.unshowGlittering(prevEl);
+					app.audio.bang();
 				}
 				else app.updateWidgetPillarFromLow(prevEl, prevPos, currentPos);
 				prevPos = currentPos; virgin = false;
@@ -51,6 +53,7 @@ App.prototype.run = function ()
 					app.updateWidgetPillarFromHigh(prevFigure);
 					hasCollided = true;
 					app.svgLowLevel.unshowGlittering(prevEl);
+					app.audio.bang();
 				}
 				else app.updateWidgetPillarFromLow(prevEl, prevPos, currentPos);
 				prevPos = currentPos; virgin = false;
