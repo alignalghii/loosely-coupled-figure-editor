@@ -3,3 +3,14 @@
  - test `Figure.prototype.centering()` method
  - last grasped figure should be made visibly distict (coloring blur?). Problem: For focusing, a figure must be moved slightly, no way of intact focusing.
  - z-index: SVG-alakzatok fedési sorrendje
+ - Mágneses ragadás
+ - Ütközés szaggatottsága, ,,pattanás'' (távolságtartás gyors berántásnál)-hiba megoldása
+ - A tervrajz mentése -- ha a javScript biztonság okokból nem enged fájlba menteni, akkor a mögöttes PHP-szerveren regisztrálható felhasználóprofil adatbézisába menthet. Ez a sok felhajtás a korai fejlesztési szakaszban kiváltható azzal, ha a ,,mentés'' egyszerűen a fő adatszerkezet JSON.stringify-formátumban kiíratható, onnan akkor a user egérrel lemásolhatja, és sajétkezűleg fájlba mentheti. Innen meg JSON.parse-szal bárikor visszaolvasható.
+ - Hanghatás ütközésnél: a hangfájlot saját mikorofonfelvétellel is elkészíthatjük (pl taps, fémkanál leejtése), így nincs vendorporbléma (szerzőijog- vagy köszönet/hivatkozás).
+ - A felhasználói felület parancsai (kiválasztható beszúrandó alakzattípus, regiszeterk, akuumulátorok bufferek, reakciók a helyzetnek és a bényomott parancsgomboknak függvényében) tulajdonképp nem más, mint állapotgép! Ez jó modularizálhatósáágra adlehetőséget. Szélsőségesen jó esetben akár saját domainspecifikus nyelv is tervezhető, és az állapotgép nyelvtana teljesen reifikálható.
+ - felhasználói doksi, jó fejlesztői doksi, Utóbbi részeként tesztdoksi.
+ - A két projekt (`llosely-coupled-figure-editor` és `floor-plan-designer`) a régi tudás minnél teljesebb haasznosítása, ne vesszék el a régi projektből semmi tudás. Különösen ügyelni a két `TODO` file összefésülésére, ne zavarjon meg, hogy e két külön tartalmú  file ugyanazon a néven létezik.
+ - `WidgetVerticalPillar` osztály bevezetése nagyon érik már, akár ,,globális'' szingelton osztály lesz, akár alazatonként, azokhoz kötősve egyéni példányonkénti
+ - Járjunk utána, milyen rokon JavaScript alkalmazások, könytárak léteznek alakzatszerkesztés, ütközésvizsgálat, widgetek terén
+ - Jobb egérgomb kattintásának kihasználása nagyon modern, felhasználóbarát, gazdag, kifejező és tömör használati módot tenne lehetővé. Gondolom `preventDefault` kell hozzá.
+ - Az alakzatok ,,típusbabkjába'' a felhasználó is menthesse be az általa épp megszerkesztett, ezáltal újfajta alakzatokat.

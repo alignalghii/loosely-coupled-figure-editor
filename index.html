@@ -37,8 +37,23 @@
 	<body>
 		<h1>Alakzatszerkesztő (refaktorizált változat)</h1>
 
-		<h2>Regiszterek kezelése</h2>
-		Forma-akkumulátorregiszter:
+		<h2>Használata</h2>
+		<ul>
+			<li>Új alakzat beszúrása: kattints az egér bal gombjával üres felületre: vagyis egérgomb le üres felületen, és egérgomb fel ugyanott.</li>
+			<ul>
+				<li>Azt, hogy milyen alakú és színű alakzat szúródjék be, a legördülő menüből választhatod ki. Ha mem választasz, akkor az előző beállítás marad életben (illetve induláskor az alapértelmezetten kiválasztódó menüpont).
+				<li>A lenyomás mindenképp üres felületen történjék, a felengedés történhetik úgy is, hogy közben esetleg egy kicsit vonszolod az egeret (ez nem kötelező): az új alakzat a felengedés helyén fog megjelenni.</li>
+				<li>Az sem gond, ha a felengedés egy korább létező alakzat területére tévedve történik. Ekkor az újonnan beszúródó alakzat rajta lesz a korábbin, és fedi azt.</li>
+			</ul>
+			<li>Az egér bal fülét ha viszont már létező alakzaton nyomod le, akkor a felengedés helyétől függően a szóbanforgó már meglévő alakzat vagy törlődik, vagy pedig arrébmozdul:</li>
+			<ul>
+				<li>ha ugyanott engeded fel, ahol lenyomtad, és picit sem csusszan közben arrébb az egér, akkor az alakzat törlődik;</li>
+				<li>ha meg viszont a lenyomás és a felengedés között kicsit vonszolod is az egeret, akkor az alakzat megmozdul: követi a vonszolódó egérkurzort.</li>
+			</ul>
+		</ul>
+
+		<h2>Kezelőparancs-felület</h2>
+		<label for="sampleFigureBank">A következő beszúrható alakzatforma:</label>
 		<select id="sampleFigureBank">
 		</select>
 
