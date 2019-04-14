@@ -11,40 +11,38 @@ App.prototype.setOriginFigureFrom = function (figure) {this.originFigure = figur
 
 App.prototype.run = function ()
 {
-	var [prevEl, prevPos, virgin] = [null, null, true];
+	var [prevEl, prevPos, virgin, hasCollided] = [null, null, true, false];
 	var app = this;
 	this.svgLowLevel.subscribe(
 		'mousedown',
-		function (           currentPos) {prevEl = prevPos = null;                  virgin = true;},
-		function (currentEl, currentPos) {prevEl = currentEl; prevPos = currentPos; virgin = true;}
+		function (           currentPos) {prevEl = prevPos = null;                  virgin = true; hasCollided = false;},
+		function (currentEl, currentPos) {prevEl = currentEl; prevPos = currentPos; virgin = true; hasCollided = false;}
 	);
 	this.svgLowLevel.subscribe(
 		'mousemove',
 		function (           currentPos)
 		{
-			if (prevEl) {
+			if (prevEl && !hasCollided) {
 				var geomPrevPos      = app.coordSysTransformer.lowToHigh(prevPos);
 				var geomCurrentPos   = app.coordSysTransformer.lowToHigh(currentPos);
 				var geomDisplacement = fromTo(geomPrevPos, geomCurrentPos);
 				var prevFigure = app.bijectionUp.get(prevEl);
 				var hypotheticFigureClone = prevFigure.translation(geomDisplacement);
-				if (app.board.wouldCollideAny(prevFigure, hypotheticFigureClone)) console.log('Bang!');
-
-				app.updateWidgetPillarFromLow(prevEl, prevPos, currentPos);
+				if (app.board.wouldCollideAny(prevFigure, hypotheticFigureClone)) hasCollided = true;
+				else app.updateWidgetPillarFromLow(prevEl, prevPos, currentPos);
 				prevPos = currentPos; virgin = false;
 			}
 		},
 		function (currentEl, currentPos)
 		{
-			if (prevEl) {
+			if (prevEl && !hasCollided) {
 				var geomPrevPos      = app.coordSysTransformer.lowToHigh(prevPos);
 				var geomCurrentPos   = app.coordSysTransformer.lowToHigh(currentPos);
 				var geomDisplacement = fromTo(geomPrevPos, geomCurrentPos);
 				var prevFigure = app.bijectionUp.get(prevEl);
 				var hypotheticFigureClone = prevFigure.translation(geomDisplacement);
-				if (app.board.wouldCollideAny(prevFigure, hypotheticFigureClone)) console.log('Bang!');
-
-				app.updateWidgetPillarFromLow(prevEl, prevPos, currentPos);
+				if (app.board.wouldCollideAny(prevFigure, hypotheticFigureClone)) hasCollided = true;
+				else app.updateWidgetPillarFromLow(prevEl, prevPos, currentPos);
 				prevPos = currentPos; virgin = false;
 			}
 		}
@@ -52,16 +50,16 @@ App.prototype.run = function ()
 	this.svgLowLevel.subscribe(
 		'mouseup',
 		function (              currentPos)
-		{	if ( prevEl) app.updateWidgetPillarFromLow(prevEl, prevPos, currentPos);
+		{	if ( prevEl && !hasCollided) app.updateWidgetPillarFromLow(prevEl, prevPos, currentPos);
 			if (!prevEl) app.createWidgetPillarFromLow(                 currentPos);
-			prevEl = prevPos = null; virgin = true;
+			prevEl = prevPos = null; virgin = true; hasCollided = false;
 		},
 		function (currentEl, currentPos)
 		{
-			if ( prevEl                        && !virgin) app.updateWidgetPillarFromLow(prevEl   , prevPos, currentPos);
-			if ( prevEl && currentEl == prevEl &&  virgin) app.deleteWidgetPillarFromLow(currentEl                     );
-			if (!prevEl                                  ) app.createWidgetPillarFromLow(                    currentPos);
-			prevEl = prevPos = null; virgin = true;
+			if ( prevEl                        && !virgin && !hasCollided) app.updateWidgetPillarFromLow(prevEl   , prevPos, currentPos);
+			if ( prevEl && currentEl == prevEl &&  virgin && !hasCollided) app.deleteWidgetPillarFromLow(currentEl                     );
+			if (!prevEl                                                  ) app.createWidgetPillarFromLow(                    currentPos);
+			prevEl = prevPos = null; virgin = true; hasCollided = false;
 		}
 	);
 };
