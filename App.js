@@ -16,7 +16,7 @@ App.prototype.run = function ()
 	this.svgLowLevel.subscribe(
 		'mousedown',
 		function (           currentPos) {prevEl = prevPos = null;                  virgin = true; hasCollided = false;},
-		function (currentEl, currentPos) {prevEl = currentEl; prevPos = currentPos; virgin = true; hasCollided = false;}
+		function (currentEl, currentPos) {prevEl = currentEl; prevPos = currentPos; virgin = true; hasCollided = false; app.svgLowLevel.showGlittering(currentEl);}
 	);
 	this.svgLowLevel.subscribe(
 		'mousemove',
@@ -32,6 +32,7 @@ App.prototype.run = function ()
 					app.board.doInterpolateCollision(prevFigure, hypotheticFigureClone);
 					app.updateWidgetPillarFromHigh(prevFigure);
 					hasCollided = true;
+					app.svgLowLevel.unshowGlittering(prevEl);
 				}
 				else app.updateWidgetPillarFromLow(prevEl, prevPos, currentPos);
 				prevPos = currentPos; virgin = false;
@@ -49,6 +50,7 @@ App.prototype.run = function ()
 					app.board.doInterpolateCollision(prevFigure, hypotheticFigureClone);
 					app.updateWidgetPillarFromHigh(prevFigure);
 					hasCollided = true;
+					app.svgLowLevel.unshowGlittering(prevEl);
 				}
 				else app.updateWidgetPillarFromLow(prevEl, prevPos, currentPos);
 				prevPos = currentPos; virgin = false;
@@ -64,9 +66,9 @@ App.prototype.run = function ()
 		},
 		function (currentEl, currentPos)
 		{
-			if ( prevEl                        && !virgin && !hasCollided) app.updateWidgetPillarFromLow(prevEl   , prevPos, currentPos);
-			if ( prevEl && currentEl == prevEl &&  virgin && !hasCollided) app.deleteWidgetPillarFromLow(currentEl                     );
-			if (!prevEl                                                  ) app.createWidgetPillarFromLow(                    currentPos);
+			if ( prevEl                        && !virgin && !hasCollided) {app.updateWidgetPillarFromLow(prevEl   , prevPos, currentPos); app.svgLowLevel.unshowGlittering(prevEl);}
+			if ( prevEl && currentEl == prevEl &&  virgin && !hasCollided)  app.deleteWidgetPillarFromLow(currentEl                     );
+			if (!prevEl                                                  )  app.createWidgetPillarFromLow(                    currentPos);
 			prevEl = prevPos = null; virgin = true; hasCollided = false;
 		}
 	);

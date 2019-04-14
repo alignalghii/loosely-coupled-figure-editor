@@ -33,6 +33,9 @@ SvgLowLevel.prototype.updatePolygonChild = function (polygonChild, svgVertices)
 	polygonChild.setAttribute('points', points);
 };
 
+SvgLowLevel.prototype.showGlittering   = function (polygonChild) {polygonChild.setAttribute   ('opacity', 0.75);};
+SvgLowLevel.prototype.unshowGlittering = function (polygonChild) {polygonChild.removeAttribute('opacity'     );};
+
 SvgLowLevel.prototype.deletePolygonChild = function (polygonChild) {polygonChild.parentNode.removeChild(polygonChild);};  // childNode.remove() is easier, nicer, but not so portable
 
 

@@ -26,3 +26,10 @@ function createAndAppendChildWithAttrs(parent, tagName, attrs, namespaceURI = nu
 
 
 function insertAfter(what, afterWhat) {afterWhat.parentNode.insertBefore(what, afterWhat.nextSibling);}
+
+// @TODO: This is an unused function!
+function updateElementWithAttributes(domElement, plusAttributes = {}, minusAttributes = [])
+{
+	for (let attrName in plusAttributes ) domElement.setAttribute    (attrName, plusAttributes[attrName]);
+	for (let i        in minusAttributes) domElement.removetAttribute(attrName, plusAttributes[i       ]);
+}
