@@ -12,7 +12,8 @@
  - A két projekt (`llosely-coupled-figure-editor` és `floor-plan-designer`) a régi tudás minnél teljesebb haasznosítása, ne vesszék el a régi projektből semmi tudás. Különösen ügyelni a két `TODO` file összefésülésére, ne zavarjon meg, hogy e két külön tartalmú  file ugyanazon a néven létezik.
  - `WidgetVerticalPillar` osztály bevezetése nagyon érik már, akár ,,globális'' szingelton osztály lesz, akár alazatonként, azokhoz kötősve egyéni példányonkénti
  - Járjunk utána, milyen rokon JavaScript alkalmazások, könytárak léteznek alakzatszerkesztés, ütközésvizsgálat, widgetek terén
- - Jobb egérgomb kattintásának kihasználása nagyon modern, felhasználóbarát, gazdag, kifejező és tömör használati módot tenne lehetővé. Gondolom `preventDefault` kell hozzá. oncontenxtmenu: see [Is right click a JavaScript event?](https://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event)
+ - Jobb egérgomb kattintásának kihasználása nagyon modern, felhasználóbarát, gazdag, kifejező és tömör használati módot tenne lehetővé. Gondolom `preventDefault` kell hozzá. oncontenxtmenu: see [Is right click a JavaScript event?](https://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event).
+    - Egyébként a jobbegérrel addig is kell kezdeni valamit, amíg nem használjuk ki, mert megzavarja a kattintsok ,,állapotgépét''.
  - Az alakzatok ,,típusbabkjába'' a felhasználó is menthesse be az általa épp megszerkesztett, ezáltal újfajta alakzatokat.
  - Vezessünk be magasszintű eseményeket és eseménykezelést! A JavaScript natív eseménykezelése mintájára, de attól függetlenül! Amelyek pl. ütközés- és közelség-eseményeket vizsgálnak a geometriai figurákon, vagy esetleg még magasabb szinten is majd a lakáselemeken!
  - Ütközés esetén csak csússzék meg az egérkurzoron, de ne jöjjön le a vonszolásról! Nagyon zavaró, ráadásul a nem teljes ütközésellenőrzés miatt becsapható alakzatütközések is sokkal nehezebben kutathatók így.
