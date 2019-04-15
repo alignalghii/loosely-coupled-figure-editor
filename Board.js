@@ -23,6 +23,8 @@ Board.prototype.wouldCollideAny = function (theFigure, hypotheticFigureClone)
 	//return this.figures.reduce(orCollides, false);
 };
 
+/**************** Külön `Hypothetical` / `Future` / `Collision` osztályba? (ahol példányváltozó a `hypotheticFigureClone`) ***********************/
+
 Board.prototype.doInterpolateCollision = function (prevFigure, hypotheticFigureClone) // modifies both to same intermediate location
 {
 	var displacementNeeded = this.interpolateHypothetic(prevFigure, hypotheticFigureClone); // modifies `hypotheticFigureClone` only

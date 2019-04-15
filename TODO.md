@@ -17,3 +17,4 @@
  - Vezessünk be magasszintű eseményeket és eseménykezelést! A JavaScript natív eseménykezelése mintájára, de attól függetlenül! Amelyek pl. ütközés- és közelség-eseményeket vizsgálnak a geometriai figurákon, vagy esetleg még magasabb szinten is majd a lakáselemeken!
  - Ütközés esetén csak csússzék meg az egérkurzoron, de ne jöjjön le a vonszolásról! Nagyon zavaró, ráadásul a nem teljes ütközésellenőrzés miatt becsapható alakzatütközések is sokkal nehezebben kutathatók így.
  - Copyright for `sonar.ogg` alertsound, or produce own sound.
+ - HypotheticlWorld, vagy FutureWold, vagy Collision nevű külön osztály az ütközéskereső interációra! Itt a hypotheticus alak olyan dolog, amit pont érdemes egy osztály instanciaváltozójaként számontartani.
