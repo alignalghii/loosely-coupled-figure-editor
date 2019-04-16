@@ -1,3 +1,5 @@
+const GLITTERING_ATTR_NAME = 'opacity', GLITTERING_VALUE = 0.75;
+
 /**************************
  * Geometric transformations (translation, reflection, rotation)
  **************************/

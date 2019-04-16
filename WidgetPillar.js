@@ -48,3 +48,15 @@ WidgetPillar.prototype.deleteFromLow = function (lowElem)
 	this.bijectionUp.delete(lowElem);
 	this.svgLowLevel.deletePolygonChild(lowElem);
 };
+
+WidgetPillar.prototype.showGlitteringFromLow = function (lowElem)
+{
+	lowElem.setAttribute(GLITTERING_ATTR_NAME, GLITTERING_VALUE);
+	this.bijectionUp.get(lowElem).svgAttributes[GLITTERING_ATTR_NAME] = GLITTERING_VALUE; // @TODO fainting should appear on an abstracter level on Figure (e.g. a boolean flag for a special kind of focus)
+};
+
+WidgetPillar.prototype.unshowGlitteringFromLow = function (polygonChild)
+{
+	polygonChild.removeAttribute(GLITTERING_ATTR_NAME);
+	delete this.bijectionUp.get(polygonChild).svgAttributes[GLITTERING_ATTR_NAME]; // @TODO fainting should appear on an abstracter level on Figure (e.g. a boolean flag for a special kind of focus)
+};
