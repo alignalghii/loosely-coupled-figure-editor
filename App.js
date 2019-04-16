@@ -11,18 +11,21 @@ App.prototype.setOriginFigureFrom = function (figure) {this.originFigure = figur
 
 App.prototype.checkAndHandleCollision = function (prevEl, prevPos, currentPos)
 {
-	var [prevFigure, hypotheticFigureClone] = this.widgetPillar.cloneHypotheticFigureFromLow(prevEl, prevPos, currentPos); // @TODO var hypotetic = this.widgetPillar.newHypotheticFromLow(prevEl, prevPos, currentPos);
-	if (this.board.wouldCollideAny(prevFigure, hypotheticFigureClone)) {                                                   //       if (hypotetic.wouldCollideAny()) {
-		this.board.doInterpolateCollision(prevFigure, hypotheticFigureClone);                                          //           var prevFigure = hypothetic.doInterPollateCollision();
+	var [prevFigure, displacement] = this.widgetPillar.figurePotentialFromLow(prevEl, prevPos, currentPos);
+	var hypothetical = new Hypothetical(this.board, prevFigure, displacement);
+	var collisionFlag = hypothetical.wouldCollideAny();
+	if (collisionFlag) {
+		var prevFigure = hypothetical.doInterpolateCollision();
 		this.widgetPillar.updateFromHigh(prevFigure);
 		hasCollided = true;
 		this.widgetPillar.unshowGlitteringFromLow(prevEl);
 		this.audio.bang();
-	}
-	else this.widgetPillar.updateFromLow(prevEl, prevPos, currentPos);
+		return true;
+	} else this.widgetPillar.updateFromLow(prevEl, prevPos, currentPos);
+	return collisionFlag;
 };
 
-App.prototype.run = function ()
+App.prototype.run = function () // @TODO move into `WidgetPillar`, then try to factor out a `StateMachine` class from it
 {
 	var [prevEl, prevPos, virgin, hasCollided] = [null, null, true, false];
 	var app = this;
@@ -36,14 +39,14 @@ App.prototype.run = function ()
 		function (           currentPos)
 		{
 			if (prevEl && !hasCollided) {
-				app.checkAndHandleCollision(prevEl, prevPos, currentPos);
+				hasCollided = app.checkAndHandleCollision(prevEl, prevPos, currentPos);
 				prevPos = currentPos; virgin = false;
 			}
 		},
 		function (currentEl, currentPos)
 		{
 			if (prevEl && !hasCollided) {
-				app.checkAndHandleCollision(prevEl, prevPos, currentPos);
+				hasCollided = app.checkAndHandleCollision(prevEl, prevPos, currentPos);
 				prevPos = currentPos; virgin = false;
 			}
 		}

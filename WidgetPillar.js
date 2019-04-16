@@ -61,12 +61,11 @@ WidgetPillar.prototype.unshowGlitteringFromLow = function (polygonChild)
 	delete this.bijectionUp.get(polygonChild).svgAttributes[GLITTERING_ATTR_NAME]; // @TODO fainting should appear on an abstracter level on Figure (e.g. a boolean flag for a special kind of focus)
 };
 
-WidgetPillar.prototype.cloneHypotheticFigureFromLow = function (prevEl, prevPos, currentPos)
+WidgetPillar.prototype.figurePotentialFromLow = function (prevEl, prevPos, currentPos)
 {
 	var geomPrevPos           = this.coordSysTransformer.lowToHigh(prevPos);
 	var geomCurrentPos        = this.coordSysTransformer.lowToHigh(currentPos);
 	var geomDisplacement      = fromTo(geomPrevPos, geomCurrentPos);
 	var prevFigure            = this.bijectionUp.get(prevEl);
-	var hypotheticFigureClone = prevFigure.translation(geomDisplacement);
-	return [prevFigure, hypotheticFigureClone]; // @TODO introduce a new `Hypothetic` class
+	return [prevFigure, geomDisplacement];
 };
