@@ -1,8 +1,6 @@
-function App(svgLowLevel, coordSysTransformer, bijectionUp, board, figure, audio, widgetPillar)
+function App(svgLowLevel, board, figure, audio, widgetPillar) // should take only `widgetPillar`, `board` and `audio`
 {
 	this.svgLowLevel         = svgLowLevel;
-	this.coordSysTransformer = coordSysTransformer;
-	this.bijectionUp         = bijectionUp;
 	this.board               = board;
 	this.setOriginFigureFrom(figure);
 	this.audio               = audio;
@@ -10,6 +8,19 @@ function App(svgLowLevel, coordSysTransformer, bijectionUp, board, figure, audio
 }
 
 App.prototype.setOriginFigureFrom = function (figure) {this.originFigure = figure.centering();}
+
+App.prototype.checkAndHandleCollision = function (prevEl, prevPos, currentPos)
+{
+	var [prevFigure, hypotheticFigureClone] = this.widgetPillar.cloneHypotheticFigureFromLow(prevEl, prevPos, currentPos); // @TODO var hypotetic = this.widgetPillar.newHypotheticFromLow(prevEl, prevPos, currentPos);
+	if (this.board.wouldCollideAny(prevFigure, hypotheticFigureClone)) {                                                   //       if (hypotetic.wouldCollideAny()) {
+		this.board.doInterpolateCollision(prevFigure, hypotheticFigureClone);                                          //           var prevFigure = hypothetic.doInterPollateCollision();
+		this.widgetPillar.updateFromHigh(prevFigure);
+		hasCollided = true;
+		this.widgetPillar.unshowGlitteringFromLow(prevEl);
+		this.audio.bang();
+	}
+	else this.widgetPillar.updateFromLow(prevEl, prevPos, currentPos);
+};
 
 App.prototype.run = function ()
 {
@@ -25,38 +36,14 @@ App.prototype.run = function ()
 		function (           currentPos)
 		{
 			if (prevEl && !hasCollided) {
-				var geomPrevPos      = app.coordSysTransformer.lowToHigh(prevPos);
-				var geomCurrentPos   = app.coordSysTransformer.lowToHigh(currentPos);
-				var geomDisplacement = fromTo(geomPrevPos, geomCurrentPos);
-				var prevFigure = app.bijectionUp.get(prevEl);
-				var hypotheticFigureClone = prevFigure.translation(geomDisplacement);
-				if (app.board.wouldCollideAny(prevFigure, hypotheticFigureClone)) {
-					app.board.doInterpolateCollision(prevFigure, hypotheticFigureClone);
-					app.widgetPillar.updateFromHigh(prevFigure);
-					hasCollided = true;
-					app.widgetPillar.unshowGlitteringFromLow(prevEl);
-					app.audio.bang();
-				}
-				else app.widgetPillar.updateFromLow(prevEl, prevPos, currentPos);
+				app.checkAndHandleCollision(prevEl, prevPos, currentPos);
 				prevPos = currentPos; virgin = false;
 			}
 		},
 		function (currentEl, currentPos)
 		{
 			if (prevEl && !hasCollided) {
-				var geomPrevPos      = app.coordSysTransformer.lowToHigh(prevPos);
-				var geomCurrentPos   = app.coordSysTransformer.lowToHigh(currentPos);
-				var geomDisplacement = fromTo(geomPrevPos, geomCurrentPos);
-				var prevFigure = app.bijectionUp.get(prevEl);
-				var hypotheticFigureClone = prevFigure.translation(geomDisplacement);
-				if (app.board.wouldCollideAny(prevFigure, hypotheticFigureClone)) {
-					app.board.doInterpolateCollision(prevFigure, hypotheticFigureClone);
-					app.widgetPillar.updateFromHigh(prevFigure);
-					hasCollided = true;
-					app.widgetPillar.unshowGlitteringFromLow(prevEl);
-					app.audio.bang();
-				}
-				else app.widgetPillar.updateFromLow(prevEl, prevPos, currentPos);
+				app.checkAndHandleCollision(prevEl, prevPos, currentPos);
 				prevPos = currentPos; virgin = false;
 			}
 		}

@@ -7,14 +7,17 @@ onload = function (event)
 	selectList.selectedIndex = bank.selected;
 
 	var svgLowLevel         = new SvgLowLevel(document); // [600, 400]
+
 	var coordSysTransformer = new CoordSysTransformer([300, 200], 10, [true, false]);
 	var bijectionUp         = new Bijection();
+
+	var widgetPillar        = new WidgetPillar(coordSysTransformer, bijectionUp, svgLowLevel);
+
 	var board               = new Board(bijectionUp);
 	var originFigure        = bank.namedFigures[bank.selected].figure;
 	var audio               = new MyAudio(new Audio('sonar.ogg'));
-	var widgetPillar        = new WidgetPillar(coordSysTransformer, bijectionUp, svgLowLevel);
 
-	var app                 = new App(svgLowLevel, coordSysTransformer, bijectionUp, board, originFigure, audio, widgetPillar);
+	var app                 = new App(svgLowLevel, board, originFigure, audio, widgetPillar);
 
 	function changeAccu(event)
 	{
