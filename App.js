@@ -6,22 +6,6 @@ function App(board, figure, audio, widgetPillar)
 	this.widgetPillar        = widgetPillar;
 }
 
-App.prototype.setOriginFigureFrom = function (figure) {this.originFigure = figure.centering();}
-
-App.prototype.checkAndHandleCollision = function (prevEl, prevPos, currentPos)
-{
-	var displacement = fromTo(prevPos.high, currentPos.high);
-	var hypothetical = new Hypothetical(this.board, prevEl.high, displacement);
-	var collisionFlag = hypothetical.wouldCollideAny();
-	if (collisionFlag) {
-		/*prevFigure =*/ hypothetical.doInterpolateCollision(); // nor needed, as Hypothetical keeps identity of prevFigure, thus effects it by reference @TODO code smell, nasty
-		prevEl.updateDownward();
-		prevEl.unshowGlittering();
-		this.audio.bang();
-	} else prevEl.update(prevPos, currentPos);
-	return collisionFlag;
-};
-
 App.prototype.run = function ()
 {
 	var sm = new StateMachine(this);
@@ -35,4 +19,20 @@ App.prototype.run = function ()
 	this.widgetPillar.subscribe('mouseup'  , (           currentPos) =>  sm.endAndCreateIfSo(currentPos),
 	                                         (currentEl, currentPos) => {sm.deleteIfSo(currentEl); sm.endAndCreateIfSo(currentPos);}
 	);
+};
+
+App.prototype.setOriginFigureFrom = function (figure) {this.originFigure = figure.centering();};
+
+App.prototype.checkAndHandleCollision = function (prevEl, prevPos, currentPos)
+{
+	var displacement = fromTo(prevPos.high, currentPos.high);
+	var hypothetical = new Hypothetical(this.board, prevEl.high, displacement);
+	var collisionFlag = hypothetical.wouldCollideAny();
+	if (collisionFlag) {
+		/*prevFigure =*/ hypothetical.doInterpolateCollision(); // nor needed, as Hypothetical keeps identity of prevFigure, thus effects it by reference @TODO code smell, nasty
+		prevEl.updateDownward();
+		prevEl.unshowGlittering();
+		this.audio.bang();
+	} else prevEl.update(prevPos, currentPos);
+	return collisionFlag;
 };
