@@ -1,6 +1,6 @@
 function App(board, figure, audio, widgetPillar)
 {
-	this.board               = board;
+	this.board               = board; // same as widgetPillar.bijectionUp
 	this.setOriginFigureFrom(figure);
 	this.audio               = audio;
 	this.widgetPillar        = widgetPillar;

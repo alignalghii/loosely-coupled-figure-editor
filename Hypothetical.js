@@ -33,7 +33,7 @@ Hypothetical.prototype.interpolateHypothetic = function () // modifies `this.hyp
 Hypothetical.prototype.wouldCollideAny = function ()
 {
 	var collision = false;
-	for (let anotherFigure of this.board.bijectionUp.range()) {
+	for (let anotherFigure of this.board.range()) {
 		if (anotherFigure != this.prevFigure && anotherFigure.collides(this.hypotheticalFigureClone)) {
 			collision = true;
 			break;

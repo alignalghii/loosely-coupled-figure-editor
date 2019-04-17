@@ -13,7 +13,7 @@ onload = function (event)
 
 	var widgetPillar        = new WidgetPillar(coordSysTransformer, bijectionUp, svgLowLevel);
 
-	var board               = new Board(bijectionUp);
+	var board               = bijectionUp; // when using bijectionUp as a set of high-level figures, we call it a board
 	var originFigure        = bank.namedFigures[bank.selected].figure;
 	var audio               = new MyAudio(new Audio('sonar.ogg'));
 
