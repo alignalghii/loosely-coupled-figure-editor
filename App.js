@@ -25,43 +25,29 @@ App.prototype.checkAndHandleCollision = function (prevEl, prevPos, currentPos)
 
 App.prototype.run = function () // @TODO move into `WidgetPillar`, then try to factor out a `StateMachine` class from it
 {
-	var [prevEl, prevPos, virgin, hasCollided] = [null, null, true, false]; // init
+	var [prevEl, prevPos, virgin, hasCollided] = [null, null, true, false]; // stateMachine.init
 	var app = this;
-	this.widgetPillar.subscribe(
-		'mousedown',
-		function (           currentPos) {prevEl = prevPos = null;                  virgin = true; hasCollided = false;}, // init
-		function (currentEl, currentPos) {prevEl = currentEl; prevPos = currentPos; virgin = true; hasCollided = false; currentEl.showGlittering();}
-	);
-	this.widgetPillar.subscribe(
-		'mousemove',
-		function (           currentPos)
-		{
-			if (prevEl && !hasCollided) {
-				hasCollided = app.checkAndHandleCollision(prevEl, prevPos, currentPos);
-				prevPos = currentPos; virgin = false;
-			}
-		},
-		function (currentEl, currentPos)
-		{
-			if (prevEl && !hasCollided) {
-				hasCollided = app.checkAndHandleCollision(prevEl, prevPos, currentPos);
-				prevPos = currentPos; virgin = false;
-			}
+
+	function actionInitAll()                                   {prevEl = null     ; prevPos = null      ; virgin = true; hasCollided = false;                            }
+	function actionUpdateInputInitFlags(currentEl, currentPos) {prevEl = currentEl; prevPos = currentPos; virgin = true; hasCollided = false; currentEl.showGlittering();}
+	function dragIfAny(currentPos)
+	{
+		if (prevEl && !hasCollided) {
+			hasCollided = app.checkAndHandleCollision(prevEl, prevPos, currentPos);
+			prevPos     = currentPos; virgin = false;
 		}
-	);
-	this.widgetPillar.subscribe(
-		'mouseup',
-		function (              currentPos)
-		{	if ( prevEl && !virgin && !hasCollided) {prevEl.update(prevPos, currentPos); prevEl.unshowGlittering(prevEl);} // probably never occurs due to dragging (maybe if very quick)
-			if (!prevEl)                 currentPos.create(app.originFigure); // @TODO swap object receiver and argument around method
-			prevEl = prevPos = null; virgin = true; hasCollided = false; // stateMachine.init()
-		},
-		function (currentEl, currentPos)
-		{
-			if ( prevEl                        && !virgin && !hasCollided) {prevEl.update(prevPos, currentPos); prevEl.unshowGlittering(prevEl);}
-			if ( prevEl && currentEl.high == prevEl.high &&  virgin && !hasCollided)  currentEl.delete();
-			if (!prevEl                                                  )  currentPos.create(app.originFigure); // @TODO swap object receiver and argument around method
-			prevEl = prevPos = null; virgin = true; hasCollided = false; // statemachine.init()
-		}
-	);
+	}
+	function putDragDownIfAny(currentPos) {if ( prevEl                                  && !virgin && !hasCollided) {prevEl.update(prevPos, currentPos); prevEl.unshowGlittering(prevEl);}}
+	function createIfSo      (currentPos) {if (!prevEl                                                            )  currentPos.create(app.originFigure);}
+	function deleteIfSo      (currentEl ) {if ( prevEl && currentEl.high == prevEl.high &&  virgin && !hasCollided)  currentEl .delete(                );}
+	function endAndCreateIfSo(currentPos)
+	{
+		putDragDownIfAny(currentPos); // probably never occurs due to dragging (maybe if very quick)
+		if (!prevEl) currentPos.create(app.originFigure); // @TODO swap object receiver and argument around method
+		actionInitAll(); // stateMachine.init()
+	}
+
+	this.widgetPillar.subscribe('mousedown', (currentPos) => actionInitAll(), actionUpdateInputInitFlags                                                       );
+	this.widgetPillar.subscribe('mousemove', dragIfAny                      , (currentEl, currentPos) => dragIfAny(currentPos)                                 );
+	this.widgetPillar.subscribe('mouseup'  , endAndCreateIfSo               , (currentEl, currentPos) => {deleteIfSo(currentEl); endAndCreateIfSo(currentPos);});
 };
