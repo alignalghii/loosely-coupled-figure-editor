@@ -1,6 +1,5 @@
-function App(svgLowLevel, board, figure, audio, widgetPillar) // should take only `widgetPillar`, `board` and `audio`
+function App(board, figure, audio, widgetPillar)
 {
-	this.svgLowLevel         = svgLowLevel;
 	this.board               = board;
 	this.setOriginFigureFrom(figure);
 	this.audio               = audio;

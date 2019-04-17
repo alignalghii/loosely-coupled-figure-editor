@@ -17,7 +17,7 @@ onload = function (event)
 	var originFigure        = bank.namedFigures[bank.selected].figure;
 	var audio               = new MyAudio(new Audio('sonar.ogg'));
 
-	var app                 = new App(svgLowLevel, board, originFigure, audio, widgetPillar);
+	var app                 = new App(board, originFigure, audio, widgetPillar);
 
 	function changeAccu(event)
 	{
