@@ -35,20 +35,6 @@ SvgLowLevel.prototype.updatePolygonChild = function (polygonChild, svgVertices)
 
 SvgLowLevel.prototype.deletePolygonChild = function (polygonChild) {polygonChild.parentNode.removeChild(polygonChild);};  // childNode.remove() is easier, nicer, but not so portable
 
-
-SvgLowLevel.prototype.subscribe = function (typeName, rootCase, otherCase)
-{
-	var that = this;
-	function handler(event)
-	{
-		var target = event.target;
-		var point  = that.eventPosition(event);
-		if (target == that.svgRootElement) rootCase (point);
-		else                               otherCase(target, point);
-	}
-	this.svgRootElement.addEventListener(typeName, handler);
-};
-
 function pointsArgValue(svgVertices) {return svgVertices.map(stringifyPositionWithComma).join(' ');}
 /**
  * We need this function:

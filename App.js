@@ -11,30 +11,28 @@ App.prototype.setOriginFigureFrom = function (figure) {this.originFigure = figur
 
 App.prototype.checkAndHandleCollision = function (prevEl, prevPos, currentPos)
 {
-	var [prevFigure, displacement] = this.widgetPillar.figurePotentialFromLow(prevEl, prevPos, currentPos);
-	var hypothetical = new Hypothetical(this.board, prevFigure, displacement);
+	var displacement = fromTo(prevPos.high, currentPos.high);
+	var hypothetical = new Hypothetical(this.board, prevEl.high, displacement);
 	var collisionFlag = hypothetical.wouldCollideAny();
 	if (collisionFlag) {
-		var prevFigure = hypothetical.doInterpolateCollision();
-		this.widgetPillar.updateFromHigh(prevFigure);
-		hasCollided = true;
-		this.widgetPillar.unshowGlitteringFromLow(prevEl);
+		/*prevFigure =*/ hypothetical.doInterpolateCollision(); // nor needed, as Hypothetical keeps identity of prevFigure, thus effects it by reference @TODO code smell, nasty
+		prevEl.updateDownward();
+		prevEl.unshowGlittering();
 		this.audio.bang();
-		return true;
-	} else this.widgetPillar.updateFromLow(prevEl, prevPos, currentPos);
+	} else prevEl.update(prevPos, currentPos);
 	return collisionFlag;
 };
 
 App.prototype.run = function () // @TODO move into `WidgetPillar`, then try to factor out a `StateMachine` class from it
 {
-	var [prevEl, prevPos, virgin, hasCollided] = [null, null, true, false];
+	var [prevEl, prevPos, virgin, hasCollided] = [null, null, true, false]; // init
 	var app = this;
-	this.svgLowLevel.subscribe(
+	this.widgetPillar.subscribe(
 		'mousedown',
-		function (           currentPos) {prevEl = prevPos = null;                  virgin = true; hasCollided = false;},
-		function (currentEl, currentPos) {prevEl = currentEl; prevPos = currentPos; virgin = true; hasCollided = false; app.widgetPillar.showGlitteringFromLow(currentEl);}
+		function (           currentPos) {prevEl = prevPos = null;                  virgin = true; hasCollided = false;}, // init
+		function (currentEl, currentPos) {prevEl = currentEl; prevPos = currentPos; virgin = true; hasCollided = false; currentEl.showGlittering();}
 	);
-	this.svgLowLevel.subscribe(
+	this.widgetPillar.subscribe(
 		'mousemove',
 		function (           currentPos)
 		{
@@ -51,19 +49,19 @@ App.prototype.run = function () // @TODO move into `WidgetPillar`, then try to f
 			}
 		}
 	);
-	this.svgLowLevel.subscribe(
+	this.widgetPillar.subscribe(
 		'mouseup',
 		function (              currentPos)
-		{	if ( prevEl && !hasCollided) app.widgetPillar.updateFromLow(prevEl, prevPos, currentPos);
-			if (!prevEl) app.widgetPillar.createFromLow(app.originFigure, currentPos);
-			prevEl = prevPos = null; virgin = true; hasCollided = false;
+		{	if ( prevEl && !virgin && !hasCollided) {prevEl.update(prevPos, currentPos); prevEl.unshowGlittering(prevEl);} // probably never occurs due to dragging (maybe if very quick)
+			if (!prevEl)                 currentPos.create(app.originFigure); // @TODO swap object receiver and argument around method
+			prevEl = prevPos = null; virgin = true; hasCollided = false; // stateMachine.init()
 		},
 		function (currentEl, currentPos)
 		{
-			if ( prevEl                        && !virgin && !hasCollided) {app.widgetPillar.updateFromLow(prevEl   , prevPos, currentPos); app.widgetPillar.unshowGlitteringFromLow(prevEl);}
-			if ( prevEl && currentEl == prevEl &&  virgin && !hasCollided)  app.widgetPillar.deleteFromLow(currentEl                     );
-			if (!prevEl                                                  )  app.widgetPillar.createFromLow(app.originFigure, currentPos);
-			prevEl = prevPos = null; virgin = true; hasCollided = false;
+			if ( prevEl                        && !virgin && !hasCollided) {prevEl.update(prevPos, currentPos); prevEl.unshowGlittering(prevEl);}
+			if ( prevEl && currentEl.high == prevEl.high &&  virgin && !hasCollided)  currentEl.delete();
+			if (!prevEl                                                  )  currentPos.create(app.originFigure); // @TODO swap object receiver and argument around method
+			prevEl = prevPos = null; virgin = true; hasCollided = false; // statemachine.init()
 		}
 	);
 };
