@@ -27,8 +27,8 @@ WidgetFactory.prototype.subscribe = function (typeName, emptyCase, widgetCase) /
 		var widgetEventPosition = new WidgetEventPosition(widgetFactory, geomPosition, svgPosition);
 		if (!isEmpty) {
 			var geomFigure = widgetFactory.bijectionUp.get(target);
-			var widgetInstance = new WidgetInstance(widgetFactory, geomFigure, target);
-			return widgetCase(widgetInstance, widgetEventPosition);
+			var widget = new Widget(widgetFactory, geomFigure, target);
+			return widgetCase(widget, widgetEventPosition);
 		} else {
 			return emptyCase(widgetEventPosition);
 		}
