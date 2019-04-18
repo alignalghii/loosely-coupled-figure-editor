@@ -1,41 +1,61 @@
-function StateMachine(app) {this.app = app; this.actionInitAll();}
-
-StateMachine.prototype.actionInitAll = function ()
+function StateMachine(app)
 {
-	this.prevWidget = null; this.prevWEPos   = null;
-	this.virgin     = true; this.hasCollided = false;
+	this.app = app;
+	this.forgetAll();
+}
+
+StateMachine.prototype.forgetAll = function ()
+{
+	this.prevWidget          = null ; this.prevWEPos   = null ;
+	this.dragHasAlreadyBegun = false; this.hasCollided = false;
 };
 
-StateMachine.prototype.actionUpdateInputInitFlags = function (currentWidget, currentWEPos)
+StateMachine.prototype.transition = function (eventType, inputSignature, ird) // ird: inputRoledData
 {
-	this.prevWidget = currentWidget; this.prevWEPos   = currentWEPos;
-	this.virgin     = true         ; this.hasCollided = false;
-	currentWidget.showGlittering();
-};
-
-StateMachine.prototype.dragIfAny = function (currentWEPos)
-{
-	if (this.prevWidget && !this.hasCollided) {
-		this.hasCollided = this.app.checkAndHandleCollision(this.prevWidget, this.prevWEPos, currentWEPos);
-		this.prevWEPos   = currentWEPos;
-		this.virgin      = false;
+	switch (eventType) {
+		case 'mousedown':
+			if (this.onEmptySpace(inputSignature))
+				this.forgetAll();
+			if (this.onAWidget(inputSignature)) {
+				this.rememberWidget(ird); this.rememberPosition(ird);
+				this.dragHasAlreadyBegun  = false;
+				this.hasCollided = false;
+				ird.currentWidget.showGlittering();
+			}
+		break;
+		case 'mousemove':
+			if (this.prevWidgetHasNotCollidedYet()) {
+				this.checkCollision(ird);
+				this.rememberPosition(ird);
+				this.dragHasAlreadyBegun = true;
+			}
+		break;
+		case 'mouseup':
+			if (this.onAWidget(inputSignature) && this.prevWidgetHasNotCollidedYet() && this.samePlaceUpAsDown(ird) && !this.dragHasAlreadyBegun)
+				ird.currentWidget.delete();
+			if (this.prevWidgetHasNotCollidedYet() && this.dragHasAlreadyBegun) {
+				this.prevWidget.update(this.prevWEPos, ird.currentWEPos);
+				this.prevWidget.unshowGlittering(this.prevWidget);
+			}
+			if (!this.prevWidget)
+				ird.currentWEPos.create(this.app.originFigure);
+			this.forgetAll();
+		break;
 	}
 };
 
-StateMachine.prototype.putDragDownIfAny = function (currentWEPos)
-{
-	if (this.prevWidget && !this.virgin && !this.hasCollided) {
-		this.prevWidget.update(this.prevWEPos, currentWEPos);
-		this.prevWidget.unshowGlittering(this.prevWidget);
-	}
-};
+/** Actions */
 
-StateMachine.prototype.createIfSo = function (currentWEPos ) {if (!this.prevWidget) currentWEPos.create(this.app.originFigure);};
-StateMachine.prototype.deleteIfSo = function (currentWidget) {if ( this.prevWidget && currentWidget.high == this.prevWidget.high && this.virgin && !this.hasCollided) currentWidget.delete();};
+StateMachine.prototype.rememberWidget   = function (ird) {this.prevWidget = ird.currentWidget;};
+StateMachine.prototype.rememberPosition = function (ird) {this.prevWEPos = ird.currentWEPos;};
+StateMachine.prototype.checkCollision   = function (ird) {this.hasCollided = this.app.checkAndHandleCollision(this.prevWidget, this.prevWEPos, ird.currentWEPos);};
 
-StateMachine.prototype.endAndCreateIfSo = function (currentWEPos)
-{
-	this.putDragDownIfAny(currentWEPos);
-	if (!this.prevWidget) currentWEPos.create(this.app.originFigure);
-	this.actionInitAll();
-};
+/** Conditions */
+
+StateMachine.prototype.prevWidgetHasNotCollidedYet = function () {return this.prevWidget && !this.hasCollided;};
+StateMachine.prototype.samePlaceUpAsDown           = function (ird) {return ird.currentWidget.high == this.prevWidget.high;};
+StateMachine.prototype.prevWidgetHasNotCollidedYet = function () {return this.prevWidget && !this.hasCollided;};
+StateMachine.prototype.samePlaceUpAsDown           = function (ird) {return ird.currentWidget.high == this.prevWidget.high;};
+
+StateMachine.prototype.onEmptySpace = function (inputSignature) {return Eq.eq(inputSignature, ['WEPos']);};
+StateMachine.prototype.onAWidget    = function (inputSignature) {return Eq.eq(inputSignature, ['Widget', 'WEPos']);};

@@ -10,14 +10,16 @@ App.prototype.run = function ()
 {
 	var sm = new StateMachine(this);
 
-	this.widgetFactory.subscribe('mousedown', (               currentWEPos) =>  sm.actionInitAll(),
-	                                          (currentWidget, currentWEPos) =>  sm.actionUpdateInputInitFlags(currentWidget, currentWEPos)
+	this.widgetFactory.subscribe('mousedown', (               currentWEPos) => sm.transition('mousedown', [          'WEPos'], {                             currentWEPos:currentWEPos}),
+	                                          (currentWidget, currentWEPos) => sm.transition('mousedown', ['Widget', 'WEPos'], {currentWidget:currentWidget, currentWEPos:currentWEPos})
 	);
-	this.widgetFactory.subscribe('mousemove', (               currentWEPos) =>  sm.dragIfAny(currentWEPos), // probably never occurs due to dragging (maybe if very quick)
-	                                          (currentWidget, currentWEPos) =>  sm.dragIfAny(currentWEPos)
+
+	// probably never occurs due to dragging (maybe if very quick):
+	this.widgetFactory.subscribe('mousemove', (               currentWEPos) => sm.transition('mousemove', [          'WEPos'], {                             currentWEPos:currentWEPos}),
+	                                          (currentWidget, currentWEPos) => sm.transition('mousemove', ['Widget', 'WEPos'], {currentWidget:currentWidget, currentWEPos:currentWEPos})
 	);
-	this.widgetFactory.subscribe('mouseup'  , (               currentWEPos) =>  sm.endAndCreateIfSo(currentWEPos),
-	                                          (currentWidget, currentWEPos) => {sm.deleteIfSo(currentWidget); sm.endAndCreateIfSo(currentWEPos);}
+	this.widgetFactory.subscribe('mouseup'  , (               currentWEPos) => sm.transition('mouseup'  , [          'WEPos'], {                             currentWEPos:currentWEPos}),
+	                                          (currentWidget, currentWEPos) => sm.transition('mouseup'  , ['Widget', 'WEPos'], {currentWidget:currentWidget, currentWEPos:currentWEPos})
 	);
 };
 
