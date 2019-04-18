@@ -11,13 +11,13 @@ onload = function (event)
 	var coordSysTransformer = new CoordSysTransformer([300, 200], 10, [true, false]);
 	var bijectionUp         = new Bijection();
 
-	var widgetPillar        = new WidgetPillar(coordSysTransformer, bijectionUp, svgLowLevel);
+	var widgetFactory       = new WidgetFactory(coordSysTransformer, bijectionUp, svgLowLevel);
 
 	var board               = bijectionUp; // when using bijectionUp as a set of high-level figures, we call it a board
 	var originFigure        = bank.namedFigures[bank.selected].figure;
 	var audio               = new MyAudio(new Audio('sonar.ogg'));
 
-	var app                 = new App(board, originFigure, audio, widgetPillar);
+	var app                 = new App(board, originFigure, audio, widgetFactory);
 
 	function changeAccu(event)
 	{
@@ -26,7 +26,7 @@ onload = function (event)
 		app.setOriginFigureFrom(selectedFigure);
 	}
 	selectList.addEventListener('change', changeAccu);
-	bank.namedFigures.map((namedFig) => widgetPillar.create(namedFig.figure));
+	bank.namedFigures.map((namedFig) => widgetFactory.create(namedFig.figure));
 
 	console.log('App: Live run')
 	app.run();

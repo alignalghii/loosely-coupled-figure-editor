@@ -1,23 +1,23 @@
-function App(board, figure, audio, widgetPillar)
+function App(board, figure, audio, widgetFactory)
 {
-	this.board               = board; // same as widgetPillar.bijectionUp
+	this.board               = board; // same as widgetFactory.bijectionUp
 	this.setOriginFigureFrom(figure);
 	this.audio               = audio;
-	this.widgetPillar        = widgetPillar;
+	this.widgetFactory       = widgetFactory;
 }
 
 App.prototype.run = function ()
 {
 	var sm = new StateMachine(this);
 
-	this.widgetPillar.subscribe('mousedown', (           currentPos) =>  sm.actionInitAll(),
-	                                         (currentEl, currentPos) =>  sm.actionUpdateInputInitFlags(currentEl, currentPos)
+	this.widgetFactory.subscribe('mousedown', (           currentPos) =>  sm.actionInitAll(),
+	                                          (currentEl, currentPos) =>  sm.actionUpdateInputInitFlags(currentEl, currentPos)
 	);
-	this.widgetPillar.subscribe('mousemove', (           currentPos) =>  sm.dragIfAny(currentPos), // probably never occurs due to dragging (maybe if very quick)
-	                                         (currentEl, currentPos) =>  sm.dragIfAny(currentPos)
+	this.widgetFactory.subscribe('mousemove', (           currentPos) =>  sm.dragIfAny(currentPos), // probably never occurs due to dragging (maybe if very quick)
+	                                          (currentEl, currentPos) =>  sm.dragIfAny(currentPos)
 	);
-	this.widgetPillar.subscribe('mouseup'  , (           currentPos) =>  sm.endAndCreateIfSo(currentPos),
-	                                         (currentEl, currentPos) => {sm.deleteIfSo(currentEl); sm.endAndCreateIfSo(currentPos);}
+	this.widgetFactory.subscribe('mouseup'  , (           currentPos) =>  sm.endAndCreateIfSo(currentPos),
+	                                          (currentEl, currentPos) => {sm.deleteIfSo(currentEl); sm.endAndCreateIfSo(currentPos);}
 	);
 };
 
