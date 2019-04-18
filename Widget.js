@@ -20,9 +20,9 @@ Widget.prototype.unshowGlittering = function ()
 	this.low.removeAttribute(GLITTERING_ATTR_NAME);
 };
 
-Widget.prototype.update = function (prevPos, currentPos)
+Widget.prototype.update = function (prevWEPos, currentWEPos)
 {
-	var geomDisplacement  = fromTo(prevPos.high, currentPos.high);
+	var geomDisplacement  = fromTo(prevWEPos.high, currentWEPos.high);
 	this.high.doTranslation(geomDisplacement);
 	this.updateDownward();
 };

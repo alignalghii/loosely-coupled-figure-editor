@@ -2,39 +2,40 @@ function StateMachine(app) {this.app = app; this.actionInitAll();}
 
 StateMachine.prototype.actionInitAll = function ()
 {
-	this.prevEl      = null; this.prevPos     = null;
-	this.virgin      = true; this.hasCollided = false;
+	this.prevWidget = null; this.prevWEPos   = null;
+	this.virgin     = true; this.hasCollided = false;
 };
 
-StateMachine.prototype.actionUpdateInputInitFlags = function (currentEl, currentPos) {
-	this.prevEl = currentEl; this.prevPos = currentPos;
-	this.virgin = true     ; this.hasCollided = false;
-	currentEl.showGlittering();
-};
-
-StateMachine.prototype.dragIfAny = function (currentPos)
+StateMachine.prototype.actionUpdateInputInitFlags = function (currentWidget, currentWEPos)
 {
-	if (this.prevEl && !this.hasCollided) {
-		this.hasCollided = this.app.checkAndHandleCollision(this.prevEl, this.prevPos, currentPos);
-		this.prevPos     = currentPos;
+	this.prevWidget = currentWidget; this.prevWEPos   = currentWEPos;
+	this.virgin     = true         ; this.hasCollided = false;
+	currentWidget.showGlittering();
+};
+
+StateMachine.prototype.dragIfAny = function (currentWEPos)
+{
+	if (this.prevWidget && !this.hasCollided) {
+		this.hasCollided = this.app.checkAndHandleCollision(this.prevWidget, this.prevWEPos, currentWEPos);
+		this.prevWEPos   = currentWEPos;
 		this.virgin      = false;
 	}
 };
 
-StateMachine.prototype.putDragDownIfAny = function (currentPos)
+StateMachine.prototype.putDragDownIfAny = function (currentWEPos)
 {
-	if (this.prevEl && !this.virgin && !this.hasCollided) {
-		this.prevEl.update(this.prevPos, currentPos);
-		this.prevEl.unshowGlittering(this.prevEl);
+	if (this.prevWidget && !this.virgin && !this.hasCollided) {
+		this.prevWidget.update(this.prevWEPos, currentWEPos);
+		this.prevWidget.unshowGlittering(this.prevWidget);
 	}
 };
 
-StateMachine.prototype.createIfSo = function (currentPos) {if (!this.prevEl) currentPos.create(this.app.originFigure);};
-StateMachine.prototype.deleteIfSo = function (currentEl ) {if ( this.prevEl && currentEl.high == this.prevEl.high && this.virgin && !this.hasCollided) currentEl.delete();};
+StateMachine.prototype.createIfSo = function (currentWEPos ) {if (!this.prevWidget) currentWEPos.create(this.app.originFigure);};
+StateMachine.prototype.deleteIfSo = function (currentWidget) {if ( this.prevWidget && currentWidget.high == this.prevWidget.high && this.virgin && !this.hasCollided) currentWidget.delete();};
 
-StateMachine.prototype.endAndCreateIfSo = function (currentPos)
+StateMachine.prototype.endAndCreateIfSo = function (currentWEPos)
 {
-	this.putDragDownIfAny(currentPos);
-	if (!this.prevEl) currentPos.create(this.app.originFigure);
+	this.putDragDownIfAny(currentWEPos);
+	if (!this.prevWidget) currentWEPos.create(this.app.originFigure);
 	this.actionInitAll();
 };
