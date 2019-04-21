@@ -1,9 +1,12 @@
 // A widget is an architectually columnal, pillar-like thing holding a high-level (geometrical) and a low-level (SVG) part
 
 // @TODO common ancestor with `WigetEventPosition`. Note also the formal sameness of the constructors (only the typing differs)
-function Widget(widgetFactory, high, low)
+function Widget(coordSysTransformer, bijectionUp, svgLowLevel, high, low)
 {
-	this.widgetFactory = widgetFactory;
+	this.coordSysTransformer = coordSysTransformer;
+	this.bijectionUp         = bijectionUp;
+	this.svgLowLevel         = svgLowLevel;
+
 	this.high = high;
 	this.low  = low;
 }
@@ -29,12 +32,12 @@ Widget.prototype.update = function (prevWEPos, currentWEPos)
 
 Widget.prototype.updateDownward = function ()
 {
-	var svgVertices = this.high.vertices.map((p) => this.widgetFactory.coordSysTransformer.highToLow(p));
-	this.widgetFactory.svgLowLevel.updatePolygonChild(this.low, svgVertices);
+	var svgVertices = this.high.vertices.map((p) => this.coordSysTransformer.highToLow(p));
+	this.svgLowLevel.updatePolygonChild(this.low, svgVertices);
 };
 
 Widget.prototype.delete = function ()
 {
-	this.widgetFactory.bijectionUp.delete(this.low);
-	this.widgetFactory.svgLowLevel.deletePolygonChild(this.low);
+	this.bijectionUp.delete(this.low);
+	this.svgLowLevel.deletePolygonChild(this.low);
 };

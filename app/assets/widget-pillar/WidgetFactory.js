@@ -15,23 +15,14 @@ WidgetFactory.prototype.create = function (geomFigure)
 	this.bijectionUp.set(svgNewPolygonCild, geomNewFigure);
 };
 
-WidgetFactory.prototype.subscribe = function (typeName, emptyCase, widgetCase) // this should send up also the high-level information: bijectionUp, coorsSysTr.lowToHigh, (maybe also colliision?)
+WidgetFactory.prototype.createWidgetFromLow = function (svgPolygon)
 {
-	var widgetFactory = this;
-	function handler(event)
-	{
-		var target = event.target;
-		var svgPosition  = widgetFactory.svgLowLevel.eventPosition(event);   //  \
-		var geomPosition = widgetFactory.coordSysTransformer.lowToHigh(svgPosition);  //  > delegate to a small svgLowLevel function
-		var isEmpty = target == widgetFactory.svgLowLevel.svgRootElement;    //  /
-		var widgetEventPosition = new WidgetEventPosition(widgetFactory, geomPosition, svgPosition);
-		if (!isEmpty) {
-			var geomFigure = widgetFactory.bijectionUp.get(target);
-			var widget = new Widget(widgetFactory, geomFigure, target);
-			return widgetCase(widget, widgetEventPosition);
-		} else {
-			return emptyCase(widgetEventPosition);
-		}
-	}
-	this.svgLowLevel.svgRootElement.addEventListener(typeName, handler);
+	var geomFigure = this.bijectionUp.get(svgPolygon);
+	return new Widget(this.coordSysTransformer, this.bijectionUp, this.svgLowLevel, geomFigure, svgPolygon);
+};
+
+WidgetFactory.prototype.createWidgetEventPositionFromLow = function (svgPosition)
+{
+	var geomPosition = this.coordSysTransformer.lowToHigh(svgPosition);
+	return new WidgetEventPosition(this.coordSysTransformer, this.bijectionUp, this.svgLowLevel, geomPosition, svgPosition);
 };

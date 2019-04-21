@@ -41,3 +41,15 @@ function pointsArgValue(svgVertices) {return svgVertices.map(stringifyPositionWi
  * Although `Array.prototype.join.call([12,7])` --> `"12,7"`, but `Array.prototype.join.call` is not a callback, cannot go higher.order!
  */
 function stringifyPositionWithComma([x, y]) {return '' + x + ',' + y + '';}
+
+SvgLowLevel.prototype.subscribe = function (typeName, emptyCase, polygonCase) // @TODO a `return` valószínűleg fölösleges itt is, és az ezt használó  hivatkozott WidgetEventPillar.subscribe-on is
+{
+	var svgLowLevel = this;
+	function handler(event)
+	{
+		var target = event.target;
+		var svgPosition  = svgLowLevel.eventPosition(event);
+		return target == svgLowLevel.svgRootElement ? emptyCase(svgPosition) : polygonCase(target, svgPosition);
+	}
+	this.svgRootElement.addEventListener(typeName, handler);
+};

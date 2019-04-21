@@ -1,6 +1,7 @@
-function StateMachine(app)
+function StateMachine(widgetCollision, originFigure) // make it obsolete
 {
-	this.app = app;
+	this.widgetCollision = widgetCollision;
+	this.originFigure = originFigure;  // make it obsolete
 	this.forgetAll();
 }
 
@@ -23,7 +24,7 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 		break;
 		case 'mousemove':
 			if (this.prevWidgetHasNotCollidedYet()) {
-				this.followWhileCheckCollision(ird);
+				this.followWhileCheckCollision(ird); // @TODO
 				this.rememberPosition(ird);
 				this.dragHasAlreadyBegun = true;
 			}
@@ -36,8 +37,12 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 				this.prevWidget.unshowGlittering(this.prevWidget);
 			}
 			if (!this.prevWidget)
-				ird.currentWEPos.create(this.app.originFigure);
+				ird.currentWEPos.create(this.originFigure);
 			this.forgetAll();
+		break;
+
+		case 'change':
+			if (Eq.eq(inputSignature, ['Figure'])) this.setOriginFigureFrom(ird.selectedFigure);
 		break;
 	}
 };
@@ -46,7 +51,7 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 
 StateMachine.prototype.rememberWidget            = function (ird) {this.prevWidget = ird.currentWidget;};
 StateMachine.prototype.rememberPosition          = function (ird) {this.prevWEPos = ird.currentWEPos;};
-StateMachine.prototype.followWhileCheckCollision = function (ird) {this.hasCollided = this.app.checkAndHandleCollision(this.prevWidget, this.prevWEPos, ird.currentWEPos);};
+StateMachine.prototype.followWhileCheckCollision = function (ird) {this.hasCollided = this.widgetCollision.checkAndHandleCollision(this.prevWidget, this.prevWEPos, ird.currentWEPos);};
 
 /** Conditions */
 
@@ -59,3 +64,7 @@ StateMachine.prototype.onAWidget    = function (inputSignature) {return Eq.eq(in
 
 //StateMachine.prototype.samePlaceUpAsDown           = function (ird) {return ird.currentWidget.high == this.prevWidget.high;};
 //StateMachine.prototype.onEmptySpace = function (inputSignature) {return Eq.eq(inputSignature, ['WEPos']);};
+
+/** MenuUI */
+
+StateMachine.prototype.setOriginFigureFrom = function (figure) {this.originFigure = figure.centering();};
