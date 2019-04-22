@@ -9,10 +9,12 @@
 		<script src="assets/control/App.js"></script>
 		<script src="assets/control/StateMachine.js"></script>
 		<script src="assets/control/WidgetCollision.js"></script>
-		<script src="assets/control/MenuUI.js"></script>
 
 		<script src="assets/physics/Figure.js"></script>
 		<script src="assets/physics/Hypothetical.js"></script>
+
+		<script src="assets/textual-widgets/StampUI.js"></script>
+		<script src="assets/textual-widgets/ModeUI.js"></script>
 
 		<script src="assets/widget-pillar/WidgetFactory.js"></script>
 		<script src="assets/widget-pillar/WidgetEventPillar.js"></script>
@@ -74,6 +76,12 @@
 		<label for="sampleFigureBank">A következő beszúrható alakzatforma:</label>
 		<select id="sampleFigureBank">
 		</select>
+		<ul id="modes">
+			<li><input id="modeObsolete" name="mode" value="obsol"  type="radio"/> <label for="modeObsolete">Elavult, gyorstesztre használt, &bdquo;mindentegybe&rdquo; mód</label></li>
+			<li><input id="modeNormal"   name="mode" value="normal" type="radio"/> <label for="modeNormal"  >Normál vonszolás és fókuszkezelés</label></li>
+			<li><input id="modeCreate"   name="mode" value="create" type="radio"/> <label for="modeCreate"  >Beszúrás</label></li>
+			<li><input id="modeDelete"   name="mode" value="delete" type="radio"/> <label for="modeDelete"  >Törlés</label></li>
+		</ul>
 
 		<h2>Vászon</h2>
 		<svg id="svgRoot" width="600" height="400"></svg>

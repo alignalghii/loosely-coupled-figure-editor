@@ -1,4 +1,4 @@
-function MenuUI(aDocument, bank, stateMachine)
+function StampUI(aDocument, bank, stateMachine)
 {
 	this.stateMachine = stateMachine;
 
@@ -12,16 +12,16 @@ function MenuUI(aDocument, bank, stateMachine)
 	bankSelectList.selectedIndex = bank.selected;
 }
 
-MenuUI.prototype.pipeToSM = function ()
+StampUI.prototype.pipeToSM = function ()
 {
-	var menuUI = this;
-	function changeAccu(event)
+	var stampUI = this;
+	function changeStamp(event)
 	{
 		var i              = event.target.selectedIndex; // @TODO consider `parseInt(event.target.value)`
-		var selectedFigure = menuUI.bank.namedFigures[i].figure;
-		menuUI.stateMachine.transition('change', ['Figure'], {selectedFigure:selectedFigure});
+		var selectedFigure = stampUI.bank.namedFigures[i].figure;
+		stampUI.stateMachine.transition('change', ['Figure'], {selectedFigure:selectedFigure});
 	}
-	this.bankSelectList.addEventListener('change', changeAccu);
+	this.bankSelectList.addEventListener('change', changeStamp);
 };
 
 

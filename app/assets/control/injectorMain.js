@@ -17,8 +17,9 @@ onload = function (event)
 	var widgetCollision     = new WidgetCollision(board, audio);
 	var stateMachine        = new StateMachine(widgetCollision, originFigure); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(widgetFactory, stateMachine);
-	var menuUI              = new MenuUI(document, bank, stateMachine);
-	var app                 = new App(widgetEventPillar, menuUI); // @TODO Law of Demeter, see inside
+	var stampUI             = new StampUI(document, bank, stateMachine);
+	var modeUI              = new ModeUI(document, stateMachine);
+	var app                 = new App(widgetEventPillar, stampUI, modeUI); // @TODO Law of Demeter, see inside
 
 	//console.log('App: live run');
 	app.run();
