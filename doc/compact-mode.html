@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Kompakt mód</title>
+	</head>
+	<body>
+		<a href="../app/index.html">Vissza a főoldalra</a> | <a href="normal-mode.html">Előző mód, a normál mód leírása</a> 
+		<h1>Kompakt mód</h1>
+		<ul>
+			<li><em>Új alakzat beszúrása</em>: kattints az egér bal gombjával üres felületre: vagyis egérgomb le üres felületen, és egérgomb fel ugyanott.</li>
+			<ul>
+				<li>Azt, hogy milyen alakú és színű alakzat szúródjék be, a legördülő menüből választhatod ki. Ha mem választasz, akkor az előző beállítás marad életben (illetve induláskor az alapértelmezetten kiválasztódó menüpont).
+				<li>A lenyomás mindenképp üres felületen történjék, a felengedés történhetik úgy is, hogy közben esetleg egy kicsit vonszolod az egeret (ez nem kötelező): az új alakzat a felengedés helyén fog megjelenni.</li>
+				<li>Az sem gond, ha a felengedés egy korább létező alakzat területére tévedve történik. Ekkor az újonnan beszúródó alakzat rajta lesz a korábbin, és fedi azt.</li>
+			</ul>
+			<li>Az egér bal fülét ha viszont már létező alakzaton nyomod le, akkor a felengedés helyétől függően a szóbanforgó már meglévő alakzat vagy törlődik, vagy pedig arrébmozdul:</li>
+			<ul>
+				<li>ha ugyanott engeded fel, ahol lenyomtad, és picit sem csusszan közben arrébb az egér, akkor az alakzat törlődik;</li>
+				<li>ha meg viszont a lenyomás és a felengedés között kicsit vonszolod is az egeret, akkor az alakzat megmozdul: követi a vonszolódó egérkurzort.</li>
+			</ul>
+			<li><em>Ütközések</em>: a rendszer automatikusan észleli őket, az ütközö alakat automatikusan megáll az utolsó még-nem-ütközött fázisában, és &bdquo;leválik&rdquo; a vonszoló egérről.</li>
+			<ul>
+				<li>&bdquo;Mágneses ragadás&rdquo; még nincs.</li>
+				<li>Az ütközésérzeklés primitív volta miatt a gyorsan vonszolt alakzat ütközés előtt oly fázisban áll meg, amely még akár jelentős távolságra is lehet az &bdquo;ütközőfaltól&rdquo;. Ez a &bdquo;visszapattanó&rdquo; hatás javítható a közeljövőben (az ütközőalgoritmus keresőalgoritmussal való kombinálásával).</li>
+				<li>Ha új alakzatot úgy hozunk létre, hogy az egy másik alakzattal eleve eleve ütközési pozícióban jön létre (pl. a belsejében), akkor mindkét alakzat onnantól kezdve mozdíthatatlanná válik, mindaddig, míg az egyiket ki nem töröljük. Ez az ütközésérzékelés logikus következménye. Ez automatikusan megoldódik, amikor szoba- és bútorobjektumokat fogunk megkülönböztetni: a szobákra &bdquo;külső&rdquo;, a bútorokra pedig &bdquo;belső&rdquo; ütközési szabályok fognak elkülönülni.</li>
+			</ul>
+		</ul>
+	</body>
+</html>

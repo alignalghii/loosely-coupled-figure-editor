@@ -5,7 +5,9 @@ function ModeUI(aDocument, stateMachine)
 	this.document = aDocument;
 	this.modeRadios = this.document.getElementById('modes');
 
-	this.document.getElementById('modeObsolete').checked = true;
+	this.document.getElementById('modeNormal').checked = true;
+
+	this.opSec = this.document.getElementById('section-operations');
 }
 
 ModeUI.prototype.pipeToSM = function ()
@@ -14,7 +16,9 @@ ModeUI.prototype.pipeToSM = function ()
 	function changeMode(event)
 	{
 		var target = event.target;
-		modeUI.stateMachine.transition('change', ['string', 'string'], {input:target.name, mode:/mode(.*)/.exec(target.id)[1].toLowerCase()});
+		var mode = /mode(.*)/.exec(target.id)[1].toLowerCase();
+		modeUI.opSec.style.visibility = mode == 'compact' ? 'hidden' : 'visible'; 
+		modeUI.stateMachine.transition('change', ['string', 'string'], {input:target.name, mode:mode});
 	}
 	this.modeRadios.addEventListener('change', changeMode);
 };

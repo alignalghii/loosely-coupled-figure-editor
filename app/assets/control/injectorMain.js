@@ -19,7 +19,8 @@ onload = function (event)
 	var widgetEventPillar   = new WidgetEventPillar(widgetFactory, stateMachine);
 	var stampUI             = new StampUI(document, bank, stateMachine);
 	var modeUI              = new ModeUI(document, stateMachine);
-	var app                 = new App(widgetEventPillar, stampUI, modeUI); // @TODO Law of Demeter, see inside
+	var operationUI         = new OperationUI(document, stateMachine);
+	var app                 = new App(widgetEventPillar, stampUI, modeUI, operationUI); // @TODO Law of Demeter, see inside
 
 	//console.log('App: live run');
 	app.run();
