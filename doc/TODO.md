@@ -27,3 +27,8 @@
  - App should load in the initial sample figures (not the injectorMain should do that! Maybe the StateMachine should do that (in its init part) instead of App
  - The module now called as `App` should be renamed, no more being the top-level module (after injectorMain).
  - A lot of functions in the `injectorMain` should move to a new Module, being called App, the formar App module shoud be ranemed,
+
+ - Gombkattitással és billentyűleütéssel egyaránt lehessen kezelni a kezelőfelületet, alakzatokat
+ - legyen TAB gomb, ill a TAB-bilenyűleütés is arra a funkcióra, hogy a fókusz váltható legyen az összes alakzaton végig. Legyen persze alakzathozzáadó és törlő gomb ill billentyű is.
+ - Legyen alakzatfókusz is és ürespozíciófókusz is. A kettő kizárja egymást: ha alakzatra kattintok, alakzatfókusz és az az alakzat fókuszba kerül. Ha üres helyre kattintok, a fókuszalakzat elveszti fókuszát, és üreshelypozíciófókusz képződik. Előbbi törlésre, utóbbi beszúrásra reagál. Az ürespozíció (WEPOs)-fókusz esetleg meg is jeleníthető (kis pötty, kis kereszt?) bár nem szükségszerű.
+ - Az Insert és a Delete nem mód, hanem funkció. Két mód elég: a jelenelg Obsolete-nek nevezett Kompakt mód, és a Normál mód. A Normál mód legyen az alapértelmezés.

@@ -23,6 +23,30 @@ Widget.prototype.unshowGlittering = function ()
 	this.low.removeAttribute(GLITTERING_ATTR_NAME);
 };
 
+Widget.prototype.showFocus = function ()
+{
+	this.high.svgAttributes[FOCUS_ATTR_NAME_1] = FOCUS_VALUE_1; // @TODO fainting should appear on an abstracter level on Figure (e.g. a boolean flag for a special kind of focus)
+	this.low.setAttribute(FOCUS_ATTR_NAME_1, FOCUS_VALUE_1);
+	this.high.svgAttributes[FOCUS_ATTR_NAME_2] = FOCUS_VALUE_2; // @TODO fainting should appear on an abstracter level on Figure (e.g. a boolean flag for a special kind of focus)
+	this.low.setAttribute(FOCUS_ATTR_NAME_2, FOCUS_VALUE_2);
+	this.high.svgAttributes[FOCUS_ATTR_NAME_3] = FOCUS_VALUE_3; // @TODO fainting should appear on an abstracter level on Figure (e.g. a boolean flag for a special kind of focus)
+	this.low.setAttribute(FOCUS_ATTR_NAME_3, FOCUS_VALUE_3);
+	this.high.svgAttributes[FOCUS_ATTR_NAME_4] = FOCUS_VALUE_4; // @TODO fainting should appear on an abstracter level on Figure (e.g. a boolean flag for a special kind of focus)
+	this.low.setAttribute(FOCUS_ATTR_NAME_4, FOCUS_VALUE_4);
+};
+
+Widget.prototype.unshowFocus = function ()
+{
+	delete this.high.svgAttributes[FOCUS_ATTR_NAME_1]; // @TODO fainting should appear on an abstracter level on Figure (e.g. a boolean flag for a special kind of focus)
+	this.low.removeAttribute(FOCUS_ATTR_NAME_1);
+	delete this.high.svgAttributes[FOCUS_ATTR_NAME_2]; // @TODO fainting should appear on an abstracter level on Figure (e.g. a boolean flag for a special kind of focus)
+	this.low.removeAttribute(FOCUS_ATTR_NAME_2);
+	delete this.high.svgAttributes[FOCUS_ATTR_NAME_3]; // @TODO fainting should appear on an abstracter level on Figure (e.g. a boolean flag for a special kind of focus)
+	this.low.removeAttribute(FOCUS_ATTR_NAME_3);
+	delete this.high.svgAttributes[FOCUS_ATTR_NAME_4]; // @TODO fainting should appear on an abstracter level on Figure (e.g. a boolean flag for a special kind of focus)
+	this.low.removeAttribute(FOCUS_ATTR_NAME_4);
+};
+
 Widget.prototype.update = function (prevWEPos, currentWEPos)
 {
 	var geomDisplacement  = fromTo(prevWEPos.high, currentWEPos.high);

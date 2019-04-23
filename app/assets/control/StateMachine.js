@@ -4,6 +4,7 @@ function StateMachine(widgetCollision, stampFigure) // @TODO at other places in 
 	this.stampFigure = stampFigure; // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 	this.forgetDrag();
 	this.mode = 'obsolete';
+	this.focus = null;
 }
 
 StateMachine.prototype.forgetDrag = function ()
@@ -14,6 +15,8 @@ StateMachine.prototype.forgetDrag = function ()
 
 StateMachine.prototype.transition = function (eventType, inputSignature, ird) // ird: inputRoledData
 {
+
+	if (eventType == 'change' && Eq.eq(inputSignature, ['string', 'string'])) this.mode = ird.mode;
 	if (this.mode == 'obsolete') {
 		switch (eventType) {
 			case 'mousedown':
@@ -26,7 +29,7 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 			break;
 			case 'mousemove':
 				if (this.prevWidgetHasNotCollidedYet()) {
-					this.followWhileCheckCollision(ird); // @TODO
+					if (this.followWhileCheckCollision(ird)) this.prevWidget.unshowGlittering(); // @TODO
 					this.rememberPosition(ird);
 					this.dragHasAlreadyBegun = true;
 				}
@@ -48,14 +51,49 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 			break;
 		}
 	}
-	if (eventType == 'change' && Eq.eq(inputSignature, ['string', 'string'])) this.mode = ird.mode;
+	if (this.mode == 'normal') {
+		switch (eventType) {
+			case 'mousedown':
+				this.forgetDrag();
+				if (this.onAWidget(inputSignature)) {
+					this.rememberWidget(ird);
+					this.rememberPosition(ird);
+					ird.currentWidget.showGlittering();
+				}
+			break;
+			case 'mousemove':
+				if (this.prevWidgetHasNotCollidedYet()) {
+					if (this.followWhileCheckCollision(ird)) this.prevWidget.unshowGlittering(); // @TODO
+					this.rememberPosition(ird);
+					this.dragHasAlreadyBegun = true;
+				}
+			break;
+			case 'mouseup':
+				if (this.onAWidget(inputSignature) && this.prevWidgetHasNotCollidedYet() && !this.dragHasAlreadyBegun) {
+					if (this.focus && ird.currentWidget.high != this.focus.high) this.focus.unshowFocus();
+					this.focus = ird.currentWidget;
+					ird.currentWidget.unshowGlittering();
+				}
+				if (this.prevWidgetHasNotCollidedYet() && this.dragHasAlreadyBegun) {
+					this.prevWidget.update(this.prevWEPos, ird.currentWEPos);
+					this.prevWidget.unshowGlittering(this.prevWidget);
+				}
+				this.forgetDrag();
+			break;
+
+			case 'change':
+				if (Eq.eq(inputSignature, ['Figure'])) this.setStampFigureFrom(ird.selectedFigure);
+			break;
+		}
+		if (this.focus) this.focus.showFocus();
+	}
 };
 
 /** Actions */
 
 StateMachine.prototype.rememberWidget            = function (ird) {this.prevWidget = ird.currentWidget;};
 StateMachine.prototype.rememberPosition          = function (ird) {this.prevWEPos = ird.currentWEPos;};
-StateMachine.prototype.followWhileCheckCollision = function (ird) {this.hasCollided = this.widgetCollision.checkAndHandleCollision(this.prevWidget, this.prevWEPos, ird.currentWEPos);};
+StateMachine.prototype.followWhileCheckCollision = function (ird) {return this.hasCollided = this.widgetCollision.checkAndHandleCollision(this.prevWidget, this.prevWEPos, ird.currentWEPos);};
 
 /** Conditions */
 

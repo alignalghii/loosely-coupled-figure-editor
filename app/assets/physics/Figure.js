@@ -1,4 +1,8 @@
-const GLITTERING_ATTR_NAME = 'opacity', GLITTERING_VALUE = 0.75;
+const GLITTERING_ATTR_NAME = 'opacity', GLITTERING_VALUE = 0.5;
+const FOCUS_ATTR_NAME_1 = 'stroke', FOCUS_VALUE_1 = 'black';
+const FOCUS_ATTR_NAME_2 = 'stroke', FOCUS_VALUE_2 = 'black';
+const FOCUS_ATTR_NAME_3 = 'stroke-width', FOCUS_VALUE_3 = 5;
+const FOCUS_ATTR_NAME_4 = 'stroke-dasharray', FOCUS_VALUE_4 = "5,5";
 
 /**************************
  * Geometric transformations (translation, reflection, rotation)

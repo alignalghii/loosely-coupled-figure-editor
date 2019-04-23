@@ -9,7 +9,6 @@ WidgetCollision.prototype.checkAndHandleCollision = function (prevWidget, prevWE
 	if (collisionFlag) {
 		/*prevFigure =*/ hypothetical.doInterpolateCollision(); // nor needed, as Hypothetical keeps identity of prevFigure, thus effects it by reference @TODO code smell, nasty
 		prevWidget.updateDownward();
-		prevWidget.unshowGlittering();
 		this.audio.bang();
 	} else prevWidget.update(prevWEPos, currentWEPos);
 	return collisionFlag;
