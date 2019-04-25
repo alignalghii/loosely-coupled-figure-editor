@@ -19,3 +19,11 @@ CoordSysTransformer.prototype.highToLow = function ([highX, highY])
 	var scaleY = this.scalingFactor_hl * (this.signPreserving[1] ? 1 : -1);
 	return [this.lowOrigin[0] + scaleX * highX, this.lowOrigin[1] + scaleY * highY];
 };
+
+CoordSysTransformer.prototype.epsilonDistance = function () {return 1/this.scalingFactor_hl;};
+
+CoordSysTransformer.prototype.epsilonAngle = function () // in radian
+{
+	var longestPossibleRadius = Math.sqrt(600*600+400*400);
+	return this.epsilonDistance() / longestPossibleRadius;
+};

@@ -1,4 +1,4 @@
-function StateMachine(widgetCollision, stampFigure, msgConsole) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function StateMachine(widgetCollision, stampFigure, coordSysTransformer, msgConsole) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.widgetCollision = widgetCollision;
 	this.stampFigure = stampFigure; // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
@@ -8,6 +8,8 @@ function StateMachine(widgetCollision, stampFigure, msgConsole) // @TODO at othe
 	this.spaceFocus = null;
 	this.msgConsole = msgConsole;
 	this.msgConsole.innerHTML = 'Üdvözlet! Jó munkát!';
+	this.epsilonDistance = coordSysTransformer.epsilonDistance();
+	this.epsilonAngle    = coordSysTransformer.epsilonAngle();console.log(this.epsilonAngle);
 }
 
 StateMachine.prototype.forgetDrag = function ()
@@ -132,6 +134,7 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 				}
 			break;
 			case 'keydown':
+				var epsilon = this.epsilonDistance;
 				if (Eq.eq(inputSignature, ['string'])) {
 					switch (ird.key) {
 						case '+':
@@ -148,6 +151,19 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 						case 'Escape':
 							if (this.focus) {this.focus.unshowFocus(); this.focus = null; this.msgConsole.innerHTML = 'Alakzatfókusz levétele';}
 							else this.msgConsole.innerHTML = 'Nincs kijelölve alakzatfókusz, nincs miről a fókuszt levenni, defókuszálni.';
+						break;
+						case 'ArrowLeft':
+							if (this.focus) {this.focus.translate([-epsilon,  0]);}
+						break;
+						case 'ArrowRight':
+							if (this.focus) {this.focus.translate([ epsilon,  0]);}
+						break;
+						case 'ArrowUp':
+							if (this.focus) {this.focus.translate([ 0,  epsilon]);}
+						break;
+						case 'ArrowDown':
+							if (this.focus) {this.focus.translate([ 0, -epsilon]);}
+						break;
 					}
 				}
 			break;

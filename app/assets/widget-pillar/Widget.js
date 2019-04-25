@@ -63,3 +63,5 @@ Widget.prototype.delete = function ()
 	this.bijectionUp.delete(this.low);
 	this.svgLowLevel.deletePolygonChild(this.low);
 };
+
+Widget.prototype.translate = function (displacement) {this.high.doTranslation(displacement); this.updateDownward();};
