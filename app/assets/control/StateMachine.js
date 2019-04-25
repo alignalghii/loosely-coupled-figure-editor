@@ -9,7 +9,7 @@ function StateMachine(widgetCollision, stampFigure, coordSysTransformer, msgCons
 	this.msgConsole = msgConsole;
 	this.msgConsole.innerHTML = 'Üdvözlet! Jó munkát!';
 	this.epsilonDistance = coordSysTransformer.epsilonDistance();
-	this.epsilonAngle    = coordSysTransformer.epsilonAngle();console.log(this.epsilonAngle);
+	this.epsilonAngle    = coordSysTransformer.epsilonAngle();
 }
 
 StateMachine.prototype.forgetDrag = function ()
