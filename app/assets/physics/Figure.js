@@ -1,9 +1,5 @@
 const GLITTERING_ATTR_NAME = 'opacity', GLITTERING_VALUE = 0.5;
-const FOCUS = [
-	{name: 'stroke'          , value:'black'},
-	{name: 'stroke-width'    , value:5      },
-	{name: 'stroke-dasharray', value:'5,5'  }
-];
+const FOCUS = [{name: 'filter', value: 'url(#shadow)'}];
 
 /**************************
  * Geometric transformations (translation, reflection, rotation)
