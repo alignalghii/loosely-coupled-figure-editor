@@ -7,14 +7,13 @@ function SvgLowLevel(aDocument)
 	this.document       = aDocument;
 	this.svgRootElement = aDocument.getElementById('svgRoot');//createElementWithAttributes('svg' , {id:'screen', width:svgWidth, height:svgHeight}, svgNS);
 	this.svgPoint       = this.svgRootElement.createSVGPoint();
-	this.conversor      = this.svgRootElement.getScreenCTM().inverse();
 };
 
 SvgLowLevel.prototype.eventPosition = function (event)
 {
 	this.svgPoint.x = event.clientX;
 	this.svgPoint.y = event.clientY;
-	var showPoint   = this.svgPoint.matrixTransform(this.conversor);
+	var showPoint   = this.svgPoint.matrixTransform(this.svgRootElement.getScreenCTM().inverse());
 	return [showPoint.x, showPoint.y];
 };
 
