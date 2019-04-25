@@ -89,7 +89,7 @@
 		<!-- Credit to https://www.w3schools.com/graphics/svg_feoffset.asp -->
 		<svg id="svgRoot" width="600" height="400">
 			<defs>
-				<filter id="shadow" x="0" y="0" width="200%" height="200%">
+				<filter id="shadow" x="-0.2" y="-0.2" width="200%" height="200%">
 					<feOffset result="offOut" in="SourceGraphic" dx="8" dy="8" />
 					<feColorMatrix result="matrixOut" in="offOut" type="matrix" values="0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0" />
 					<feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="3" />
