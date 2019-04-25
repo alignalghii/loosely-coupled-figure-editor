@@ -13,14 +13,16 @@ onload = function (event)
 
 	var bank                = sampleFigureBank();
 	var originFigure        = bank.namedFigures[bank.selected].figure.centering();
+	var msgConsole          = document.getElementById('msgConsole');
 
 	var widgetCollision     = new WidgetCollision(board, audio);
-	var stateMachine        = new StateMachine(widgetCollision, originFigure); // @TODO make globalOriginFigure obsolete
+	var stateMachine        = new StateMachine(widgetCollision, originFigure, msgConsole); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(widgetFactory, stateMachine);
 	var stampUI             = new StampUI(document, bank, stateMachine);
 	var modeUI              = new ModeUI(document, stateMachine);
 	var operationUI         = new OperationUI(document, stateMachine);
-	var app                 = new App(widgetEventPillar, stampUI, modeUI, operationUI); // @TODO Law of Demeter, see inside
+	var keyboardUI          = new KeyboardUI(document, stateMachine);
+	var app                 = new App(widgetEventPillar, stampUI, modeUI, operationUI, keyboardUI); // @TODO Law of Demeter, see inside
 
 	//console.log('App: live run');
 	app.run();

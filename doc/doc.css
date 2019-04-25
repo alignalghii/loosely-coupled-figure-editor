@@ -1,0 +1,9 @@
+.left {float:left;}
+.right{float:right;}
+.clear{clear:both;}
+
+.keystroke {
+	font-family: monospace; font-weight: bold;
+	color: white; background-color: black;
+	padding-left: 3px; padding-right: 3px;
+}

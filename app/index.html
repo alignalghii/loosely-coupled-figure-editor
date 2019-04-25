@@ -4,6 +4,7 @@
 		<meta charset="UTF-8"/>
 		<title>Alakzatszerkesztő (refaktorizált változat)</title>
 		<link rel="stylesheet" href="assets/graphics.css"/>
+		<link rel="stylesheet" href="../doc/doc.css"/>
 
 		<script src="assets/control/injectorMain.js"></script>
 		<script src="assets/control/App.js"></script>
@@ -16,6 +17,7 @@
 		<script src="assets/textual-widgets/StampUI.js"></script>
 		<script src="assets/textual-widgets/ModeUI.js"></script>
 		<script src="assets/textual-widgets/OperationUI.js"></script>
+		<script src="assets/textual-widgets/KeyboardUI.js"></script>
 
 		<script src="assets/widget-pillar/WidgetFactory.js"></script>
 		<script src="assets/widget-pillar/WidgetEventPillar.js"></script>
@@ -57,26 +59,31 @@
 
 		<h2>Használata</h2>
 		<ul>
-			<li><a href="../doc/normal-mode.html">Normál módban:</a> Az alakzatok egyszerűen a szokásos módon vonszolhatóak az egérrel. Ha pedig vonszolás nélkül kattintunk rá az alakzatra, akkor az fókuszba kerül (ez szemmel is látszik kiemelve). A fókuszba került alakzat törölhető, ha a műveletlistban a &bdquo;Törlés&rdquo; szóra rákattintunk. Új alakzat beszúrásához pedig először rá kell kattintani egy üres helyre a vásznon. Ezt a helyet az alkalmazás megjegyzi (ez a helyfókusz, ami hasonló fogalom az alakzatok fókuszához, de azzal ellentétben a helyfókusz nem hagy látható nyomot a vásznon). Utána a &bdquo;Beszúrás&rdquo; szóra kattintva megtörténik az új alakzat beszúrása a helyfókusznak megfelelő helyre. Az, hogy milyen alakzat kerüljön beszúrásra, legördülő menüből választható ki.</li>
-			<li><a href="../doc/compact-mode.html">Kompakt módban:</a> ...</li>
+			<li><a href="../doc/normal-mode.html">Normál módban:</a> Ezt a módot vesszük alapul és egyelőre ez is az alapértelmezés. Ez a legjobban skálázható mód. Annyiból egyszerű, hogy az alakzatok egyszerűen a szokásos módon vonszolhatóak az egérrel. Azonban van egy sajátos ún. fókusz-fogalom is: ha vonszolás nélkül kattintunk rá az alakzatra (nem moccan meg az egér a lenyomás és a fölengedés közt), akkor a kattintott alakzat fókuszba kerül (ez szemmel is látszik kiemelve). A fókuszba került alakzat törölhető, ha a műveletlistban a &bdquo;Törlés&rdquo; szóra rákattintunk. Új alakzat beszúrásához pedig először rá kell kattintani egy üres helyre a vásznon. Ezt a helyet az alkalmazás megjegyzi (ez a helyfókusz, ami hasonló fogalom az alakzatok fókuszához, de azzal ellentétben a helyfókusz nem hagy látható nyomot a vásznon). Utána a &bdquo;Beszúrás&rdquo; szóra kattintva megtörténik az új alakzat beszúrása a helyfókusznak megfelelő helyre. Az, hogy milyen alakzat kerüljön beszúrásra, legördülő menüből választható ki.</li>
+			<li><a href="../doc/compact-mode.html">Kompakt módban:</a> Elég az egér használata, szöveges műveletelemek nem szükségesek, mégis van beszúrás , törlés is a vonszoláson kívül. Fókuszfogalom nem létezik, ezért ez a mód nemigen skálázható összetettebb műveletekre. Alapvetően nem használjuk, teszt- és szemléltetési, megbeszélési célokból maradt fenn.</li>
+			<li>Félkompakt módban: Alapvetően a normál módhoz hasonló, azon lapul, van fókuszfogalom. Viszont abban meg a kompakt módhoz hasonlít, hogy üres helyre kattintva új alakzat jelenik meg, az új alakzat automatikusan magára húzza a fókuszt.  Hasonlóképp, a vonszolás is magára húzza a fókuszt.</li>
+			<li>Félfélkompakt módban: Alapvetően a normál módhoz hasonló, azon alapul, van fókuszfogalom. Viszont abban meg a kompakt módhoz hasonlít, hogy üres helyre kattintva új alakzat jelenik meg. De kevesebb a hasonlóság a kompakt móddal, mint a félkompakt mód esetében, mert itt a félfélkompakt módnál az új alakzat nem húzza magára húzza a fókuszt, vagyis ha van korábbi fókusz, az fókusz is marad. Hasonlóképp, a vonszolás sem húzza magára a fókuszt.</li>
+			<li>Modularizált mód: a vonszolás nincs privilegizálva a többi  művelethez  képest. Vagy az is szöveges elemből kapcsolódik be, vagy pedig a többi műveletnél (pl. forgatás) is kihasználjuk a vonszolást mint megvalósító egérműveletet.</li>
 		</ul>
 
 		<h2>Kezelőparancs-felület</h2>
-		<div>Módok</div>
+		<em>Módok:</em>
 		<ul id="modes">
 			<li><input id="modeNormal"  name="mode" value="normal"  type="radio"/> <label for="modeNormal" >Normál vonszolás és fókuszkezelés</label></li>
-			<li><input id="modeCompact" name="mode" value="compact" type="radio"/> <label for="modeCompact">Kompakt mód (gyorstesztre használt, &bdquo;mindentegybe&rdquo;)</label></li>
+			<li><input id="modeCompact" name="mode" value="compact" type="radio"/> <label for="modeCompact">Kompakt mód (csak gyorstesztre, összevetésekre használt, &bdquo;mindentegybe&rdquo;-jellegű, elavult mód)</label></li>
 		</ul>
 		<label for="sampleFigureBank">A következő beszúrható alakzatforma:</label>
 		<select id="sampleFigureBank">
 		</select>
 		<div id="section-operations">
-			<span>Műveletek</span>
+			<em>Műveletek (kattints a dobozkára, vagy alternatívaként nyomd meg a megadott billentyű-gyorsparancsot a billentyűzeten):</em>
 			<ul id="operations">
-				<li id="operationCreate">Beszúrás</li>
-				<li id="operationDelete">Törlés</li>
+				<li><button id="operationCreate">Új alakzat beszúrása</button> (vagy &bdquo;<span class="keystroke">+</span>&rdquo;-billentyű)</li>
+				<li><button id="operationDelete">Fókuszál alakzat törlése</button> (vagy &bdquo;<span class="keystroke">-</span>&rdquo;, vagy &bdquo;<span class="keystroke">DEL</span>&rdquo;-billentyű)</li>
+				<li><button id="operationUnfigfocus">Alakzatfókusz levétele</button> (vagy &bdquo;<span class="keystroke">ESC</span>&rdquo;-billentyű)</li>
 			</ul>
 		</div>
+		<div><em>Rendszerüzenetek:</em> <span id="msgConsole"></span></div>
 
 		<h2>Vászon</h2>
 		<!-- Credit to https://www.w3schools.com/graphics/svg_feoffset.asp -->
