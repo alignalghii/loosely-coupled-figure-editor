@@ -183,6 +183,54 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 						case '=':
 							if (this.focus) {this.focus.reflectHorizontally();}
 						break;
+						case '<':
+							if (this.focus) {this.focus.scale(1-epsilonAngle);}
+						break;
+						case '>':
+							if (this.focus) {this.focus.scale(1+epsilonAngle);}
+						break;
+						case '.':
+							if (this.focus) {this.focus.scaleY(1-epsilonAngle);}
+						break;
+						case ':':
+							if (this.focus) {this.focus.scaleY(1+epsilonAngle);}
+						break;
+						case "'":
+							if (this.focus) {this.focus.scaleX(1-epsilonAngle);}
+						break;
+						case '"':
+							if (this.focus) {this.focus.scaleX(1+epsilonAngle);}
+						break;
+						case '[':
+							if (this.focus) {this.focus.scale(1-epsilonAngle*100);}
+						break;
+						case ']':
+							if (this.focus) {this.focus.scale(1+epsilonAngle*100);}
+						break;
+						case 'L': case 'l':
+							if (this.focus) {this.focus.scaleY(1-epsilonAngle*100);}
+						break;
+						case 'Z': case 'z':
+							if (this.focus) {this.focus.scaleY(1+epsilonAngle*100);}
+						break;
+						case "I": case "i":
+							if (this.focus) {this.focus.scaleX(1-epsilonAngle*100);}
+						break;
+						case 'H': case 'h':
+							if (this.focus) {this.focus.scaleX(1+epsilonAngle*100);}
+						break;
+						case "~":
+							if (this.focus) {this.focus.scaleXYArealInvariant(1+epsilonAngle);}
+						break;
+						case '$':
+							if (this.focus) {this.focus.unscaleXYArealInvariant(1+epsilonAngle);}
+						break;
+						case "÷":
+							if (this.focus) {this.focus.scaleXYArealInvariant(1+epsilonAngle*100);}
+						break;
+						case '§':
+							if (this.focus) {this.focus.unscaleXYArealInvariant(1+epsilonAngle*100);}
+						break;
 					}
 				}
 			break;

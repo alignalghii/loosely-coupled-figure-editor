@@ -99,3 +99,28 @@ Figure.prototype.doReflectVertically = function ()
 	var reflect = makeReflectVertically(this.grasp[0]);
 	this.vertices = this.vertices.map(reflect);
 };
+Figure.prototype.doScale = function (q)
+{
+	var scale = makeScale(q, this.grasp);
+	this.vertices = this.vertices.map(scale);
+};
+Figure.prototype.doScaleX = function (q)
+{
+	var scale = makeScaleX(q, this.grasp[0]);
+	this.vertices = this.vertices.map(scale);
+};
+Figure.prototype.doScaleY = function (q)
+{
+	var scale = makeScaleY(q, this.grasp[1]);
+	this.vertices = this.vertices.map(scale);
+};
+Figure.prototype.doScaleXYArealInvariant = function (q)
+{
+	var scale = makeScaleXYArealInvariant(q, this.grasp);
+	this.vertices = this.vertices.map(scale);
+};
+Figure.prototype.doUnscaleXYArealInvariant = function (q)
+{
+	var scale = makeUnscaleXYArealInvariant(q, this.grasp);
+	this.vertices = this.vertices.map(scale);
+};
