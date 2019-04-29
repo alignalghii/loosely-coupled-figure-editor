@@ -7,3 +7,5 @@
 	color: white; background-color: black;
 	padding-left: 3px; padding-right: 3px;
 }
+
+.warning {color:red; font-weight: bold;}

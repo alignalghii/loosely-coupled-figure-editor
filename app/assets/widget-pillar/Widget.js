@@ -65,3 +65,6 @@ Widget.prototype.delete = function ()
 };
 
 Widget.prototype.translate = function (displacement) {this.high.doTranslation(displacement); this.updateDownward();};
+Widget.prototype.rotate    = function (phi) {this.high.doRotation(phi); this.updateDownward();};
+Widget.prototype.reflectHorizontally = function () {this.high.doReflectHorizontally(); this.updateDownward();};
+Widget.prototype.reflectVertically   = function () {this.high.doReflectVertically();   this.updateDownward();};

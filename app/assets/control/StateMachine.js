@@ -134,7 +134,8 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 				}
 			break;
 			case 'keydown':
-				var epsilon = this.epsilonDistance;
+				var epsilon      = this.epsilonDistance;
+				var epsilonAngle = this.epsilonAngle;
 				if (Eq.eq(inputSignature, ['string'])) {
 					switch (ird.key) {
 						case '+':
@@ -163,6 +164,24 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 						break;
 						case 'ArrowDown':
 							if (this.focus) {this.focus.translate([ 0, -epsilon]);}
+						break;
+						case '(':
+							if (this.focus) {this.focus.rotate( epsilonAngle);}
+						break;
+						case ')':
+							if (this.focus) {this.focus.rotate(-epsilonAngle);}
+						break;
+						case '{':
+							if (this.focus) {this.focus.rotate( epsilonAngle*100);}
+						break;
+						case '}':
+							if (this.focus) {this.focus.rotate(-epsilonAngle*100);}
+						break;
+						case '|':
+							if (this.focus) {this.focus.reflectVertically();}
+						break;
+						case '=':
+							if (this.focus) {this.focus.reflectHorizontally();}
 						break;
 					}
 				}

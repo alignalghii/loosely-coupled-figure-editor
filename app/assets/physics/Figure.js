@@ -82,3 +82,20 @@ Figure.prototype.centering = function ()
 	for (let at in this.svgAttributes) if (this.svgAttributes.hasOwnProperty(at)) newFig.svgAttributes[at] = this.svgAttributes[at];
 	return newFig;
 };
+
+Figure.prototype.doRotation = function (phi)
+{
+	var rotate = makeRotate(phi, this.grasp);
+	this.vertices = this.vertices.map(rotate);
+};
+
+Figure.prototype.doReflectHorizontally = function ()
+{
+	var reflect = makeReflectHorizontally(this.grasp[1]);
+	this.vertices = this.vertices.map(reflect);
+};
+Figure.prototype.doReflectVertically = function ()
+{
+	var reflect = makeReflectVertically(this.grasp[0]);
+	this.vertices = this.vertices.map(reflect);
+};
