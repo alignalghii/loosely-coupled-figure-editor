@@ -73,3 +73,11 @@ Widget.prototype.scaleX = function (q) {this.high.doScaleX(q); this.updateDownwa
 Widget.prototype.scaleY = function (q) {this.high.doScaleY(q); this.updateDownward();};
 Widget.prototype.scaleXYArealInvariant = function (q) {this.high.doScaleXYArealInvariant(q); this.updateDownward();};
 Widget.prototype.unscaleXYArealInvariant = function (q) {this.high.doUnscaleXYArealInvariant(q); this.updateDownward();};
+
+Widget.prototype.reflectHorizontallyRef = function () {this.high.doReflectHorizontallyRef(); this.updateDownward();};
+Widget.prototype.reflectVerticallyRef   = function () {this.high.doReflectVerticallyRef  (); this.updateDownward();};
+
+Widget.prototype.scaleXRef = function (q) {this.high.doScaleXRef(q); this.updateDownward();};
+Widget.prototype.scaleYRef = function (q) {this.high.doScaleYRef(q); this.updateDownward();};
+Widget.prototype.scaleXYArealInvariantRef = function (q) {this.high.doScaleXYArealInvariantRef(q); this.updateDownward();};
+Widget.prototype.unscaleXYArealInvariantRef = function (q) {this.high.doUnscaleXYArealInvariantRef(q); this.updateDownward();};

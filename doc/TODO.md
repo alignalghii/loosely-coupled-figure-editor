@@ -34,3 +34,6 @@
  - Az Insert és a Delete nem mód, hanem funkció. Két mód elég: a jelenelg Obsolete-nek nevezett Kompakt mód, és a Normál mód. A Normál mód legyen az alapértelmezés.
  - Kurzornyilakkal is lehessen mozgatni (tologatni) az alakzatokat. Alternatív megoldás: csúszkákkal. A csúszkák forgatáshoz, és tükrözéshez is használhatók
  - Az ürespozíció-fókusznak és az alakzatfókusznak nem kell felétlenül egymást kizáróank lennie. Lehet az is, hogy háromféle fókusz lehet a bufferben: alakzatfókusz, pozíciófókusz és orientációfókusz. Az alakzat- és a pozíciófókusz szerepe az lenne, ami eddig, plusz még a pozíciófókusz felhasználható lenne még forgatás középpontjának megadsára is. Az orientációfókusz meg tükrözés tengelyét adná meg (a pozíciófókusszal együtt)
+
+ - Az alakzatoknak referenciapontjuk mellett referenciaszögök is legyen. Ez lehet automatikus: a konstruktor megadhat default 0 referenciaszöget. A lényeg, hogy a forgatás kövesse. Átgondolandó askálázások hatása, de szerintem nem hatnak rá. Épp fordítva: a scaleX és scaleY a referenciaszög szerint számít mostantól, nem az abszolút vízszintes szerint.
+ - Legyenek buktatások: az alakzat legyen képes rábukni a taplpára, illetve a következő/előző oldalára vízszntesbe.

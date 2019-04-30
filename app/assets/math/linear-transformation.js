@@ -29,3 +29,68 @@ function makeScaleXY(q, r, [x0, y0])
 }
 function makeScaleXYArealInvariant  (q, point0) {return makeScaleXY(q, 1/q, point0);}
 function makeUnscaleXYArealInvariant(q, point0) {return makeScaleXY(1/q, q, point0);}
+
+function makeReflectHorizontallyRef([x0, y0], refAngle)
+{
+	return function (point)
+	{
+		var point_  = makeRotate(-refAngle, [x0, y0])(point);
+		var point__ = makeReflectHorizontally(y0)(point_);
+		return        makeRotate( refAngle, [x0, y0])(point__);
+	};
+}
+function makeReflectVerticallyRef([x0, y0], refAngle)
+{
+	return function (point)
+	{
+		var point_  = makeRotate(-refAngle, [x0, y0])(point);
+		var point__ = makeReflectVertically(x0)(point_);
+		return        makeRotate( refAngle, [x0, y0])(point__);
+	};
+}
+
+function makeScaleXRef(q, [x0, y0], refAngle)
+{
+	return function (point)
+	{
+		var point_  = makeRotate(-refAngle, [x0, y0])(point);
+		var point__ = makeScaleX(q, x0)(point_);
+		return        makeRotate( refAngle, [x0, y0])(point__);
+	};
+}
+function makeScaleYRef(q, [x0, y0], refAngle)
+{
+	return function (point)
+	{
+		var point_  = makeRotate(-refAngle, [x0, y0])(point);
+		var point__ = makeScaleY(q, y0)(point_);
+		return        makeRotate( refAngle, [x0, y0])(point__);
+	};
+}
+function makeScaleXYRef(q, r, point0, refAngle)
+{
+	return function (point)
+	{
+		var point_  = makeRotate(-refAngle, point0)(point);
+		var point__ = makeScaleXY(q, r, point0)(point_);
+		return        makeRotate( refAngle, point0)(point__);
+	};
+}
+function makeScaleXYArealInvariantRef(q, point0, refAngle)
+{
+	return function (point)
+	{
+		var point_  = makeRotate(-refAngle, point0)(point);
+		var point__ = makeScaleXYArealInvariant(q, point0)(point_);
+		return        makeRotate( refAngle, point0)(point__);
+	};
+}
+function makeUnscaleXYArealInvariantRef(q, point0, refAngle)
+{
+	return function (point)
+	{
+		var point_  = makeRotate(-refAngle, point0)(point);
+		var point__ = makeUnscaleXYArealInvariant(q, point0)(point_);
+		return        makeRotate( refAngle, point0)(point__);
+	};
+}

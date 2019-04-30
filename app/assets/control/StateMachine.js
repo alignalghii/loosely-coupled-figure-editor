@@ -178,10 +178,10 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 							if (this.focus) {this.focus.rotate(-epsilonAngle*100);}
 						break;
 						case '|':
-							if (this.focus) {this.focus.reflectVertically();}
+							if (this.focus) {this.focus.reflectVerticallyRef();}
 						break;
 						case '=':
-							if (this.focus) {this.focus.reflectHorizontally();}
+							if (this.focus) {this.focus.reflectHorizontallyRef();}
 						break;
 						case '<':
 							if (this.focus) {this.focus.scale(1-epsilonAngle);}
@@ -190,16 +190,16 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 							if (this.focus) {this.focus.scale(1+epsilonAngle);}
 						break;
 						case '.':
-							if (this.focus) {this.focus.scaleY(1-epsilonAngle);}
+							if (this.focus) {this.focus.scaleYRef(1-epsilonAngle);}
 						break;
 						case ':':
-							if (this.focus) {this.focus.scaleY(1+epsilonAngle);}
+							if (this.focus) {this.focus.scaleYRef(1+epsilonAngle);}
 						break;
 						case "'":
-							if (this.focus) {this.focus.scaleX(1-epsilonAngle);}
+							if (this.focus) {this.focus.scaleXRef(1-epsilonAngle);}
 						break;
 						case '"':
-							if (this.focus) {this.focus.scaleX(1+epsilonAngle);}
+							if (this.focus) {this.focus.scaleXRef(1+epsilonAngle);}
 						break;
 						case '[':
 							if (this.focus) {this.focus.scale(1-epsilonAngle*100);}
@@ -208,28 +208,28 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 							if (this.focus) {this.focus.scale(1+epsilonAngle*100);}
 						break;
 						case 'L': case 'l':
-							if (this.focus) {this.focus.scaleY(1-epsilonAngle*100);}
+							if (this.focus) {this.focus.scaleYRef(1-epsilonAngle*100);}
 						break;
 						case 'Z': case 'z':
-							if (this.focus) {this.focus.scaleY(1+epsilonAngle*100);}
+							if (this.focus) {this.focus.scaleYRef(1+epsilonAngle*100);}
 						break;
 						case "I": case "i":
-							if (this.focus) {this.focus.scaleX(1-epsilonAngle*100);}
+							if (this.focus) {this.focus.scaleXRef(1-epsilonAngle*100);}
 						break;
 						case 'H': case 'h':
-							if (this.focus) {this.focus.scaleX(1+epsilonAngle*100);}
+							if (this.focus) {this.focus.scaleXRef(1+epsilonAngle*100);}
 						break;
 						case "~":
-							if (this.focus) {this.focus.scaleXYArealInvariant(1+epsilonAngle);}
+							if (this.focus) {this.focus.scaleXYArealInvariantRef(1+epsilonAngle);}
 						break;
 						case '$':
-							if (this.focus) {this.focus.unscaleXYArealInvariant(1+epsilonAngle);}
+							if (this.focus) {this.focus.unscaleXYArealInvariantRef(1+epsilonAngle);}
 						break;
 						case "÷":
-							if (this.focus) {this.focus.scaleXYArealInvariant(1+epsilonAngle*100);}
+							if (this.focus) {this.focus.scaleXYArealInvariantRef(1+epsilonAngle*100);}
 						break;
 						case '§':
-							if (this.focus) {this.focus.unscaleXYArealInvariant(1+epsilonAngle*100);}
+							if (this.focus) {this.focus.unscaleXYArealInvariantRef(1+epsilonAngle*100);}
 						break;
 					}
 				}

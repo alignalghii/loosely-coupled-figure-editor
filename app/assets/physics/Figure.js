@@ -18,9 +18,10 @@ function sampleFigureBank() { return {
 	]
 };}
 
-function Figure(vertices, svgAttributes = {}, grasp)
+function Figure(vertices, svgAttributes = {}, grasp, referenceAngle)
 {
-	this.grasp         = grasp || (vertices.length > 0 ? centroid(vertices) : [0,0]);
+	this.grasp         = grasp || (vertices.length > 0 ? centroid(vertices) : [0,0]); // referencePoint
+	this.referenceAngle = referenceAngle || 0;
 	this.vertices      = vertices;
 	if (!('stroke' in svgAttributes)) svgAttributes['stroke'] = 'black';
 	if (!('stroke-width' in svgAttributes)) svgAttributes['stroke-width'] = 5;
@@ -47,7 +48,7 @@ Figure.prototype.translation = function ([dx, dy])
 			}
 		}
 	}
-	return new Figure( vertices, svgAttributes, grasp);
+	return new Figure( vertices, svgAttributes, grasp, this.referenceAngle);
 	// @TODO make `testTranslation` stricter, it should fail if this implementation returned a naked literal object instead of a Figure instance with methods
 }
 
@@ -75,7 +76,7 @@ Figure.prototype.doCentering = function ()
 
 Figure.prototype.centering = function ()
 {
-	var newFig = new Figure([], {}, [0,0]);
+	var newFig = new Figure([], {}, [0,0], this.referenceAngle);
 	for (let i = 0; i < this.vertices.length; i++) {
 		newFig.vertices.push([ this.vertices[i][0]-this.grasp[0], this.vertices[i][1]-this.grasp[1] ]);
 	}
@@ -87,17 +88,20 @@ Figure.prototype.doRotation = function (phi)
 {
 	var rotate = makeRotate(phi, this.grasp);
 	this.vertices = this.vertices.map(rotate);
+	this.referenceAngle += phi;
 };
 
 Figure.prototype.doReflectHorizontally = function ()
 {
 	var reflect = makeReflectHorizontally(this.grasp[1]);
 	this.vertices = this.vertices.map(reflect);
+	this.referenceAngle = -this.referenceAngle;
 };
 Figure.prototype.doReflectVertically = function ()
 {
 	var reflect = makeReflectVertically(this.grasp[0]);
 	this.vertices = this.vertices.map(reflect);
+	this.referenceAngle = Math.PI - this.referenceAngle;
 };
 Figure.prototype.doScale = function (q)
 {
@@ -122,5 +126,42 @@ Figure.prototype.doScaleXYArealInvariant = function (q)
 Figure.prototype.doUnscaleXYArealInvariant = function (q)
 {
 	var scale = makeUnscaleXYArealInvariant(q, this.grasp);
+	this.vertices = this.vertices.map(scale);
+};
+
+Figure.prototype.doReflectHorizontallyRef = function ()
+{
+	var reflect = makeReflectHorizontallyRef(this.grasp, this.referenceAngle);
+	this.vertices = this.vertices.map(reflect);
+};
+Figure.prototype.doReflectVerticallyRef = function ()
+{
+	var reflect = makeReflectVerticallyRef(this.grasp, this.referenceAngle);
+	this.vertices = this.vertices.map(reflect);
+};
+
+Figure.prototype.doScaleXRef = function (q)
+{
+	var scale = makeScaleXRef(q, this.grasp, this.referenceAngle);
+	this.vertices = this.vertices.map(scale);
+};
+Figure.prototype.doScaleYRef = function (q)
+{
+	var scale = makeScaleYRef(q, this.grasp, this.referenceAngle);
+	this.vertices = this.vertices.map(scale);
+};
+Figure.prototype.doScaleXYRef = function (q, r)
+{
+	var scale = makeScaleXYRef(q, r, this.grasp, this.referenceAngle);
+	this.vertices = this.vertices.map(scale);
+};
+Figure.prototype.doScaleXYArealInvariantRef = function (q)
+{
+	var scale = makeScaleXYArealInvariantRef(q, this.grasp, this.referenceAngle);
+	this.vertices = this.vertices.map(scale);
+};
+Figure.prototype.doUnscaleXYArealInvariantRef = function (q)
+{
+	var scale = makeUnscaleXYArealInvariantRef(q, this.grasp, this.referenceAngle);
 	this.vertices = this.vertices.map(scale);
 };
