@@ -24,16 +24,16 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 				}
 			break;
 			case 'mousemove':
-				if (this.prevWidgetHasNotCollidedYet()) {
+				if (this.state.prevWidgetHasNotCollidedYet()) {
 					if (this.followWhileCheckCollision(ird)) this.state.prevWidget.unshowGlittering(); // @TODO
 					this.rememberPosition(ird);
 					this.state.dragHasAlreadyBegun = true;
 				}
 			break;
 			case 'mouseup':
-				if (this.onAWidget(inputSignature) && this.prevWidgetHasNotCollidedYet() && !this.state.dragHasAlreadyBegun)
+				if (this.onAWidget(inputSignature) && this.state.prevWidgetHasNotCollidedYet() && !this.state.dragHasAlreadyBegun)
 					ird.currentWidget.delete();
-				if (this.prevWidgetHasNotCollidedYet() && this.state.dragHasAlreadyBegun) {
+				if (this.state.prevWidgetHasNotCollidedYet() && this.state.dragHasAlreadyBegun) {
 					this.state.prevWidget.update(this.state.prevWEPos, ird.currentWEPos);
 					this.state.prevWidget.unshowGlittering();
 				}
@@ -59,7 +59,7 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 				} else this.msgConsole.innerHTML = 'Üres helyhez vagy helypozícióhoz kötődő művelet várható...';
 			break;
 			case 'mousemove':
-				if (this.prevWidgetHasNotCollidedYet()) {
+				if (this.state.prevWidgetHasNotCollidedYet()) {
 					if (this.followWhileCheckCollision(ird)) {
 						this.state.prevWidget.unshowGlittering(); // @TODO
 						this.msgConsole.innerHTML = 'Ütközés!';
@@ -69,14 +69,14 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 				}
 			break;
 			case 'mouseup':
-				if (this.onAWidget(inputSignature) && this.prevWidgetHasNotCollidedYet() && !this.state.dragHasAlreadyBegun) {
+				if (this.onAWidget(inputSignature) && this.state.prevWidgetHasNotCollidedYet() && !this.state.dragHasAlreadyBegun) {
 					if (this.state.focus && ird.currentWidget.high != this.state.focus.high) this.state.focus.unshowFocus();
 					this.state.focus = ird.currentWidget; this.state.spaceFocus = null;
 					this.state.focus.showFocus();
 					ird.currentWidget.unshowGlittering();
 					this.msgConsole.innerHTML = 'Alakzatfókusz megjegyezve, üreshelyfókusz levéve.';
 				}
-				if (this.prevWidgetHasNotCollidedYet() && this.state.dragHasAlreadyBegun) {
+				if (this.state.prevWidgetHasNotCollidedYet() && this.state.dragHasAlreadyBegun) {
 					this.state.prevWidget.update(this.state.prevWEPos, ird.currentWEPos);
 					this.state.prevWidget.unshowGlittering();
 					this.msgConsole.innerHTML = 'Vonszolás vége.';
@@ -238,7 +238,6 @@ StateMachine.prototype.followWhileCheckCollision = function (ird) {return this.s
 /** Conditions */
 
 StateMachine.prototype.samePlaceUpAsDown           = function (ird) {return ird.currentWidget.high == this.state.prevWidget.high;};
-StateMachine.prototype.prevWidgetHasNotCollidedYet = function (   ) {return this.state.prevWidget && !this.state.hasCollided;};
 StateMachine.prototype.onAWidget    = function (inputSignature) {return Eq.eq(inputSignature, ['Widget', 'WEPos']);};
 StateMachine.prototype.onEmptySpace = function (inputSignature) {return Eq.eq(inputSignature, ['WEPos']);};
 
