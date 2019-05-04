@@ -216,10 +216,10 @@ StateMachine.prototype.transition = function (eventType, inputSignature, ird) //
 						case '$':
 							if (this.state.focus) {this.state.focus.unscaleXYArealInvariantRef(1+epsilonAngle);}
 						break;
-						case "÷":
+						case "÷": case 'W': case 'w':
 							if (this.state.focus) {this.state.focus.scaleXYArealInvariantRef(1+epsilonAngle*100);}
 						break;
-						case '§':
+						case '§': case 'S': case 's':
 							if (this.state.focus) {this.state.focus.unscaleXYArealInvariantRef(1+epsilonAngle*100);}
 						break;
 					}
