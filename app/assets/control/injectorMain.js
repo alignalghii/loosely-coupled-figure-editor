@@ -16,7 +16,9 @@ onload = function (event)
 	var msgConsole          = document.getElementById('msgConsole');
 
 	var widgetCollision     = new WidgetCollision(board, audio);
-	var stateMachine        = new StateMachine(widgetCollision, originFigure, coordSysTransformer, msgConsole); // @TODO make globalOriginFigure obsolete
+
+	var state               = new State(originFigure);
+	var stateMachine        = new StateMachine(state, widgetCollision, originFigure, coordSysTransformer, msgConsole); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(widgetFactory, stateMachine);
 	var stampUI             = new StampUI(document, bank, stateMachine);
 	var modeUI              = new ModeUI(document, stateMachine);
