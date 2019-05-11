@@ -19,7 +19,7 @@ StampUI.prototype.pipeToSM = function ()
 	{
 		var i              = event.target.selectedIndex; // @TODO consider `parseInt(event.target.value)`
 		var selectedFigure = stampUI.bank.namedFigures[i].figure;
-		stampUI.router.transition('change', ['Figure'], {selectedFigure:selectedFigure});
+		stampUI.router.dispatch('change', ['Figure'], {selectedFigure:selectedFigure});
 	}
 	this.bankSelectList.addEventListener('change', changeStamp);
 };

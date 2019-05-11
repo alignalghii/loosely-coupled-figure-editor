@@ -10,7 +10,7 @@ KeyboardUI.prototype.pipeToSM = function ()
 	function keyOperation(keyboardEvent)
 	{
 		var key = keyboardEvent.key;
-		keyboardUI.router.transition('keydown', ['string'], {key:key});
+		keyboardUI.router.dispatch('keydown', ['string'], {key:key});
 	}
 	this.document.addEventListener('keydown', keyOperation);
 };

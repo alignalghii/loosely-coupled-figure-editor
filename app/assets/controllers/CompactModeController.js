@@ -1,12 +1,10 @@
-function CompactModeController(state, widgetCollision, coordSysTransformer, msgConsole) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function CompactModeController(state, widgetCollision, msgConsole) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
 	this.widgetCollision = widgetCollision;
 	this.msgConsole = msgConsole;
 	this.msgConsole.innerHTML = 'Üdvözlet! Jó munkát!';
-	this.epsilonDistance = coordSysTransformer.epsilonDistance();
-	this.epsilonAngle    = coordSysTransformer.epsilonAngle();
 }
 
 // @TODO The GU API should introduce a Mouse object/interface? (like many APIs introduce a Context obejct)

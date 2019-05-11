@@ -14,8 +14,8 @@ WidgetEventPillar.prototype.pipeToSM = function ()
 WidgetEventPillar.prototype.mergeAndPipeSubsribe = function (eventType)
 {
 	this.mergelessSubscribe(eventType,
-		(currentWEPos)                => this.router.transition(eventType, [          'WEPos'], {                             currentWEPos:currentWEPos}),
-		(currentWidget, currentWEPos) => this.router.transition(eventType, ['Widget', 'WEPos'], {currentWidget:currentWidget, currentWEPos:currentWEPos})
+		(currentWEPos)                => this.router.dispatch(eventType, [          'WEPos'], {                             currentWEPos:currentWEPos}),
+		(currentWidget, currentWEPos) => this.router.dispatch(eventType, ['Widget', 'WEPos'], {currentWidget:currentWidget, currentWEPos:currentWEPos})
 	);
 };
 

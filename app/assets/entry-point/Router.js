@@ -1,18 +1,12 @@
-function Router(state, widgetCollision, stampFigure, coordSysTransformer, msgConsole, compactModeController, normalModeController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function Router(state, normalModeController, compactModeController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
-	this.widgetCollision = widgetCollision;
-	this.msgConsole = msgConsole;
-	this.msgConsole.innerHTML = 'Üdvözlet! Jó munkát!';
-	this.epsilonDistance = coordSysTransformer.epsilonDistance();
-	this.epsilonAngle    = coordSysTransformer.epsilonAngle();
-
-	this.compactModeController = compactModeController;
 	this.normalModeController  = normalModeController;
+	this.compactModeController = compactModeController;
 }
 
-Router.prototype.transition = function (eventType, inputSignature, ird) // ird: inputRoledData
+Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: inputRoledData
 {
 
 	if (eventType == 'change') {
@@ -90,7 +84,6 @@ Router.prototype.transition = function (eventType, inputSignature, ird) // ird: 
 
 Router.prototype.rememberWidget            = function (ird) {this.state.prevWidget = ird.currentWidget;};
 Router.prototype.rememberPosition          = function (ird) {this.state.prevWEPos = ird.currentWEPos;};
-Router.prototype.followWhileCheckCollision = function (ird) {return this.state.hasCollided = this.widgetCollision.checkAndHandleCollision(this.state.prevWidget, this.state.prevWEPos, ird.currentWEPos);};
 
 /** Conditions */
 

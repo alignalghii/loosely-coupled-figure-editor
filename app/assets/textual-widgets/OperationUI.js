@@ -15,7 +15,7 @@ OperationUI.prototype.pipeToSM = function ()
 	{
 		var target = event.target;
 		var operation = /operation(.*)/.exec(target.id)[1].toLowerCase();
-		operationUI.router.transition('click', ['string'], {operation:operation});
+		operationUI.router.dispatch('click', ['string'], {operation:operation});
 	}
 	this.operationItems.addEventListener('click', clickOperation);
 };

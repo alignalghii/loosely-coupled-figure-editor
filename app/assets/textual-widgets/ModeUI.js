@@ -18,7 +18,7 @@ ModeUI.prototype.pipeToSM = function ()
 		var target = event.target;
 		var mode = /mode(.*)/.exec(target.id)[1].toLowerCase();
 		modeUI.opSec.style.visibility = mode == 'compact' ? 'hidden' : 'visible'; 
-		modeUI.router.transition('change', ['string', 'string'], {input:target.name, mode:mode});
+		modeUI.router.dispatch('change', ['string', 'string'], {input:target.name, mode:mode});
 	}
 	this.modeRadios.addEventListener('change', changeMode);
 };

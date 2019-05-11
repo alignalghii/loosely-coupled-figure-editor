@@ -18,9 +18,9 @@ onload = function (event)
 	var widgetCollision     = new WidgetCollision(board, audio);
 
 	var state               = new State(originFigure);
-	var compactModeController   = new CompactModeController(state, widgetCollision, coordSysTransformer, msgConsole);
-	var normalModeController    = new NormalModeController (state, widgetCollision, coordSysTransformer, msgConsole);
-	var router        = new Router(state, widgetCollision, originFigure, coordSysTransformer, msgConsole, compactModeController, normalModeController); // @TODO make globalOriginFigure obsolete
+	var compactModeController = new CompactModeController(state, widgetCollision,                      msgConsole);
+	var normalModeController  = new NormalModeController (state, widgetCollision, coordSysTransformer, msgConsole);
+	var router              = new Router(state, normalModeController, compactModeController); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(widgetFactory, router);
 	var stampUI             = new StampUI(document, bank, router);
 	var modeUI              = new ModeUI(document, router);
