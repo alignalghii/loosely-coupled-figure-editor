@@ -18,7 +18,9 @@ onload = function (event)
 	var widgetCollision     = new WidgetCollision(board, audio);
 
 	var state               = new State(originFigure);
-	var stateMachine        = new StateMachine(state, widgetCollision, originFigure, coordSysTransformer, msgConsole); // @TODO make globalOriginFigure obsolete
+	var compactModeGUIAPI   = new CompactModeGUIAPI(state, widgetCollision, coordSysTransformer, msgConsole);
+	var normalModeGUIAPI    = new NormalModeGUIAPI (state, widgetCollision, coordSysTransformer, msgConsole);
+	var stateMachine        = new StateMachine(state, widgetCollision, originFigure, coordSysTransformer, msgConsole, compactModeGUIAPI, normalModeGUIAPI); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(widgetFactory, stateMachine);
 	var stampUI             = new StampUI(document, bank, stateMachine);
 	var modeUI              = new ModeUI(document, stateMachine);
