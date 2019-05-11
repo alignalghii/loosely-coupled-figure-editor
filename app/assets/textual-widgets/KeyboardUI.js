@@ -1,6 +1,6 @@
-function KeyboardUI(aDocument, stateMachine)
+function KeyboardUI(aDocument, router)
 {
-	this.stateMachine = stateMachine;
+	this.router = router;
 	this.document = aDocument;
 }
 
@@ -10,7 +10,7 @@ KeyboardUI.prototype.pipeToSM = function ()
 	function keyOperation(keyboardEvent)
 	{
 		var key = keyboardEvent.key;
-		keyboardUI.stateMachine.transition('keydown', ['string'], {key:key});
+		keyboardUI.router.transition('keydown', ['string'], {key:key});
 	}
 	this.document.addEventListener('keydown', keyOperation);
 };

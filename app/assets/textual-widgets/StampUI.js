@@ -1,6 +1,6 @@
-function StampUI(aDocument, bank, stateMachine)
+function StampUI(aDocument, bank, router)
 {
-	this.stateMachine = stateMachine;
+	this.router = router;
 
 	this.document = aDocument;
 	this.bankSelectList = this.document.getElementById('sampleFigureBank');
@@ -19,7 +19,7 @@ StampUI.prototype.pipeToSM = function ()
 	{
 		var i              = event.target.selectedIndex; // @TODO consider `parseInt(event.target.value)`
 		var selectedFigure = stampUI.bank.namedFigures[i].figure;
-		stampUI.stateMachine.transition('change', ['Figure'], {selectedFigure:selectedFigure});
+		stampUI.router.transition('change', ['Figure'], {selectedFigure:selectedFigure});
 	}
 	this.bankSelectList.addEventListener('change', changeStamp);
 };

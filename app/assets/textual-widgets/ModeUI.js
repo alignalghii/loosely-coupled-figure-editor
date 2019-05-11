@@ -1,6 +1,6 @@
-function ModeUI(aDocument, stateMachine)
+function ModeUI(aDocument, router)
 {
-	this.stateMachine = stateMachine;
+	this.router = router;
 
 	this.document = aDocument;
 	this.modeRadios = this.document.getElementById('modes');
@@ -18,7 +18,7 @@ ModeUI.prototype.pipeToSM = function ()
 		var target = event.target;
 		var mode = /mode(.*)/.exec(target.id)[1].toLowerCase();
 		modeUI.opSec.style.visibility = mode == 'compact' ? 'hidden' : 'visible'; 
-		modeUI.stateMachine.transition('change', ['string', 'string'], {input:target.name, mode:mode});
+		modeUI.router.transition('change', ['string', 'string'], {input:target.name, mode:mode});
 	}
 	this.modeRadios.addEventListener('change', changeMode);
 };

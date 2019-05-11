@@ -1,7 +1,7 @@
-function WidgetEventPillar (widgetFactory, stateMachineInterface)
+function WidgetEventPillar (widgetFactory, routerInterface)
 {
 	this.widgetFactory = widgetFactory;
-	this.stateMachine = stateMachineInterface;
+	this.router = routerInterface;
 }
 
 WidgetEventPillar.prototype.pipeToSM = function ()
@@ -14,8 +14,8 @@ WidgetEventPillar.prototype.pipeToSM = function ()
 WidgetEventPillar.prototype.mergeAndPipeSubsribe = function (eventType)
 {
 	this.mergelessSubscribe(eventType,
-		(currentWEPos)                => this.stateMachine.transition(eventType, [          'WEPos'], {                             currentWEPos:currentWEPos}),
-		(currentWidget, currentWEPos) => this.stateMachine.transition(eventType, ['Widget', 'WEPos'], {currentWidget:currentWidget, currentWEPos:currentWEPos})
+		(currentWEPos)                => this.router.transition(eventType, [          'WEPos'], {                             currentWEPos:currentWEPos}),
+		(currentWidget, currentWEPos) => this.router.transition(eventType, ['Widget', 'WEPos'], {currentWidget:currentWidget, currentWEPos:currentWEPos})
 	);
 };
 

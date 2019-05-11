@@ -1,6 +1,6 @@
-function OperationUI(aDocument, stateMachine)
+function OperationUI(aDocument, router)
 {
-	this.stateMachine = stateMachine;
+	this.router = router;
 
 	this.document = aDocument;
 	this.operationItems = this.document.getElementById('operations');
@@ -15,7 +15,7 @@ OperationUI.prototype.pipeToSM = function ()
 	{
 		var target = event.target;
 		var operation = /operation(.*)/.exec(target.id)[1].toLowerCase();
-		operationUI.stateMachine.transition('click', ['string'], {operation:operation});
+		operationUI.router.transition('click', ['string'], {operation:operation});
 	}
 	this.operationItems.addEventListener('click', clickOperation);
 };

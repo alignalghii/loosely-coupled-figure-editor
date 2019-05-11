@@ -18,14 +18,14 @@ onload = function (event)
 	var widgetCollision     = new WidgetCollision(board, audio);
 
 	var state               = new State(originFigure);
-	var compactModeGUIAPI   = new CompactModeGUIAPI(state, widgetCollision, coordSysTransformer, msgConsole);
-	var normalModeGUIAPI    = new NormalModeGUIAPI (state, widgetCollision, coordSysTransformer, msgConsole);
-	var stateMachine        = new StateMachine(state, widgetCollision, originFigure, coordSysTransformer, msgConsole, compactModeGUIAPI, normalModeGUIAPI); // @TODO make globalOriginFigure obsolete
-	var widgetEventPillar   = new WidgetEventPillar(widgetFactory, stateMachine);
-	var stampUI             = new StampUI(document, bank, stateMachine);
-	var modeUI              = new ModeUI(document, stateMachine);
-	var operationUI         = new OperationUI(document, stateMachine);
-	var keyboardUI          = new KeyboardUI(document, stateMachine);
+	var compactModeController   = new CompactModeController(state, widgetCollision, coordSysTransformer, msgConsole);
+	var normalModeController    = new NormalModeController (state, widgetCollision, coordSysTransformer, msgConsole);
+	var router        = new Router(state, widgetCollision, originFigure, coordSysTransformer, msgConsole, compactModeController, normalModeController); // @TODO make globalOriginFigure obsolete
+	var widgetEventPillar   = new WidgetEventPillar(widgetFactory, router);
+	var stampUI             = new StampUI(document, bank, router);
+	var modeUI              = new ModeUI(document, router);
+	var operationUI         = new OperationUI(document, router);
+	var keyboardUI          = new KeyboardUI(document, router);
 	var app                 = new App(widgetEventPillar, stampUI, modeUI, operationUI, keyboardUI); // @TODO Law of Demeter, see inside
 
 	//console.log('App: live run');
