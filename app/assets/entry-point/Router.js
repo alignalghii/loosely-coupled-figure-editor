@@ -76,6 +76,9 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 						case '§': case 'S': case 's': this.normalModeController.focusUnscaleXYArealInvariantFastRef(); break;
 
 						case '1':case '2':case '3':case '4':case '5':case '6':case '7':case '8':case '9': this.roomController.createSquareByArea(parseFloat(ird.key)); break;
+
+						case 'o': case 'O': this.roomController.focusOpenHole() ; break;
+						case 'c': case 'C': this.roomController.focusCloseHole(); break;
 					}
 				}
 			break;

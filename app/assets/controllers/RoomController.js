@@ -14,3 +14,15 @@ RoomController.prototype.createSquareByArea = function (area)
 		this.msgConsole.innerHTML = 'Nincs kijelölve üreshelyfókusz, nincs hova beszúrni új szobát.';
 	}
 };
+
+RoomController.prototype.focusOpenHole = function()
+{
+	var widget = this.state.focus;
+	if (widget) {
+	}
+};
+RoomController.prototype.focusCloseHole = function()
+{
+	if (this.state.focus) {
+	}
+};
