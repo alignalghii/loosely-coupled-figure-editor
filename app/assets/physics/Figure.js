@@ -165,3 +165,5 @@ Figure.prototype.doUnscaleXYArealInvariantRef = function (q)
 	var scale = makeUnscaleXYArealInvariantRef(q, this.grasp, this.referenceAngle);
 	this.vertices = this.vertices.map(scale);
 };
+
+Figure.prototype.perimeter = function () {return perimeter(this.vertices);};

@@ -165,3 +165,9 @@ function sectionSide(point1, point2, testPoint)
 function areConvexDirectedEdges  (e, f) {return areConvexVectors  (edgeVector(e), edgeVector(f));}
 function areConcaveDirectedEdges (e, f) {return areConcaveVectors (edgeVector(e), edgeVector(f));}
 function areConcave0DirectedEdges(e, f) {return areConcave0Vectors(edgeVector(e), edgeVector(f));}
+
+function perimeter(polygon)
+{
+	function addEdgeLength(perimeterSum, edge) {return perimeterSum + sectionLength(edge);}
+	return tour(polygon).reduce(addEdgeLength, 0);
+}

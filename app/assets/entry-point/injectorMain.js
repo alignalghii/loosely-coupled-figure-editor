@@ -5,7 +5,10 @@ onload = function (event)
 	var coordSysTransformer = new CoordSysTransformer([300, 200], 10, [true, false]);
 	var bijectionUp         = new Bijection();
 
+	var roomFactory         = new RoomFactory();
 	var widgetFactory       = new WidgetFactory(coordSysTransformer, bijectionUp, svgLowLevel);
+	var injectionRoomToGeom = new Bijection();
+	var roomWidgetFactory   = new RoomWidgetFactory(roomFactory, widgetFactory, injectionRoomToGeom);
 
 	var board               = bijectionUp; // when using bijectionUp as a set of high-level figures, we call it a board
 
@@ -20,7 +23,8 @@ onload = function (event)
 	var state               = new State(originFigure);
 	var compactModeController = new CompactModeController(state, widgetCollision,                      msgConsole);
 	var normalModeController  = new NormalModeController (state, widgetCollision, coordSysTransformer, msgConsole);
-	var router              = new Router(state, normalModeController, compactModeController); // @TODO make globalOriginFigure obsolete
+	var roomController        = new RoomController       (state, roomWidgetFactory, msgConsole);
+	var router              = new Router(state, normalModeController, compactModeController, roomController); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(widgetFactory, router);
 	var stampUI             = new StampUI(document, bank, router);
 	var modeUI              = new ModeUI(document, router);

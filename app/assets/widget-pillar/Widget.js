@@ -1,4 +1,5 @@
 // A widget is an architectually columnal, pillar-like thing holding a high-level (geometrical) and a low-level (SVG) part
+// A widget is a cache of a record (assignment item/element, ordered pair) of a bijection
 
 // @TODO common ancestor with `WigetEventPosition`. Note also the formal sameness of the constructors (only the typing differs)
 function Widget(coordSysTransformer, bijectionUp, svgLowLevel, high, low)

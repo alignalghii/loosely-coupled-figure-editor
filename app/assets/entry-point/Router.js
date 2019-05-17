@@ -1,9 +1,10 @@
-function Router(state, normalModeController, compactModeController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function Router(state, normalModeController, compactModeController, roomController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
 	this.normalModeController  = normalModeController;
 	this.compactModeController = compactModeController;
+	this.roomController        = roomController;
 }
 
 Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: inputRoledData
@@ -73,6 +74,8 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 						case '$':                     this.normalModeController.focusUnscaleXYArealInvariantRef    (); break;
 						case "÷": case 'W': case 'w': this.normalModeController.focusScaleXYArealInvariantFastRef  (); break;
 						case '§': case 'S': case 's': this.normalModeController.focusUnscaleXYArealInvariantFastRef(); break;
+
+						case '1':case '2':case '3':case '4':case '5':case '6':case '7':case '8':case '9': this.roomController.createSquareByArea(parseFloat(ird.key)); break;
 					}
 				}
 			break;
