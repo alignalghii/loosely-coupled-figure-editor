@@ -3,14 +3,14 @@ onload = function (event)
 	var svgLowLevel         = new SvgLowLevel(document); // [600, 400]
 
 	var coordSysTransformer = new CoordSysTransformer([300, 200], 10, [true, false]);
-	var bijectionUp         = new Bijection();
+	var bijectionSvgToGeom         = new Bijection();
 
 	var roomFactory         = new RoomFactory();
-	var widgetFactory       = new WidgetFactory(coordSysTransformer, bijectionUp, svgLowLevel);
+	var widgetFactory       = new WidgetFactory(coordSysTransformer, bijectionSvgToGeom, svgLowLevel);
 	var injectionRoomToGeom = new Bijection();
 	var roomWidgetFactory   = new RoomWidgetFactory(roomFactory, widgetFactory, injectionRoomToGeom);
 
-	var board               = bijectionUp; // when using bijectionUp as a set of high-level figures, we call it a board
+	var board               = bijectionSvgToGeom; // when using bijectionSvgToGeom as a set of high-level figures, we call it a board
 
 	var audio               = new MyAudio(new Audio('assets/sonar.ogg'));
 

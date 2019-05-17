@@ -1,10 +1,10 @@
 // A widget is an architectually columnal, pillar-like thing holding a high-level (geometrical) and a low-level (SVG) part
 
 // @TODO common ancestor with `WigetInstance`. Note also the formal sameness of the constructors (only the typing differs)
-function WidgetEventPosition(coordSysTransformer, bijectionUp, svgLowLevel, high, low)
+function WidgetEventPosition(coordSysTransformer, bijectionSvgToGeom, svgLowLevel, high, low)
 {
 	this.coordSysTransformer = coordSysTransformer;
-	this.bijectionUp         = bijectionUp;
+	this.bijectionSvgToGeom         = bijectionSvgToGeom;
 	this.svgLowLevel         = svgLowLevel;
 
 	this.high = high;
@@ -16,5 +16,5 @@ WidgetEventPosition.prototype.create = function (originFigure) // @TODO swap obj
 	var geomNewFigure     = originFigure.translation(this.high);
 	var svgVertices       = geomNewFigure.vertices.map((p) => this.coordSysTransformer.highToLow(p));
 	var svgNewPolygonCild = this.svgLowLevel.createPolygonChild(svgVertices, geomNewFigure.svgAttributes); // @TODO consider `this.originFigure.svgAttributes`
-	this.bijectionUp.set(svgNewPolygonCild, geomNewFigure);
+	this.bijectionSvgToGeom.set(svgNewPolygonCild, geomNewFigure);
 };

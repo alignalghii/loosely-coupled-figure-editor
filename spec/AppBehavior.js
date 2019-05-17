@@ -10,10 +10,10 @@ AppBehavior.prototype.shouldCreateTheOriginFigure = function ()
 	var polygonChildToBeCreated  = {};
 	var svgLowLevelMock          = new SvgLowLevelMock(polygonChildToBeCreated);
 	var coordSysTransformerMock  = new CoordSysTransformerMock([[260, 120], [300, 120], [290, 100]], [[300, 200]]);
-	var bijectionUpMock          = new BijectionMock();
+	var bijectionSvgToGeomMock          = new BijectionMock();
 	var originFigureTranslatedBy00 = new FigureMock([[ -4,  8], [ 0,  8], [-1, 10]]);
 	var originFigure               = new FigureMock([[ -4,  8], [ 0,  8], [-1, 10]], originFigureTranslatedBy00); console.log(originFigure);
-	var app                        = new App(svgLowLevelMock, coordSysTransformerMock, bijectionUpMock, originFigure); console.log(app)
+	var app                        = new App(svgLowLevelMock, coordSysTransformerMock, bijectionSvgToGeomMock, originFigure); console.log(app)
 
 	var flag_virgin = svgLowLevelMock.communication.length == 0;
 	app.run();
@@ -29,7 +29,7 @@ AppBehavior.prototype.shouldCreateTheOriginFigure = function ()
 	var communication_transf = coordSysTransformerMock.communication;
 	var flag_transf = Eq.eq(communication_transf, [{name: 'highToLow', args: [[-4, 8]], result: [260, 120]}, {name: 'highToLow', args: [[0, 8]], result: [300, 120]}, {name: 'highToLow', args: [[-1, 10]], result: [290, 100]}]);
 
-	var communicationBij = bijectionUpMock.communication;
+	var communicationBij = bijectionSvgToGeomMock.communication;
 	var flag_bijection = communicationBij.length = 1 && communicationBij[0].name == 'set' && communicationBij[0].args[0] == polygonChildToBeCreated && communicationBij[0].args[1] == originFigure;
 
 	return flag_virgin && flag_run && flag_runDetails && flag_transf && flag_bijection;
@@ -42,10 +42,10 @@ AppBehavior.prototype.shouldDeleteFigIfClickingOnItWhileStayingOnTheSamePlace = 
 	var anotherPolygonChild      = {};
 	var svgLowLevelMock          = new SvgLowLevelMock(polygonChildToBeCreated0);
 	var coordSysTransformerMock  = new CoordSysTransformerMock([[260, 120], [300, 120], [290, 100]]);
-	var bijectionUpMock          = new BijectionMock();
+	var bijectionSvgToGeomMock          = new BijectionMock();
 	var originFigureTranslatedBy00 = new FigureMock([[ -4,  8], [ 0,  8], [-1, 10]]);
 	var originFigure               = new FigureMock([[ -4,  8], [ 0,  8], [-1, 10]], originFigureTranslatedBy00);
-	var app                      = new App(svgLowLevelMock, coordSysTransformerMock, bijectionUpMock, originFigure);
+	var app                      = new App(svgLowLevelMock, coordSysTransformerMock, bijectionSvgToGeomMock, originFigure);
 
 	var flag_virgin = svgLowLevelMock.communication.length == 0;
 	app.run();
@@ -59,7 +59,7 @@ AppBehavior.prototype.shouldDeleteFigIfClickingOnItWhileStayingOnTheSamePlace = 
 		svgLowLevelMock.communication.length == 5 &&
 		svgLowLevelMock.communication[4].name == 'deletePolygonChild' && svgLowLevelMock.communication[4].args.length == 1 && svgLowLevelMock.communication[4].args[0] == anotherPolygonChild; // @TODO check whether also the origin polygon can be deleted this way
 
-	var communicationBij = bijectionUpMock.communication;
+	var communicationBij = bijectionSvgToGeomMock.communication;
 	var flag_bijection = communicationBij.length = 1 && communicationBij[0].name == 'delete' && communicationBij[0].args[0] == anotherPolygonChild;
 
 	return flag_virgin && flag_run && flag_mousedownAtAFig && flag_mouseupSamePlaceEffectsFigDel// && flag_bijection;
@@ -71,9 +71,9 @@ AppBehavior.prototype.shouldUpdateFigIfClickingOnItWhileDraggingALittleFurther =
 	var polygonChildToBeCreated  = {};
 	var svgLowLevelMock          = new SvgLowLevelMock(polygonChildToBeCreated);
 	var coordSysTransformerMock  = new CoordSysTransformerMock([[260, 120], [300, 120], [290, 100]]);
-	var bijectionUpMock          = new BijectionMock();
+	var bijectionSvgToGeomMock          = new BijectionMock();
 	var originFigure             = new FigureMock([[ -4,  8], [ 0,  8], [-1, 10]]);
-	var app                      = new App(svgLowLevelMock, coordSysTransformerMock, bijectionUpMock, originFigure);
+	var app                      = new App(svgLowLevelMock, coordSysTransformerMock, bijectionSvgToGeomMock, originFigure);
 
 	app.run();
 
@@ -95,9 +95,9 @@ AppBehavior.prototype.shouldCreateFigIfClickingOnEmptyWhileStayingOnTheSamePlace
 	var polygonChildToBeCreated1  = {};
 	var svgLowLevelMock          = new SvgLowLevelMock(polygonChildToBeCreated0);
 	var coordSysTransformerMock  = new CoordSysTransformerMock([[260, 120], [300, 120], [290, 100]]);
-	var bijectionUpMock          = new BijectionMock();
+	var bijectionSvgToGeomMock          = new BijectionMock();
 	var originFigure             = new FigureMock([[ -4,  8], [ 0,  8], [-1, 10]]);
-	var app                      = new App(svgLowLevelMock, coordSysTransformerMock, bijectionUpMock, originFigure);
+	var app                      = new App(svgLowLevelMock, coordSysTransformerMock, bijectionSvgToGeomMock, originFigure);
 
 	var flag_virgin = svgLowLevelMock.communication.length == 0;
 	app.run();
@@ -122,9 +122,9 @@ AppBehavior.prototype.shouldCreateFigIfClickingOnEmptyWhileDraggingButEndingUpAt
 	var polygonChildToBeCreated1  = {};
 	var svgLowLevelMock          = new SvgLowLevelMock(polygonChildToBeCreated0);
 	var coordSysTransformerMock  = new CoordSysTransformerMock([[260, 120], [300, 120], [290, 100]]);
-	var bijectionUpMock          = new BijectionMock();
+	var bijectionSvgToGeomMock          = new BijectionMock();
 	var originFigure             = new FigureMock([[ -4,  8], [ 0,  8], [-1, 10]]);
-	var app                      = new App(svgLowLevelMock, coordSysTransformerMock, bijectionUpMock, originFigure);
+	var app                      = new App(svgLowLevelMock, coordSysTransformerMock, bijectionSvgToGeomMock, originFigure);
 
 	var flag_virgin = svgLowLevelMock.communication.length == 0;
 	app.run();
@@ -151,9 +151,9 @@ AppBehavior.prototype.shouldCreateFigIfClickingOnEmptyWhileDraggingButEndingUpAt
 	var polygonChildToBeCreated1    = {};
 	var svgLowLevelMock          = new SvgLowLevelMock(polygonChildToBeCreated0);
 	var coordSysTransformerMock  = new CoordSysTransformerMock([[260, 120], [300, 120], [290, 100]]);
-	var bijectionUpMock          = new BijectionMock();
+	var bijectionSvgToGeomMock          = new BijectionMock();
 	var originFigure             = new FigureMock([[ -4,  8], [ 0,  8], [-1, 10]]);
-	var app                      = new App(svgLowLevelMock, coordSysTransformerMock, bijectionUpMock, originFigure);
+	var app                      = new App(svgLowLevelMock, coordSysTransformerMock, bijectionSvgToGeomMock, originFigure);
 
 	var flag_virgin = svgLowLevelMock.communication.length == 0;
 	app.run();
