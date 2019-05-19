@@ -14,8 +14,10 @@ onload = function (event)
 	var audio               = new MyAudio(new Audio('assets/sonar.ogg'));
 
 	var roomBank             = roomFactory.sampleRoomBank();
-	var domainStamp          = roomBank.namedRooms[roomBank.selected].room.copy(); // `.copy` is needed also at widgetFactory.stampAt` and probably also at `app.populate`
-	domainStamp.figure.doCentering(); // The blue suare rendered during `app.populate` remains intact
+	var domainStamp          = roomBank.namedRooms[roomBank.selected].room.centering();
+	// `.copy` (hidden in `centering`) is needed here, because the blue suare rendered during `app.populate` must remain intact
+	// `.copy` is needed -- for another reason -- also at `widgetFactory.stampAt` and probably also at `app.populate` (hidden in `createWidgetFromDomain1`),
+	// because otherwise, any user transformations on the last stamped object would affect the future stamps (see `spec/last-inserted-room-owns-stamp--clone-error.mp4`).
 
 	var msgConsole          = document.getElementById('msgConsole');
 
