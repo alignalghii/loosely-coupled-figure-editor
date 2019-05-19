@@ -1,12 +1,15 @@
-function NormalModeController(state, widgetCollision, coordSysTransformer, msgConsole) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function NormalModeController(state, widgetFactory, widgetCollision, msgConsole) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
+	this.widgetFactory   = widgetFactory;
 	this.widgetCollision = widgetCollision;
+
 	this.msgConsole = msgConsole;
 	this.msgConsole.innerHTML = 'Üdvözlet! Jó munkát!';
-	this.epsilonDistance = coordSysTransformer.epsilonDistance();
-	this.epsilonAngle    = coordSysTransformer.epsilonAngle();
+
+	this.epsilonDistance = widgetFactory.coordSysTransformer.epsilonDistance(); // @TODO Demeter priciple
+	this.epsilonAngle    = widgetFactory.coordSysTransformer.epsilonAngle();    // @TODO Demeter priciple
 }
 
 // @TODO The GU API should introduce a Mouse object/interface? (like many APIs introduce a Context obejct)
@@ -75,7 +78,7 @@ NormalModeController.prototype.changeStamp = function (selectedDomainObject)
 NormalModeController.prototype.createAtPosFocus = function ()
 {
 	if (this.state.spaceFocus) {
-		this.state.spaceFocus.create(this.state.domainStamp);
+		this.widgetFactory.stampAt(this.state.domainStamp, this.state.spaceFocus);
 		this.state.spaceFocus = null;
 		this.msgConsole.innerHTML = 'Új alakzat beszúrása az üreshelyfókusz által mutatott helyre. Üreshelyfókusz levétele.';
 	} else this.msgConsole.innerHTML = 'Nincs kijelölve üreshelyfókusz, nincs hova beszúrni új alakzatot.';

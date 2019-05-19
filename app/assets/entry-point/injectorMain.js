@@ -22,8 +22,8 @@ onload = function (event)
 	var widgetCollision     = new WidgetCollision(board, audio);
 
 	var state               = new State(domainStamp);
-	var compactModeController = new CompactModeController(state, widgetCollision,                      msgConsole);
-	var normalModeController  = new NormalModeController (state, widgetCollision, coordSysTransformer, msgConsole);
+	var compactModeController = new CompactModeController(state, widgetFactory, widgetCollision, msgConsole);
+	var normalModeController  = new NormalModeController (state, widgetFactory, widgetCollision, msgConsole);
 	var roomController        = new RoomController       (state, roomFactory, widgetFactory, msgConsole);
 	var router              = new Router(state, normalModeController, compactModeController, roomController); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(widgetFactory, router);

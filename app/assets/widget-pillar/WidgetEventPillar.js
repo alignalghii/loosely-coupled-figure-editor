@@ -24,13 +24,13 @@ WidgetEventPillar.prototype.mergelessSubscribe = function (eventTypeName, emptyC
 	var widgetFactory = this.widgetFactory;
 	function svgEmptyCase(svgPosition)
 	{
-		var widgetEventPosition  = widgetFactory.createWidgetEventPositionFromLow(svgPosition);
+		var widgetEventPosition  = widgetFactory.coordSysTransformer.lowToHigh(svgPosition);
 		return emptyCase(widgetEventPosition);
 	}
 	function svgPolygonCase(svgPolygon, svgPosition)
 	{
-		var widget               = widgetFactory.createWidgetFromLow             (svgPolygon );
-		var widgetEventPosition  = widgetFactory.createWidgetEventPositionFromLow(svgPosition);
+		var widget               = widgetFactory.createWidgetFromLow          (svgPolygon );
+		var widgetEventPosition  = widgetFactory.coordSysTransformer.lowToHigh(svgPosition);  // @TODO Demeter principle
 		return widgetCase(widget, widgetEventPosition);
 	}
 	this.widgetFactory.svgLowLevel.subscribe(eventTypeName, svgEmptyCase, svgPolygonCase); // @TODO Demeter principle

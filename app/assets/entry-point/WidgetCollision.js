@@ -3,7 +3,7 @@ function WidgetCollision (board, audio) {this.board = board; this.audio = audio;
 // @TODO Comes to a CollisionEventDecorator/Fassade: move to a lower level instead of app, possibly `WidgetCollision`
 WidgetCollision.prototype.checkAndHandleCollision = function (prevWidget, prevWEPos, currentWEPos)
 {
-	var displacement = fromTo(prevWEPos.high, currentWEPos.high);
+	var displacement = fromTo(prevWEPos, currentWEPos);
 	var hypothetical = new Hypothetical(this.board, prevWidget.high, displacement); //@TODO dependency injection?
 	var collisionFlag = hypothetical.wouldCollideAny();
 	if (collisionFlag) {

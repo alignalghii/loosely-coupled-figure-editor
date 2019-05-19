@@ -42,9 +42,3 @@ WidgetFactory.prototype.createWidgetFromLow = function (svgPolygon)
 	var domainObject = this.bijectionGeomToDomain.get(geomFigure);
 	return new Widget(this.bijectionGeomToDomain, this.coordSysTransformer, this.bijectionSvgToGeom, this.svgLowLevel, domainObject, geomFigure, svgPolygon);
 };
-
-WidgetFactory.prototype.createWidgetEventPositionFromLow = function (svgPosition)
-{
-	var geomPosition = this.coordSysTransformer.lowToHigh(svgPosition);
-	return new WidgetEventPosition(this, geomPosition, svgPosition);
-};

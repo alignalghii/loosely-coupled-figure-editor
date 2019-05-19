@@ -50,7 +50,7 @@ Widget.prototype.unshowFocus = function ()
 
 Widget.prototype.update = function (prevWEPos, currentWEPos)
 {
-	var geomDisplacement  = fromTo(prevWEPos.high, currentWEPos.high);
+	var geomDisplacement  = fromTo(prevWEPos, currentWEPos);
 	this.high.doTranslation(geomDisplacement);
 	this.updateDownward();
 };

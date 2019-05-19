@@ -1,9 +1,11 @@
-function CompactModeController(state, widgetCollision, msgConsole) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function CompactModeController(state, widgetFactory, widgetCollision, msgConsole) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
+	this.widgetFactory   = widgetFactory;
 	this.widgetCollision = widgetCollision;
-	this.msgConsole = msgConsole;
+
+	this.msgConsole      = msgConsole;
 	this.msgConsole.innerHTML = 'Üdvözlet! Jó munkát!';
 }
 
@@ -36,7 +38,7 @@ CompactModeController.prototype.mouseUp = function (currentWEPos, currentWidget 
 		this.state.prevWidget.unshowGlittering();
 	}
 	if (!this.state.prevWidget)
-		currentWEPos.create(this.state.domainStamp);
+		this.widgetFactory.stampAt(this.state.domainStamp, currentWEPos);
 	this.state.forgetDrag();
 };
 

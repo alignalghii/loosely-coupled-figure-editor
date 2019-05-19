@@ -9,7 +9,7 @@ function RoomController(state, roomFactory, widgetFactory, msgConsole)
 RoomController.prototype.createSquareByArea = function (area)
 {
 	if (this.state.spaceFocus) {
-		  var squareRoom =   this.roomFactory.createSquareByArea(area, this.state.spaceFocus.high);
+		  var squareRoom =   this.roomFactory.createSquareByArea(area, this.state.spaceFocus);
 		/*var roomWidget =*/ this.widgetFactory.createWidgetFromDomain0(squareRoom);
 		this.msgConsole.innerHTML = 'Új négyzetes szoba beszúrva, területe ' + area + ' egység.';
 	} else {
