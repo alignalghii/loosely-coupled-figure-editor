@@ -36,7 +36,7 @@ CompactModeController.prototype.mouseUp = function (currentWEPos, currentWidget 
 		this.state.prevWidget.unshowGlittering();
 	}
 	if (!this.state.prevWidget)
-		currentWEPos.create(this.state.stampFigure);
+		currentWEPos.create(this.state.domainStamp);
 	this.state.forgetDrag();
 };
 

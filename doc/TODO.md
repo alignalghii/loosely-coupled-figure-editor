@@ -42,3 +42,6 @@
  - Legyen belső API, esetleg majd REST API is. ,,API frst'' szemlélet?
 
  - Legyen magasz ,szintű, ütközés típusú eemény! Ahogy az seseményfeldobó programrész képes már geometriai (és nem SVG-koordinátás) szintű információkat feldobni, ugyanúgy legyen ezen a téren is egy kis fogalmi emelés: ne csak natív eseményeket dobjon fel! Az e event objektum helyett legyen valami Either Event MyHighlevelEvent! Ez még ne akarja az ütközést tényelges lekezelni, hanem infókat tartalmazzon, amit aztán bármilyen ütközésszabályzat szerint fel lehessen dolgozni. Amúgy ez a saját magaszintű ütközésesemény elvégezhet ütözésinterpolációs számításokat is, az nincs megtiltva, használhat és mozgathat virtuális próbafigurát. Az van csak megtiltva, hogy a tényleges figurán ö maga akciót hajtson végre, az eredeti figurát tevőleges visszarántsa valami kiszámolt pozícióba. Ezt ne tegye, csak infókat adjon!
+
+ - Teszteleni normál módnál és kompakt módnál is: ha a `sampleBank` által beszúrt egyik alakzatot elcsavarom, aztán elkezdek stamp-elni úgy, hogy épp azt az alakzatot választom ki pecsétnek, akkor a torzított  pecsétet teszi ki, vagy az eredetit?
+    - általában is ellenőrozni kell, hogy pecsételéskor, mág általánosabban létrehozáskor történik-e klónozás ott, ahol kell, és klónozásmentes-e ott, ahol fölösleges lenne klónozni.

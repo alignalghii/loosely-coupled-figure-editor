@@ -1,22 +1,11 @@
 const GLITTERING_ATTR_NAME = 'opacity', GLITTERING_VALUE = 0.5;
 const FOCUS = [{name: 'filter', value: 'url(#shadow)'}];
 
+// @TODO make a `clone` function in `Figure` and resuse it the more occasions as possible
+
 /**************************
  * Geometric transformations (translation, reflection, rotation)
  **************************/
-
-function sampleFigureBank() { return {
-	selected: 1,
-	namedFigures: [
-		{name: 'Piros háromszög' , figure: (new Figure([[ 2,  3], [ 6,  3], [ 5,  5]          ], {fill: 'red'    })).translation([ -6  ,  5  ])},
-		{name: 'Kék négyzet'     , figure: (new Figure([[ 1, -1], [ 1,  1], [-1,  1], [-1, -1]], {fill: 'blue'   })).translation([ -8  , -4  ])},
-		{name: 'Bíbor konvex 1'  , figure: (new Figure(poly1_convex_ccw,                         {fill: 'magenta'})).translation([-18  ,  0  ])},
-		{name: 'Zöld konkáv 1'   , figure: (new Figure(poly1_concave_ccw,                        {fill: 'green'  })).translation([  8  , -7  ])},
-		{name: 'Fekete konvex 2' , figure: (new Figure(poly2_convex_ccw,                         {fill: 'black'  })).translation([  0  , -4  ])},
-		{name: 'Szürke elfajult' , figure: (new Figure(poly2_degen_ccw,                          {fill: 'gray'   })).translation([ -2.3, -0.7])},
-		{name: 'Narancs konkáv 2', figure: (new Figure(poly2_concave_ccw,                        {fill: 'orange' })).translation([ -4  ,  2.6])}
-	]
-};}
 
 function Figure(vertices, svgAttributes = {}, grasp, referenceAngle)
 {
@@ -70,8 +59,8 @@ Figure.prototype.doCentering = function ()
 	for (let i = 0; i < this.vertices.length; i++) {
 		this.vertices[i][0] -= this.grasp[0];
 		this.vertices[i][1] -= this.grasp[1];
-		this.grasp[0] = 0; this.grasp[1] = 1;
 	}
+	this.grasp[0] = 0; this.grasp[1] = 0;
 };
 
 Figure.prototype.centering = function ()

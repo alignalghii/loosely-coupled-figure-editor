@@ -1,13 +1,15 @@
 // A widget is an architectually columnal, pillar-like thing holding a high-level (geometrical) and a low-level (SVG) part
-// A widget is a cache of a record (assignment item/element, ordered pair) of a bijection
+// A widget is a cache of a record (assignment item/element, ordered pair) of a bijection, possibly a ternary or multiple-attribute bijection
 
 // @TODO common ancestor with `WigetEventPosition`. Note also the formal sameness of the constructors (only the typing differs)
-function Widget(coordSysTransformer, bijectionSvgToGeom, svgLowLevel, high, low)
+function Widget(bijectionGeomToDomain, coordSysTransformer, bijectionSvgToGeom, svgLowLevel,    domainObject, high, low)
 {
+	this.bijectionGeomToDomain = bijectionGeomToDomain;
 	this.coordSysTransformer = coordSysTransformer;
 	this.bijectionSvgToGeom         = bijectionSvgToGeom;
 	this.svgLowLevel         = svgLowLevel;
 
+	this.domainObject = domainObject;
 	this.high = high;
 	this.low  = low;
 }

@@ -65,9 +65,9 @@ NormalModeController.prototype.changeMode = function (mode)
 	this.msgConsole.innerHTML = 'Módváltozás.';
 };
 
-NormalModeController.prototype.changeStamp = function (selectedFigure)
+NormalModeController.prototype.changeStamp = function (selectedDomainObject)
 {
-	this.state.setStampFigureFrom(selectedFigure);
+	this.state.setDomainStampFrom(selectedDomainObject);
 	this.msgConsole.innerHTML = 'Pecsétváltozás.';
 };
 
@@ -75,7 +75,7 @@ NormalModeController.prototype.changeStamp = function (selectedFigure)
 NormalModeController.prototype.createAtPosFocus = function ()
 {
 	if (this.state.spaceFocus) {
-		this.state.spaceFocus.create(this.state.stampFigure);
+		this.state.spaceFocus.create(this.state.domainStamp);
 		this.state.spaceFocus = null;
 		this.msgConsole.innerHTML = 'Új alakzat beszúrása az üreshelyfókusz által mutatott helyre. Üreshelyfókusz levétele.';
 	} else this.msgConsole.innerHTML = 'Nincs kijelölve üreshelyfókusz, nincs hova beszúrni új alakzatot.';

@@ -21,5 +21,16 @@ var Eq = {
 			}
 		}
 		return flag;
-	}
+	},
+
+	flatObjectCopy: function (ob)
+	{
+		var resOb = {};
+		for (let prop in ob) resOb[prop] = ob[prop];
+		return resOb;
+	},
+
+	flatListCopy: function (lst) {return lst.map((i) => i);},
+
+	obListCopy: function (obList) {return obList.map(Eq.flatObjectCopy);}
 }

@@ -1,14 +1,19 @@
-function State(toBeStampFigure)
+function State(toBeDomainStamp)
 {
 	this.mode = 'normal';
 	this.focus = null;
 	this.spaceFocus = null;
 
-	this.setStampFigureFrom(toBeStampFigure);
+	this.setDomainStampFrom(toBeDomainStamp);
 	this.forgetDrag();
 }
 
-State.prototype.setStampFigureFrom = function (figure) {this.stampFigure = figure.centering();}; /** MenuUI */
+State.prototype.setDomainStampFrom = function (domainObject) /** MenuUI */
+{
+	var domainStamp = domainObject.copy();
+	domainStamp.figure.doCentering();
+	this.domainStamp = domainStamp;
+};
 
 State.prototype.forgetDrag = function ()
 {

@@ -11,8 +11,8 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 {
 
 	if (eventType == 'change') {
-		if (Eq.eq(inputSignature, ['string', 'string'])) this.normalModeController.changeMode (ird.mode          ); // @TODO common
-		if (Eq.eq(inputSignature, ['Figure'          ])) this.normalModeController.changeStamp(ird.selectedFigure); // @TODO common
+		if (Eq.eq(inputSignature, ['string', 'string'])) this.normalModeController.changeMode (ird.mode        ); // @TODO common
+		if (Eq.eq(inputSignature, ['Room'            ])) this.normalModeController.changeStamp(ird.selectedRoom); // @TODO common
 	}
 	if (this.state.mode == 'compact') {
 		switch (eventType) {
