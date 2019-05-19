@@ -14,8 +14,8 @@ onload = function (event)
 	var audio               = new MyAudio(new Audio('assets/sonar.ogg'));
 
 	var roomBank             = roomFactory.sampleRoomBank();
-	var domainStamp          = roomBank.namedRooms[roomBank.selected].room.copy();
-	domainStamp.figure.doCentering();
+	var domainStamp          = roomBank.namedRooms[roomBank.selected].room.copy(); // `.copy` is needed also at widgetFactory.stampAt` and probably also at `app.populate`
+	domainStamp.figure.doCentering(); // The blue suare rendered during `app.populate` remains intact
 
 	var msgConsole          = document.getElementById('msgConsole');
 

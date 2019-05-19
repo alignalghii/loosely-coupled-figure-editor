@@ -30,9 +30,10 @@ WidgetFactory.prototype.createWidgetFromDomain1 = function (domainObjectOriginal
 
 WidgetFactory.prototype.stampAt = function (domainStamp, geomCoords) // @TODO swap object receiver and argument around method
 {
-	var geomNewFigure     = domainStamp.figure.centering();
+	var domainObject      = domainStamp.copy();
+	var geomNewFigure     = domainObject.figure.centering();
 	geomNewFigure.doTranslation(geomCoords);
-	return this.createWidgetFromReplacedGeom(geomNewFigure, domainStamp);
+	return this.createWidgetFromReplacedGeom(geomNewFigure, domainObject);
 };
 
 
