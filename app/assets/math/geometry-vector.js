@@ -30,6 +30,8 @@ function det(a, b)
 	return a1*b2 - a2*b1;
 }
 
+function toNegative([x, y]) {return [-x, -y];}
+
 /******************************
  * Transition between coordinate sytems:
  ******************************/

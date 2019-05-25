@@ -36,6 +36,10 @@ function foldl(op, cnst, lst) // @TODO same as `Array.prototype.reduce`?
 	return result;
 }
 
+function unshiftClone(x, lst) {var lst2 = lst.map((i)=>i); lst2.unshift(x); return lst2;}
+function pushClone   (x, lst) {var lst2 = lst.map((i)=>i); lst2.push   (x); return lst2;}
+function tailClone   (   lst) {var lst2 = lst.map((i)=>i); lst2.shift()   ; return lst2;}
+
 function depth(xs)
 {
 	if (typeof xs == 'object') {
