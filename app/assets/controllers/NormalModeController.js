@@ -27,10 +27,28 @@ NormalModeController.prototype.mouseDown = function (position, widget = null)
 NormalModeController.prototype.mouseMove = function (currentWEPos)
 {
 	if (this.state.prevWidgetHasNotCollidedYet()) {
-		if (this.followWhileCheckCollision(currentWEPos)) {
+		var infinitezimalDisplacement = fromTo(this.state.prevWEPos, currentWEPos);
+		var fallingFigure             = this.state.prevWidget.high;
+		var board                     = this.widgetFactory.bijectionSvgToGeom;
+		if (vectorLength(infinitezimalDisplacement) > 0) {
+			var wasCaptured = affectsAnyOtherFigureBoundary(fallingFigure, board);
+			if (!wasCaptured) {console.log('not capt');
+				var maybeFallVector       = fallFigureOnBoard(infinitezimalDisplacement, fallingFigure, board);
+				var allowableDisplacement = lessThanPossibleInfinitelyDistant(infinitezimalDisplacement, maybeFallVector) ? infinitezimalDisplacement : maybeFallVector[1];
+				this.state.prevWidget.translate(allowableDisplacement);
+			} else { console.log('capt');// wasCaptured
+				var probeFigure = fallingFigure.translation(infinitezimalDisplacement);
+				var wouldEscape = !affectsAnyFigureBoundaryBut(probeFigure, fallingFigure, board);
+				if (wouldEscape) this.state.prevWidget.translate(infinitezimalDisplacement);
+			}
+		}
+
+		///////////////////////////////////////////////////////
+
+		/*if (this.followWhileCheckCollision(currentWEPos)) {
 			this.state.prevWidget.unshowGlittering(); // @TODO
 			this.msgConsole.innerHTML = 'Ütközés!';
-		}
+		}*/
 		this.rememberPosition(currentWEPos);
 		this.state.dragHasAlreadyBegun = true;
 	}
