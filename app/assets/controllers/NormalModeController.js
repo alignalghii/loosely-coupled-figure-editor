@@ -34,12 +34,19 @@ NormalModeController.prototype.mouseMove = function (currentWEPos)
 			var wasCaptured = affectsAnyOtherFigureBoundary(fallingFigure, board);
 			if (!wasCaptured) {console.log('not capt');
 				var maybeFallVector       = fallFigureOnBoard(infinitezimalDisplacement, fallingFigure, board);
-				var allowableDisplacement = lessThanPossibleInfinitelyDistant(infinitezimalDisplacement, maybeFallVector) ? infinitezimalDisplacement : maybeFallVector[1];
+				var isFullRunAllowed = lessThanPossibleInfinitelyDistant(infinitezimalDisplacement, maybeFallVector);
+				var allowableDisplacement = isFullRunAllowed ? infinitezimalDisplacement : maybeFallVector[1];
 				this.state.prevWidget.translate(allowableDisplacement);
+				this.addToRememberedPosition(allowableDisplacement);
 			} else { console.log('capt');// wasCaptured
 				var probeFigure = fallingFigure.translation(infinitezimalDisplacement);
 				var wouldEscape = !affectsAnyFigureBoundaryBut(probeFigure, fallingFigure, board);
-				if (wouldEscape) this.state.prevWidget.translate(infinitezimalDisplacement);
+				if (wouldEscape) {
+					this.state.prevWidget.translate(infinitezimalDisplacement);
+					this.addToRememberedPosition(infinitezimalDisplacement);
+				} else {
+					this.msgConsole.innerHTML = 'Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ' + JSON.stringify(infinitezimalDisplacement) + ' irányban.';
+				}
 			}
 		}
 
@@ -49,7 +56,6 @@ NormalModeController.prototype.mouseMove = function (currentWEPos)
 			this.state.prevWidget.unshowGlittering(); // @TODO
 			this.msgConsole.innerHTML = 'Ütközés!';
 		}*/
-		this.rememberPosition(currentWEPos);
 		this.state.dragHasAlreadyBegun = true;
 	}
 };
@@ -155,6 +161,7 @@ NormalModeController.prototype.focusUnscaleXYArealInvariantFastRef = function ()
 
 NormalModeController.prototype.rememberWidget            = function (currentWidget) {this.state.prevWidget = currentWidget;};
 NormalModeController.prototype.rememberPosition          = function (currentWEPos ) {this.state.prevWEPos  = currentWEPos;};
+NormalModeController.prototype.addToRememberedPosition   = function (displacement ) {this.state.prevWEPos  = addVec(this.state.prevWEPos, displacement);};
 NormalModeController.prototype.followWhileCheckCollision = function (currentWEPos ) {return this.state.hasCollided = this.widgetCollision.checkAndHandleCollision(this.state.prevWidget, this.state.prevWEPos, currentWEPos);};
 
 /** Conditions */

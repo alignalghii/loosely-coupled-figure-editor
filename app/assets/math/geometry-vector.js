@@ -5,6 +5,14 @@ function fromTo(a, b)
 	return [b1-a1, b2-a2];
 }
 
+function addVec(a, b)
+{
+	var [a1, a2] = a;
+	var [b1, b2] = b;
+	return [a1+b1, a2+b2];
+}
+
+
 function scalarProduct ([a, b], [c, d]) {return a*c + b*d;}
 function vectorLength  ([a, b]        ) {return Math.sqrt(a*a + b*b);}
 
