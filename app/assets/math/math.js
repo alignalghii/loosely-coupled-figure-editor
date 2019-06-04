@@ -7,3 +7,4 @@ function cca(x, r) {return Math.abs(x - r) < 0.001;} // @TODO Used in tests, may
 var ccEpsilon = 0.001;
 function ccEq(x, y) {return Math.abs(x - y) < ccEpsilon;}
 function cc0(x) {return ccEq(x, 0);}
+function ccVecEq([a1, a2], [b1, b2]) {return ccEq(a1,b1) && ccEq(a2, b2);}
