@@ -18,4 +18,10 @@ App.prototype.run = function ()
 	this.keyboardUI       .pipeToSM();
 };
 
-App.prototype.populate = function () {this.roomStampUI.roomBank.namedRooms.map((namedRoom) => this.widgetEventPillar.widgetFactory.createWidgetFromDomain1(namedRoom.room));}; // @TODO Law of Demeter
+App.prototype.populate = function ()
+{
+	this.roomStampUI.roomBank.namedRooms.map((namedRoom) => this.widgetEventPillar.widgetFactory.createWidgetFromDomain1(namedRoom.room));// @TODO Law of Demeter
+	var massPointFactory = new MassPointFactory;
+	this.widgetEventPillar.widgetFactory.createWidgetFromDomain1(massPointFactory.testMassPoint('red' , [ 8,  4]));
+	this.widgetEventPillar.widgetFactory.createWidgetFromDomain1(massPointFactory.testMassPoint('blue', [10, -6]));
+};
