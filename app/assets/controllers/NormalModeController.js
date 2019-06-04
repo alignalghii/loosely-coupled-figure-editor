@@ -31,7 +31,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos)
 		var fallingFigure             = this.state.prevWidget.high;
 		var board                     = this.widgetFactory.bijectionSvgToGeom;
 
-		var allowable = vectorTransfomationForAllowance(fallingFigure, board)(infinitezimalDisplacement);
+		var allowable = this.state.prevWidget.domainObject.vectorTransfomationForAllowance(board)(infinitezimalDisplacement);
 		this.state.prevWidget.translate(allowable);
 		this.addToRememberedPosition(allowable);
 		if (vectorLength(infinitezimalDisplacement) > 0 && vectorLength(allowable) == 0) this.msgConsole.innerHTML = 'Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ' + JSON.stringify(infinitezimalDisplacement) + ' irányban.';
