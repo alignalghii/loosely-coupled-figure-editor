@@ -28,15 +28,18 @@ NormalModeController.prototype.mouseMove = function (currentWEPos)
 {
 	if (this.state.prevWidgetHasNotCollidedYet()) {
 		var infinitezimalDisplacement = fromTo(this.state.prevWEPos, currentWEPos);
-		var fallingFigure             = this.state.prevWidget.high;
 		var board                     = this.widgetFactory.bijectionSvgToGeom;
-
-		var allowable = this.state.prevWidget.domainObject.vectorTransfomationForAllowance(board)(infinitezimalDisplacement);
-		this.state.prevWidget.translate(allowable);
-		this.addToRememberedPosition(allowable);
+		var allowable                 = this.state.prevWidget.domainObject.vectorTransfomationForAllowance(board)(infinitezimalDisplacement);
+		this.translatePrevWidgetAndRememberItsNewPosition(allowable);
 		if (vectorLength(infinitezimalDisplacement) > 0 && vectorLength(allowable) == 0) this.msgConsole.innerHTML = 'Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ' + JSON.stringify(infinitezimalDisplacement) + ' irányban.';
 		this.state.dragHasAlreadyBegun = true;
 	}
+};
+
+NormalModeController.prototype.translatePrevWidgetAndRememberItsNewPosition = function (allowableDisplacement)
+{
+	this.state.prevWidget.translate(allowableDisplacement);
+	this.addToRememberedPosition(allowableDisplacement);
 };
 
 NormalModeController.prototype.mouseUp = function (currentWEPos, currentWidget = null)

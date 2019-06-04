@@ -5,7 +5,7 @@ function vectorTransfomationForAllowance(fallingFigure, board)
 			var wasCaptured = affectsAnyOtherFigureBoundary(fallingFigure, board);
 			if (!wasCaptured) {console.log('not capt');
 				var maybeFallVector       = fallFigureOnBoard(infinitezimalDisplacement, fallingFigure, board);
-				var isFullRunAllowed = lessThanPossibleInfinitelyDistant(infinitezimalDisplacement, maybeFallVector);
+				var isFullRunAllowed      = lessThanPossibleInfinitelyDistant(infinitezimalDisplacement, maybeFallVector);
 				var allowableDisplacement = isFullRunAllowed ? infinitezimalDisplacement : maybeFallVector[1];
 				return allowableDisplacement;
 			} else { console.log('capt');// wasCaptured
