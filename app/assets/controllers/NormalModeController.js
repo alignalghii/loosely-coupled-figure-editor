@@ -30,32 +30,11 @@ NormalModeController.prototype.mouseMove = function (currentWEPos)
 		var infinitezimalDisplacement = fromTo(this.state.prevWEPos, currentWEPos);
 		var fallingFigure             = this.state.prevWidget.high;
 		var board                     = this.widgetFactory.bijectionSvgToGeom;
-		if (vectorLength(infinitezimalDisplacement) > 0) {
-			var wasCaptured = affectsAnyOtherFigureBoundary(fallingFigure, board);
-			if (!wasCaptured) {console.log('not capt');
-				var maybeFallVector       = fallFigureOnBoard(infinitezimalDisplacement, fallingFigure, board);
-				var isFullRunAllowed = lessThanPossibleInfinitelyDistant(infinitezimalDisplacement, maybeFallVector);
-				var allowableDisplacement = isFullRunAllowed ? infinitezimalDisplacement : maybeFallVector[1];
-				this.state.prevWidget.translate(allowableDisplacement);
-				this.addToRememberedPosition(allowableDisplacement);
-			} else { console.log('capt');// wasCaptured
-				var probeFigure = fallingFigure.translation(infinitezimalDisplacement);
-				var wouldEscape = !affectsAnyFigureBoundaryBut(probeFigure, fallingFigure, board);
-				if (wouldEscape) {
-					this.state.prevWidget.translate(infinitezimalDisplacement);
-					this.addToRememberedPosition(infinitezimalDisplacement);
-				} else {
-					this.msgConsole.innerHTML = 'Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ' + JSON.stringify(infinitezimalDisplacement) + ' irányban.';
-				}
-			}
-		}
 
-		///////////////////////////////////////////////////////
-
-		/*if (this.followWhileCheckCollision(currentWEPos)) {
-			this.state.prevWidget.unshowGlittering(); // @TODO
-			this.msgConsole.innerHTML = 'Ütközés!';
-		}*/
+		var allowable = vectorTransfomationForAllowance(fallingFigure, board)(infinitezimalDisplacement);
+		this.state.prevWidget.translate(allowable);
+		this.addToRememberedPosition(allowable);
+		if (vectorLength(infinitezimalDisplacement) > 0 && vectorLength(allowable) == 0) this.msgConsole.innerHTML = 'Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ' + JSON.stringify(infinitezimalDisplacement) + ' irányban.';
 		this.state.dragHasAlreadyBegun = true;
 	}
 };
@@ -70,7 +49,6 @@ NormalModeController.prototype.mouseUp = function (currentWEPos, currentWidget =
 		this.msgConsole.innerHTML = 'Alakzatfókusz megjegyezve, üreshelyfókusz levéve.';
 	}
 	if (this.state.prevWidgetHasNotCollidedYet() && this.state.dragHasAlreadyBegun) {
-		this.state.prevWidget.update(this.state.prevWEPos, currentWEPos);
 		this.state.prevWidget.unshowGlittering();
 		this.msgConsole.innerHTML = 'Vonszolás vége.';
 	}
