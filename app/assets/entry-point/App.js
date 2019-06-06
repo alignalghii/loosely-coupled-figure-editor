@@ -21,7 +21,8 @@ App.prototype.run = function ()
 App.prototype.populate = function ()
 {
 	this.roomStampUI.roomBank.namedRooms.map((namedRoom) => this.widgetEventPillar.widgetFactory.createWidgetFromDomain1(namedRoom.room));// @TODO Law of Demeter
-	var massPointFactory = new MassPointFactory;
-	this.widgetEventPillar.widgetFactory.createWidgetFromDomain1(massPointFactory.testMassPoint('red' , [ 8,  4]));
-	this.widgetEventPillar.widgetFactory.createWidgetFromDomain1(massPointFactory.testMassPoint('blue', [10, -6]));
+	var massPoint1Factory = new MassPoint1Factory;
+	var massPoint2Factory = new MassPoint2Factory;
+	this.widgetEventPillar.widgetFactory.createWidgetFromDomain1(massPoint1Factory.testMassPoint1('red' , [ 8,  4]));
+	this.widgetEventPillar.widgetFactory.createWidgetFromDomain1(massPoint2Factory.testMassPoint2('blue', [10, -6]));
 };

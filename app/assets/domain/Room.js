@@ -26,5 +26,3 @@ Room.prototype.copy = function ()
 		this.furniture.map((piece) => piece.copy())
 	);
 };
-
-Room.prototype.vectorTransfomationForAllowance = function (board) {return vectorTransfomationForAllowance(this.figure, board);};
