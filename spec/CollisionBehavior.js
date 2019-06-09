@@ -87,14 +87,14 @@ CollisionBehavior.prototype.shouldFallVerticeOnEdges = function ()
 };
 
 
-CollisionBehavior.prototype.shouldDirectProjectPathOnSection = function ()
+CollisionBehavior.prototype.shouldDirectProjectFallOnSection = function ()
 {
 	return true &&
-		vecEq(directedProjectPathOnSection([12, 13], [-4, -5], [[0,  9], [6, 0]]), ['just', [-8, -10]]) &&
-		vecEq(directedProjectPathOnSection([12, 13], [-4, -5], [[0,  9], [4, 3]]), ['just', [-8, -10]]) &&
-		vecEq(directedProjectPathOnSection([12, 13], [-4, -5], [[0,  9], [2, 6]]), ['nothing'      ]) &&
-		vecEq(directedProjectPathOnSection([12, 13], [-4, -5], [[0, -2], [4, 3]]), ['just', [-8, -10]]) &&
-		vecEq(directedProjectPathOnSection([12, 13], [-4, -5], [[2,  0], [6, 5]]), ['nothing'      ]) &&
+		vecEq(directedProjectFallOnSection([12, 13], [-4, -5], [[0,  9], [6, 0]]), ['just', [-8, -10]]) &&
+		vecEq(directedProjectFallOnSection([12, 13], [-4, -5], [[0,  9], [4, 3]]), ['just', [-8, -10]]) &&
+		vecEq(directedProjectFallOnSection([12, 13], [-4, -5], [[0,  9], [2, 6]]), ['nothing'      ]) &&
+		vecEq(directedProjectFallOnSection([12, 13], [-4, -5], [[0, -2], [4, 3]]), ['just', [-8, -10]]) &&
+		vecEq(directedProjectFallOnSection([12, 13], [-4, -5], [[2,  0], [6, 5]]), ['nothing'      ]) &&
 		true;
 };
 

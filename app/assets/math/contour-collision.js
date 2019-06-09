@@ -1,4 +1,4 @@
-function polygonPathsTouchOrCross(verticesA, verticesB)
+function polygonContoursTouchOrCross(verticesA, verticesB)
 {
 	var edgesA = tour(verticesA);
 	var edgesB = tour(verticesB);
@@ -28,7 +28,7 @@ function isTouchOrCrossInBetweenness(sectionA, sectionB, solution)
 
 
 
-function polygonPathsFiniteTouch(verticesA, verticesB)
+function polygonContoursFiniteTouch(verticesA, verticesB)
 {
 	var edgesA = tour(verticesA);
 	var edgesB = tour(verticesB);

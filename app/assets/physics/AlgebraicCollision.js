@@ -15,7 +15,7 @@ function affectsAnyOtherFigureBoundary(figure, board)
 {
 	for (let anotherFigure of board.range()) {
 		if (anotherFigure != figure) {
-			if (polygonPathsTouchOrCross(figure.vertices, anotherFigure.vertices)) {
+			if (polygonContoursTouchOrCross(figure.vertices, anotherFigure.vertices)) {
 				return true;
 			}
 		}
@@ -27,7 +27,7 @@ function affectsAnyFigureBoundaryBut(figure, exception, board)
 {
 	for (let anotherFigure of board.range()) {
 		if (anotherFigure != exception) {
-			if (polygonPathsTouchOrCross(figure.vertices, anotherFigure.vertices)) {
+			if (polygonContoursTouchOrCross(figure.vertices, anotherFigure.vertices)) {
 				return true;
 			}
 		}

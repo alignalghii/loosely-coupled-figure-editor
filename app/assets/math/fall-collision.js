@@ -37,12 +37,12 @@ function fallVerticesOnEdges(fallDirectionVector, vertices, edges)
 
 function fallVerticeOnEdges(fallDirectionVector, vertice, edges)
 {
-	function byEdge(currentEdge) {return directedProjectPathOnSection(vertice, fallDirectionVector, currentEdge);}
+	function byEdge(currentEdge) {return directedProjectFallOnSection(vertice, fallDirectionVector, currentEdge);}
 	var maybeFallVectors = edges.map(byEdge);
 	return maybeFallVectors.reduce(compareLengthForMin, ['nothing']);
 }
 
-function directedProjectPathOnSection(point, projectionDirectionVector, section)
+function directedProjectFallOnSection(point, projectionDirectionVector, section)
 {
 	var hit = directedProjectOnSection(point, projectionDirectionVector, section);
 	switch (hit[0]) {

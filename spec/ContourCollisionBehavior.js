@@ -1,6 +1,6 @@
-function PathCollisionBehavior () {}
+function ContourCollisionBehavior () {}
 
-PathCollisionBehavior.prototype.shouldSectionsTouchOrCross = function ()
+ContourCollisionBehavior.prototype.shouldSectionsTouchOrCross = function ()
 {
 	var a = [[-1, 11], [ 1,  7]];
 	var b = [[ 0,  9], [ 4,  1]];
@@ -30,15 +30,15 @@ PathCollisionBehavior.prototype.shouldSectionsTouchOrCross = function ()
 		true;
 };
 
-PathCollisionBehavior.prototype.shouldPolygonPathsTouchOrCross = function ()
+ContourCollisionBehavior.prototype.shouldPolygonContoursTouchOrCross = function ()
 {
 	return true &&
-		 polygonPathsTouchOrCross([[0, 0], [2, 0], [1, 1]], [[1, 0], [3, 0], [2, 1]]) &&
-		!polygonPathsTouchOrCross([[0, 0], [2, 0], [1, 1]], [[7, 0], [9, 0], [8, 1]]) &&
+		 polygonContoursTouchOrCross([[0, 0], [2, 0], [1, 1]], [[1, 0], [3, 0], [2, 1]]) &&
+		!polygonContoursTouchOrCross([[0, 0], [2, 0], [1, 1]], [[7, 0], [9, 0], [8, 1]]) &&
 		true;
 };
 
-PathCollisionBehavior.prototype.shouldSectionsFiniteTouch = function ()
+ContourCollisionBehavior.prototype.shouldSectionsFiniteTouch = function ()
 {
 	var a = [[-1, 11], [ 1,  7]];
 	var b = [[ 0,  9], [ 4,  1]];
@@ -77,31 +77,19 @@ PathCollisionBehavior.prototype.shouldSectionsFiniteTouch = function ()
 		true;
 };
 
-PathCollisionBehavior.prototype.shouldPolygonPathsFiniteTouch = function ()
+ContourCollisionBehavior.prototype.shouldPolygonContoursFiniteTouch = function ()
 {
 	return true &&
-		!polygonPathsFiniteTouch([[0, 0], [2, 0], [1, 1]], [[1, 0], [3, 0], [2,  1]]) && // /X\
-		 polygonPathsFiniteTouch([[0, 0], [2, 0], [1, 1]], [[2, 0], [4, 0], [3,  1]]) && // /\/\
-		 polygonPathsFiniteTouch([[0, 0], [2, 0], [1, 1]], [[0, 1], [2, 1], [1,  2]]) &&
-		 polygonPathsFiniteTouch([[0, 0], [2, 0], [1, 1]], [[1, 1], [3, 1], [2,  0]]) && // /\/
-		 polygonPathsFiniteTouch([[0, 0], [2, 0], [1, 1]], [[1, 0], [3, 0], [2, -1]]) &&
-		!polygonPathsFiniteTouch([[0, 0], [2, 0], [1, 1]], [[7, 0], [9, 0], [8,  1]]) && // /\     /\
+		!polygonContoursFiniteTouch([[0, 0], [2, 0], [1, 1]], [[1, 0], [3, 0], [2,  1]]) && // /X\
+		 polygonContoursFiniteTouch([[0, 0], [2, 0], [1, 1]], [[2, 0], [4, 0], [3,  1]]) && // /\/\
+		 polygonContoursFiniteTouch([[0, 0], [2, 0], [1, 1]], [[0, 1], [2, 1], [1,  2]]) &&
+		 polygonContoursFiniteTouch([[0, 0], [2, 0], [1, 1]], [[1, 1], [3, 1], [2,  0]]) && // /\/
+		 polygonContoursFiniteTouch([[0, 0], [2, 0], [1, 1]], [[1, 0], [3, 0], [2, -1]]) &&
+		!polygonContoursFiniteTouch([[0, 0], [2, 0], [1, 1]], [[7, 0], [9, 0], [8,  1]]) && // /\     /\
 		true;
 };
 
-PathCollisionBehavior.prototype.shouldNaturalNormalTo = function ()
-{
-	return true &&
-		vecEq(normalTo([2, -1, 5], [-2, 6]), [ 6, -3]) &&
-		vecEq(normalTo([2, -1, 5], [ 0, 5]), [ 4, -2]) &&
-		vecEq(normalTo([2, -1, 5], [ 2, 4]), [ 2, -1]) &&
-		vecEq(normalTo([2, -1, 5], [ 4, 3]), [ 0,  0]) &&
-		vecEq(normalTo([2, -1, 5], [ 6, 2]), [-2,  1]) &&
-		vecEq(normalTo([2, -1, 5], [ 8, 1]), [-4,  2]) &&
-		vecEq(normalTo([2, -1, 5], [10, 0]), [-6,  3]) &&
-		true;
-};
-PathCollisionBehavior.prototype.shouldDistancedDrag = function ()
+ContourCollisionBehavior.prototype.shouldDistancedDrag = function ()
 {
 	return true &&
 		vecEq(distancedDrag([3, -4, 3], [-5,  8]), [[3, -4], [1, 0], 10]) &&
@@ -112,7 +100,7 @@ PathCollisionBehavior.prototype.shouldDistancedDrag = function ()
 		true;
 };
 
-PathCollisionBehavior.prototype.shouldDistancedDrag = function ()
+ContourCollisionBehavior.prototype.shouldDistancedDrag = function ()
 {
 	return true &&
 		vecEq(distancedDrag([[-3, -3], [5, 3]], [-5,  8]), ['just', [[3, -4], [1, 0], 10]]) &&
@@ -141,7 +129,7 @@ PathCollisionBehavior.prototype.shouldDistancedDrag = function ()
 
 		true;
 };
-PathCollisionBehavior.prototype.shouldSelectDrags = function ()
+ContourCollisionBehavior.prototype.shouldSelectDrags = function ()
 {
 	return true &&
 		vecEq(selectDrags([                                        ], [8, 3]), [                                          ]) &&
@@ -158,7 +146,7 @@ PathCollisionBehavior.prototype.shouldSelectDrags = function ()
 		true;
 };
 
-PathCollisionBehavior.prototype.shouldSelectNearestDrags = function ()
+ContourCollisionBehavior.prototype.shouldSelectNearestDrags = function ()
 {
 	return true &&
 		vecEq(selectDrags([                                        ], [8, 3]), [['nothing'], [                                    ]]) &&
@@ -188,7 +176,7 @@ PathCollisionBehavior.prototype.shouldSelectNearestDrags = function ()
 		true;
 };
 
-PathCollisionBehavior.shouldDecompose = function (toDecompose, alongWhat)
+ContourCollisionBehavior.shouldDecompose = function (toDecompose, alongWhat)
 {
 	return true &&
 		vecEq(
@@ -206,7 +194,7 @@ PathCollisionBehavior.shouldDecompose = function (toDecompose, alongWhat)
 		true;
 };
 
-PathCollisionBehavior.shouldPolygonSlideOnPolygon = function ()
+ContourCollisionBehavior.shouldPolygonSlideOnPolygon = function ()
 {
 	return true &&
 		vecEq(polygonSlideOnPolygon([[5, 7], [7, 8], [5, 10]], [-3, -6], [[ 3, 4], [4, 7], [ 1,  8], [ 1, 6]]), [[-1, -2], [0, -4]]) &&
@@ -216,19 +204,19 @@ PathCollisionBehavior.shouldPolygonSlideOnPolygon = function ()
 };
 
 
-PathCollisionBehavior.prototype.shouldVectorFieldTransformationOfPolygon = function ()
+ContourCollisionBehavior.prototype.shouldVectorFieldTransformationOfPolygon = function ()
 {
 	return true &&
 		true;
 };
 
-PathCollisionBehavior.prototype.shouldVectorFieldTransformationOfSection = function ()
+ContourCollisionBehavior.prototype.shouldVectorFieldTransformationOfSection = function ()
 {
 	return true &&
 		true;
 };
 
-PathCollisionBehavior.prototype.shouldVectorFieldTransformationOfLine = function ()
+ContourCollisionBehavior.prototype.shouldVectorFieldTransformationOfLine = function ()
 {
 	return true &&
 		vecEq(vectorFieldTransformationOfLine([2, -1, -1], [ 2, -1])([1, 3], [5, 0]), [1, 2]) &&
@@ -242,23 +230,5 @@ PathCollisionBehavior.prototype.shouldVectorFieldTransformationOfLine = function
 		true;
 };
 
-PathCollisionBehavior.prototype.shouldOrthogonalProjectOnSection = function ()
-{
-	return true &&
-		vecEq(vectorFieldTransformationOfLine([[ 0, -2], [4,  4]], [-4, 5]), [2,  1]) && // internal point
-		vecEq(vectorFieldTransformationOfLine([[-2, -5], [2,  1]], [-4, 5]), [2,  1]) && // terminal point
-		vecEq(vectorFieldTransformationOfLine([[-2, -5], [0, -2]], [-4, 5]), [0, -2]) && // external point not involved, using terminal point instead
-		true;
-};
 
-PathCollisionBehavior.prototype.shouldOrthogonalProjectOnLine = function ()
-{
-	return true &&
-		vecEq(vectorFieldTransformationOfLine([3, -2, 4], [12,  3]), [6,  7]) &&
-		vecEq(vectorFieldTransformationOfLine([3, -2, 4], [-4,  5]), [2,  1]) &&
-		vecEq(vectorFieldTransformationOfLine([3, -2, 4], [ 8, 10]), [8, 10]) &&
-		true;
-};
-
-
-PathCollisionBehavior.prototype.shouldFindSolutionSet = function () {};
+ContourCollisionBehavior.prototype.shouldFindSolutionSet = function () {};
