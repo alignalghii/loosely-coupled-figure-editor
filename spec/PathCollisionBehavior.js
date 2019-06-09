@@ -38,7 +38,7 @@ PathCollisionBehavior.prototype.shouldPolygonPathsTouchOrCross = function ()
 		true;
 };
 
-PathCollisionBehavior.prototype.shouldSectionsExactlyTouch = function ()
+PathCollisionBehavior.prototype.shouldSectionsFiniteTouch = function ()
 {
 	var a = [[-1, 11], [ 1,  7]];
 	var b = [[ 0,  9], [ 4,  1]];
@@ -50,33 +50,42 @@ PathCollisionBehavior.prototype.shouldSectionsExactlyTouch = function ()
 	var h = [[ 8,  3], [11,  1]];
 	var i = [[13,  4], [13,  2]];
 	var j = [[12,  2], [14,  2]];
+	var k = [[12,  1], [14,  1]];
+	var l = [[12,  1], [13,  1]];
+	var m = [[13,  1], [14,  1]];
 
 	return true &&
-		!sectionsExactlyTouch(a, b) &&
-		!sectionsExactlyTouch(b, c) &&
-		!sectionsExactlyTouch(a, c) &&
-		 sectionsExactlyTouch(a, g) &&
-		!sectionsExactlyTouch(b, g) &&
-		!sectionsExactlyTouch(c, d) &&
-		 sectionsExactlyTouch(b, d) &&
-		 sectionsExactlyTouch(d, e) &&
-		!sectionsExactlyTouch(d, h) &&
-		!sectionsExactlyTouch(e, h) &&
-		 sectionsExactlyTouch(d, i) &&
-		!sectionsExactlyTouch(i, j) &&
-		!sectionsExactlyTouch(d, j) &&
+		!sectionsFiniteTouch(a, b) &&
+		!sectionsFiniteTouch(b, c) &&
+		!sectionsFiniteTouch(a, c) &&
+		 sectionsFiniteTouch(a, g) &&
+		!sectionsFiniteTouch(b, g) &&
+		!sectionsFiniteTouch(c, d) &&
+		 sectionsFiniteTouch(b, d) &&
+		 sectionsFiniteTouch(d, e) &&
+		!sectionsFiniteTouch(d, h) &&
+		!sectionsFiniteTouch(e, h) &&
+		 sectionsFiniteTouch(d, i) &&
+		 sectionsFiniteTouch(i, j) &&
+		!sectionsFiniteTouch(d, j) &&
+		!sectionsFiniteTouch(j, j) &&
+		!sectionsFiniteTouch(j, k) &&
+		!sectionsFiniteTouch(k, l) &&
+		!sectionsFiniteTouch(l, k) &&
+		!sectionsFiniteTouch(k, m) &&
+		!sectionsFiniteTouch(m, k) &&
 		true;
 };
 
-PathCollisionBehavior.prototype.shouldPolygonPathsExactlyTouch = function ()
+PathCollisionBehavior.prototype.shouldPolygonPathsFiniteTouch = function ()
 {
 	return true &&
-		!polygonPathsExactlyTouch([[0, 0], [2, 0], [1, 1]], [[1, 0], [3, 0], [2,  1]]) && // /X\
-		 polygonPathsExactlyTouch([[0, 0], [2, 0], [1, 1]], [[2, 0], [4, 0], [3,  1]]) && // /\/\
-		 polygonPathsExactlyTouch([[0, 0], [2, 0], [1, 1]], [[0, 1], [2, 1], [1,  2]]) &&
-		 polygonPathsExactlyTouch([[0, 0], [2, 0], [1, 1]], [[1, 1], [3, 1], [2,  0]]) && // /\/
-		 polygonPathsExactlyTouch([[0, 0], [2, 0], [1, 1]], [[1, 0], [3, 0], [2, -1]]) &&
-		!polygonPathsExactlyTouch([[0, 0], [2, 0], [1, 1]], [[7, 0], [9, 0], [8,  1]]) && // /\     /\
+		!polygonPathsFiniteTouch([[0, 0], [2, 0], [1, 1]], [[1, 0], [3, 0], [2,  1]]) && // /X\
+		 polygonPathsFiniteTouch([[0, 0], [2, 0], [1, 1]], [[2, 0], [4, 0], [3,  1]]) && // /\/\
+		 polygonPathsFiniteTouch([[0, 0], [2, 0], [1, 1]], [[0, 1], [2, 1], [1,  2]]) &&
+		 polygonPathsFiniteTouch([[0, 0], [2, 0], [1, 1]], [[1, 1], [3, 1], [2,  0]]) && // /\/
+		 polygonPathsFiniteTouch([[0, 0], [2, 0], [1, 1]], [[1, 0], [3, 0], [2, -1]]) &&
+		!polygonPathsFiniteTouch([[0, 0], [2, 0], [1, 1]], [[7, 0], [9, 0], [8,  1]]) && // /\     /\
 		true;
 };
 
