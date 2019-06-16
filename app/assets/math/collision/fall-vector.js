@@ -17,11 +17,36 @@ function fallPointOnSegment(projectionDirectionVector, point, segment)
 }
 
 
-
-
 function fallSegmentOnSegment(dir, segmentProjectile, segmentTarget)
 {
-	var vecs = segmentProjectile.map((terminalPoint) => fallPointOnSegment(dir, terminalPoint, segmentTarget));
-	console.log(JSON.stringify(vecs));
-	return ['nothing'];
+	if (collidesSegmentWithSegment_signAndMagnitudeIndependent(dir, segmentProjectile, segmentTarget)) {
+		var fallForward  = fallSegmentOnSegmentForward (dir, segmentProjectile, segmentTarget);
+		var fallBackward = fallSegmentOnSegmentBackward(dir, segmentProjectile, segmentTarget);
+		return maybeVectorByMinLength2(fallForward, fallBackward);
+	} else {
+		return ['nothing'];
+	}
 }
+
+function fallSegmentOnSegmentForward(dir, segmentProjectile, segmentTarget)
+{
+	var maybeFallVectors = segmentProjectile.map((terminalPoint) => fallPointOnSegment(dir, terminalPoint, segmentTarget));
+	return maybeVectorByMinLengths(maybeFallVectors);
+}
+
+function fallSegmentOnSegmentBackward(dir, segmentProjectile, segmentTarget)
+{
+	var backDir  = toNegative(dir);
+	var backFall = fallSegmentOnSegmentForward(backDir, segmentTarget, segmentProjectile);
+	return maybeMap(toNegative, backFall);
+}
+
+
+function maybeVectorByMinLength2(mbVec1, mbVec2)
+{
+	if (mbVec1[0] == 'nothing') return mbVec2;
+	if (mbVec2[0] == 'nothing') return mbVec1;
+	if (mbVec1[0] == 'just' && mbVec2[0] == 'just') return vectorLength(mbVec1[1]) < vectorLength(mbVec2[1]) ? mbVec1 : mbVec2;
+}
+
+function maybeVectorByMinLengths(mbVecs) {return mbVecs.reduce(maybeVectorByMinLength2, ['nothing']);}

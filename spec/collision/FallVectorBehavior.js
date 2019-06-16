@@ -67,3 +67,33 @@ FallVectorBehavior.prototype.shouldFallSegmentOnSegmentBackward = function ()
 		vecEq(fallSegmentOnSegmentBackward([1, -2], [[ 1,  6], [2, 4]], [[3, 2], [5, 3]]), ['just', [1, -2]]) &&
 		true;
 };
+
+
+FallVectorBehavior.prototype.shouldMaybeVectorByMinLength2 = function ()
+{
+	return true &&
+		vecEq(maybeVectorByMinLength2(['nothing'     ], ['nothing'     ]), ['nothing'     ]) &&
+		vecEq(maybeVectorByMinLength2(['nothing'     ], ['just', [3, 4]]), ['just', [3, 4]]) &&
+		vecEq(maybeVectorByMinLength2(['just', [3, 4]], ['nothing'     ]), ['just', [3, 4]]) &&
+		vecEq(maybeVectorByMinLength2(['just', [3, 4]], ['just', [3, 4]]), ['just', [3, 4]]) &&
+		vecEq(maybeVectorByMinLength2(['just', [3, 4]], ['just', [6, 8]]), ['just', [3, 4]]) &&
+		vecEq(maybeVectorByMinLength2(['just', [6, 8]], ['just', [3, 4]]), ['just', [3, 4]]) &&
+		true;
+};
+
+FallVectorBehavior.prototype.shouldMaybeVectorByMinLengths = function ()
+{
+	return true &&
+		vecEq(maybeVectorByMinLengths([]), ['nothing']) &&
+
+		vecEq(maybeVectorByMinLengths([['nothing'     ]]), ['nothing'     ]) &&
+		vecEq(maybeVectorByMinLengths([['just', [3, 4]]]), ['just', [3, 4]]) &&
+
+		vecEq(maybeVectorByMinLengths([['nothing'     ], ['nothing'     ]]), ['nothing'     ]) &&
+		vecEq(maybeVectorByMinLengths([['nothing'     ], ['just', [3, 4]]]), ['just', [3, 4]]) &&
+		vecEq(maybeVectorByMinLengths([['just', [3, 4]], ['nothing'     ]]), ['just', [3, 4]]) &&
+		vecEq(maybeVectorByMinLengths([['just', [3, 4]], ['just', [3, 4]]]), ['just', [3, 4]]) &&
+		vecEq(maybeVectorByMinLengths([['just', [3, 4]], ['just', [6, 8]]]), ['just', [3, 4]]) &&
+		vecEq(maybeVectorByMinLengths([['just', [6, 8]], ['just', [3, 4]]]), ['just', [3, 4]]) &&
+		true;
+};
