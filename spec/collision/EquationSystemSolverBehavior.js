@@ -1,7 +1,7 @@
-function EquationSolverBehavior() {}
+function EquationSystemSolverBehavior() {}
 
 
-EquationSolverBehavior.prototype.shouldSolveLines = function ()
+EquationSystemSolverBehavior.prototype.shouldSolveLines = function ()
 {
 	return true &&
 		vecEq(solveLines([2, 3,  6], [2, 3,  6]), ['line', 2, 3, 6]) &&
