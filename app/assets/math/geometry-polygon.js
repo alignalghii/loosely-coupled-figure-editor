@@ -38,13 +38,13 @@ function inside(point, figure)
 	var edges = tour(figure);
 	var dir   = signedRotAngleSumWhenToured(figure);
 	if (dir > 0) {
-		function pointIsLeftOfEdge ([edgeStart, edgeEnd]) {return sectionSide(edgeStart, edgeEnd, point) >= 0;}
+		function pointIsLeftOfEdge ([edgeStart, edgeEnd]) {return segmentSide(edgeStart, edgeEnd, point) >= 0;}
 		var expr_lhs = subsequencerRolled(edges, areConvexDirectedEdges  );
 		var flag_lhs = angleTyper(expr_lhs , pointIsLeftOfEdge, true, bAnd, bOr);
 		return flag_lhs;
 	}
 	if (dir < 0) {
-		function pointIsRightOfEdge([edgeStart, edgeEnd]) {return sectionSide(edgeStart, edgeEnd, point) <= 0;}
+		function pointIsRightOfEdge([edgeStart, edgeEnd]) {return segmentSide(edgeStart, edgeEnd, point) <= 0;}
 		var expr_rhs = subsequencerRolled(edges, areConcave0DirectedEdges);
 		var flag_rhs = angleTyper(expr_rhs, pointIsRightOfEdge, true, bAnd, bOr);
 		return flag_rhs;
@@ -155,7 +155,7 @@ function signedRotAngleOfEdges(e, f) {return signedRotAngleOfVectors(edgeVector(
 function angleOfEdges(e, f) {return angleOfVectors(edgeVector(e), edgeVector(f));}
 
 
-function sectionSide(point1, point2, testPoint)
+function segmentSide(point1, point2, testPoint)
 {
 	var lineVector = fromTo(point1, point2);
 	return lineSide(point1, lineVector, testPoint);
@@ -168,6 +168,6 @@ function areConcave0DirectedEdges(e, f) {return areConcave0Vectors(edgeVector(e)
 
 function perimeter(polygon)
 {
-	function addEdgeLength(perimeterSum, edge) {return perimeterSum + sectionLength(edge);}
+	function addEdgeLength(perimeterSum, edge) {return perimeterSum + segmentLength(edge);}
 	return tour(polygon).reduce(addEdgeLength, 0);
 }

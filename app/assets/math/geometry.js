@@ -16,7 +16,7 @@ function lineSide(linePoint,lineVector, testPoint)
 function edgeVector([p, q]) {return fromTo(p, q);}
 
 function distance(start, end) {return vectorLength(fromTo(start, end));}
-function sectionLength([start, end]) {return distance(start, end);}
+function segmentLength([start, end]) {return distance(start, end);}
 
 function areConvexVectors  (u, v) {return det(u, v) >= 0;}
 function areConcaveVectors (u, v) {return det(u, v) <  0;}

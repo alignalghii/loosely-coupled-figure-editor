@@ -13,15 +13,15 @@ function vectorToNearestPointOnLine(line, point)
 }
 
 
-function nearestPointOnSection(section, point)
+function nearestPointOnSegment(segment, point)
 {
-	var line = lineOfSection(section);
+	var line = lineOfSegment(segment);
 	var hit = nearestPointOnLine(line, point);
-	return betweenness(section, hit) <= 0 ? hit : selectNearestPointsToPoint(section, hit)[0];
+	return betweenness(segment, hit) <= 0 ? hit : selectNearestPointsToPoint(segment, hit)[0];
 }
 
-function vectorToNearestPointOnSection(section, point)
+function vectorToNearestPointOnSegment(segment, point)
 {
-	var hit = nearestPointOnSection(section, point);
+	var hit = nearestPointOnSegment(segment, point);
 	return fromTo(point, hit);
 }

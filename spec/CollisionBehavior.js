@@ -87,49 +87,7 @@ CollisionBehavior.prototype.shouldFallVerticeOnEdges = function ()
 };
 
 
-CollisionBehavior.prototype.shouldDirectProjectFallOnSection = function ()
-{
-	return true &&
-		vecEq(directedProjectFallOnSection([12, 13], [-4, -5], [[0,  9], [6, 0]]), ['just', [-8, -10]]) &&
-		vecEq(directedProjectFallOnSection([12, 13], [-4, -5], [[0,  9], [4, 3]]), ['just', [-8, -10]]) &&
-		vecEq(directedProjectFallOnSection([12, 13], [-4, -5], [[0,  9], [2, 6]]), ['nothing'      ]) &&
-		vecEq(directedProjectFallOnSection([12, 13], [-4, -5], [[0, -2], [4, 3]]), ['just', [-8, -10]]) &&
-		vecEq(directedProjectFallOnSection([12, 13], [-4, -5], [[2,  0], [6, 5]]), ['nothing'      ]) &&
-		true;
-};
 
-CollisionBehavior.prototype.shouldDirectProjectionOnSection = function ()
-{
-	return true &&
-		vecEq(directedProjectOnSection([12, 13], [-4, -5], [[0,  9], [6, 0]]), ['internalpoint', 4      , 3     ]) &&
-		vecEq(directedProjectOnSection([12, 13], [-4, -5], [[0,  9], [4, 3]]), ['terminalpoint', 4      , 3     ]) &&
-		vecEq(directedProjectOnSection([12, 13], [-4, -5], [[0,  9], [2, 6]]), ['externalpoint', 4      , 3     ]) &&
-		vecEq(directedProjectOnSection([12, 13], [-4, -5], [[0, -2], [4, 3]]), ['section'      , [0, -2], [4, 3]]) &&
-		vecEq(directedProjectOnSection([12, 13], [-4, -5], [[2,  0], [6, 5]]), ['inconsistent'                  ]) &&
-		true;
-};
-
-CollisionBehavior.prototype.shouldDirectProjection = function ()
-{
-	return true &&
-		vecEq(directedProject([12, 13], [-4, -5], [3,  2, 18]), ['point', 4, 3]) &&
-		vecEq(directedProject([12, 13], [-4, -5], [5, -4,  8]), ['line', -5, 4, -8]) &&
-		vecEq(directedProject([12, 13], [-4, -5], [5, -4, 16]), ['inconsistent']) &&
-		true;
-};
-
-CollisionBehavior.prototype.shouldSolveLines = function ()
-{
-	return true &&
-		vecEq(solveLines([2, 3,  6], [2, 3,  6]), ['line', 2, 3, 6]) &&
-		vecEq(solveLines([2, 3,  6], [4, 6, 12]), ['line', 2, 3, 6]) &&
-		vecEq(solveLines([2, 3,  0], [4, 6,  0]), ['line', 2, 3, 0]) &&
-
-		vecEq(solveLines([2, 3,  6], [4, 6, 13]), ['inconsistent' ]) &&
-		vecEq(solveLines([2, 3,  0], [4, 6,  1]), ['inconsistent' ]) &&
-		vecEq(solveLines([0, 1,  5], [1, 0, 10]), ['point', 10,  5]) &&
-		true;
-};
 
 CollisionBehavior.prototype.shouldDetectBetweenness = function ()
 {

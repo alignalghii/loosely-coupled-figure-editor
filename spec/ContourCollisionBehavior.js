@@ -1,6 +1,6 @@
 function ContourCollisionBehavior () {}
 
-ContourCollisionBehavior.prototype.shouldSectionsTouchOrCross = function ()
+ContourCollisionBehavior.prototype.shouldSegmentsTouchOrCross = function ()
 {
 	var a = [[-1, 11], [ 1,  7]];
 	var b = [[ 0,  9], [ 4,  1]];
@@ -14,19 +14,19 @@ ContourCollisionBehavior.prototype.shouldSectionsTouchOrCross = function ()
 	var j = [[12,  2], [14,  2]];
 
 	return true &&
-		 sectionsTouchOrCross(a, b) &&
-		 sectionsTouchOrCross(b, c) &&
-		!sectionsTouchOrCross(a, c) &&
-		 sectionsTouchOrCross(a, g) &&
-		 sectionsTouchOrCross(b, g) &&
-		!sectionsTouchOrCross(c, d) &&
-		 sectionsTouchOrCross(b, d) &&
-		 sectionsTouchOrCross(d, e) &&
-		 sectionsTouchOrCross(d, h) &&
-		!sectionsTouchOrCross(e, h) &&
-		 sectionsTouchOrCross(d, i) &&
-		 sectionsTouchOrCross(i, j) &&
-		!sectionsTouchOrCross(d, j) &&
+		 segmentsTouchOrCross(a, b) &&
+		 segmentsTouchOrCross(b, c) &&
+		!segmentsTouchOrCross(a, c) &&
+		 segmentsTouchOrCross(a, g) &&
+		 segmentsTouchOrCross(b, g) &&
+		!segmentsTouchOrCross(c, d) &&
+		 segmentsTouchOrCross(b, d) &&
+		 segmentsTouchOrCross(d, e) &&
+		 segmentsTouchOrCross(d, h) &&
+		!segmentsTouchOrCross(e, h) &&
+		 segmentsTouchOrCross(d, i) &&
+		 segmentsTouchOrCross(i, j) &&
+		!segmentsTouchOrCross(d, j) &&
 		true;
 };
 
@@ -38,7 +38,7 @@ ContourCollisionBehavior.prototype.shouldPolygonContoursTouchOrCross = function 
 		true;
 };
 
-ContourCollisionBehavior.prototype.shouldSectionsFiniteTouch = function ()
+ContourCollisionBehavior.prototype.shouldSegmentsFiniteTouch = function ()
 {
 	var a = [[-1, 11], [ 1,  7]];
 	var b = [[ 0,  9], [ 4,  1]];
@@ -55,25 +55,25 @@ ContourCollisionBehavior.prototype.shouldSectionsFiniteTouch = function ()
 	var m = [[13,  1], [14,  1]];
 
 	return true &&
-		!sectionsFiniteTouch(a, b) &&
-		!sectionsFiniteTouch(b, c) &&
-		!sectionsFiniteTouch(a, c) &&
-		 sectionsFiniteTouch(a, g) &&
-		!sectionsFiniteTouch(b, g) &&
-		!sectionsFiniteTouch(c, d) &&
-		 sectionsFiniteTouch(b, d) &&
-		 sectionsFiniteTouch(d, e) &&
-		!sectionsFiniteTouch(d, h) &&
-		!sectionsFiniteTouch(e, h) &&
-		 sectionsFiniteTouch(d, i) &&
-		 sectionsFiniteTouch(i, j) &&
-		!sectionsFiniteTouch(d, j) &&
-		!sectionsFiniteTouch(j, j) &&
-		!sectionsFiniteTouch(j, k) &&
-		!sectionsFiniteTouch(k, l) &&
-		!sectionsFiniteTouch(l, k) &&
-		!sectionsFiniteTouch(k, m) &&
-		!sectionsFiniteTouch(m, k) &&
+		!segmentsFiniteTouch(a, b) &&
+		!segmentsFiniteTouch(b, c) &&
+		!segmentsFiniteTouch(a, c) &&
+		 segmentsFiniteTouch(a, g) &&
+		!segmentsFiniteTouch(b, g) &&
+		!segmentsFiniteTouch(c, d) &&
+		 segmentsFiniteTouch(b, d) &&
+		 segmentsFiniteTouch(d, e) &&
+		!segmentsFiniteTouch(d, h) &&
+		!segmentsFiniteTouch(e, h) &&
+		 segmentsFiniteTouch(d, i) &&
+		 segmentsFiniteTouch(i, j) &&
+		!segmentsFiniteTouch(d, j) &&
+		!segmentsFiniteTouch(j, j) &&
+		!segmentsFiniteTouch(j, k) &&
+		!segmentsFiniteTouch(k, l) &&
+		!segmentsFiniteTouch(l, k) &&
+		!segmentsFiniteTouch(k, m) &&
+		!segmentsFiniteTouch(m, k) &&
 		true;
 };
 
@@ -210,7 +210,7 @@ ContourCollisionBehavior.prototype.shouldVectorFieldTransformationOfPolygon = fu
 		true;
 };
 
-ContourCollisionBehavior.prototype.shouldVectorFieldTransformationOfSection = function ()
+ContourCollisionBehavior.prototype.shouldVectorFieldTransformationOfSegment = function ()
 {
 	return true &&
 		true;

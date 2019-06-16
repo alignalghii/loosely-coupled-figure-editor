@@ -14,6 +14,7 @@ function addVec(a, b)
 
 
 function scalarProduct ([a, b], [c, d]) {return a*c + b*d;}
+function detCols([a11, a21], [a12, a22]) {return a11*a22-a21*a12;}
 function vectorLength  ([a, b]        ) {return Math.sqrt(a*a + b*b);}
 
 function signedRotAngleOfVectors(u , v)
@@ -78,3 +79,27 @@ function centroid(points)
 	for (i = 0; i < count; i++) {xSum += points[i][0]; ySum += points[i][1];}
 	return [xSum / count, ySum / count];
 }
+
+function decompose(base1, base2, toDecompose)
+{
+	var solution = solveColumns(base1, base2, toDecompose);
+	solution.shift();
+	return solution;
+}
+
+function projectNormal(newYAxisBackDirection, point)
+{
+	var base2 = normalizeVector(toNegative(newYAxisBackDirection));
+	var base1 = normalizeVector(rotVec90CW(base2));
+	return decompose(base1, base2, point)[0];
+}
+
+function normalizeVector(vector)
+{
+	var [x, y] = vector;
+	var n      = vectorLength(vector);
+	return       [x/n, y/n];
+}
+
+function rotVec90CCW([x, y]) {return [-y,  x];}
+function rotVec90CW ([x, y]) {return [ y, -x];}

@@ -24,20 +24,20 @@ CollisionAsOrthogonalNearnessBehavior.prototype.shouldVectorToNearestPointOnLine
 };
 
 
-CollisionAsOrthogonalNearnessBehavior.prototype.shouldNearestPointOnSection = function ()
+CollisionAsOrthogonalNearnessBehavior.prototype.shouldNearestPointOnSegment = function ()
 {
 	return true &&
-		vecEq(nearestPointOnSection([[ 0, -2], [4,  4]], [-4, 5]), [2,  1]) && // internal point
-		vecEq(nearestPointOnSection([[-2, -5], [2,  1]], [-4, 5]), [2,  1]) && // terminal point
-		vecEq(nearestPointOnSection([[-2, -5], [0, -2]], [-4, 5]), [0, -2]) && // external point not involved, using terminal point instead
+		vecEq(nearestPointOnSegment([[ 0, -2], [4,  4]], [-4, 5]), [2,  1]) && // internal point
+		vecEq(nearestPointOnSegment([[-2, -5], [2,  1]], [-4, 5]), [2,  1]) && // terminal point
+		vecEq(nearestPointOnSegment([[-2, -5], [0, -2]], [-4, 5]), [0, -2]) && // external point not involved, using terminal point instead
 		true;
 };
 
-CollisionAsOrthogonalNearnessBehavior.prototype.shouldVectorToNearestPointOnSection = function ()
+CollisionAsOrthogonalNearnessBehavior.prototype.shouldVectorToNearestPointOnSegment = function ()
 {
 	return true &&
-		vecEq(nearestPointOnSection([[ 0, -2], [4,  4]], [-4, 5]), [3, -4]) && // internal point
-		vecEq(nearestPointOnSection([[-2, -5], [2,  1]], [-4, 5]), [3, -4]) && // terminal point
-		vecEq(nearestPointOnSection([[-2, -5], [0, -2]], [-4, 5]), [4, -7]) && // external point not involved, using terminal point instead
+		vecEq(nearestPointOnSegment([[ 0, -2], [4,  4]], [-4, 5]), [3, -4]) && // internal point
+		vecEq(nearestPointOnSegment([[-2, -5], [2,  1]], [-4, 5]), [3, -4]) && // terminal point
+		vecEq(nearestPointOnSegment([[-2, -5], [0, -2]], [-4, 5]), [4, -7]) && // external point not involved, using terminal point instead
 		true;
 };

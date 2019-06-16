@@ -37,62 +37,24 @@ function fallVerticesOnEdges(fallDirectionVector, vertices, edges)
 
 function fallVerticeOnEdges(fallDirectionVector, vertice, edges)
 {
-	function byEdge(currentEdge) {return directedProjectFallOnSection(vertice, fallDirectionVector, currentEdge);}
+	function byEdge(currentEdge) {return directedProjectFallOnSegment(vertice, fallDirectionVector, currentEdge);}
 	var maybeFallVectors = edges.map(byEdge);
 	return maybeFallVectors.reduce(compareLengthForMin, ['nothing']);
 }
 
-function directedProjectFallOnSection(point, projectionDirectionVector, section)
+function directedProjectFallOnSegment(point, projectionDirectionVector, segment)
 {
-	var hit = directedProjectOnSection(point, projectionDirectionVector, section);
+	var hit = intersectRayWithSegment(point, projectionDirectionVector, segment);
 	switch (hit[0]) {
 		case 'inconsistent' : return ['nothing'];
 		case 'unconstrained': return ['nothing'];
-		case 'section':
+		case 'segment':
 			var [_, begin, end] = hit;
 			var theNearestOne = selectNearestPointsToPoint([begin, end], point)[0];
 			return ['just', fromTo(point, theNearestOne)];
-		case 'externalpoint': return ['nothing'];
-		case 'terminalpoint': case 'internalpoint':
+		case 'external-point': return ['nothing'];
+		case 'terminal-point': case 'internal-point':
 			var [_, x, y] = hit;
 			return ['just', fromTo(point, [x, y])];
 	}
-}
-
-
-function directedProjectOnSection(point, projectionDirectionVector, section)
-{
-	var line = lineOfSection(section);
-	var typedResult  = directedProject(point, projectionDirectionVector, line);
-
-	switch (typedResult[0]) {
-		case 'inconsistent' : return typedResult;
-		case 'unconstrained': return typedResult;
-		case 'line'         : return unshiftClone('section', section);
-		case 'point':
-			var point = tailClone(typedResult);
-			var embrace = betweenness(section, point);
-			if (embrace >  0) return unshiftClone('externalpoint', point);
-			if (embrace == 0) return unshiftClone('terminalpoint', point);
-			if (embrace <  0) return unshiftClone('internalpoint', point);
-	}
-}
-
-function directedProject(point, projectionDirectionVector, lineAsNormalVectorEquation)
-{
-	var [p1, p2] = point;
-	var [pdv1, pdv2] = projectionDirectionVector;
-	var [lnv1, lnv2, lineRhs] = lineAsNormalVectorEquation;
-
-	var projectionLineRhs = detCols(point, projectionDirectionVector);
-
-	return solveGeneral([pdv2, -pdv1, projectionLineRhs], lineAsNormalVectorEquation);
-
-	/*var equatrionSystemRhsVector = [projectionLineRhs, lineRhs]; var eqSysRhsVec = equatrionSystemRhsVector;
-	var col1 = [ pdv2, lnv1];
-	var col2 = [-pdv1, lnv2];
-
-	var eqSysMatrix = [col1, col2];
-	var sub1Matrix  = [eqSysRhsVec, col2];
-	var sub2Matrix  = [col1, eqSysRhsVec];*/
 }

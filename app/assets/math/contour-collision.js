@@ -4,24 +4,24 @@ function polygonContoursTouchOrCross(verticesA, verticesB)
 	var edgesB = tour(verticesB);
 	for (let i = 0; i < edgesA.length; i++)
 		for (let j = 0; j < edgesB.length; j++)
-			if (sectionsTouchOrCross(edgesA[i], edgesB[j]))
+			if (segmentsTouchOrCross(edgesA[i], edgesB[j]))
 				return true;
 	return false;
 }
 
-function sectionsTouchOrCross(sectionA, sectionB)
+function segmentsTouchOrCross(segmentA, segmentB)
 {
-	var a = lineOfSection(sectionA);
-	var b = lineOfSection(sectionB);
+	var a = lineOfSegment(segmentA);
+	var b = lineOfSegment(segmentB);
 	var solution = solveLines(a, b);
-	return isTouchOrCrossInBetweenness(sectionA, sectionB, solution);
+	return isTouchOrCrossInBetweenness(segmentA, segmentB, solution);
 }
 
-function isTouchOrCrossInBetweenness(sectionA, sectionB, solution)
+function isTouchOrCrossInBetweenness(segmentA, segmentB, solution)
 {
 	switch (solution[0]) {
-		case 'point'       : return betweenness(sectionA, [solution[1], solution[2]]) <= 0 && betweenness(sectionB, [solution[1], solution[2]]) <= 0;
-		case 'line'        : return betweenness(sectionA, sectionB[0]) <= 0 || betweenness(sectionA, sectionB[1]) <= 0 || betweenness(sectionB, sectionA[0]) <= 0 || betweenness(sectionB, sectionA[0]) <= 0;
+		case 'point'       : return betweenness(segmentA, [solution[1], solution[2]]) <= 0 && betweenness(segmentB, [solution[1], solution[2]]) <= 0;
+		case 'line'        : return betweenness(segmentA, segmentB[0]) <= 0 || betweenness(segmentA, segmentB[1]) <= 0 || betweenness(segmentB, segmentA[0]) <= 0 || betweenness(segmentB, segmentA[0]) <= 0;
 		case 'inconsistent': return false;
 	}
 }
@@ -34,29 +34,29 @@ function polygonContoursFiniteTouch(verticesA, verticesB)
 	var edgesB = tour(verticesB);
 	for (let i = 0; i < edgesA.length; i++)
 		for (let j = 0; j < edgesB.length; j++)
-			if (sectionsFiniteTouch(edgesA[i], edgesB[j]))
+			if (segmentsFiniteTouch(edgesA[i], edgesB[j]))
 				return true;
 	return false;
 }
 
-function sectionsFiniteTouch(sectionA, sectionB)
+function segmentsFiniteTouch(segmentA, segmentB)
 {
-	var a = lineOfSection(sectionA);
-	var b = lineOfSection(sectionB);
+	var a = lineOfSegment(segmentA);
+	var b = lineOfSegment(segmentB);
 	var solution = solveLines(a, b);
-	return isFiniteTouchInBetweenness(sectionA, sectionB, solution);
+	return isFiniteTouchInBetweenness(segmentA, segmentB, solution);
 }
 
-function isFiniteTouchInBetweenness(sectionA, sectionB, solution)
+function isFiniteTouchInBetweenness(segmentA, segmentB, solution)
 {
 	switch (solution[0]) {
-		case 'point'       : return betweenness(sectionA, [solution[1], solution[2]]) == 0 && betweenness(sectionB, [solution[1], solution[2]]) <= 0 || betweenness(sectionB, [solution[1], solution[2]]) == 0 && betweenness(sectionA, [solution[1], solution[2]]) <= 0;
+		case 'point'       : return betweenness(segmentA, [solution[1], solution[2]]) == 0 && betweenness(segmentB, [solution[1], solution[2]]) <= 0 || betweenness(segmentB, [solution[1], solution[2]]) == 0 && betweenness(segmentA, [solution[1], solution[2]]) <= 0;
 		case 'line'        : return false ||
-			vecEq(sectionA[1], sectionB[0]) && betweenness([sectionA[0], sectionB[1]], sectionA[1]) <= 0 || // A+ -- B+
-			vecEq(sectionA[1], sectionB[1]) && betweenness([sectionA[0], sectionB[0]], sectionA[1]) <= 0 || // A+ -- B-
+			vecEq(segmentA[1], segmentB[0]) && betweenness([segmentA[0], segmentB[1]], segmentA[1]) <= 0 || // A+ -- B+
+			vecEq(segmentA[1], segmentB[1]) && betweenness([segmentA[0], segmentB[0]], segmentA[1]) <= 0 || // A+ -- B-
 
-			vecEq(sectionA[0], sectionB[0]) && betweenness([sectionA[1], sectionB[1]], sectionA[0]) <= 0 || // A- -- B+
-			vecEq(sectionA[0], sectionB[1]) && betweenness([sectionA[1], sectionB[0]], sectionA[0]) <= 0 || // A- -- B-
+			vecEq(segmentA[0], segmentB[0]) && betweenness([segmentA[1], segmentB[1]], segmentA[0]) <= 0 || // A- -- B+
+			vecEq(segmentA[0], segmentB[1]) && betweenness([segmentA[1], segmentB[0]], segmentA[0]) <= 0 || // A- -- B-
 			false;
 		case 'inconsistent': return false;
 	}
