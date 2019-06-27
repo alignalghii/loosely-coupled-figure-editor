@@ -8,6 +8,7 @@ import RealModulus (isConvex)
 import FourierMotzkinElimination
 import DataX
 import Combinator
+import Orientation
 
 type LineEquation        = (Float, Float, Float) -- Ax + By = C
 type HalfPlaneInequality = (Float, Float, Float) -- Ax + By < C
@@ -32,13 +33,14 @@ edgeVector = uncurry fromTo
 (a, b) ..<-. c = (a, b, c)
 
 
-polygonInequalityStructure :: [Point] -> DisjunctiveNormalForm HalfPlaneInequality
-polygonInequalityStructure  = cnfToDnf . opsTerminatedListToCnf . polygonInequalityStructure_
+polygonInequalityStructure :: BoundnessSign -> [Point] -> DisjunctiveNormalForm HalfPlaneInequality
+polygonInequalityStructure boundnessSign = cnfToDnf . opsTerminatedListToCnf . polygonInequalityStructure_ boundnessSign
 
-polygonInequalityStructure_ :: [Point] -> [OpTerminated HalfPlaneInequality]
-polygonInequalityStructure_  vertices = let edges  = tour vertices
-                                            rotDir = tourRotDir vertices
-                                        in cycleToOpsTerminatedListWith (convexEdgeBendBy rotDir) (edgeSide rotDir) edges
+polygonInequalityStructure_ :: BoundnessSign -> [Point] -> [OpTerminated HalfPlaneInequality]
+polygonInequalityStructure_ boundnessSign  vertices = let edges   = tour vertices
+                                                          rotDir  = tourRotDir vertices
+                                                          rotDir_ = effectiveRotDir boundnessSign rotDir
+                                                      in cycleToOpsTerminatedListWith (convexEdgeBendBy rotDir_) (edgeSide rotDir_) edges
 
 convexVectorBend :: Vector -> Vector -> Bool
 convexVectorBend = bbb isConvex angle2_0360
@@ -49,6 +51,20 @@ convexVectorBendBy rotDir u v = isConvex $ angle2_0360_by rotDir u v
 convexEdgeBendBy :: RotationDirection -> DirectedSegment -> DirectedSegment -> Bool
 convexEdgeBendBy rotDir = psi (convexVectorBendBy rotDir) edgeVector
 
+solveIncludingTie, solveExcludingTie :: DisjunctiveNormalForm HalfPlaneInequality -> Bool
+solveIncludingTie = any (isConsistentIncludingTie . map tripleToNEList)
+solveExcludingTie = any (isConsistentExcludingTie . map tripleToNEList)
+
 intersectIncludingTouch, intersectExcludingTouch :: [Point] -> [Point] -> Bool
-intersectIncludingTouch = any (isConsistentIncludingTie . map tripleToNEList) `bbb` psi dnfAnd polygonInequalityStructure
-intersectExcludingTouch = any (isConsistentExcludingTie . map tripleToNEList) `bbb` psi dnfAnd polygonInequalityStructure
+intersectIncludingTouch = solveIncludingTie `bbb` psi dnfAnd (polygonInequalityStructure Containment)
+intersectExcludingTouch = solveExcludingTie `bbb` psi dnfAnd (polygonInequalityStructure Containment)
+
+containIncludingTouch, containExcludingTouch :: [Point] -> [Point] -> Bool
+containIncludingTouch verticesA verticesB = let eqSysA = polygonInequalityStructure Containment   verticesA
+                                                eqSysB = polygonInequalityStructure Complementary verticesB
+                                                eqSys  = dnfAnd eqSysA eqSysB
+                                            in not $ solveExcludingTie eqSys
+containExcludingTouch verticesA verticesB = let eqSysA = polygonInequalityStructure Containment   verticesA
+                                                eqSysB = polygonInequalityStructure Complementary verticesB
+                                                eqSys  = dnfAnd eqSysA eqSysB
+                                            in not $ solveIncludingTie eqSys

@@ -26,3 +26,11 @@ invertSide RightSide = LeftSide
 rotationDirectionInterpretation :: Num a => RotationDirection -> (a -> a)
 rotationDirectionInterpretation PositiveRotation = id
 rotationDirectionInterpretation NegativeRotation = negate
+
+data BoundnessSign = Containment | Complementary
+
+effectiveRotDir :: BoundnessSign -> RotationDirection -> RotationDirection
+effectiveRotDir Containment   PositiveRotation = PositiveRotation
+effectiveRotDir Containment   NegativeRotation = NegativeRotation
+effectiveRotDir Complementary PositiveRotation = NegativeRotation
+effectiveRotDir Complementary NegativeRotation = PositiveRotation
