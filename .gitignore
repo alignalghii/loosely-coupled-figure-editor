@@ -1,1 +1,3 @@
 sonar.ogg
+*.o
+*.hi
