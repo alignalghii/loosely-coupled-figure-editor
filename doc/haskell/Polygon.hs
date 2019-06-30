@@ -51,13 +51,16 @@ convexVectorBendBy rotDir u v = isConvex $ angle2_0360_by rotDir u v
 convexEdgeBendBy :: RotationDirection -> DirectedSegment -> DirectedSegment -> Bool
 convexEdgeBendBy rotDir = psi (convexVectorBendBy rotDir) edgeVector
 
-solveIncludingTie, solveExcludingTie :: DisjunctiveNormalForm HalfPlaneInequality -> Bool
+solveIncludingTie, solveExcludingTie, solveExactlyTie :: DisjunctiveNormalForm HalfPlaneInequality -> Bool
 solveIncludingTie = any (isConsistentIncludingTie . map tripleToNEList)
 solveExcludingTie = any (isConsistentExcludingTie . map tripleToNEList)
+--solveExactlyTie = any (isConsistentExactlyTie   . map tripleToNEList)
+solveExactlyTie dnf = any (isConsistentExactlyTie . map tripleToNEList) dnf -- && all (not . isConsistentExcludingTie . map tripleToNEList) dnf 
 
-intersectIncludingTouch, intersectExcludingTouch :: [Point] -> [Point] -> Bool
+intersectIncludingTouch, intersectExcludingTouch, intersectExactlyTouch :: [Point] -> [Point] -> Bool
 intersectIncludingTouch = solveIncludingTie `bbb` psi dnfAnd (polygonInequalityStructure Containment)
 intersectExcludingTouch = solveExcludingTie `bbb` psi dnfAnd (polygonInequalityStructure Containment)
+intersectExactlyTouch   = solveExactlyTie   `bbb` psi dnfAnd (polygonInequalityStructure Containment) --- ??? PROBABLY WRONG SEE BELOW
 
 containIncludingTouch, containExcludingTouch :: [Point] -> [Point] -> Bool
 containIncludingTouch verticesA verticesB = let eqSysA = polygonInequalityStructure Containment   verticesA
@@ -68,3 +71,12 @@ containExcludingTouch verticesA verticesB = let eqSysA = polygonInequalityStruct
                                                 eqSysB = polygonInequalityStructure Complementary verticesB
                                                 eqSys  = dnfAnd eqSysA eqSysB
                                             in not $ solveIncludingTie eqSys
+--containExactlyTouch       verticesA verticesB = let eqSysA = polygonInequalityStructure Containment   verticesA --- ??? PROBABLY WRONG SEE BELOW
+--                                                    eqSysB = polygonInequalityStructure Complementary verticesB
+--                                                    eqSys  = dnfAnd eqSysA eqSysB
+--                                                in solveExactlyTie eqSys
+containExactlyTouch verticesA verticesB = containIncludingTouch verticesA verticesB && not (containExcludingTouch verticesA verticesB)
+
+validState, invalidState :: [Point] -> [Point] -> Bool
+validState   verticesA verticesB = intersectIncludingTouch verticesA verticesB || containIncludingTouch verticesA verticesB
+invalidState verticesA verticesB = not (validState verticesA verticesB)

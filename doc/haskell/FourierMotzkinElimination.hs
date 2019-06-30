@@ -6,9 +6,10 @@ import Infinitesimal ((=~=))
 import Data.List (uncons)
 import DataX (NEList, descartesWith)
 
-isConsistentIncludingTie, isConsistentExcludingTie :: [NEList Float] -> Bool
+isConsistentIncludingTie, isConsistentExcludingTie, isConsistentExactlyTie :: [NEList Float] -> Bool
 isConsistentIncludingTie = maybe True (\n -> n =~= 0 || n >= 0) . consistence
 isConsistentExcludingTie = maybe True (\n -> not (n =~= 0) && n > 0) . consistence
+isConsistentExactlyTie   = maybe True (\n -> n =~= 0) . consistence
 
 consistence :: [NEList Float] -> Maybe Float
 consistence = safeMin . eliminate
