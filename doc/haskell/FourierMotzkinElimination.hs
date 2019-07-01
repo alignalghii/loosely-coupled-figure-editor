@@ -4,15 +4,31 @@ module FourierMotzkinElimination where
 
 import Infinitesimal ((=~=))
 import Data.List (uncons)
-import DataX (NEList, descartesWith)
+import DataX (NEList, descartesPlus, maybeLoop, safeMin)
+import Logic (Predicate, Quantor, predicateNot, predicateAnd)
 
-isConsistentIncludingTie, isConsistentExcludingTie, isConsistentExactlyTie :: [NEList Float] -> Bool
-isConsistentIncludingTie = maybe True (\n -> n =~= 0 || n >= 0) . consistence
-isConsistentExcludingTie = maybe True (\n -> not (n =~= 0) && n > 0) . consistence
-isConsistentExactlyTie   = maybe True (\n -> n =~= 0) . consistence
+type EqSystem =  [NEList Float]
+type EqSystemCharacteristic = Maybe Float
 
-consistence :: [NEList Float] -> Maybe Float
-consistence = safeMin . eliminate
+globalStatementForEqSystems :: Predicate [EqSystemCharacteristic] -> Predicate [EqSystem]
+globalStatementForEqSystems globalPred = globalPred . map eqSystemCharacteristic
+
+eqSystemCharacteristic   :: EqSystem -> EqSystemCharacteristic
+eqSystemCharacteristic = safeMin . eliminate
+
+quantifyCharacteristic :: Quantor EqSystemCharacteristic -> Predicate Float -> Predicate [EqSystemCharacteristic]
+quantifyCharacteristic quantor = quantor . maybe True
+
+globalPredicateForIncludingBoundary, globalPredicateForExcludingBoundary, globalPredicateForExactBoundary :: Predicate [EqSystemCharacteristic]
+globalPredicateForIncludingBoundary =  quantifyCharacteristic any predicateForIncludingBoundary
+globalPredicateForExcludingBoundary =  quantifyCharacteristic any predicateForExcludingBoundary
+globalPredicateForExactBoundary     =  quantifyCharacteristic any predicateForExactBoundary `predicateAnd` predicateNot globalPredicateForExcludingBoundary
+
+
+predicateForIncludingBoundary, predicateForExcludingBoundary, predicateForExactBoundary :: Predicate Float
+predicateForIncludingBoundary n =      n =~= 0  || n >= 0
+predicateForExcludingBoundary n = not (n =~= 0) && n >  0
+predicateForExactBoundary     n =      n =~= 0
 
 eliminate :: [NEList Float] -> [Float]
 eliminate = map fst . maybeLoop eliminate1
@@ -46,17 +62,3 @@ dispatch mbTaggedRow mbPartition = do
 
 combine :: Num a => ([NEList a], [NEList a], [NEList a]) -> [NEList a]
 combine (negs, nuls, poss) = descartesPlus negs poss ++ nuls
-
-descartesPlus :: Num a => [NEList a] -> [NEList a] -> [NEList a]
-descartesPlus = descartesWith nePlus
-
-
-nePlus :: Num a => NEList a -> NEList a -> NEList a
-nePlus (a, as) (b, bs) = (a + b, zipWith (+) as bs)
-
-maybeLoop :: (a -> Maybe a) -> a -> a
-maybeLoop f a = maybe a (maybeLoop f) (f a)
-
-safeMin :: Ord a => [a] -> Maybe a
-safeMin [] = Nothing
-safeMin lst = Just $ minimum lst

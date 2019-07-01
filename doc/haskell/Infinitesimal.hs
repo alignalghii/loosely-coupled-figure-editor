@@ -1,5 +1,7 @@
 module Infinitesimal where
 
+import Combinator
+
 epsilon :: Float
 epsilon = 0.0001
 
@@ -14,9 +16,10 @@ class Infinitesimal a where
     distance a b = norm (a `diff` b)
     (<->) = distance
 
-    approx, (=~=) :: a -> a -> Bool
+    approx, (=~=), (=/~=) :: a -> a -> Bool
     approx a b = distance a b < epsilon
-    (=~=) = approx
+    (=~=)  = approx
+    (=/~=) = bbb not approx
 
 instance Infinitesimal Float where
     norm = abs

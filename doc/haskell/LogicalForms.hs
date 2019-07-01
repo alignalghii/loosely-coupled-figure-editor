@@ -1,9 +1,9 @@
 module LogicalForms where
 
 import DataX
+import Logic (Relation)
 import Data.Bool (bool)
 
-type Relation a = a -> a -> Bool
 data Op = Or | And deriving (Eq, Show)
 type OpTerminated a = (a, Op)
 type NormalForm a = [[a]]

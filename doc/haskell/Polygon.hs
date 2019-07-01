@@ -9,6 +9,7 @@ import FourierMotzkinElimination
 import DataX
 import Combinator
 import Orientation
+import Logic (BoolOp1, Predicate, Relation, predicateAnd, relationNot, relationAnd, relationOr, none)
 
 type LineEquation        = (Float, Float, Float) -- Ax + By = C
 type HalfPlaneInequality = (Float, Float, Float) -- Ax + By < C
@@ -51,32 +52,28 @@ convexVectorBendBy rotDir u v = isConvex $ angle2_0360_by rotDir u v
 convexEdgeBendBy :: RotationDirection -> DirectedSegment -> DirectedSegment -> Bool
 convexEdgeBendBy rotDir = psi (convexVectorBendBy rotDir) edgeVector
 
-solveIncludingTie, solveExcludingTie, solveExactlyTie :: DisjunctiveNormalForm HalfPlaneInequality -> Bool
-solveIncludingTie = any (isConsistentIncludingTie . map tripleToNEList)
-solveExcludingTie = any (isConsistentExcludingTie . map tripleToNEList)
---solveExactlyTie = any (isConsistentExactlyTie   . map tripleToNEList)
-solveExactlyTie dnf = any (isConsistentExactlyTie . map tripleToNEList) dnf -- && all (not . isConsistentExcludingTie . map tripleToNEList) dnf 
+diagnostizeCollision :: BoundnessSign -> BoundnessSign -> [Point] -> [Point] -> [EqSystemCharacteristic]
+diagnostizeCollision bs1 bs2 verticesA verticesB = let eqSystemsA = polygonInequalityStructure bs1 verticesA
+                                                       eqSystemsB = polygonInequalityStructure bs2 verticesB
+                                                       eqSystems  = dnfAnd eqSystemsA eqSystemsB
+                                                   in map eqSystemCharacteristic $ map (map tripleToNEList) eqSystems
+
+diagnostizeIntersect, diagnostizeAntiContain :: [Point] -> [Point] -> [EqSystemCharacteristic]
+diagnostizeIntersect   = diagnostizeCollision Containment Containment
+diagnostizeAntiContain = diagnostizeCollision Containment Complementary
 
 intersectIncludingTouch, intersectExcludingTouch, intersectExactlyTouch :: [Point] -> [Point] -> Bool
-intersectIncludingTouch = solveIncludingTie `bbb` psi dnfAnd (polygonInequalityStructure Containment)
-intersectExcludingTouch = solveExcludingTie `bbb` psi dnfAnd (polygonInequalityStructure Containment)
-intersectExactlyTouch   = solveExactlyTie   `bbb` psi dnfAnd (polygonInequalityStructure Containment) --- ??? PROBABLY WRONG SEE BELOW
+intersectIncludingTouch = globalPredicateForIncludingBoundary `bbb` diagnostizeIntersect
+intersectExcludingTouch = globalPredicateForExcludingBoundary `bbb` diagnostizeIntersect
+intersectExactlyTouch   = globalPredicateForExactBoundary     `bbb` diagnostizeIntersect
+--intersectExactlyTouch verticesA verticesB  = intersectIncludingTouch verticesA verticesB && not (intersectExcludingTouch verticesA verticesB)
 
-containIncludingTouch, containExcludingTouch :: [Point] -> [Point] -> Bool
-containIncludingTouch verticesA verticesB = let eqSysA = polygonInequalityStructure Containment   verticesA
-                                                eqSysB = polygonInequalityStructure Complementary verticesB
-                                                eqSys  = dnfAnd eqSysA eqSysB
-                                            in not $ solveExcludingTie eqSys
-containExcludingTouch verticesA verticesB = let eqSysA = polygonInequalityStructure Containment   verticesA
-                                                eqSysB = polygonInequalityStructure Complementary verticesB
-                                                eqSys  = dnfAnd eqSysA eqSysB
-                                            in not $ solveIncludingTie eqSys
---containExactlyTouch       verticesA verticesB = let eqSysA = polygonInequalityStructure Containment   verticesA --- ??? PROBABLY WRONG SEE BELOW
---                                                    eqSysB = polygonInequalityStructure Complementary verticesB
---                                                    eqSys  = dnfAnd eqSysA eqSysB
---                                                in solveExactlyTie eqSys
-containExactlyTouch verticesA verticesB = containIncludingTouch verticesA verticesB && not (containExcludingTouch verticesA verticesB)
+containIncludingTouch, containExcludingTouch, containExactlyTouch :: [Point] -> [Point] -> Bool
+containIncludingTouch = (not . globalPredicateForExcludingBoundary) `bbb` diagnostizeAntiContain
+containExcludingTouch = (not . globalPredicateForIncludingBoundary) `bbb` diagnostizeAntiContain
+containExactlyTouch   =        globalPredicateForExactBoundary      `bbb` diagnostizeAntiContain
+--containExactlyTouch verticesA verticesB  = containIncludingTouch verticesA verticesB && not (containExcludingTouch verticesA verticesB)
 
 validState, invalidState :: [Point] -> [Point] -> Bool
-validState   verticesA verticesB = intersectIncludingTouch verticesA verticesB || containIncludingTouch verticesA verticesB
-invalidState verticesA verticesB = not (validState verticesA verticesB)
+validState   = relationNot intersectExcludingTouch `relationOr` containIncludingTouch
+invalidState = relationNot validState
