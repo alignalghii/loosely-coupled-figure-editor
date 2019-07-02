@@ -1,16 +1,16 @@
-module Polygon where
+module GeometryHigh.Polygon where
 
-import Vector
-import Orientation
-import TourRotation
-import LogicalForms
-import RealModulus (isConvex)
-import FourierMotzkinElimination
+import GeometryLow.Vector
+import GeometryHigh.Orientation
+import GeometryHigh.TourRotation
+import GeometryLow.RealModulus (isConvex)
+import GeometryHigh.FourierMotzkinElimination
 import Data.NonEmptyFootList (tripleToNonEmptyFootList)
+import GeometryHigh.Orientation
 
-import Combinator
-import Orientation
-import Logic (BoolOp1, Predicate, Relation, predicateAnd, relationNot, relationAnd, relationOr, none)
+import Logic.Combinator
+import Logic.LogicalForms
+import Logic.Logic (BoolOp1, Predicate, Relation, predicateAnd, relationNot, relationAnd, relationOr, none)
 
 type LineEquation        = (Float, Float, Float) -- Ax + By = C
 type HalfPlaneInequality = (Float, Float, Float) -- Ax + By < C

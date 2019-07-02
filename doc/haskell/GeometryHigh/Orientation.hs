@@ -1,4 +1,4 @@
-module Orientation where
+module GeometryHigh.Orientation where
 
 data SideOrientation = LeftSide | RightSide
 data RotationDirection = PositiveRotation | NegativeRotation deriving (Eq, Show)

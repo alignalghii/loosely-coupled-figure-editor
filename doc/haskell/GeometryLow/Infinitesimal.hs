@@ -1,6 +1,6 @@
-module Infinitesimal where
+module GeometryLow.Infinitesimal where
 
-import Combinator
+import Logic.Combinator
 
 epsilon :: Float
 epsilon = 0.0001

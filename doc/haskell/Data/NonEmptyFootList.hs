@@ -2,8 +2,9 @@
 
 module Data.NonEmptyFootList where
 
-import Data.SetTheory (withSnd, descartesWith)
+import Data.ListX (descartesWith)
 import Data.List (uncons)
+import Control.Arrow (second)
 
 
 type NonEmptyFootList a = ([a], a)
@@ -11,7 +12,7 @@ type NonEmptyFootList a = ([a], a)
 footMap f (as, a) = (map f as, f a)
 
 footUncons :: NonEmptyFootList a -> Maybe (a, NonEmptyFootList a)
-footUncons (lst, foot) = fmap (withSnd (, foot)) $ uncons lst
+footUncons (lst, foot) = fmap (second (, foot)) $ uncons lst
 
 footHead :: NonEmptyFootList a -> a
 footHead (lst, foot) = maybe foot fst $ uncons lst

@@ -1,4 +1,4 @@
-module RealModulus where
+module GeometryLow.RealModulus where
 
 mod0Real, modMinusPlusHalfReal :: Float -> Float -> Float
 mod0Real m x

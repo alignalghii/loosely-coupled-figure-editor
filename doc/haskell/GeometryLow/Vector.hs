@@ -1,10 +1,10 @@
 {-# LANGUAGE FlexibleInstances #-}
 
-module Vector where
+module GeometryLow.Vector where
 
-import RealModulus
-import Orientation
-import Infinitesimal
+import GeometryLow.RealModulus
+import GeometryHigh.Orientation -- @TODO
+import GeometryLow.Infinitesimal
 
 type Point  = (Float, Float)
 type Vector = (Float, Float)

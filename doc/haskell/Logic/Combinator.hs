@@ -1,4 +1,4 @@
-module Combinator where
+module Logic.Combinator where
 
 phi  u f g x = u (f x) (g x)
 phi2 u f g x y = u (f x y) (g x y)

@@ -1,6 +1,6 @@
-module Logic where
+module Logic.Logic where
 
-import Combinator (bbb, phi, phi2)
+import Logic.Combinator (bbb, phi, phi2)
 
 type BoolOp1 = Bool -> Bool
 type BoolOp2 = Bool -> Bool -> Bool

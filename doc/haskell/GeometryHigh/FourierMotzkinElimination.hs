@@ -1,11 +1,11 @@
 {-# LANGUAGE TupleSections #-}
 
-module FourierMotzkinElimination where
+module GeometryHigh.FourierMotzkinElimination where
 
-import Infinitesimal ((=~=))
+import GeometryLow.Infinitesimal ((=~=))
 import Data.NonEmptyFootList (NonEmptyFootList, footUncons, descartesFootPlus, footMap)
 import Data.MaybeX (maybeLoop, safeMin)
-import Logic (Predicate, Quantor, predicateNot, predicateAnd)
+import Logic.Logic (Predicate, Quantor, predicateNot, predicateAnd)
 
 import Data.List (uncons)
 import Control.Monad (liftM2)

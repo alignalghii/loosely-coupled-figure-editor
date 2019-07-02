@@ -1,11 +1,11 @@
 -- In Hungarian: Körüljárás (alakzat körüljárása)
 
-module TourRotation where
+module GeometryHigh.TourRotation where
 
-import Vector
-import LogicalForms
-import Infinitesimal
-import Orientation
+import GeometryLow.Vector
+import Logic.LogicalForms
+import GeometryLow.Infinitesimal
+import GeometryHigh.Orientation
 
 samplePlusRotTriangle, sampleMinusRotTriangle :: [Point]
 samplePlusRotTriangle  = [(0, 0), (2, 0), (1, 1)]

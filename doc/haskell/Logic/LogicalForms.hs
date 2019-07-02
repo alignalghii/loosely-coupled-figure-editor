@@ -1,7 +1,7 @@
-module LogicalForms where
+module Logic.LogicalForms where
 
-import Data.SetTheory (descartesProduct, descartesWith)
-import Logic (Relation)
+import Data.ListX (descartesProduct, descartesWith)
+import Logic.Logic (Relation)
 import Data.Bool (bool)
 
 data Op = Or | And deriving (Eq, Show)
