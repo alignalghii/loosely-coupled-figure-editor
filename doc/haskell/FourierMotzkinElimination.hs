@@ -3,62 +3,70 @@
 module FourierMotzkinElimination where
 
 import Infinitesimal ((=~=))
-import Data.List (uncons)
-import DataX (NEList, descartesPlus, maybeLoop, safeMin)
+import Data.NonEmptyFootList (NonEmptyFootList, footUncons, descartesFootPlus, footMap)
+import Data.MaybeX (maybeLoop, safeMin)
 import Logic (Predicate, Quantor, predicateNot, predicateAnd)
 
-type EqSystem =  [NEList Float]
-type EqSystemCharacteristic = Maybe Float
+import Data.List (uncons)
+import Control.Monad (liftM2)
 
-globalStatementForEqSystems :: Predicate [EqSystemCharacteristic] -> Predicate [EqSystem]
-globalStatementForEqSystems globalPred = globalPred . map eqSystemCharacteristic
+type Inequality = NonEmptyFootList Float
+type IneqSystem   =  [Inequality]
+type IneqSystemCharacteristic = Maybe Float
 
-eqSystemCharacteristic   :: EqSystem -> EqSystemCharacteristic
-eqSystemCharacteristic = safeMin . eliminate
+type SignTagged a = (Ordering, a)
+type SignPartitioned a = ([a], [a], [a])
 
-quantifyCharacteristic :: Quantor EqSystemCharacteristic -> Predicate Float -> Predicate [EqSystemCharacteristic]
+--globalStatementForIneqSystems :: Predicate [IneqSystemCharacteristic] -> Predicate [IneqSystem]
+--globalStatementForIneqSystems globalPred = globalPred . map ineqSystemCharacteristic
+
+ineqSystemCharacteristic   :: IneqSystem -> IneqSystemCharacteristic
+ineqSystemCharacteristic = safeMin . eliminateAllVars
+
+-- @TODO : although accidentally OK, but theoretically Nothing plays the role of positive infinite. Make an explicit algebra for it: see `extended reals'.
+quantifyCharacteristic :: Quantor IneqSystemCharacteristic -> Predicate Float -> Predicate [IneqSystemCharacteristic]
 quantifyCharacteristic quantor = quantor . maybe True
 
-globalPredicateForIncludingBoundary, globalPredicateForExcludingBoundary, globalPredicateForExactBoundary :: Predicate [EqSystemCharacteristic]
+globalPredicateForIncludingBoundary, globalPredicateForExcludingBoundary, globalPredicateForExactBoundary :: Predicate [IneqSystemCharacteristic]
 globalPredicateForIncludingBoundary =  quantifyCharacteristic any predicateForIncludingBoundary
 globalPredicateForExcludingBoundary =  quantifyCharacteristic any predicateForExcludingBoundary
 globalPredicateForExactBoundary     =  quantifyCharacteristic any predicateForExactBoundary `predicateAnd` predicateNot globalPredicateForExcludingBoundary
 
-
+-- @TODO : although accidentally OK, but theoretically Nothing plays the role of positive infinite. Make an explicit algebra for it: see `extended reals'.
 predicateForIncludingBoundary, predicateForExcludingBoundary, predicateForExactBoundary :: Predicate Float
 predicateForIncludingBoundary n =      n =~= 0  || n >= 0
 predicateForExcludingBoundary n = not (n =~= 0) && n >  0
 predicateForExactBoundary     n =      n =~= 0
 
-eliminate :: [NEList Float] -> [Float]
-eliminate = map fst . maybeLoop eliminate1
+eliminateAllVars :: IneqSystem -> [Float]
+eliminateAllVars = map snd . maybeLoop eliminateVar1
 
-eliminate1 :: [NEList Float] -> Maybe [NEList Float]
-eliminate1 [] = Nothing
-eliminate1 lst = fmap combine $ normalize1stCol lst
+eliminateVar1 :: IneqSystem -> Maybe IneqSystem
+eliminateVar1 []  = Nothing
+eliminateVar1 lst = fmap recombine $ partitionateByNormalization lst
 
-normalize1stCol :: [NEList Float] -> Maybe ([NEList Float], [NEList Float], [NEList Float])
-normalize1stCol []           = Just ([], [], [])
-normalize1stCol (row : rows) = dispatch (normalize1 row) (normalize1stCol rows)
+partitionateByNormalization :: IneqSystem -> Maybe (SignPartitioned Inequality)
+partitionateByNormalization []             = Just ([], [], [])
+partitionateByNormalization (ineq : ineqs) = liftM2 dispatch (tagByNormalization ineq) (partitionateByNormalization ineqs)
 
-normalize1 :: NEList Float -> Maybe (Ordering, NEList Float)
-normalize1 ne = let (o, as) = normalize1_ ne
-                in fmap (o ,) (uncons as)
+tagByNormalization :: Inequality -> Maybe (SignTagged Inequality)
+tagByNormalization ineq = do
+    (mainCoeff, ineq') <- footUncons ineq
+    let    (signTag, normalizerFunction) = decideNormalizationRule mainCoeff
+    return (signTag, footMap normalizerFunction ineq')
 
-normalize1_ :: NEList Float -> (Ordering, [Float])
-normalize1_ (a, as)
-    | a =~= 0 = (EQ, as) 
-    | a  >  0 = (GT, map (/   a ) as)
-    | a  <  0 = (LT, map (/ (-a)) as)
+decideNormalizationRule :: Float -> SignTagged (Float -> Float)
+decideNormalizationRule mainCoeff
+    | mainCoeff =~= 0 = (EQ, id     ) 
+    | mainCoeff  >  0 = (GT, (/  mainCoeff) )
+    | mainCoeff  <  0 = (LT, (/(-mainCoeff)))
 
-dispatch :: Maybe (Ordering, NEList a) -> Maybe ([NEList a], [NEList a], [NEList a]) -> Maybe ([NEList a], [NEList a], [NEList a])
-dispatch mbTaggedRow mbPartition = do
-    (tag, ne)       <- mbTaggedRow
-    (negs, nuls, poss) <- mbPartition
-    case tag of
-        LT -> return (ne:negs, nuls, poss)
-        EQ -> return (negs, ne:nuls, poss)
-        GT -> return (negs, nuls, ne:poss)
+dispatch :: SignTagged a -> SignPartitioned a -> SignPartitioned a
+dispatch (tag, a) (negs, nuls, poss) = case tag of
+        LT -> (a:negs, nuls, poss)
+        EQ -> (negs, a:nuls, poss)
+        GT -> (negs, nuls, a:poss)
 
-combine :: Num a => ([NEList a], [NEList a], [NEList a]) -> [NEList a]
-combine (negs, nuls, poss) = descartesPlus negs poss ++ nuls
+-- @TODO: generalize signature
+recombine :: SignPartitioned Inequality -> IneqSystem
+recombine (negs, nuls, poss) = descartesFootPlus negs poss ++ nuls

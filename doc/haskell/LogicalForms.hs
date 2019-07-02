@@ -1,6 +1,6 @@
 module LogicalForms where
 
-import DataX
+import Data.SetTheory (descartesProduct, descartesWith)
 import Logic (Relation)
 import Data.Bool (bool)
 

@@ -1,7 +1,6 @@
 module PolygonBehavior where
 
 import Polygon
-import FourierMotzkinElimination
 
 shouldTestPolygonBehavior :: Bool
 shouldTestPolygonBehavior = shouldIntersectIncludingTouch && shouldIntersectExcludingTouch && shouldIntersectExactlyTouch && shouldContainIncludingTouch && shouldContainExcludingTouch && shouldContainExactlyTouch && shouldValidState && shouldInvalidState

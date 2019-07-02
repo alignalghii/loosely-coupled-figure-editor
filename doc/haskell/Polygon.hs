@@ -6,7 +6,8 @@ import TourRotation
 import LogicalForms
 import RealModulus (isConvex)
 import FourierMotzkinElimination
-import DataX
+import Data.NonEmptyFootList (tripleToNonEmptyFootList)
+
 import Combinator
 import Orientation
 import Logic (BoolOp1, Predicate, Relation, predicateAnd, relationNot, relationAnd, relationOr, none)
@@ -52,13 +53,13 @@ convexVectorBendBy rotDir u v = isConvex $ angle2_0360_by rotDir u v
 convexEdgeBendBy :: RotationDirection -> DirectedSegment -> DirectedSegment -> Bool
 convexEdgeBendBy rotDir = psi (convexVectorBendBy rotDir) edgeVector
 
-diagnostizeCollision :: BoundnessSign -> BoundnessSign -> [Point] -> [Point] -> [EqSystemCharacteristic]
-diagnostizeCollision bs1 bs2 verticesA verticesB = let eqSystemsA = polygonInequalityStructure bs1 verticesA
-                                                       eqSystemsB = polygonInequalityStructure bs2 verticesB
-                                                       eqSystems  = dnfAnd eqSystemsA eqSystemsB
-                                                   in map eqSystemCharacteristic $ map (map tripleToNEList) eqSystems
+diagnostizeCollision :: BoundnessSign -> BoundnessSign -> [Point] -> [Point] -> [IneqSystemCharacteristic]
+diagnostizeCollision bs1 bs2 verticesA verticesB = let ineqSystemsA = polygonInequalityStructure bs1 verticesA
+                                                       ineqSystemsB = polygonInequalityStructure bs2 verticesB
+                                                       ineqSystems  = dnfAnd ineqSystemsA ineqSystemsB
+                                                   in map ineqSystemCharacteristic $ map (map tripleToNonEmptyFootList) ineqSystems
 
-diagnostizeIntersect, diagnostizeAntiContain :: [Point] -> [Point] -> [EqSystemCharacteristic]
+diagnostizeIntersect, diagnostizeAntiContain :: [Point] -> [Point] -> [IneqSystemCharacteristic]
 diagnostizeIntersect   = diagnostizeCollision Containment Containment
 diagnostizeAntiContain = diagnostizeCollision Containment Complementary
 
