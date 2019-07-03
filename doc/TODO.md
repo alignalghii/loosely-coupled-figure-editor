@@ -46,3 +46,5 @@
  - Teszteleni normál módnál és kompakt módnál is: ha a `sampleBank` által beszúrt egyik alakzatot elcsavarom, aztán elkezdek stamp-elni úgy, hogy épp azt az alakzatot választom ki pecsétnek, akkor a torzított  pecsétet teszi ki, vagy az eredetit?
     - általában is ellenőrozni kell, hogy pecsételéskor, mág általánosabban létrehozáskor történik-e klónozás ott, ahol kell, és klónozásmentes-e ott, ahol fölösleges lenne klónozni.
  - Az ütközésnél a rugalmas fogómegcsúszás visszahajlása is, és az átbuktatás is végre rendben működik, de objktumot egy másik objektum éle mentén csusztatni, reszelni nem lehet. Ezt is valósítsuk meg!
+
+ - A körüljárásdetektálási hiba javítása (amikor sem +360 fok sem -360 fok nem jön ki a külső szögek összegére - átnyúló konkáv szögeknél jelenik meg ilyesmi).
