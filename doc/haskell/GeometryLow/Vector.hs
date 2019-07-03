@@ -2,9 +2,9 @@
 
 module GeometryLow.Vector where
 
-import GeometryLow.RealModulus
-import GeometryHigh.Orientation -- @TODO
-import GeometryLow.Infinitesimal
+import GeometryLow.Orientation -- @TODO
+import Number.RealModulus
+import Number.Infinitesimal
 
 type Point  = (Float, Float)
 type Vector = (Float, Float)

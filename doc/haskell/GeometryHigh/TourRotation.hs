@@ -4,8 +4,8 @@ module GeometryHigh.TourRotation where
 
 import GeometryLow.Vector
 import Logic.LogicalForms
-import GeometryLow.Infinitesimal
-import GeometryHigh.Orientation
+import Number.Infinitesimal
+import GeometryLow.Orientation
 
 samplePlusRotTriangle, sampleMinusRotTriangle :: [Point]
 samplePlusRotTriangle  = [(0, 0), (2, 0), (1, 1)]

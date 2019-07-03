@@ -1,4 +1,4 @@
-module GeometryLow.Infinitesimal where
+module Number.Infinitesimal where
 
 import Logic.Combinator
 

@@ -2,20 +2,22 @@
 
 module GeometryHigh.FourierMotzkinElimination where
 
-import GeometryLow.Infinitesimal ((=~=))
+import Number.Infinitesimal ((=~=))
 import Data.NonEmptyFootList (NonEmptyFootList, footUncons, descartesFootPlus, footMap)
-import Data.MaybeX (maybeLoop, safeMin)
+import Data.MaybeX (maybeLoop)
+import Control.MonadX (mLoopN)
+import Number.Infinity (safeMin)
+import Number.Sign
 import Logic.Logic (Predicate, Quantor, predicateNot, predicateAnd)
 
-import Data.List (uncons)
 import Control.Monad (liftM2)
+import Data.List (uncons)
+import Data.Maybe (fromJust)
+import Data.TupleX (prod3)
 
 type Inequality = NonEmptyFootList Float
 type IneqSystem   =  [Inequality]
 type IneqSystemCharacteristic = Maybe Float
-
-type SignTagged a = (Ordering, a)
-type SignPartitioned a = ([a], [a], [a])
 
 --globalStatementForIneqSystems :: Predicate [IneqSystemCharacteristic] -> Predicate [IneqSystem]
 --globalStatementForIneqSystems globalPred = globalPred . map ineqSystemCharacteristic
@@ -38,8 +40,34 @@ predicateForIncludingBoundary n =      n =~= 0  || n >= 0
 predicateForExcludingBoundary n = not (n =~= 0) && n >  0
 predicateForExactBoundary     n =      n =~= 0
 
+constraintLastVar :: IneqSystem -> (Maybe Float, Maybe Ordering, Maybe Float)
+--constraintLastVar = (prod3 (fmap negate) (fmap (fst . decideNormalizationRule)) id) . statSignPartition (safeMin . ) statSignPartition truncateSys . fromJust . partitionateByNormalization . eliminateAllVarsButOne
+constraintLastVar = prod3 lowConstraint nullConstraint highConstraint . eliminateAllVarsButOne
+
+assembleConstraint :: (Float -> a) -> [Float] -> Maybe a
+assembleConstraint rule = fmap rule . safeMin
+
+lowConstraint, highConstraint :: [Float] -> Maybe Float
+lowConstraint  = assembleConstraint negate
+highConstraint = assembleConstraint id
+
+nullConstraint :: [Float] -> Maybe Ordering
+nullConstraint = assembleConstraint (fst . decideNormalizationRule)
+
+eliminateNVars :: Int -> IneqSystem -> Maybe IneqSystem
+eliminateNVars = flip mLoopN eliminateVar1
+
+sysVarCount :: IneqSystem -> Int
+sysVarCount = length . fst . head
+
+eliminateAllVarsButOne :: IneqSystem -> SignPartitioned Float
+eliminateAllVarsButOne = statSignPartition truncateSys . fromJust . partitionateByNormalization . eliminateAllVarsButOne_
+
+eliminateAllVarsButOne_ :: IneqSystem -> IneqSystem
+eliminateAllVarsButOne_ ineqSys = fromJust $ eliminateNVars (pred $ sysVarCount ineqSys) ineqSys
+
 eliminateAllVars :: IneqSystem -> [Float]
-eliminateAllVars = map snd . maybeLoop eliminateVar1
+eliminateAllVars = truncateSys . maybeLoop eliminateVar1
 
 eliminateVar1 :: IneqSystem -> Maybe IneqSystem
 eliminateVar1 []  = Nothing
@@ -70,3 +98,12 @@ dispatch (tag, a) (negs, nuls, poss) = case tag of
 -- @TODO: generalize signature
 recombine :: SignPartitioned Inequality -> IneqSystem
 recombine (negs, nuls, poss) = descartesFootPlus negs poss ++ nuls
+
+--optimize :: SignPartitioned Float -> (Maybe Float, Maybe Float)
+--optimize = ( *** ) . dualize
+
+truncateSys :: IneqSystem -> [Float]
+truncateSys = map snd
+
+truncableSys :: Predicate IneqSystem
+truncableSys = all (null . fst)

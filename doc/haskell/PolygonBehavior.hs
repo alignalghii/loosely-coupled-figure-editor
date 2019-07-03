@@ -1,10 +1,13 @@
 module PolygonBehavior where
 
 import GeometryHigh.Polygon
+import GeometryHigh.FourierMotzkinElimination -- (eliminateNVars)
 
 shouldTestPolygonBehavior :: Bool
-shouldTestPolygonBehavior = shouldIntersectIncludingTouch && shouldIntersectExcludingTouch && shouldIntersectExactlyTouch && shouldContainIncludingTouch && shouldContainExcludingTouch && shouldContainExactlyTouch && shouldValidState && shouldInvalidState
+shouldTestPolygonBehavior = shouldIntersectIncludingTouch && shouldIntersectExcludingTouch && shouldIntersectExactlyTouch && shouldContainIncludingTouch && shouldContainExcludingTouch && shouldContainExactlyTouch && shouldValidState && shouldInvalidState && shouldConstraintLastVar
 
+shouldConstraintLastVar :: Bool
+shouldConstraintLastVar = constraintLastVar [([2, 3, 0], 21), ([1, -2, 0], 0), ([-1, 0, -3], -7), ([1, 1, -1], 5)] == (Just 1, Nothing, Nothing)
 
 shouldIntersectIncludingTouch :: Bool
 shouldIntersectIncludingTouch = intersectIncludingTouch [] [] &&

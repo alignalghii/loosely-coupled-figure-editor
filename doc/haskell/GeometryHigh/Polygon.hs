@@ -1,12 +1,11 @@
 module GeometryHigh.Polygon where
 
 import GeometryLow.Vector
-import GeometryHigh.Orientation
+import GeometryLow.Orientation
 import GeometryHigh.TourRotation
-import GeometryLow.RealModulus (isConvex)
+import Number.RealModulus (isConvex)
 import GeometryHigh.FourierMotzkinElimination
 import Data.NonEmptyFootList (tripleToNonEmptyFootList)
-import GeometryHigh.Orientation
 
 import Logic.Combinator
 import Logic.LogicalForms
