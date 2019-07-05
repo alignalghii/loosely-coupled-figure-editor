@@ -1,9 +1,16 @@
 module PolygonBehavior where
 
 import GeometryHigh.Polygon
+import Number.Infinitesimal
 
 shouldTestPolygonBehavior :: Bool
-shouldTestPolygonBehavior = shouldIntersectIncludingTouch && shouldIntersectExcludingTouch && shouldIntersectExactlyTouch && shouldContainIncludingTouch && shouldContainExcludingTouch && shouldContainExactlyTouch && shouldValidState && shouldInvalidState
+shouldTestPolygonBehavior = shouldIntersectIncludingTouch && shouldIntersectExcludingTouch && shouldIntersectExactlyTouch && shouldContainIncludingTouch && shouldContainExcludingTouch && shouldContainExactlyTouch && shouldValidState && shouldInvalidState && shouldFallFromOutside_diagnostic && shouldFallFromOutside
+
+shouldFallFromOutside :: Bool
+shouldFallFromOutside = either (const False) (=~= 1) (fallFromOutside (-3, 4) [(7, -5), (10, -5), (7, -2)] [(0, 0), (6, 3), (0, 7)]) && either (const False) (=~= 2) (fallFromOutside (-1.5, 2) [(7, -5), (10, -5), (7, -2)] [(0, 0), (6, 3), (0, 7)]) && either (const False) (=~= 0.5) (fallFromOutside (-6, 8) [(7, -5), (10, -5), (7, -2)] [(0, 0), (6, 3), (0, 7)]) && fallFromOutside (3, -4) [(7, -5), (10, -5), (7, -2)] [(0, 0), (6, 3), (0, 7)] == Left True
+
+shouldFallFromOutside_diagnostic :: Bool
+shouldFallFromOutside_diagnostic = fallFromOutside_diagnostic (-3, 4) [(7, -5), (10, -5), (7, -2)] [(0, 0), (6, 3), (0, 7)] == [(Just 1, Just GT, Just 3)]
 
 shouldIntersectIncludingTouch :: Bool
 shouldIntersectIncludingTouch = intersectIncludingTouch [] [] &&

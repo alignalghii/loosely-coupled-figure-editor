@@ -17,8 +17,11 @@ footUncons (lst, foot) = fmap (second (, foot)) $ uncons lst
 footHead :: NonEmptyFootList a -> a
 footHead (lst, foot) = maybe foot fst $ uncons lst
 
-tripleToNonEmptyFootList :: (a, a, a) -> NonEmptyFootList a
+tripleToNonEmptyFootList :: (r, r, r) -> NonEmptyFootList r
 tripleToNonEmptyFootList (a, b, c) = ([a, b], c)
+
+quadrupleToNonEmptyFootList :: (r, r, r, r) -> NonEmptyFootList r
+quadrupleToNonEmptyFootList (a, b, lambda, c) = ([a, b, lambda], c)
 
 descartesFootPlus :: Num a => [NonEmptyFootList a] -> [NonEmptyFootList a] -> [NonEmptyFootList a]
 descartesFootPlus = descartesWith neFootPlus

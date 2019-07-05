@@ -21,10 +21,19 @@ class Infinitesimal a where
     (=~=)  = approx
     (=/~=) = bbb not approx
 
+class (Infinitesimal a, Ord a) => InfinitesimalOrd a where
+    (<~=), (>~=), (<~), (>~) :: a -> a -> Bool
+    a <~= b = a < b || a =~=  b
+    a >~= b = a > b || a =~=  b
+    a <~  b = a < b && a =/~= b
+    a >~  b = a > b && a =/~= b
+
 instance Infinitesimal Float where
     norm = abs
     normSquare a = a*a
     diff a b = a - b
+
+instance InfinitesimalOrd Float
 
 acos_safe, asin_safe, mend :: Float -> Float
 acos_safe = acos . mend
