@@ -3,6 +3,7 @@ module Logic.LogicalForms where
 import Data.ListX (descartesProduct, descartesWith)
 import Logic.Logic (Relation)
 import Data.Bool (bool)
+import GeometryLow.Orientation (BoundnessSign (..))
 
 data Op = Or | And deriving (Eq, Show)
 type OpTerminated a = (a, Op)
@@ -25,8 +26,10 @@ cycleToOpsTerminatedListWith areConvex inequalityOf = map (uncurry $ opTerminate
 opTerminate :: Relation edge -> (edge -> halfPlane) -> edge -> edge -> OpTerminated halfPlane
 opTerminate areConvex inequalityOf edge1 edge2 = (inequalityOf edge1, bool Or And $ areConvex edge1 edge2) 
 
-opsTerminatedListToCnf :: [OpTerminated halfPlane] -> NormalForm halfPlane
-opsTerminatedListToCnf  = uncurry spliceBackIfNeeded . takeDisjunctiveSubTerms
+
+opsTerminatedListToDnf :: BoundnessSign -> [OpTerminated halfPlane] -> DisjunctiveNormalForm halfPlane
+opsTerminatedListToDnf Containment   = cnfToDnf . uncurry spliceBackIfNeeded . takeDisjunctiveSubTerms
+opsTerminatedListToDnf Complementary =            uncurry spliceBackIfNeeded . takeConjunctiveSubTerms
 
 spliceBackIfNeeded :: [[halfPlane]] -> Maybe [halfPlane] -> [[halfPlane]]
 spliceBackIfNeeded subterms = maybe subterms (spliceBack subterms)
@@ -48,6 +51,22 @@ takeDisjunctiveSubTerm (halfPlane, And) more     = ([halfPlane], Just more)
 takeDisjunctiveSubTerm (halfPlane, Or ) []       = ([halfPlane], Nothing)
 takeDisjunctiveSubTerm (halfPlane, Or ) (o : os) = let (subterm, mos) = takeDisjunctiveSubTerm o os
                                                    in (halfPlane : subterm, mos)
+
+
+takeConjunctiveSubTerms :: [OpTerminated halfPlane] -> ([[halfPlane]], Maybe [halfPlane])
+takeConjunctiveSubTerms []       = ([], Nothing)
+takeConjunctiveSubTerms (o : os) = let (subterm, mos) = takeConjunctiveSubTerm o os
+                                   in case mos of
+                                       Nothing  -> ([], Just subterm)
+                                       Just os_ -> let (subterms, mbSubterm) = takeConjunctiveSubTerms os_
+                                                   in (subterm : subterms, mbSubterm)
+
+takeConjunctiveSubTerm :: OpTerminated halfPlane -> [OpTerminated halfPlane] -> ([halfPlane], Maybe [OpTerminated halfPlane])
+takeConjunctiveSubTerm (halfPlane, Or ) more     = ([halfPlane], Just more)
+takeConjunctiveSubTerm (halfPlane, And) []       = ([halfPlane], Nothing)
+takeConjunctiveSubTerm (halfPlane, And) (o : os) = let (subterm, mos) = takeConjunctiveSubTerm o os
+                                                   in (halfPlane : subterm, mos)
+
 
 cnfToDnf :: ConjunctiveNormalForm halfPlane -> DisjunctiveNormalForm halfPlane
 cnfToDnf [] = [[]]

@@ -19,7 +19,7 @@ class Infinitesimal a where
     approx, (=~=), (=/~=) :: a -> a -> Bool
     approx a b = distance a b < epsilon
     (=~=)  = approx
-    (=/~=) = bbb not approx
+    (=/~=) = deter_2 not approx
 
 class (Infinitesimal a, Ord a) => InfinitesimalOrd a where
     (<~=), (>~=), (<~), (>~) :: a -> a -> Bool

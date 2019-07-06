@@ -1,6 +1,6 @@
 module Logic.Logic where
 
-import Logic.Combinator (bbb, phi, phi2)
+import Logic.Combinator (deter_2, phi, phi2)
 
 type BoolOp1 = Bool -> Bool
 type BoolOp2 = Bool -> Bool -> Bool
@@ -21,7 +21,7 @@ predicateOr  = phi (||)
 (|.|*)       = predicateOr
 
 relationNot :: Relation a -> Relation a
-relationNot = bbb not
+relationNot = deter_2 not
 
 relationAnd, relationOr :: Relation a -> Relation a -> Relation a
 relationAnd = phi2 (&&)

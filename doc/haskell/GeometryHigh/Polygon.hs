@@ -37,7 +37,7 @@ edgeVector = uncurry fromTo
 
 
 polygonInequalityStructure :: BoundnessSign -> [Point] -> DisjunctiveNormalForm HalfPlaneInequality
-polygonInequalityStructure boundnessSign = cnfToDnf . opsTerminatedListToCnf . polygonInequalityStructure_ boundnessSign
+polygonInequalityStructure boundnessSign = opsTerminatedListToDnf boundnessSign . polygonInequalityStructure_ boundnessSign
 
 polygonInequalityStructure_ :: BoundnessSign -> [Point] -> [OpTerminated HalfPlaneInequality]
 polygonInequalityStructure_ boundnessSign  vertices = let edges   = tour vertices
@@ -46,7 +46,7 @@ polygonInequalityStructure_ boundnessSign  vertices = let edges   = tour vertice
                                                       in cycleToOpsTerminatedListWith (convexEdgeBendBy rotDir_) (edgeSide rotDir_) edges
 
 convexVectorBend :: Vector -> Vector -> Bool
-convexVectorBend = bbb isConvex angle2_0360
+convexVectorBend = deter_2 isConvex angle2_0360
 
 convexVectorBendBy :: RotationDirection -> Vector -> Vector -> Bool
 convexVectorBendBy rotDir u v = isConvex $ angle2_0360_by rotDir u v
@@ -67,15 +67,15 @@ diagnostizeIntersect   = diagnostizeCollision Containment Containment
 diagnostizeAntiContain = diagnostizeCollision Containment Complementary
 
 intersectIncludingTouch, intersectExcludingTouch, intersectExactlyTouch :: [Point] -> [Point] -> Bool
-intersectIncludingTouch = globalPredicateForIncludingBoundary `bbb` diagnostizeIntersect
-intersectExcludingTouch = globalPredicateForExcludingBoundary `bbb` diagnostizeIntersect
-intersectExactlyTouch   = globalPredicateForExactBoundary     `bbb` diagnostizeIntersect
+intersectIncludingTouch = globalPredicateForIncludingBoundary `deter_2` diagnostizeIntersect
+intersectExcludingTouch = globalPredicateForExcludingBoundary `deter_2` diagnostizeIntersect
+intersectExactlyTouch   = globalPredicateForExactBoundary     `deter_2` diagnostizeIntersect
 --intersectExactlyTouch verticesA verticesB  = intersectIncludingTouch verticesA verticesB && not (intersectExcludingTouch verticesA verticesB)
 
 containIncludingTouch, containExcludingTouch, containExactlyTouch :: [Point] -> [Point] -> Bool
-containIncludingTouch = (not . globalPredicateForExcludingBoundary) `bbb` diagnostizeAntiContain
-containExcludingTouch = (not . globalPredicateForIncludingBoundary) `bbb` diagnostizeAntiContain
-containExactlyTouch   =        globalPredicateForExactBoundary      `bbb` diagnostizeAntiContain
+containIncludingTouch = (not . globalPredicateForExcludingBoundary) `deter_2` diagnostizeAntiContain
+containExcludingTouch = (not . globalPredicateForIncludingBoundary) `deter_2` diagnostizeAntiContain
+containExactlyTouch   =        globalPredicateForExactBoundary      `deter_2` diagnostizeAntiContain
 --containExactlyTouch verticesA verticesB  = containIncludingTouch verticesA verticesB && not (containExcludingTouch verticesA verticesB)
 
 validState, invalidState :: [Point] -> [Point] -> Bool
@@ -84,18 +84,17 @@ invalidState = relationNot validState
 
 -- Fall
 
-fallFromOutside :: Vector -> [Point] -> [Point] -> PMInf Float
-fallFromOutside vector verticesSrc verticesTgt = fallScaleFromOutside $ fallFromOutside_diagnostic vector verticesSrc verticesTgt
+fallFromOutside, fallFromInside :: Vector -> [Point] -> [Point] -> PMInf Float
+fallFromOutside = deter_3 fallScale $ fall_diagnostic Containment Containment
+fallFromInside  = deter_3 fallScale $ fall_diagnostic Containment Complementary
 
-fallFromOutside_diagnostic :: Vector -> [Point] -> [Point] -> [(Maybe Float, Maybe Ordering, Maybe Float)]
-fallFromOutside_diagnostic vector verticesSrc verticesTgt = let ineqSystemsSrc  = polygonInequalityStructure Containment verticesSrc
-                                                                ineqSystemsTgt  = polygonInequalityStructure Containment verticesTgt
-                                                                ineqSystemsSrc' = animateWith vector ineqSystemsSrc
-                                                                ineqSystemsTgt' = animateWith (0, 0) ineqSystemsTgt
-                                                                ineqSystems'    = dnfAnd ineqSystemsSrc' ineqSystemsTgt'
-                                                            in map constraintLastVar $ map (map quadrupleToNonEmptyFootList) ineqSystems'
-
---fallFromInside  :: [Point] -> [Point] -> Vector -> Float
+fall_diagnostic :: BoundnessSign -> BoundnessSign -> Vector -> [Point] -> [Point] -> [(Maybe Float, Maybe Ordering, Maybe Float)]
+fall_diagnostic bs1 bs2 vector verticesSrc verticesTgt = let ineqSystemsSrc  = polygonInequalityStructure bs1 verticesSrc
+                                                             ineqSystemsTgt  = polygonInequalityStructure bs2 verticesTgt
+                                                             ineqSystemsSrc' = animateWith vector ineqSystemsSrc
+                                                             ineqSystemsTgt' = animateWith (0, 0) ineqSystemsTgt
+                                                             ineqSystems'    = dnfAnd ineqSystemsSrc' ineqSystemsTgt'
+                                                         in map constraintLastVar $ map (map quadrupleToNonEmptyFootList) ineqSystems'
 
 type AnimatedHalfPlaneInequality = (Float, Float, Float, Float)
 
@@ -105,15 +104,15 @@ animateWith vector = map (map (animateWith_ vector))
 animateWith_ :: Vector -> HalfPlaneInequality -> AnimatedHalfPlaneInequality
 animateWith_ (u, v) (a, b, c) = (a, b, -a*u-b*v, c)
 
-fallScaleFromOutside :: [(Maybe Float, Maybe Ordering, Maybe Float)] -> PMInf Float
-fallScaleFromOutside =  minimumBy pMInfCompare . map fallScaleFromOutside_
+fallScale :: [(Maybe Float, Maybe Ordering, Maybe Float)] -> PMInf Float
+fallScale =  minimumBy pMInfCompare . map fallScale_
 
-fallScaleFromOutside_ :: (Maybe Float, Maybe Ordering, Maybe Float) -> PMInf Float
-fallScaleFromOutside_ (_       , Just LT, _      ) = Left True
-fallScaleFromOutside_ (Nothing , _      , Nothing) = Left False
-fallScaleFromOutside_ (Just low, _      , Nothing) = if low >~= 0  then Right low else Left False
-fallScaleFromOutside_ (Nothing , _      , Just up) = if up  <~= 0  then Left True else Left False
-fallScaleFromOutside_ (Just low, _      , Just up)
+fallScale_ :: (Maybe Float, Maybe Ordering, Maybe Float) -> PMInf Float
+fallScale_ (_       , Just LT, _      ) = Left True
+fallScale_ (Nothing , _      , Nothing) = Left False
+fallScale_ (Just low, _      , Nothing) = if low >~= 0  then Right low else Left False
+fallScale_ (Nothing , _      , Just up) = if up  <~= 0  then Left True else Left False
+fallScale_ (Just low, _      , Just up)
     | low =~= up                          = Left True
     | low >~  up                          = Left True
     | low <~  up && low >~= 0             = Right low

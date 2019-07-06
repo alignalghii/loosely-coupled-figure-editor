@@ -1,7 +1,8 @@
 module TestRunner where
 
-import PolygonBehavior
-import FourierMotzkinEliminationBehavior
+import PolygonBehavior (shouldTestPolygonBehavior)
+import FourierMotzkinEliminationBehavior (shouldTestFourierMotzkinBehavior)
+import LogicalFormsBehavior (shouldTestLogicalFormsBehavior)
 
 test :: Bool
-test = shouldTestPolygonBehavior && shouldTestFourierMotzkinBehavior
+test = shouldTestPolygonBehavior && shouldTestFourierMotzkinBehavior && shouldTestLogicalFormsBehavior

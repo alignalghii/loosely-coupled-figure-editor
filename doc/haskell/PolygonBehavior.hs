@@ -2,15 +2,19 @@ module PolygonBehavior where
 
 import GeometryHigh.Polygon
 import Number.Infinitesimal
+import GeometryLow.Orientation (BoundnessSign (Containment, Complementary))
 
 shouldTestPolygonBehavior :: Bool
-shouldTestPolygonBehavior = shouldIntersectIncludingTouch && shouldIntersectExcludingTouch && shouldIntersectExactlyTouch && shouldContainIncludingTouch && shouldContainExcludingTouch && shouldContainExactlyTouch && shouldValidState && shouldInvalidState && shouldFallFromOutside_diagnostic && shouldFallFromOutside
+shouldTestPolygonBehavior = shouldIntersectIncludingTouch && shouldIntersectExcludingTouch && shouldIntersectExactlyTouch && shouldContainIncludingTouch && shouldContainExcludingTouch && shouldContainExactlyTouch && shouldValidState && shouldInvalidState && shouldFall_diagnostic && shouldFallFromOutside && shouldFallFromInside
 
 shouldFallFromOutside :: Bool
 shouldFallFromOutside = either (const False) (=~= 1) (fallFromOutside (-3, 4) [(7, -5), (10, -5), (7, -2)] [(0, 0), (6, 3), (0, 7)]) && either (const False) (=~= 2) (fallFromOutside (-1.5, 2) [(7, -5), (10, -5), (7, -2)] [(0, 0), (6, 3), (0, 7)]) && either (const False) (=~= 0.5) (fallFromOutside (-6, 8) [(7, -5), (10, -5), (7, -2)] [(0, 0), (6, 3), (0, 7)]) && fallFromOutside (3, -4) [(7, -5), (10, -5), (7, -2)] [(0, 0), (6, 3), (0, 7)] == Left True
 
-shouldFallFromOutside_diagnostic :: Bool
-shouldFallFromOutside_diagnostic = fallFromOutside_diagnostic (-3, 4) [(7, -5), (10, -5), (7, -2)] [(0, 0), (6, 3), (0, 7)] == [(Just 1, Just GT, Just 3)]
+shouldFallFromInside :: Bool
+shouldFallFromInside = either (const False) (=~= 0.5) (fallFromInside (-1, 0) [(2, 3), (5, 4), (5, 5), (8, 6), (8, 9), (7, 9), (7, 8), (2, 4)] [(1, 2), (7, 3), (9, 7), (7, 12), (5, 8), (2, 9), (2, 6)]) && either (const False) (=~= 0.5) (fallFromInside (0, 1) [(2, 3), (5, 4), (5, 5), (8, 6), (8, 9), (7, 9), (7, 8), (2, 4)] [(1, 2), (7, 3), (9, 7), (7, 12), (5, 8), (2, 9), (2, 6)]) && either (const False) (=~= 0.2) (fallFromInside (1, 0) [(2, 3), (5, 4), (5, 5), (8, 6), (8, 9), (7, 9), (7, 8), (2, 4)] [(1, 2), (7, 3), (9, 7), (7, 12), (5, 8), (2, 9), (2, 6)]) && either (const False) (=~= (5/6)) (fallFromInside (0, -1) [(2, 3), (5, 4), (5, 5), (8, 6), (8, 9), (7, 9), (7, 8), (2, 4)] [(1, 2), (7, 3), (9, 7), (7, 12), (5, 8), (2, 9), (2, 6)])
+
+shouldFall_diagnostic :: Bool
+shouldFall_diagnostic = fall_diagnostic Containment Containment (-3, 4) [(7, -5), (10, -5), (7, -2)] [(0, 0), (6, 3), (0, 7)] == [(Just 1, Just GT, Just 3)]
 
 shouldIntersectIncludingTouch :: Bool
 shouldIntersectIncludingTouch = intersectIncludingTouch [] [] &&
