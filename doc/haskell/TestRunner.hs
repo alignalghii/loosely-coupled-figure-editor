@@ -5,4 +5,4 @@ import FourierMotzkinEliminationBehavior (shouldTestFourierMotzkinBehavior)
 import LogicalFormsBehavior (shouldTestLogicalFormsBehavior)
 
 test :: Bool
-test = shouldTestPolygonBehavior && shouldTestFourierMotzkinBehavior && shouldTestLogicalFormsBehavior
+test = shouldTestPolygonBehavior && shouldTestFourierMotzkinEliminationBehavior && shouldTestLogicalFormsBehavior
