@@ -57,6 +57,7 @@ nullConstraint = assembleConstraint (fst . decideNormalizationRule)
 eliminateNVars :: Int -> IneqSystem -> Maybe IneqSystem
 eliminateNVars = flip mLoopN eliminateVar1
 
+-- @TODO: Should allow empty inequality systems, and provide a `Nothing` result
 sysVarCount :: IneqSystem -> Int
 sysVarCount = length . fst . head
 

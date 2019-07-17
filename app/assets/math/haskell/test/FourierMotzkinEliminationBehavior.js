@@ -14,6 +14,7 @@ FourierMotzkinEliminationBehavior.prototype.shouldConstraintLastVar = function (
 
 //shouldEliminateVar1 :: Bool
 FourierMotzkinEliminationBehavior.prototype.shouldEliminateVar1 = function () {
+	return true &&
 	ccTreeEq/*<<<*/(    eliminateVar1([[[-1, -2], -4], [[2, -1], 3], [[-1, 3], 6]]),/*===*/   ['just', [[[-5/2], -5/2], [[5/2], 15/2]]]                                                   )/*>>>*/ &&
 	ccTreeEq/*<<<*/(    eliminateVar1                                                         (        [[[-5/2], -5/2], [[5/2], 15/2]]),/*===*/  ['just', [[[], 2]]]                      )/*>>>*/ &&
 	ccTreeEq/*<<<*/(    eliminateVar1                                                                                                            (        [[[], 2]]),/*===*/   ['nothing'])/*>>>*/ &&
@@ -37,6 +38,7 @@ FourierMotzkinEliminationBehavior.prototype.shouldEliminateAllVarsButOne = funct
 
 //shouldEliminateNVars :: Bool
 FourierMotzkinEliminationBehavior.prototype.shouldEliminateNVars = function () {
+	return true &&
 	ccTreeEq/*<<<*/(    eliminateNVars( 0, [[[-1, -2], -4], [[2, -1], 3], [[-1, 3], 6]]), /*===*/    ['just', [[[-1, -2], -4], [[2, -1], 3], [[-1, 3], 6]]])/*>>>*/ &&
 	ccTreeEq/*<<<*/(    eliminateNVars( 1, [[[-1, -2], -4], [[2, -1], 3], [[-1, 3], 6]]), /*===*/    ['just', [[[-5/2], -5/2], [[5/2], 15/2]]]             )/*>>>*/ &&
 	ccTreeEq/*<<<*/(    eliminateNVars( 2, [[[-1, -2], -4], [[2, -1], 3], [[-1, 3], 6]]), /*===*/    ['just', [[[], 2]]]                                   )/*>>>*/ &&
@@ -67,7 +69,7 @@ FourierMotzkinEliminationBehavior.prototype.shouldSysVarCount = function () {
 
 
 //shouldPartitionateByNormalization :: Bool
-shouldPartitionateByNormalization = function () {
+FourierMotzkinEliminationBehavior.prototype.shouldPartitionateByNormalization = function () {
 	return true &&
 	ccTreeEq/*<<<*/(    partitionateByNormalization( [[[-1, -2], -4], [[2, -1], 3], [[-1, 3], 6]]), /*===*/    ['just', [[[[-2], -4], [[3], 6]], [], [[[-1/2], 3/2]]]])/*>>>*/ &&
 	ccTreeEq/*<<<*/(    partitionateByNormalization( [[[-5/2], -5/2], [[5/2], 15/2]]             ), /*===*/    ['just', [[[[], -1]]            , [], [[[], 3]]]]      )/*>>>*/ &&
@@ -106,12 +108,19 @@ FourierMotzkinEliminationBehavior.prototype.shouldDecideNormalizationRule = func
 //shouldDispatch :: Bool
 FourierMotzkinEliminationBehavior.prototype.shouldDispatch = function () {
 	return true &&
-	ccTreeEq/*<<<*/(    dispatch( ['lt', 'a'], ["-kutya", "-cica", "-tyuk"] ), /*===*/    ["a-kutya",  "-cica",  "-tyuk"])/*>>>*/ &&
-	ccTreeEq/*<<<*/(    dispatch( ['eq', 'a'], ["-kutya", "-cica", "-tyuk"] ), /*===*/    [ "-kutya", "a-cica",  "-tyuk"])/*>>>*/ &&
-	ccTreeEq/*<<<*/(    dispatch( ['gt', 'a'], ["-kutya", "-cica", "-tyuk"] ), /*===*/    [ "-kutya",  "-cica", "a-tyuk"])/*>>>*/ &&
+	ccTreeEq/*<<<*/( dispatch( ['lt', 'a'], [['-','d','o','g'], ['-','c','a','t'], ['-','h','e','n']] ), /*===*/ [['a','-','d','o','g'], [    '-','c','a','t'], [    '-','h','e','n']])/*>>>*/ &&
+	ccTreeEq/*<<<*/( dispatch( ['eq', 'a'], [['-','d','o','g'], ['-','c','a','t'], ['-','h','e','n']] ), /*===*/ [[    '-','d','o','g'], ['a','-','c','a','t'], [    '-','h','e','n']])/*>>>*/ &&
+	ccTreeEq/*<<<*/( dispatch( ['gt', 'a'], [['-','d','o','g'], ['-','c','a','t'], ['-','h','e','n']] ), /*===*/ [[    '-','d','o','g'], [    '-','c','a','t'], ['a','-','h','e','n']])/*>>>*/ &&
 	true;
 };
 
+FourierMotzkinEliminationBehavior.prototype.shouldDispatchToTheRear = function () {
+	return true &&
+	ccTreeEq/*<<<*/( dispatchToTheRear( ['lt', '!'], [['d','o','g'], ['c','a','t'], ['h','e','n']] ), /*===*/ [['d','o','g','!'], ['c','a','t'    ], ['h','e','n'    ]])/*>>>*/ &&
+	ccTreeEq/*<<<*/( dispatchToTheRear( ['eq', '!'], [['d','o','g'], ['c','a','t'], ['h','e','n']] ), /*===*/ [['d','o','g'    ], ['c','a','t','!'], ['h','e','n'    ]])/*>>>*/ &&
+	ccTreeEq/*<<<*/( dispatchToTheRear( ['gt', '!'], [['d','o','g'], ['c','a','t'], ['h','e','n']] ), /*===*/ [['d','o','g'    ], ['c','a','t'    ], ['h','e','n','!']])/*>>>*/ &&
+	true;
+};
 
 //shouldRecombine :: Bool
 FourierMotzkinEliminationBehavior.prototype.shouldRecombine = function () {
@@ -141,7 +150,7 @@ shouldTruncableSys = function () {
 	     truncableSys( [[[], 12], [[], 55]]   )   &&
 	    !truncableSys( [[[4], 12], [[5], 55]] )   &&
 	    !truncableSys( [[[], 12], [[5], 55]]  )   &&
-	    !truncableSys( [[[4], 12], [[], 55]]) )   &&
+	    !truncableSys( [[[4], 12], [[], 55]]  )   &&
 	true;
 };
 
@@ -169,7 +178,7 @@ FourierMotzkinEliminationBehavior.prototype.shouldPredicateForExcludingBoundary 
 };
 
 //shouldPredicateForExactBoundary :: Bool
-shouldPredicateForExactBoundary = function () {
+FourierMotzkinEliminationBehavior.prototype.shouldPredicateForExactBoundary = function () {
 	return true &&
 	    !predicateForExactBoundary(  -5        )     &&
 	     predicateForExactBoundary(  -0.00001  )     &&

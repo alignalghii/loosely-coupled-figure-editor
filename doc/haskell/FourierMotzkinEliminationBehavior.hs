@@ -39,6 +39,7 @@ shouldEliminateNVars =
     eliminateNVars 1 [([], 2)] == Nothing &&
     eliminateNVars 2 [([], 2)] == Nothing
 
+-- @TODO: Should allow empty inequality systems, and provide a `Nothing` result
 shouldSysVarCount :: Bool
 shouldSysVarCount = sysVarCount [([-1, -2], -4), ([2, -1], 3), ([-1, 3], 6)] == 2 && sysVarCount [([2, 3], 21), ([1, -2], 0), ([-1, 0], -4), ([-1, 0], -7), ([1, 1], 5), ([0, -1], 5)] == 2 && sysVarCount [([-5/2], -5/2), ([5/2], 15/2)] == 1 && sysVarCount [([], 2)] == 0
 

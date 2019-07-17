@@ -8,7 +8,7 @@ function ccSubtree(a, b)
 		return is;
 	}
 	if (typeof a == typeof b) return a == b;
-	throw '`ccSubtree` type error';
+	throw '`ccSubtree` type error with `a`: ' + typeof a + ' and `b`: ' + typeof b;
 }
 
 function ccTreeEq(a, b) {return ccSubtree(a, b) && ccSubtree(b, a);}
