@@ -67,7 +67,7 @@ function takeSubTermTerminatedBy(terminatorOp, [halfPlane, postOp], oppeds, inde
 function cnfToDnf(cnf)
 {
 	var dnf = [[]];
-	var n = cnf.length;
+	    n   = cnf.length;
 	for (let i = 1; i <= cnf.length; i++) {
 		dnf = descartesWith(consX, cnf[n-i], dnf);
 	}

@@ -93,17 +93,17 @@ function eliminateNVars(n, ineqSys)
 
 function eliminateAllVarsButOne_(ineqSys)
 {
-	var n = sysVarCount(ineqSys);
-	var mbRedIneqSys = eliminateNVars(n-1, ineqSys);
+	var n = sysVarCount(ineqSys),
+	    mbRedIneqSys = eliminateNVars(n-1, ineqSys);
 	return fromJust(mbRedIneqSys);
 }
 
 
 function eliminateAllVarsButOne(ineqSys)
 {
-	var   redIneqSys       = eliminateAllVarsButOne_(ineqSys);
-	var mbRedIneqPartition = partitionateByNormalization(redIneqSys);
-	var   redIneqPartition = fromJust(mbRedIneqPartition);
+	var   redIneqSys       = eliminateAllVarsButOne_(ineqSys),
+	    mbRedIneqPartition = partitionateByNormalization(redIneqSys),
+	      redIneqPartition = fromJust(mbRedIneqPartition);
 	return statSignPartition(truncateSys, redIneqPartition);
 }
 
@@ -120,3 +120,10 @@ function globalPredicateForExcludingBoundary(lst) {return quantifyCharacteristic
 function globalPredicateForExactBoundary    (lst) {return quantifyCharacteristic(any, predicateForExactBoundary, lst) && quantifyCharacteristic(none, predicateForExcludingBoundary, lst);}
 
 function quantifyCharacteristic(quantor, predicate, setOfMaybes) {return quantor(mX => maybe(true, predicate, mX), setOfMaybes);}
+
+//ineqSystemCharacteristic   :: IneqSystem -> IneqSystemCharacteristic
+function ineqSystemCharacteristic(ineqSys)
+{
+	var rhsCol = eliminateAllVars(ineqSys);
+	return safeMin(rhsCol);
+}
