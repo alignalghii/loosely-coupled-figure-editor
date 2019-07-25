@@ -6,7 +6,7 @@ function PolygonBehavior() {}
 
 
 //shouldTestPolygonBehavior :: Bool
-PolygonBehavior.prototype.shouldTestPolygonBehavior = function () {return shouldIntersectIncludingTouch() && shouldIntersectExcludingTouch() && shouldIntersectExactlyTouch() && shouldContainIncludingTouch() && shouldContainExcludingTouch() && shouldContainExactlyTouch() && shouldValidState() && shouldInvalidState() && shouldFall_diagnostic() && shouldFallFromOutside() && shouldFallFromInside();}
+PolygonBehavior.prototype.shouldTestPolygonBehavior = function () {return this.shouldIntersectIncludingTouch() && this.shouldIntersectExcludingTouch() && this.shouldIntersectExactlyTouch() && this.shouldContainsIncludingTouch() && this.shouldContainsExcludingTouch() && this.shouldContainsExactlyTouch() && this.shouldContainedByIncludingTouch() && this.shouldContainedByExcludingTouch() && this.shouldContainedByExactlyTouch() && this.shouldValidSituation() && this.shouldInvalidSituation() && this.shouldFall_diagnostic() && this.shouldFallFromOutside() && this.shouldFallFromInside() && this.shouldSituationStatus();}
 
 PolygonBehavior.prototype.shouldConvexEdgeBendBy = function ()
 {
@@ -144,60 +144,142 @@ PolygonBehavior.prototype.shouldIntersectExactlyTouch = function ()
 };
 
 
-//shouldContainIncludingTouch, shouldContainExcludingTouch, shouldContainExactlyTouch :: Bool
-PolygonBehavior.prototype.shouldContainIncludingTouch = function ()
+//shouldContainedByIncludingTouch, shouldContainedByExcludingTouch, shouldContainedByExactlyTouch :: Bool
+PolygonBehavior.prototype.shouldContainedByIncludingTouch = function ()
 {
 	return true &&
-	!containIncludingTouch([[3,4], [4,4], [4,6], [2,6]         ],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
-	 containIncludingTouch([[3,4], [4,4], [4,6], [2,6], [3,5  ]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
-	 containIncludingTouch([[3,4], [4,4], [4,6], [2,6], [3,5.2]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
-	 containIncludingTouch([[3,4], [4,4], [4,6], [2,6], [3.2,5]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
+	!containedByIncludingTouch([[3,4], [4,4], [4,6], [2,6]         ],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
+	 containedByIncludingTouch([[3,4], [4,4], [4,6], [2,6], [3,5  ]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
+	 containedByIncludingTouch([[3,4], [4,4], [4,6], [2,6], [3,5.2]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
+	 containedByIncludingTouch([[3,4], [4,4], [4,6], [2,6], [3.2,5]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
 	true;
 };
 
-PolygonBehavior.prototype.shouldContainExcludingTouch = function ()
+PolygonBehavior.prototype.shouldContainedByExcludingTouch = function ()
 {
 	return true &&
-	!containExcludingTouch([[3,4], [4,4], [4,6], [2,6]         ],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
-	!containExcludingTouch([[3,4], [4,4], [4,6], [2,6], [3,5  ]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
-	!containExcludingTouch([[3,4], [4,4], [4,6], [2,6], [3,5.2]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
-	 containExcludingTouch([[3,4], [4,4], [4,6], [2,6], [3.2,5]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
+	!containedByExcludingTouch([[3,4], [4,4], [4,6], [2,6]         ],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
+	!containedByExcludingTouch([[3,4], [4,4], [4,6], [2,6], [3,5  ]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
+	!containedByExcludingTouch([[3,4], [4,4], [4,6], [2,6], [3,5.2]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
+	 containedByExcludingTouch([[3,4], [4,4], [4,6], [2,6], [3.2,5]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
 	true;
 };
 
-PolygonBehavior.prototype.shouldContainExactlyTouch = function ()
+PolygonBehavior.prototype.shouldContainedByExactlyTouch = function ()
 {
 	return true &&
-	!containExactlyTouch([[3,4], [4,4], [4,6], [2,6]         ],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
-	 containExactlyTouch([[3,4], [4,4], [4,6], [2,6], [3,5  ]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
-	 containExactlyTouch([[3,4], [4,4], [4,6], [2,6], [3,5.2]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
-	!containExactlyTouch([[3,4], [4,4], [4,6], [2,6], [3,4.9]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
-	!containExactlyTouch([[3,4], [4,4], [4,6], [2,6], [3.2,5]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
+	!containedByExactlyTouch([[3,4], [4,4], [4,6], [2,6]         ],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
+	 containedByExactlyTouch([[3,4], [4,4], [4,6], [2,6], [3,5  ]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
+	 containedByExactlyTouch([[3,4], [4,4], [4,6], [2,6], [3,5.2]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
+	!containedByExactlyTouch([[3,4], [4,4], [4,6], [2,6], [3,4.9]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
+	!containedByExactlyTouch([[3,4], [4,4], [4,6], [2,6], [3.2,5]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) &&
 	true;
 };
 
-//shouldValidState, shouldInvalidState :: Bool
-PolygonBehavior.prototype.shouldValidState = function ()
+
+
+//shouldContainsIncludingTouch, shouldContainsExcludingTouch, shouldContainsExactlyTouch :: Bool
+PolygonBehavior.prototype.shouldContainsIncludingTouch = function ()
 {
 	return true &&
-	 validState([[0,0], [2,0], [1,1]       ],  [[0  , 0  ], [2, 0  ], [1,1  ]]) &&
-	 validState([[0,0], [2,0], [1,1]       ],  [[2  , 0  ], [4, 0  ], [3,1  ]]) &&
-	 validState([[0,0], [2,0], [1,1]       ],  [[2.1, 0  ], [4, 0  ], [3,1  ]]) &&
-	!validState([[0,2], [2,1], [3,3]       ],  [[1  , 4  ], [4, 1  ], [7,4  ]]) &&
-	 validState([[0,2], [2,1], [2,3]       ],  [[1  , 4  ], [4, 1  ], [7,4  ]]) &&
-	 validState([[1,3], [2,1], [2,4], [3,9]],  [[0  ,-1.1], [2,-2.1], [4,2.9]]) &&
+	!containsIncludingTouch([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6]         ]) &&
+	 containsIncludingTouch([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6], [3,5  ]]) &&
+	 containsIncludingTouch([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6], [3,5.2]]) &&
+	 containsIncludingTouch([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6], [3.2,5]]) &&
 	true;
 };
 
-PolygonBehavior.prototype.shouldInvalidState = function ()
+PolygonBehavior.prototype.shouldContainsExcludingTouch = function ()
 {
 	return true &&
-	!invalidState([[0,0], [2,0], [1,1]       ],  [[0  , 0  ], [2, 0  ], [1,1  ]]) &&
-	!invalidState([[0,0], [2,0], [1,1]       ],  [[2  , 0  ], [4, 0  ], [3,1  ]]) &&
-	!invalidState([[0,0], [2,0], [1,1]       ],  [[2.1, 0  ], [4, 0  ], [3,1  ]]) &&
+	!containsExcludingTouch([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6]         ]) &&
+	!containsExcludingTouch([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6], [3,5  ]]) &&
+	!containsExcludingTouch([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6], [3,5.2]]) &&
+	 containsExcludingTouch([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6], [3.2,5]]) &&
+	true;
+};
 
-	 invalidState([[0,2], [2,1], [3,3]       ],  [[1  , 4  ], [4, 1  ], [7,4  ]]) &&
-	!invalidState([[0,2], [2,1], [2,3]       ],  [[1  , 4  ], [4, 1  ], [7,4  ]]) &&
-	!invalidState([[1,3], [2,1], [2,4], [3,9]],  [[0  ,-1.1], [2,-2.1], [4,2.9]]) &&
+PolygonBehavior.prototype.shouldContainsExactlyTouch = function ()
+{
+	return true &&
+	!containsExactlyTouch([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6]         ]) &&
+	 containsExactlyTouch([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6], [3,5  ]]) &&
+	 containsExactlyTouch([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6], [3,5.2]]) &&
+	!containsExactlyTouch([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6], [3,4.9]]) &&
+	!containsExactlyTouch([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6], [3.2,5]]) &&
+	true;
+};
+
+
+
+//shouldValidSituation, shouldInvalidSituation :: Bool
+PolygonBehavior.prototype.shouldValidSituation = function ()
+{
+	return true &&
+	 validSituation([[0,0], [2,0], [1,1]       ],  [[0  , 0  ], [2, 0  ], [1,1  ]]) &&
+	 validSituation([[0,0], [2,0], [1,1]       ],  [[2  , 0  ], [4, 0  ], [3,1  ]]) &&
+	 validSituation([[0,0], [2,0], [1,1]       ],  [[2.1, 0  ], [4, 0  ], [3,1  ]]) &&
+	!validSituation([[0,2], [2,1], [3,3]       ],  [[1  , 4  ], [4, 1  ], [7,4  ]]) &&
+	 validSituation([[0,2], [2,1], [2,3]       ],  [[1  , 4  ], [4, 1  ], [7,4  ]]) &&
+	 validSituation([[1,3], [2,1], [2,4], [3,9]],  [[0  ,-1.1], [2,-2.1], [4,2.9]]) &&
+	true;
+};
+
+PolygonBehavior.prototype.shouldInvalidSituation = function ()
+{
+	return true &&
+	!invalidSituation([[0,0], [2,0], [1,1]       ],  [[0  , 0  ], [2, 0  ], [1,1  ]]) &&
+	!invalidSituation([[0,0], [2,0], [1,1]       ],  [[2  , 0  ], [4, 0  ], [3,1  ]]) &&
+	!invalidSituation([[0,0], [2,0], [1,1]       ],  [[2.1, 0  ], [4, 0  ], [3,1  ]]) &&
+
+	 invalidSituation([[0,2], [2,1], [3,3]       ],  [[1  , 4  ], [4, 1  ], [7,4  ]]) &&
+	!invalidSituation([[0,2], [2,1], [2,3]       ],  [[1  , 4  ], [4, 1  ], [7,4  ]]) &&
+	!invalidSituation([[1,3], [2,1], [2,4], [3,9]],  [[0  ,-1.1], [2,-2.1], [4,2.9]]) &&
+	true;
+};
+
+
+PolygonBehavior.prototype.shouldSituationStatus  = function ()
+{
+	return true &&
+
+	/*** Intersect ***/
+
+	 //situationStatus([], []) && // @TODO
+
+	vecEq(/*<<<*/ situationStatus([[0,0], [2,0], [1,1]        ], [[0  , 0], [2,  0  ], [1 ,1  ]]) ,/*===*/ {contains:0, containedBy:0} /*>>>*/) &&
+	vecEq(/*<<<*/ situationStatus([[0,0], [2,0], [1,1]        ], [[2  , 0], [4,  0  ], [3 ,1  ]]) ,/*===*/ {disjoint:0}                /*>>>*/) &&
+	vecEq(/*<<<*/ situationStatus([[0,0], [2,0], [1,1]        ], [[2.1, 0], [4 , 0  ], [3 ,1  ]]) ,/*===*/ {disjoint:1}                /*>>>*/) &&
+
+	vecEq(/*<<<*/ situationStatus([[0,2], [2,1], [3,3]        ], [[1  , 4], [4 , 1  ], [7 ,4  ]]) ,/*===*/ {}                          /*>>>*/) &&
+	vecEq(/*<<<*/ situationStatus([[0,2], [2,1], [2,3]        ], [[1  , 4], [4 , 1  ], [7 ,4  ]]) ,/*===*/ {disjoint:0}                /*>>>*/) &&
+	vecEq(/*<<<*/ situationStatus([[0,2], [2,1], [1,3]        ], [[1  , 4], [4 , 1  ], [7 ,4  ]]) ,/*===*/ {disjoint:1}                /*>>>*/) &&
+	vecEq(/*<<<*/ situationStatus([[0,2], [2,1], [4,4]        ], [[1  , 4], [4 , 1  ], [7 ,4  ]]) ,/*===*/ {}                          /*>>>*/) &&
+
+	vecEq(/*<<<*/ situationStatus([[1,4], [5,6], [3,3], [3,-2]], [[1  ,-2], [6 ,-3  ], [5,-1  ]]) ,/*===*/ {}                          /*>>>*/) &&
+
+	vecEq(/*<<<*/ situationStatus([[1,3], [2,1], [2,4], [3, 9]], [[0, 1  ], [2 , 0  ], [4, 5  ]]) ,/*===*/ {}                          /*>>>*/) &&
+	vecEq(/*<<<*/ situationStatus([[1,3], [2,1], [2,4], [3, 9]], [[0,-1  ], [2 ,-2  ], [4, 3  ]]) ,/*===*/ {disjoint:0}                /*>>>*/) &&
+	vecEq(/*<<<*/ situationStatus([[1,3], [2,1], [2,4], [3, 9]], [[0,-1.1], [2 ,-2.1], [4, 2.9]]) ,/*===*/ {disjoint:1}                /*>>>*/) &&
+
+
+	true &&
+
+	/*** ContainedBy ***/
+	vecEq(/*<<<*/ situationStatus([[3,4], [4,4], [4,6], [2,6]         ],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) ,/*===*/ {}               /*>>>*/) &&
+	vecEq(/*<<<*/ situationStatus([[3,4], [4,4], [4,6], [2,6], [3,5  ]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) ,/*===*/ {containedBy:0}  /*>>>*/) &&
+	vecEq(/*<<<*/ situationStatus([[3,4], [4,4], [4,6], [2,6], [3,5.2]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) ,/*===*/ {containedBy:0}  /*>>>*/) &&
+	vecEq(/*<<<*/ situationStatus([[3,4], [4,4], [4,6], [2,6], [3,4.8]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) ,/*===*/ {}               /*>>>*/) &&
+	vecEq(/*<<<*/ situationStatus([[3,4], [4,4], [4,6], [2,6], [3.2,5]],  [[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]]) ,/*===*/ {containedBy:1}  /*>>>*/) &&
+
+	true &&
+
+	/*** Contains ***/
+	vecEq(/*<<<*/ situationStatus([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6]         ]) ,/*===*/ {}            /*>>>*/) &&
+	vecEq(/*<<<*/ situationStatus([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6], [3,5  ]]) ,/*===*/ {contains:0}  /*>>>*/) &&
+	vecEq(/*<<<*/ situationStatus([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6], [3,5.2]]) ,/*===*/ {contains:0}  /*>>>*/) &&
+	vecEq(/*<<<*/ situationStatus([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6], [3,4.8]]) ,/*===*/ {}            /*>>>*/) &&
+	vecEq(/*<<<*/ situationStatus([[2,2], [5,4], [7,4], [5,8], [1,6], [3,5]],  [[3,4], [4,4], [4,6], [2,6], [3.2,5]]) ,/*===*/ {contains:1}  /*>>>*/) &&
+
 	true;
 };

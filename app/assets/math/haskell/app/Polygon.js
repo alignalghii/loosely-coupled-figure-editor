@@ -97,8 +97,9 @@ function diagnostizeCollision(bs1, bs2, verticesA, verticesB)
 
 
 //diagnostizeIntersect, diagnostizeAntiContain :: [Point] -> [Point] -> [IneqSystemCharacteristic]
-function diagnostizeIntersect  (verticesSrc, verticesTgt) {return diagnostizeCollision('containment', 'containment'  , verticesSrc, verticesTgt);}
-function diagnostizeAntiContain(verticesSrc, verticesTgt) {return diagnostizeCollision('containment', 'complementary', verticesSrc, verticesTgt);}
+function diagnostizeIntersect      (verticesSrc, verticesTgt) {return diagnostizeCollision('containment'  , 'containment'  , verticesSrc, verticesTgt);}
+function diagnostizeAntiContains   (verticesSrc, verticesTgt) {return diagnostizeCollision('complementary', 'containment'  , verticesSrc, verticesTgt);}
+function diagnostizeAntiContainedBy(verticesSrc, verticesTgt) {return diagnostizeCollision('containment'  , 'complementary', verticesSrc, verticesTgt);}
 
 
 //intersectIncludingTouch, intersectExcludingTouch, intersectExactlyTouch :: [Point] -> [Point] -> Bool
@@ -121,27 +122,65 @@ function intersectExactlyTouch(verticesSrc, verticesTgt)
 
 //containIncludingTouch, containExcludingTouch, containExactlyTouch :: [Point] -> [Point] -> Bool
 //containExactlyTouch verticesA verticesB  = containIncludingTouch verticesA verticesB && not (containExcludingTouch verticesA verticesB)
-function containIncludingTouch(verticesSrc, verticesTgt)
+function containsIncludingTouch(verticesSrc, verticesTgt)
 {
-	var ineqSysCharacteristics = diagnostizeAntiContain(verticesSrc, verticesTgt);
+	var ineqSysCharacteristics = diagnostizeAntiContains(verticesSrc, verticesTgt);
 	return !globalPredicateForExcludingBoundary(ineqSysCharacteristics);
 }
-function containExcludingTouch(verticesSrc, verticesTgt)
+function containsExcludingTouch(verticesSrc, verticesTgt)
 {
-	var ineqSysCharacteristics = diagnostizeAntiContain(verticesSrc, verticesTgt);
+	var ineqSysCharacteristics = diagnostizeAntiContains(verticesSrc, verticesTgt);
 	return !globalPredicateForIncludingBoundary(ineqSysCharacteristics);
 }
-function containExactlyTouch(verticesSrc, verticesTgt)
+function containsExactlyTouch(verticesSrc, verticesTgt)
 {
-	var ineqSysCharacteristics = diagnostizeAntiContain(verticesSrc, verticesTgt);
+	var ineqSysCharacteristics = diagnostizeAntiContains(verticesSrc, verticesTgt);
+	return globalPredicateForExactBoundary(ineqSysCharacteristics);
+}
+
+// containedBy(src, tgt) <===> contain(tgt, src)
+function containedByIncludingTouch(verticesSrc, verticesTgt)
+{
+	var ineqSysCharacteristics = diagnostizeAntiContainedBy(verticesSrc, verticesTgt);
+	return !globalPredicateForExcludingBoundary(ineqSysCharacteristics);
+}
+function containedByExcludingTouch(verticesSrc, verticesTgt)
+{
+	var ineqSysCharacteristics = diagnostizeAntiContainedBy(verticesSrc, verticesTgt);
+	return !globalPredicateForIncludingBoundary(ineqSysCharacteristics);
+}
+function containedByExactlyTouch(verticesSrc, verticesTgt)
+{
+	var ineqSysCharacteristics = diagnostizeAntiContainedBy(verticesSrc, verticesTgt);
 	return globalPredicateForExactBoundary(ineqSysCharacteristics);
 }
 
 
 
-//validState, invalidState :: [Point] -> [Point] -> Bool
-function validState(verticesSrc, verticesTgt) {return !intersectExcludingTouch(verticesSrc, verticesTgt) || containIncludingTouch(verticesSrc, verticesTgt);}
-function invalidState(verticesSrc, verticesTgt) {return !validState(verticesSrc, verticesTgt);}
+//validSituation, invalidSituation :: [Point] -> [Point] -> Bool
+// @TODO: optimize: for src, FME of containement is counted thrice instead of once (and same applies for tgt)
+function validSituation(verticesSrc, verticesTgt) {return !intersectExcludingTouch(verticesSrc, verticesTgt) || containsIncludingTouch(verticesSrc, verticesTgt) || containedByIncludingTouch(verticesSrc, verticesTgt);}
+function invalidSituation(verticesSrc, verticesTgt) {return !validSituation(verticesSrc, verticesTgt);}
+
+// @TODO! optimize!
+function situationStatus(verticesSrc, verticesTgt)
+{
+	var disjoint     = !intersectExcludingTouch  (verticesSrc, verticesTgt),
+	    disjoint1    = !intersectIncludingTouch  (verticesSrc, verticesTgt);
+	var contains     =  containsIncludingTouch   (verticesSrc, verticesTgt),
+	    contains1    =  containsExcludingTouch   (verticesSrc, verticesTgt);
+	var containedBy  =  containedByIncludingTouch(verticesSrc, verticesTgt);
+	    containedBy1 =  containedByExcludingTouch(verticesSrc, verticesTgt);
+
+	var status = {};
+	if (disjoint    && !disjoint1   ) status.disjoint    = 0;
+	if (disjoint    &&  disjoint1   ) status.disjoint    = 1;
+	if (contains    && !contains1   ) status.contains    = 0;
+	if (contains    &&  contains1   ) status.contains    = 1;
+	if (containedBy && !containedBy1) status.containedBy = 0;
+	if (containedBy &&  containedBy1) status.containedBy = 1;
+	return status;
+}
 
 
 // Fall

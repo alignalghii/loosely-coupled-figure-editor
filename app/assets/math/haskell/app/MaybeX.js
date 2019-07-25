@@ -6,7 +6,7 @@ function maybe(asNothing, asJust, maybeData)
 	}
 }
 
-function maybe_f0(asNothing, asJust, maybeData)
+function maybe_exec(asNothing, asJust, maybeData)
 {
 	switch (maybeData[0]) {
 		case 'nothing': return asNothing();
@@ -29,4 +29,4 @@ function maybeLoop(f, x)
 	return x;
 }
 
-function fromJust(mbX) {return maybe_f0(() => {throw "`fromJust` error";}, x => x, mbX);}
+function fromJust(mbX) {return maybe_exec(() => {throw "`fromJust` error";}, x => x, mbX);}

@@ -1,6 +1,12 @@
-function shouldTour() {return vecEq(tour([]), []) && vecEq(tour([10]), [[10,10]]) && vecEq(tour([10,20]), [[10,20], [20,10]]) && vecEq(tour([10,20,30]), [[10,20], [20,30], [30,10]]);}
+function LogicalFormsBehavior () {}
 
-function shouldCycleToOpsTerminatedListWith()
+
+LogicalFormsBehavior.prototype.shouldTestLogicalFormsBehavior = function () {return this.shouldTour() && this.shouldCycleToOpsTerminatedListWith() && this.shouldOpTerminate() && this.shouldOpsTerminatedListToDnf() && this.shouldSpliceBackIfNeeded() && this.shouldSpliceBack() && this.shouldTakeSubTermTerminatedBy() && this.shouldTakeSubTermsSeparatedBy();};
+
+
+LogicalFormsBehavior.prototype.shouldTour = function () {return vecEq(tour([]), []) && vecEq(tour([10]), [[10,10]]) && vecEq(tour([10,20]), [[10,20], [20,10]]) && vecEq(tour([10,20,30]), [[10,20], [20,30], [30,10]]);};
+
+LogicalFormsBehavior.prototype.shouldCycleToOpsTerminatedListWith = function ()
 {
 	function posModR(a, m) {while (a < 0 || a >= m) a -= Math.sign(a) * m; return a;}
 	function isConvexValue(a) {return posModR(a, 360) <= 180;}
@@ -10,9 +16,9 @@ function shouldCycleToOpsTerminatedListWith()
 	return true &&
 		vecEq(cycleToOpsTerminatedListWith(changeIsConvexValue, showAsDegree, [0, 90, 180, 270]), [['0°', 'and'], ['90°', 'and'], ['180°', 'and'], ['270°', 'and']])
 		true;
-}
+};
 
-function shouldOpTerminate()
+LogicalFormsBehavior.prototype.shouldOpTerminate = function ()
 {
 	function posModR(a, m) {while (a < 0 || a >= m) a -= Math.sign(a) * m; return a;}
 	function isConvexValue(a) {return posModR(a, 360) <= 180;}
@@ -24,9 +30,9 @@ function shouldOpTerminate()
 		vecEq(opTerminate(changeIsConvexValue, showAsDegree, 10 ,   0), ['10°', 'or' ]) &&
 		vecEq(opTerminate(changeIsConvexValue, showAsDegree, 10,  220), ['10°', 'or' ]) &&
 		true;
-}
+};
 
-function shouldOpsTerminatedListToDnf()
+LogicalFormsBehavior.prototype.shouldOpsTerminatedListToDnf = function ()
 {
 	function posModR(a, m) {while (a < 0 || a >= m) a -= Math.sign(a) * m; return a;}
 	function isConvexValue(a) {return posModR(a, 360) <= 180;}
@@ -41,9 +47,9 @@ function shouldOpsTerminatedListToDnf()
 		vecEq(opsTerminatedListToDnf('containment'  , [['a', 'and'], ['b', 'or'], ['c', 'or'], ['d', 'or'], ['e', 'and'], ['f', 'and']]), [['a', 'b', 'f'], ['a', 'c', 'f'], ['a', 'd', 'f'], ['a', 'e', 'f']]) &&
 		vecEq(opsTerminatedListToDnf('complementary', [['a', 'and'], ['b', 'or'], ['c', 'or'], ['d', 'or'], ['e', 'and'], ['f', 'and']]), [['e', 'f', 'a', 'b'], ['c'], ['d']]) &&
 		true;
-}
+};
 
-function shouldSpliceBackIfNeeded()
+LogicalFormsBehavior.prototype.shouldSpliceBackIfNeeded = function ()
 {
 	return true &&
 		vecEq(spliceBackIfNeeded([]                                , ['nothing'              ]), []                                              ) &&
@@ -51,31 +57,31 @@ function shouldSpliceBackIfNeeded()
 		vecEq(spliceBackIfNeeded([['a', 'b', 'c'], ['x', 'y', 'z']], ['nothing'              ]), [              ['a', 'b', 'c'], ['x', 'y', 'z']]) &&
 		vecEq(spliceBackIfNeeded([['a', 'b', 'c'], ['x', 'y', 'z']], ['just'   , [10, 20, 30]]), [[10, 20, 30,   'a', 'b', 'c'], ['x', 'y', 'z']]) &&
 		true;
-}
+};
 
 
-function shouldSpliceBack()
+LogicalFormsBehavior.prototype.shouldSpliceBack = function ()
 {
 	return true &&
 		vecEq(spliceBack([]                                , [10, 20, 30]), [[10, 20, 30]]                                ) &&
 		vecEq(spliceBack([['a', 'b', 'c'], ['x', 'y', 'z']], [10, 20, 30]), [[10, 20, 30, 'a', 'b', 'c'], ['x', 'y', 'z']]) &&
 		true;
-}
+};
 
-function shouldTakeSubTermTerminatedBy()
+LogicalFormsBehavior.prototype.shouldTakeSubTermTerminatedBy = function ()
 {
 	return true &&
 		vecEq(takeSubTermTerminatedBy('and', ['a', 'and'], [['b', 'and'], ['c', 'and'], ['d', 'and']], 0), [['a']               , ['just', 0]]) &&
 		vecEq(takeSubTermTerminatedBy('and', ['a', 'or' ], [['b', 'or' ], ['c', 'or' ], ['d', 'or' ]], 0), [['a', 'b', 'c', 'd'], ['nothing']]) &&
 		vecEq(takeSubTermTerminatedBy('and', ['a', 'or' ], [['b', 'or' ], ['c', 'and'], ['d', 'or' ]], 0), [['a', 'b', 'c']     , ['just', 2]]) &&
 		true;
-}
+};
 
-function shouldTakeSubTermsSeparatedBy()
+LogicalFormsBehavior.prototype.shouldTakeSubTermsSeparatedBy = function ()
 {
 	return true &&
 		vecEq(takeSubTermsSeparatedBy('and', [['a', 'and'], ['b', 'and'], ['c', 'and'], ['d', 'and']]), [[['a'], ['b'], ['c'], ['d']], ['nothing'                      ]]) &&
 		vecEq(takeSubTermsSeparatedBy('and', [['a', 'or' ], ['b', 'or' ], ['c', 'or' ], ['d', 'or' ]]), [[                          ], ['just'   , ['a', 'b', 'c', 'd']]]) &&
 		vecEq(takeSubTermsSeparatedBy('and', [['a', 'or' ], ['b', 'or' ], ['c', 'and'], ['d', 'or' ]]), [[['a', 'b', 'c']           ], ['just'   , ['d'               ]]]) &&
 		true;
-}
+};
