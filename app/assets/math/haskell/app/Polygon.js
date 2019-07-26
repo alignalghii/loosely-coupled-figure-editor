@@ -212,7 +212,7 @@ function fall_diagnostic(bs1, bs2, vector, verticesSrc, verticesTgt)
 	return ineqSystems_.map(ineqSys => ineqSys.map(quadrupleToNonEmptyFootList)).map(constraintLastVar);
 };
 
-//fallFromOutside, fallFromInside :: Vector -> [Point] -> [Point] -> PMInf Float
+//fallFromOutside, fallFromInside, fallFromAround :: Vector -> [Point] -> [Point] -> PMInf Float
 function fallFromOutside(vector, verticesSrc, verticesTgt)
 {
 	var constraintPartitions = fall_diagnostic('containment', 'containment', vector, verticesSrc, verticesTgt);
@@ -222,6 +222,31 @@ function fallFromInside(vector, verticesSrc, verticesTgt)
 {
 	var constraintPartitions = fall_diagnostic('containment', 'complementary', vector, verticesSrc, verticesTgt);
 	return fallScale(constraintPartitions);
+}
+function fallFromAround(vector, verticesSrc, verticesTgt)
+{
+	var constraintPartitions = fall_diagnostic('complementary', 'containment', vector, verticesSrc, verticesTgt);
+	return fallScale(constraintPartitions);
+}
+
+
+
+function fallPolygonOnPolygon_IMPROVED(verticesSrc, verticesTgt, fallDirectionVector)
+{
+	// @TODO: optimize!
+	/*var ineqSystemsSrc  = polygonInequalityStructure('containment'  , verticesSrc),
+	    ineqSystemsSrc_ = polygonInequalityStructure('complementary', verticesSrc),
+	    ineqSystemsTgt  = polygonInequalityStructure('containment'  , verticesTgt),
+	    ineqSystemsTgt_ = polygonInequalityStructure('complementary', verticesTgt),
+
+	    ineqSystems_intersect       = dnfAnd(ineqSystemsSrc , ineqSystemsTgt ),
+	    ineqSystems_antiContains    = dnfAnd(ineqSystemsSrc_, ineqSystemsTgt ),
+	    ineqSystems_antiContainedBy = dnfAnd(ineqSystemsSrc , ineqSystemsTgt_),*/
+
+	var status = situationStatus(verticesSrc, verticesTgt);
+	if ('disjoint'    in status) return fallFromOutside(fallDirectionVector, verticesSrc, verticesTgt);
+	if ('containedBy' in status) return fallFromInside (fallDirectionVector, verticesSrc, verticesTgt);
+	if ('contains'    in status) return fallFromAround (fallDirectionVector, verticesSrc, verticesTgt);
 }
 
 

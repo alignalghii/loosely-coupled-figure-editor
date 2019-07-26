@@ -13,6 +13,16 @@ function ccMixedLt (finiteValue, valueOrPosInf) {return maybe(true, val => ccLt 
 function ccMixedGeq(valueOrPosInf, finiteValue) {return maybe(true, val => ccGeq(val, finiteValue), valueOrPosInf);}
 function ccMixedGt (valueOrPosInf, finiteValue) {return maybe(true, val => ccGt (val, finiteValue), valueOrPosInf);}
 
+function ccMixedGeq_callback(valueOrPosInf, finiteValue, thenValue, elseFunction)
+{
+	return maybe(
+		thenValue,
+		val => ccGeq(val, finiteValue) ? thenValue
+		                               : elseFunction(val),
+		valueOrPosInf
+	);
+}
+
 
 //minimumBy :: (a -> a -> Ordering) -> [a] -> a
 function minimumBy (cmp, lst)
@@ -26,11 +36,11 @@ function minimumBy (cmp, lst)
 // type PMInf a = Either Bool a
 
 //pMInfCompare :: Ord a => PMInf a -> PMInf a -> Ordering
-function pMInfCompare(pmInf1, pmInf2)
+function pMInfCompare(pMInf1, pMInf2)
 {
-	var [tag1, val1] = pmInf1;
-	var [tag2, val2] = pmInf2;
-	var casesStr = JSON.stringify(pmInf1) + ' ! ' + JSON.stringify(pmInf2);
+	var [tag1, val1] = pMInf1;
+	var [tag2, val2] = pMInf2;
+	var casesStr = JSON.stringify(pMInf1) + ' ! ' + JSON.stringify(pMInf2);
 	switch (true) {
 		case /\["left",false\] ! \["left",false\]/.test(casesStr): return  0; // eq
 		case /\["left",false\] ! \["right",.*\]/  .test(casesStr): return -1; // lt
@@ -46,18 +56,21 @@ function pMInfCompare(pmInf1, pmInf2)
 	}
 }
 
-function pMInfGeq(a, b) {return pmInfCompare(a, b) >= 0;}
-function pMInfGt (a, b) {return pmInfCompare(a, b) >  0;}
-function pMInfLeq(a, b) {return pmInfCompare(a, b) <= 0;}
-function pMInfLt (a, b) {return pmInfCompare(a, b) <  0;}
-function pMInfEq (a, b) {return pmInfCompare(a, b) == 0;}
+function pMInfGeq(a, b) {return pMInfCompare(a, b) >= 0;}
+function pMInfGt (a, b) {return pMInfCompare(a, b) >  0;}
+function pMInfLeq(a, b) {return pMInfCompare(a, b) <= 0;}
+function pMInfLt (a, b) {return pMInfCompare(a, b) <  0;}
+function pMInfEq (a, b) {return pMInfCompare(a, b) == 0;}
 
 
-function ccPMInfGeq(a, b) {return ccGeq(pmInfCompare(a, b), 0);}
-function ccPMInfGt (a, b) {return ccGt (pmInfCompare(a, b), 0);}
-function ccPMInfLeq(a, b) {return ccLeq(pmInfCompare(a, b), 0);}
-function ccPMInfLt (a, b) {return ccLt (pmInfCompare(a, b), 0);}
-function ccPMInfEq (a, b) {return ccEq (pmInfCompare(a, b), 0);}
+function ccPMInfGeq(a, b) {return ccGeq(pMInfCompare(a, b), 0);}
+function ccPMInfGt (a, b) {return ccGt (pMInfCompare(a, b), 0);}
+function ccPMInfLeq(a, b) {return ccLeq(pMInfCompare(a, b), 0);}
+function ccPMInfLt (a, b) {return ccLt (pMInfCompare(a, b), 0);}
+function ccPMInfEq (a, b) {return ccEq (pMInfCompare(a, b), 0);}
+
+
+function pMInfMixedMin(mbA, b) {return maybe(b, a => Math.min(a, b) , mbA)}
 
 
 // Catamorhisms:
@@ -80,20 +93,22 @@ function valueOrPMInfCatamorhism_exec(caseNegInf, callbackForFiniteValue, casePo
 	);
 }
 
-function pMToPInfinity(caseNegatioveInfinity, callbackForValueOrPInfinity, valueOrPMInfinity)
+function pMToPInfinity(caseNegativeInfinity, callbackForValueOrPInfinity, valueOrPMInfinity)
 {
 	return either(
 		isInfinityPositive => !isInfinityPositive ? caseNegativeInfinity
-		                                          : callbackForValueOrPInfinity(['nothing          ']),
-		finiteValue        =>                       callbackForValueOrPInfinity(['just', finiteValue])
+		                                          : callbackForValueOrPInfinity(['nothing'          ]),
+		finiteValue        =>                       callbackForValueOrPInfinity(['just', finiteValue]),
+		valueOrPMInfinity
 	);
 }
 
-function pMToPInfinity_exec(caseNegatioveInfinity, callbackForValueOrPInfinity, valueOrPMInfinity)
+function pMToPInfinity_exec(caseNegativeInfinity, callbackForValueOrPInfinity, valueOrPMInfinity)
 {
 	return either(
 		isInfinityPositive => !isInfinityPositive ? caseNegativeInfinity()
-		                                          : callbackForValueOrPInfinity(['nothing          ']),
-		finiteValue        =>                       callbackForValueOrPInfinity(['just', finiteValue])
+		                                          : callbackForValueOrPInfinity(['nothing'          ]),
+		finiteValue        =>                       callbackForValueOrPInfinity(['just', finiteValue]),
+		valueOrPMInfinity
 	);
 }

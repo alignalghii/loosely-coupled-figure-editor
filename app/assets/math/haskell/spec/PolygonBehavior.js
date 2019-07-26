@@ -6,7 +6,7 @@ function PolygonBehavior() {}
 
 
 //shouldTestPolygonBehavior :: Bool
-PolygonBehavior.prototype.shouldTestPolygonBehavior = function () {return this.shouldIntersectIncludingTouch() && this.shouldIntersectExcludingTouch() && this.shouldIntersectExactlyTouch() && this.shouldContainsIncludingTouch() && this.shouldContainsExcludingTouch() && this.shouldContainsExactlyTouch() && this.shouldContainedByIncludingTouch() && this.shouldContainedByExcludingTouch() && this.shouldContainedByExactlyTouch() && this.shouldValidSituation() && this.shouldInvalidSituation() && this.shouldFall_diagnostic() && this.shouldFallFromOutside() && this.shouldFallFromInside() && this.shouldSituationStatus();}
+PolygonBehavior.prototype.shouldTestPolygonBehavior = function () {return this.shouldIntersectIncludingTouch() && this.shouldIntersectExcludingTouch() && this.shouldIntersectExactlyTouch() && this.shouldContainsIncludingTouch() && this.shouldContainsExcludingTouch() && this.shouldContainsExactlyTouch() && this.shouldContainedByIncludingTouch() && this.shouldContainedByExcludingTouch() && this.shouldContainedByExactlyTouch() && this.shouldValidSituation() && this.shouldInvalidSituation() && this.shouldFall_diagnostic() && this.shouldFallFromOutside() && this.shouldFallFromInside() && this.shouldFallFromAround() && this.shouldFallPolygonOnPolygon_IMPROVED() && this.shouldSituationStatus();}
 
 PolygonBehavior.prototype.shouldConvexEdgeBendBy = function ()
 {
@@ -62,6 +62,36 @@ PolygonBehavior.prototype.shouldFallFromInside = function ()
 	either(constK(false), ccIs(0.2), fallFromInside([ 1,  0], [[2, 3], [5, 4], [5, 5], [8, 6], [8, 9], [7, 9], [7, 8], [2, 4]], [[1, 2], [7, 3], [9, 7], [7, 12], [5, 8], [2, 9], [2, 6]])) &&
 	either(constK(false), ccIs(5/6), fallFromInside([ 0, -1], [[2, 3], [5, 4], [5, 5], [8, 6], [8, 9], [7, 9], [7, 8], [2, 4]], [[1, 2], [7, 3], [9, 7], [7, 12], [5, 8], [2, 9], [2, 6]])) &&
 	true;
+};
+
+//shouldFallFromInside :: Bool
+PolygonBehavior.prototype.shouldFallFromAround = function ()
+{
+	return true &&
+	either(constK(false), ccIs(0.5), fallFromAround([ 1,  0], [[1, 2], [7, 3], [9, 7], [7, 12], [5, 8], [2, 9], [2, 6]], [[2, 3], [5, 4], [5, 5], [8, 6], [8, 9], [7, 9], [7, 8], [2, 4]])) &&
+	either(constK(false), ccIs(0.5), fallFromAround([ 0, -1], [[1, 2], [7, 3], [9, 7], [7, 12], [5, 8], [2, 9], [2, 6]], [[2, 3], [5, 4], [5, 5], [8, 6], [8, 9], [7, 9], [7, 8], [2, 4]])) &&
+	either(constK(false), ccIs(0.2), fallFromAround([-1,  0], [[1, 2], [7, 3], [9, 7], [7, 12], [5, 8], [2, 9], [2, 6]], [[2, 3], [5, 4], [5, 5], [8, 6], [8, 9], [7, 9], [7, 8], [2, 4]])) &&
+	either(constK(false), ccIs(5/6), fallFromAround([ 0,  1], [[1, 2], [7, 3], [9, 7], [7, 12], [5, 8], [2, 9], [2, 6]], [[2, 3], [5, 4], [5, 5], [8, 6], [8, 9], [7, 9], [7, 8], [2, 4]])) &&
+	true;
+};
+
+PolygonBehavior.prototype.shouldFallPolygonOnPolygon_IMPROVED = function ()
+{
+	var pMInfScale1 = fallPolygonOnPolygon_IMPROVED(
+		[[4,  1], [5, 1], [ 4, 2]],
+		[[4, -2], [1, 4], [-5, 1]],
+		[-7, -7]
+	);
+	var flag1 = ccTreeEq(pMInfScale1, ['right', 1/7]);
+
+	var pMInfScale2 = fallPolygonOnPolygon_IMPROVED(
+		[[4, -2], [1, 4], [-5, 1]],
+		[[4,  1], [5, 1], [ 4, 2]],
+		[7, 7]
+	);
+	var flag2 = ccTreeEq(pMInfScale2, ['right', 1/7]);
+
+	return flag1 && flag2;
 };
 
 //shouldFall_diagnostic :: Bool
