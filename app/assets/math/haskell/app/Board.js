@@ -7,18 +7,6 @@ function boardReduce(reducer, initialValue, board)
 	return accumulator;
 }
 
-function boardMin(filterPred, mapFun, parametricLt, posInf, board)
-{
-	function reducer(accumulator, currentItem) {
-		if (filterPred(currentItem)) {
-			let currentValue = mapFun(currentItem);
-			return parametricLt(currentValue, accumulator) ? currentValue : accumulator;
-		} else {
-			return accumulator;
-		}
-	}
-	return boardReduce(reducer, posInf, board);
-}
 
 // Optimizated special implementations for reduction (partial, lazy evaluation):
 

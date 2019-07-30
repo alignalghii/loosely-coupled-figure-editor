@@ -1,8 +1,8 @@
-function fallFigureOnBoard_IMPROVED(fallingFigure, board, fallDirectionVector)
+function fallFigureOnBoard_allMins(fallingFigure, board, fallDirectionVector)
 {
 	const isAnOther    = (anotherFigure) => anotherFigure != fallingFigure;
 	const itsFallScale = (targetFigure ) => fallPolygonOnPolygon_IMPROVED(fallingFigure.vertices, targetFigure.vertices, fallDirectionVector);
-	return boardMin(isAnOther, itsFallScale, pMInfLt, ['left', true], board);
+	return boardMinSelectSet(isAnOther, itsFallScale, pMInfCompare, ['left', true], board);
 }
 
 function invalidSituationOnBoard(fallingFigure, board)

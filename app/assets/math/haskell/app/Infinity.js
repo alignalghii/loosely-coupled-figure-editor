@@ -112,3 +112,39 @@ function pMToPInfinity_exec(caseNegativeInfinity, callbackForValueOrPInfinity, v
 		valueOrPMInfinity
 	);
 }
+
+
+// Minimum for `Board`:
+
+function boardMin(filterPred, mapFun, parametricLt, posInf, board)
+{
+	function reducer(accumulator, currentItem) {
+		if (filterPred(currentItem)) {
+			let currentValue = mapFun(currentItem);
+			return parametricLt(currentValue, accumulator) ? currentValue : accumulator;
+		} else {
+			return accumulator;
+		}
+	}
+	return boardReduce(reducer, posInf, board);
+}
+
+function boardMinSelectSet(filterPred, mapFun, parametricCompare, posInf, board)
+{
+	function reducer(accumulator, currentItem) {
+		if (filterPred(currentItem)) {
+			const currentValue                         = mapFun(currentItem),
+			      [accumulatorValue, accumulatorItems] = accumulator,
+                              comparison                           = parametricCompare(currentValue, accumulatorValue);
+			switch (comparison) {
+				case -1: return [currentValue, [currentItem]];
+				case  0: return [accumulatorValue, accumulatorItems.concat([currentItem])];
+				case  1: return accumulator;
+				default: throw 'Invalid `compare` label at `boardMinSelectSet`';
+			};
+		} else {
+			return accumulator;
+		}
+	}
+	return boardReduce(reducer, [posInf, []], board);
+}
