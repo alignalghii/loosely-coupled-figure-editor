@@ -1,5 +1,8 @@
 function ListXBehavior() {}
 
+ListXBehavior.prototype.shouldTestListXBehavior = function () {return this.shouldDescartesProduct() && this.shouldDescartesWith() && this.shouldConsX() && this.shouldAppend() && this.shouldUncons() && this.shouldZipWith() /*&& this.shouldIsHomogenousByEq()*/;};
+
+
 ListXBehavior.prototype.shouldDescartesProduct = function ()
 {
 	var letters = ['a', 'b', 'c'], numbers = [1, 2];
@@ -53,3 +56,16 @@ ListXBehavior.prototype.shouldZipWith = function ()
 	vecEq(zipWith((a, b) => a + b, [1, 3, 67], [4, 12]), [5, 15]) &&
 	true;
 };
+
+// @TODO: not used: ratioEq would have used it, but its new implementation does not use it
+ListXBehavior.prototype.shouldIsHomogenousByEq = function ()
+{
+	const absEq = (a, b) => Math.abs(a) == Math.abs(b);
+	return true &&
+	 isHomogenousByEq(absEq, [2, -2, 2, 2, -2]) &&
+	!isHomogenousByEq(absEq, [2, -2, 3, 2, -2]) &&
+
+	 isHomogenousByEq(absEq, []) &&
+	 isHomogenousByEq(absEq, [3]) &&
+	true;
+}

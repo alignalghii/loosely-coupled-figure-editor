@@ -1,5 +1,7 @@
 function LogicBehavior() {}
 
+LogicBehavior.prototype.shouldTestLogicBehavior = function () {return this.shouldAll() && this.shouldAny() && this.shouldNone() && this.shouldBothOrNone();};
+
 LogicBehavior.prototype.shouldAll = function ()
 {
 	return true &&
@@ -41,3 +43,5 @@ LogicBehavior.prototype.shouldNone = function ()
 	 none(x => x > 0, [-5             ]) &&
 	true;
 }
+
+LogicBehavior.prototype.shouldBothOrNone = () => bothOrNone(true, true) && !bothOrNone(true, false) && !bothOrNone(false, true) && bothOrNone(false, false);
