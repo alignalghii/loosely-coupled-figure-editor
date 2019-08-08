@@ -1,5 +1,7 @@
 function MaybeXBehavior () {}
 
+MaybeXBehavior.prototype.shouldTestMaybeXBehavior = function () {return this.shouldMaybeLoop() && this.shouldFromJust() && this.shouldCatMaybes() && this.shouldFromMaybe() && this.shouldFromMaybe_exec();}
+
 MaybeXBehavior.prototype.shouldMaybeLoop = function ()
 {
 	return true &&
@@ -21,3 +23,18 @@ MaybeXBehavior.prototype.shouldFromJust = function ()
 	fromJust(['just', 12]) == 12 &&
 	true;
 };
+
+MaybeXBehavior.prototype.shouldCatMaybes = () =>
+	vecEq(catMaybes([], []), []) &&
+	vecEq(catMaybes([['just', 1], ['nothing'], ['just', 2]]), [1, 2]) &&
+	true;
+
+MaybeXBehavior.prototype.shouldFromMaybe = () =>
+	fromMaybe(-1, ['nothing']) == -1 &&
+	fromMaybe(-1, ['just', 5]) ==  5 &&
+	true;
+
+MaybeXBehavior.prototype.shouldFromMaybe_exec = () =>
+	fromMaybe_exec(() => -1, ['nothing']) == -1 &&
+	fromMaybe_exec(() => -1, ['just', 5]) ==  5 &&
+	true;

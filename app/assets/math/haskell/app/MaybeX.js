@@ -17,8 +17,16 @@ function maybe_exec(asNothing, asJust, maybeData)
 
 // For monadic laws and reuse:
 function just(x) {return ['just', x];}
+const nothing = ['nothing'];
+
 function maybeMap(f, mx)   {return maybe(['nothing'], x => ['just', f(x)], mx);}
 function maybeBind(mx, mf) {return maybe(['nothing'], mf,                  mx);}
+const maybeReturn = just;
+const maybeJoin = mmX =>
+	maybeBind(
+		mmX,
+		mX => maybeBind(mX, maybeReturn)
+	)
 
 function maybeLoop(f, x)
 {
@@ -30,4 +38,34 @@ function maybeLoop(f, x)
 	return x;
 }
 
+const fromMaybe      = (defaultValue    , mX) => maybe     (defaultValue    , x => x, mX),
+      fromMaybe_exec = (defaultConstCall, mX) => maybe_exec(defaultConstCall, x => x, mX);
+
+
 function fromJust(mbX) {return maybe_exec(() => {throw "`fromJust` error";}, x => x, mbX);}
+
+
+// const listToMaybe = list => list.length > 0 ? ['just', list[0]] : ['nothing'];
+// listToMaybe = foldr (const . Just) Nothing
+const listToMaybe = list =>
+	skippableReduce(
+		(acc, curr) => maybe(rdcCONTINUE(['just', curr]), item => rdcSKIP, acc),
+		['nothing'],
+		list
+	);
+
+const isJust = mbX => maybe(false, x => true, mbX);
+
+const catMaybes = mXs => mapMaybe(x=>x, mXs);
+
+const mapMaybe = (mf, xs) =>
+	xs.reduce(
+		(acc, curr) => acc.concat(
+			maybe(
+				[],
+				y=>[y],
+				mf(curr)
+			)
+		),
+		[]
+	);

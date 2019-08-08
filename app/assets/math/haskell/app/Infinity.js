@@ -2,6 +2,7 @@ function minimum(ns) {return Math.min.apply(null, ns);}
 function safeMin(ns) {return ns.length > 0 ? ['just', minimum(ns)] : ['nothing'];}
 //function safeMin(ns) {return ns.reduce((acc, curr) => ['just', mixedMinPosInfWithNormalNumber(acc, curr)], ['nothing']);}
 
+
 function mixedMinPosInfWithNormalNumber(mbX, y) {return maybe(y, x => Math.min(x, y), mbX);}
 function mixedLeq(finiteValue, valueOrPosInf) {return maybe(true, val => val <= finiteValue, valueOrPosInf);}
 function mixedLt (finiteValue, valueOrPosInf) {return maybe(true, val => val <  finiteValue, valueOrPosInf);}
@@ -34,6 +35,10 @@ function minimumBy (cmp, lst)
 }
 
 // type PMInf a = Either Bool a
+
+const plusInfinity  = ['left', true ],
+      minusInfinity = ['left', false];
+
 
 //pMInfCompare :: Ord a => PMInf a -> PMInf a -> Ordering
 function pMInfCompare(pMInf1, pMInf2)
@@ -92,6 +97,9 @@ function valueOrPMInfCatamorhism_exec(caseNegInf, callbackForFiniteValue, casePo
 		valueOrPMInf
 	);
 }
+
+const plusMinusInfinityExtensionToMaybePlusInfinityExtension = pMIVal => valueOrPMInfCatamorhism(['nothing'], val => ['just', ['just', val]], ['just', ['nothing']], pMIVal),
+      maybePlusInfinityExtensionToPlusMinusInfinityExtension = mPIVal => maybe(['left', false], pIVal => maybe(['left', true], val => ['right', val], pIVal), mPIVal);
 
 function pMToPInfinity(caseNegativeInfinity, callbackForValueOrPInfinity, valueOrPMInfinity)
 {

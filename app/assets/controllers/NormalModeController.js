@@ -30,7 +30,11 @@ NormalModeController.prototype.mouseMove = function (currentWEPos)
 		var infinitezimalDisplacement  = fromTo(this.state.prevWEPos, currentWEPos);
 		if (vectorLength(infinitezimalDisplacement) > 0) { // drag event provides sometimes also 0-displacements, we filter them out for better clarity's sake
 			var board                      = this.widgetFactory.bijectionSvgToGeom;
-			var allowable                  = this.state.prevWidget.domainObject.vectorTransfomationForAllowance(board)(infinitezimalDisplacement);
+			var mbAllowable                = this.state.prevWidget.domainObject.mbVectorTransfomationForAllowance(board)(infinitezimalDisplacement);
+			var allowable = fromMaybe_exec(
+				() => {this.msgConsole.innerHTML = 'Tiltott zóna!'; return [0, 0];},
+				mbAllowable
+			);
 			this.translatePrevWidgetAndRememberItsNewPosition(allowable);
 			if (vectorLength(infinitezimalDisplacement) > 0 && vectorLength(allowable) == 0) this.msgConsole.innerHTML = 'Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ' + JSON.stringify(infinitezimalDisplacement) + ' irányban.';
 			this.state.dragHasAlreadyBegun = true;

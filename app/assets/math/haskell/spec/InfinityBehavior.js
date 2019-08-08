@@ -1,7 +1,7 @@
 function InfinityBehavior () {}
 
 
-InfinityBehavior.prototype.shouldTestInfinityBehavior = function () {return this.shouldSafeMin() && this.shouldMixedMinPosInfWithNormalNumber() && this.shouldPMInfMixedMin() && this.shouldBoardMin1() && this.shouldBoardMin2() && this.shouldBoardMinSelectSet();};
+InfinityBehavior.prototype.shouldTestInfinityBehavior = function () {return this.shouldSafeMin() && this.shouldMixedMinPosInfWithNormalNumber() && this.shouldPMInfMixedMin() && this.shouldBoardMin1() && this.shouldBoardMin2() && this.shouldBoardMinSelectSet() && this.shouldPlusMinusInfinityExtensionToMaybePlusInfinityExtension() && this.shouldMaybePlusInfinityExtensionToPlusMinusInfinityExtension();};
 
 
 
@@ -12,7 +12,6 @@ InfinityBehavior.prototype.shouldSafeMin = function ()
 	vecEq(safeMin([1, 6, 8, 2, -3, 67, 5]), ['just', -3]) &&
 	true;
 };
-
 
 InfinityBehavior.prototype.shouldMixedMinPosInfWithNormalNumber = function ()
 {
@@ -144,3 +143,16 @@ InfinityBehavior.prototype.shouldBoardMinSelectSet = function ()
 
 	return flagEmpty && flagSingleton && flagAgainFirstWins && flagIncreasing && flagDecreasing && flagMixed && flagMixed2 && flagMixed3 && flagMixed4 && flagNegInf;
 };
+
+
+InfinityBehavior.prototype.shouldPlusMinusInfinityExtensionToMaybePlusInfinityExtension = () =>
+	treeEq(plusMinusInfinityExtensionToMaybePlusInfinityExtension(['left' , false]), ['nothing'           ]) &&
+	treeEq(plusMinusInfinityExtensionToMaybePlusInfinityExtension(['left' , true ]), ['just', ['nothing' ]]) &&
+	treeEq(plusMinusInfinityExtensionToMaybePlusInfinityExtension(['right', 12   ]), ['just', ['just', 12]]) &&
+	true;
+
+InfinityBehavior.prototype.shouldMaybePlusInfinityExtensionToPlusMinusInfinityExtension = () =>
+	treeEq(maybePlusInfinityExtensionToPlusMinusInfinityExtension(['nothing'           ]), ['left' , false]) &&
+	treeEq(maybePlusInfinityExtensionToPlusMinusInfinityExtension(['just', ['nothing' ]]), ['left' , true ]) &&
+	treeEq(maybePlusInfinityExtensionToPlusMinusInfinityExtension(['just', ['just', 12]]), ['right', 12   ]) &&
+	true;

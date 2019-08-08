@@ -15,6 +15,7 @@ function modMinusPlusHalfReal(m, x)
 
 //mod_0_360 :: Float -> Float
 function mod_0_360(x) {return mod0Real(360, x);}
+const mod_0_180 = x => mod0Real(180, x);
 
 //isConvex, isConcave :: Float -> Bool
 function isConvex (angle) {return mod_0_360(angle) <= 180;}

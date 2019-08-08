@@ -1,34 +1,20 @@
 function CollisionAsVectorTransformationBehavior () {}
 
-CollisionAsVectorTransformationBehavior.prototype.shouldTestCollisionAsVectorTransformationBehavior = function () {return this.shouldRestrictOrTeleport();};
+CollisionAsVectorTransformationBehavior.prototype.shouldTestCollisionAsVectorTransformationBehavior = function () {return this.shouldCouldTeleport();};
 
-
-CollisionAsVectorTransformationBehavior.prototype.shouldRestrictOrTeleport = function ()
+CollisionAsVectorTransformationBehavior.prototype.shouldCouldTeleport = function ()
 {
-	return true &&
-	restrictOrTeleport([0.1, 0.2], ['nothing'   ], undefined )  == 1   &&
-	restrictOrTeleport([0.1, 0.2], ['just', 10  ], undefined )  == 1   &&
-	restrictOrTeleport([0.1, 0.2], ['just',  1  ], undefined )  == 1   &&
-	restrictOrTeleport([0.1, 0.2], ['just',  0.5], undefined )  == 0.5 &&
-	restrictOrTeleport([0.1, 0.2], ['just',  0.4], undefined )  == 0.4 &&
-	restrictOrTeleport([0.1, 0.2], ['just',  0  ], dsp=>true )  == 1   &&
-	restrictOrTeleport([0.1, 0.2], ['just',  0  ], dsp=>false)  == 0   &&
-	true;
-}
-
-/*
-CollisionAsVectorTransformationBehavior.prototype.shouldRestrictOrTeleport = function ()
-{
-	const board = new Map();
+	const board = new Bijection();
 	const srcFigure = new Figure([[0,0], [2,0], [1,1]]);
 	const tgtFigure = new Figure([[2,0], [4,0], [3,1]]);
+	board.set(null, srcFigure);
+	board.set(null, tgtFigure);
 	return true &&
-	restrictOrTeleport(undefined, undefined, [0.1, 0.2], ['nothing'   ])  == 1   &&
-	restrictOrTeleport(undefined, undefined, [0.1, 0.2], ['just', 10  ])  == 1   &&
-	restrictOrTeleport(undefined, undefined, [0.1, 0.2], ['just',  1  ])  == 1   &&
-	restrictOrTeleport(undefined, undefined, [0.1, 0.2], ['just',  0.5])  == 0.5 &&
-	restrictOrTeleport(undefined, undefined, [0.1, 0.2], ['just',  0.5])  == 0.5 &&
-	restrictOrTeleport(undefined, undefined, [0.1, 0.2], ['just',  0.5])  == 0.5 &&
-	true;
+		!couldTeleport(srcFigure, board, [1, 0]) &&
+		 couldTeleport(srcFigure, board, [2, 0]) &&
+		!couldTeleport(srcFigure, board, [3, 0]) &&
+		 couldTeleport(srcFigure, board, [4, 0]) &&
+		 couldTeleport(srcFigure, board, [5, 0]) &&
+		 couldTeleport(srcFigure, board, [6, 0]) &&
+		true;
 }
-*/

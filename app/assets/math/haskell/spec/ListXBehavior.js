@@ -1,6 +1,6 @@
 function ListXBehavior() {}
 
-ListXBehavior.prototype.shouldTestListXBehavior = function () {return this.shouldDescartesProduct() && this.shouldDescartesWith() && this.shouldConsX() && this.shouldAppend() && this.shouldUncons() && this.shouldZipWith() /*&& this.shouldIsHomogenousByEq()*/;};
+ListXBehavior.prototype.shouldTestListXBehavior = function () {return this.shouldDescartesProduct() && this.shouldDescartesWith() && this.shouldConsX() && this.shouldAppend() && this.shouldUncons() && this.shouldZipWith() && this.shouldHomogenityByEq() && this.shouldIsHomogenousByEq();};
 
 
 ListXBehavior.prototype.shouldDescartesProduct = function ()
@@ -67,5 +67,17 @@ ListXBehavior.prototype.shouldIsHomogenousByEq = function ()
 
 	 isHomogenousByEq(absEq, []) &&
 	 isHomogenousByEq(absEq, [3]) &&
+	true;
+}
+
+ListXBehavior.prototype.shouldHomogenityByEq = function ()
+{
+	const absEq = (a, b) => Math.abs(a) == Math.abs(b);
+	return true &&
+	vecEq(homogenityByEq(absEq, [2, -2, 2, 2, -2]), ['just', ['just', 2]]) &&
+	vecEq(homogenityByEq(absEq, [2, -2, 3, 2, -2]), ['nothing']          ) &&
+
+	vecEq(homogenityByEq(absEq, [] ), ['just', ['nothing']]) &&
+	vecEq(homogenityByEq(absEq, [3]), ['just', ['just', 3]]) &&
 	true;
 }
