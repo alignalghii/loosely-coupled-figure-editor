@@ -7,8 +7,22 @@ function boardReduce(reducer, initialValue, board)
 	return accumulator;
 }
 
+const boardMap_unopt = (mapper, board) => boardReduce(
+	(acc, curr) => acc.concat([mapper(curr)]),
+	[],
+	board
+);
 
 // Optimizated special implementations for reduction (partial, lazy evaluation):
+
+function boardMap_opt(mapper, board)
+{
+	const results = [];
+	for (let currentValue of board.range()) {
+		results.push(mapper(currentValue));
+	}
+	return results;
+}
 
 function boardAll(predicate, board)
 {

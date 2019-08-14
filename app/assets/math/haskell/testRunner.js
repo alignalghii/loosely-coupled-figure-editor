@@ -7,6 +7,8 @@ function testRunner()
 	      hilbertGeometryBehavior                 = new HilbertGeometryBehavior,
 	      geometryBehavior                        = new GeometryBehavior,
 	      tangentDetectorBehavior                 = new TangentDetectorBehavior,
+	      echolocationBehavior                    = new EcholocationBehavior,
+	      distanceHenceBehavior                   = new DistanceHenceBehavior,
 	      infinityBehavior                        = new InfinityBehavior,
 	      boardBehavior                           = new BoardBehavior,
 	      polynomialBehavior                      = new PolynomialBehavior,
@@ -30,6 +32,8 @@ function testRunner()
 	maybeXBehavior                         .shouldTestMaybeXBehavior                         () &&
 	listXBehavior                          .shouldTestListXBehavior                          () &&
 	tangentDetectorBehavior                .shouldTestTangentDetectorBehavior                () &&
-	ccSubtreeBehavior                      .shouldTestCcSubtreeBehavior                          () &&
+	echolocationBehavior                   .shouldTestEcholocationBehavior                   () &&
+	distanceHenceBehavior                  .shouldTestDistanceHenceBehavior                  () &&
+	ccSubtreeBehavior                      .shouldTestCcSubtreeBehavior                      () &&
 	true;
 }

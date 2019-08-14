@@ -1,6 +1,6 @@
 function ListXBehavior() {}
 
-ListXBehavior.prototype.shouldTestListXBehavior = function () {return this.shouldDescartesProduct() && this.shouldDescartesWith() && this.shouldConsX() && this.shouldAppend() && this.shouldUncons() && this.shouldZipWith() && this.shouldHomogenityByEq() && this.shouldIsHomogenousByEq();};
+ListXBehavior.prototype.shouldTestListXBehavior = function () {return this.shouldDescartesProduct() && this.shouldDescartesWith() && this.shouldConsX() && this.shouldAppend() && this.shouldUncons() && this.shouldListBind() && this.shouldZipWith() && this.shouldHomogenityByEq() && this.shouldIsHomogenousByEq();};
 
 
 ListXBehavior.prototype.shouldDescartesProduct = function ()
@@ -47,6 +47,8 @@ ListXBehavior.prototype.shouldUncons = function ()
 	vecEq(uncons([12, 15, 20]), ['just', [12, [15, 20]]]) &&
 	true;
 };
+
+ListXBehavior.prototype.shouldListBind = () => vecEq(listBind([{edges: [1,2,3]}, {edges: [10,20,30]}], pack => pack.edges), [1, 2, 3, 10, 20, 30]);
 
 ListXBehavior.prototype.shouldZipWith = function ()
 {

@@ -21,6 +21,8 @@ function append(as, bs) {return  as.concat(bs);}
 
 function uncons(lst) {return lst.length > 0 ? ['just', [lst[0], lst.slice(1)]] : ['nothing'];}
 
+const listBind = (list, mfunction) => list.flatMap(mfunction); // list.map(mfunction).flat(); // @TODO: listJoin, @TODO: implement `listBind` directly by `.reduce`
+
 function zipWith(f, as, bs)
 {
 	var n = Math.min(as.length, bs.length);
@@ -30,7 +32,6 @@ function zipWith(f, as, bs)
 	}
 	return res;
 }
-
 
 const homogenityBy_ = (paramEq, list) =>
 	skippableReduce_(
