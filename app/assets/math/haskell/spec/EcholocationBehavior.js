@@ -1,6 +1,6 @@
 function EcholocationBehavior () {}
 
-EcholocationBehavior.prototype.shouldTestEcholocationBehavior = function () {return this.shouldBoardEcholocationHence() && this.shouldBoardMinimalEcholocationHence() && this.shouldReshapeEchosForMinimalDistanceIfAny() && this.shouldMaybeMinimalDistanceOfEchos() && this.shouldReshapeEchosForDistance() && this.shouldReshapeEchosDroppingDistances() && this.shouldSelectEchosForDistance();};
+EcholocationBehavior.prototype.shouldTestEcholocationBehavior = function () {return this.shouldBoardEcholocationHence() && this.shouldBoardMinimalEcholocationHence() && this.shouldVerticePathEchoHence() && this.shouldVerticePathReshapedMinimalEchoHence() && this.shouldNearestFiguresHence() && this.shouldMaybeNearestFigureHence() && this.shouldNearestVerticesHence() && this.shouldMaybeNearestVerticeHence() && this.shouldReshapeEchosForMinimalDistanceIfAny() && this.shouldMaybeMinimalDistanceOfEchos() && this.shouldReshapeEchosForDistance() && this.shouldReshapeEchosDroppingDistances() && this.shouldSelectEchosForDistance();};
 
 
 EcholocationBehavior.prototype.shouldBoardEcholocationHence = () =>
@@ -58,9 +58,113 @@ EcholocationBehavior.prototype.shouldBoardMinimalEcholocationHence = () =>
 						[[9, -2], [0, 10]]
 					]
 				);
-
 	return flag0 && flag1a && flag1b;
 };
+
+EcholocationBehavior.prototype.shouldVerticePathEchoHence = () =>
+	vecEq(
+		verticePathEchoHence(
+			[[2, -6], [11, -6], [2, 6]],
+			[9, 5]
+		),
+		[{edge: [[2, -6], [11, -6]], distance: 11}, {edge: [[11, -6], [2, 6]], distance: 5}, {edge: [[2, 6], [2, -6]], distance: 7}]
+	) &&
+	vecEq(
+		verticePathEchoHence(
+			[[2, 2], [5, 2], [2, 6]],
+			[9, 5]
+		),
+		[{edge: [[2, 2], [5, 2]], distance: 5}, {edge: [[5, 2], [2, 6]], distance: 5}, {edge: [[2, 6], [2, 2]], distance: 7}]
+	);
+
+EcholocationBehavior.prototype.shouldVerticePathReshapedMinimalEchoHence = () =>
+	vecEq(
+		verticePathReshapedMinimalEchoHence(
+			[],
+			[9, 5]
+		),
+		['nothing']
+	) &&
+	vecEq(
+		verticePathReshapedMinimalEchoHence(
+			[[2, -6], [11, -6], [2, 6]],
+			[9, 5]
+		),
+		['just', {distance: 5, selectedEdges: [[[11, -6], [2, 6]]]}]
+	) &&
+	vecEq(
+		verticePathReshapedMinimalEchoHence(
+			[[2, 2], [5, 2], [2, 6]],
+			[9, 5]
+		),
+		['just', {distance: 5, selectedEdges: [[[2, 2], [5, 2]], [[5, 2], [2, 6]]]}]
+	);
+
+EcholocationBehavior.prototype.shouldNearestFiguresHence = () =>
+{
+	const board = new Bijection;
+	const flag0 = flatVecEq(nearestFiguresHence(board, [9, 5]), []); // nothing is there
+
+	const fig1 = new Figure([[2, -6], [11, -6], [2, 6]]);
+	board.set(null, fig1);
+	const flag1 = flatVecEq(nearestFiguresHence(board, [9, 5]), [fig1]); // single figure is minimal-distance by default
+
+	const fig2 = new Figure([[15, 3], [17, 3], [17, 5], [15, 5]]);
+	board.set(null, fig2);
+	const flag2 = flatVecEq(nearestFiguresHence(board, [9, 5]), [fig1]); // too distant
+
+	const fig3 = new Figure([[14, 3], [16, 3], [16, 5], [14, 5]]);
+	board.set(null, fig3);
+	const flag3 = flatVecEq(nearestFiguresHence(board, [9, 5]), [fig1, fig3]); // tie
+
+	const fig4 = new Figure([[13, 3], [15, 3], [15, 5], [13, 5]]);
+	board.set(null, fig4);
+	const flag4 = flatVecEq(nearestFiguresHence(board, [9, 5]), [fig4]); // a new distance-minimum updates the former one
+
+	return flag0 && flag1 && flag2 && flag3 && flag4;
+};
+
+EcholocationBehavior.prototype.shouldMaybeNearestFigureHence = () =>
+{
+	const board = new Bijection;
+	const flag0 = flatVecEq(maybeNearestFigureHence(board, [9, 5]), ['nothing']); // nothing is there
+
+	const fig1 = new Figure([[2, -6], [11, -6], [2, 6]]);
+	board.set(null, fig1);
+	const flag1 = flatVecEq(maybeNearestFigureHence(board, [9, 5]), ['just', fig1]); // single figure is minimal-distance by default
+
+	const fig2 = new Figure([[15, 3], [17, 3], [17, 5], [15, 5]]);
+	board.set(null, fig2);
+	const flag2 = flatVecEq(maybeNearestFigureHence(board, [9, 5]), ['just', fig1]); // too distant
+
+	const fig3 = new Figure([[14, 3], [16, 3], [16, 5], [14, 5]]);
+	board.set(null, fig3);
+	const flag3 = flatVecEq(maybeNearestFigureHence(board, [9, 5]), ['nothing']); // tie
+
+	const fig4 = new Figure([[13, 3], [15, 3], [15, 5], [13, 5]]);
+	board.set(null, fig4);
+	const flag4 = flatVecEq(maybeNearestFigureHence(board, [9, 5]), ['just', fig4]); // a new distance-minimum updates the former one
+
+	return flag0 && flag1 && flag2 && flag3 && flag4;
+};
+
+EcholocationBehavior.prototype.shouldNearestVerticesHence = () =>
+	vecEq(nearestVerticesHence([], [9, 5]), []) &&
+	vecEq(nearestVerticesHence([[-1, -1], [1, -1], [1,  1], [-1, 1]], [0, 0]), [[-1, -1], [1, -1], [1,  1], [-1, 1]]) &&
+	vecEq(nearestVerticesHence([[-1, -1], [1, -1], [1,  1], [-1, 1]], [0, 2]), [                   [1,  1], [-1, 1]]) &&
+	vecEq(nearestVerticesHence([[-1, -1], [1, -1], [1,  1], [-1, 1]], [2, 2]), [                   [1,  1]         ]) &&
+	true;
+
+EcholocationBehavior.prototype.shouldMaybeNearestVerticeHence = () =>
+	vecEq(maybeNearestVertexHence([], [9, 5]), ['nothing']) &&
+	vecEq(maybeNearestVertexHence([[-1, -1], [1, -1], [1,  1], [-1, 1]], [ 0        , 0]), ['nothing'      ]) &&
+	vecEq(maybeNearestVertexHence([[-1, -1], [1, -1], [1,  1], [-1, 1]], [ 0        , 2]), ['nothing'      ]) &&
+	vecEq(maybeNearestVertexHence([[-1, -1], [1, -1], [1,  1], [-1, 1]], [ 0.0000001, 2]), ['nothing'      ]) &&
+	vecEq(maybeNearestVertexHence([[-1, -1], [1, -1], [1,  1], [-1, 1]], [-0.0000001, 2]), ['nothing'      ]) &&
+	vecEq(maybeNearestVertexHence([[-1, -1], [1, -1], [1,  1], [-1, 1]], [ 0.01     , 2]), ['just', [ 1, 1]]) &&
+	vecEq(maybeNearestVertexHence([[-1, -1], [1, -1], [1,  1], [-1, 1]], [-0.01     , 2]), ['just', [-1, 1]]) &&
+	vecEq(maybeNearestVertexHence([[-1, -1], [1, -1], [1,  1], [-1, 1]], [ 2        , 2]), ['just', [1,  1]]) &&
+	true;
 
 EcholocationBehavior.prototype.shouldMaybeMinimalDistanceOfEchos = () =>
 	treeEq(

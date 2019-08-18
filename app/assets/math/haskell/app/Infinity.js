@@ -1,3 +1,21 @@
+// Simple three-way compae, without the notion of infinity:
+function compareCases(a, b, ltCase, eqCase, gtCase)
+{
+	switch (Math.sign(a - b)) {
+		case -1: return ltCase;
+		case  0: return eqCase;
+		case  1: return gtCase;
+		default: throw 'Invalid `compare` label at `compareCases`';
+	}
+}
+
+const val_compareCases_pIVal = (val1, pIVal2, ltCase, eqCase, gtCase) =>
+	maybe(
+		ltCase,
+		val2 => compareCases(val1, val2, ltCase, eqCase, gtCase),
+		pIVal2
+	);
+
 function minimum(ns) {return Math.min.apply(null, ns);}
 function safeMin(ns) {return ns.length > 0 ? ['just', minimum(ns)] : ['nothing'];}
 //function safeMin(ns) {return ns.reduce((acc, curr) => ['just', mixedMinPosInfWithNormalNumber(acc, curr)], ['nothing']);}

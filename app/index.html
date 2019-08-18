@@ -15,6 +15,7 @@
 		<script src="assets/controllers/CompactModeController.js"></script>
 		<script src="assets/controllers/NormalModeController.js"></script>
 		<script src="assets/controllers/RoomController.js"></script>
+		<script src="assets/controllers/FigureEditorController.js"></script>
 
 		<script src="assets/physics/Figure.js"></script>
 		<script src="assets/physics/Hypothetical.js"></script>
@@ -101,6 +102,8 @@
 		<script src="assets/math/haskell/app/Echolocation.js"></script>
 		<script src="assets/math/haskell/app/DistanceHence.js"></script>
 		<script src="assets/math/haskell/app/LineRepresentationForms.js"></script>
+		<script src="assets/math/haskell/app/VerticePathClickAlgebra.js"></script>
+		<script src="assets/math/haskell/app/FigureEditorByProximityHeuristic.js"></script>
 		<script src="assets/math/haskell/app/LogicalForms.js"></script>
 		<script src="assets/math/haskell/app/Logic.js"></script>
 		<script src="assets/math/haskell/app/MaybeX.js"></script>
@@ -131,12 +134,15 @@
 		<script src="assets/math/haskell/spec/TangentDetectorBehavior.js"></script>
 		<script src="assets/math/haskell/spec/EcholocationBehavior.js"></script>
 		<script src="assets/math/haskell/spec/DistanceHenceBehavior.js"></script>
+		<script src="assets/math/haskell/spec/VerticePathClickAlgebraBehavior.js"></script>
 		<script src="assets/math/haskell/spec/NonEmptyFootListBehavior.js"></script>
+		<script src="assets/math/haskell/spec/FigureEditorByProximityHeuristicBehavior.js"></script>
 		<script src="assets/math/haskell/spec/ListXBehavior.js"></script>
 		<script src="assets/math/haskell/spec/MaybeXBehavior.js"></script>
 		<script src="assets/math/haskell/spec/EitherBehavior.js"></script>
 		<script src="assets/math/haskell/spec/MonadXBehavior.js"></script>
 		<script src="assets/math/haskell/spec/InfinityBehavior.js"></script>
+		<script src="assets/math/haskell/spec/InfinitesimalBehavior.js"></script>
 		<script src="assets/math/haskell/spec/SignBehavior.js"></script>
 		<script src="assets/math/haskell/spec/BoardBehavior.js"></script>
 		<script src="assets/math/haskell/spec/PolynomialBehavior.js"></script>
@@ -163,6 +169,9 @@
 		<ul id="modes">
 			<li><input id="modeNormal"  name="mode" value="normal"  type="radio"/> <label for="modeNormal" >Normál vonszolás és fókuszkezelés</label></li>
 			<li><input id="modeCompact" name="mode" value="compact" type="radio"/> <label for="modeCompact">Kompakt mód (csak gyorstesztre, összevetésekre használt, &bdquo;mindentegybe&rdquo;-jellegű, elavult mód)</label></li>
+			<li><input id="modeFigureeditoradd"    name="mode" value="figureeditoradd"    type="radio"/> <label for="modeFigureeditoradd"   >Alakzatszerkesztés: csúcspont hozzáadása</label></li>
+			<li><input id="modeFigureeditordelete" name="mode" value="figureeditordelete" type="radio"/> <label for="modeFigureeditordelete">Alakzatszerkesztés: csúcspont törlése</label></li>
+			<li><input id="modeFigureeditormove"   name="mode" value="figureeditormove"   type="radio"/> <label for="modeFigureeditormove"  >Alakzatszerkesztés: csúcspont mozgatása</label></li>
 		</ul>
 		<label for="sampleRoomBank">A következő beszúrható szobasablon:</label>
 		<select id="sampleRoomBank">

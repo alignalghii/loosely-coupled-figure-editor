@@ -1,10 +1,11 @@
-function Router(state, normalModeController, compactModeController, roomController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function Router(state, normalModeController, compactModeController, roomController, figureEditorController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
 	this.normalModeController  = normalModeController;
 	this.compactModeController = compactModeController;
 	this.roomController        = roomController;
+	this.figureEditorController = figureEditorController;
 }
 
 Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: inputRoledData
@@ -81,6 +82,27 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 						case 'c': case 'C': this.roomController.focusCloseHole(); break;
 					}
 				}
+			break;
+		}
+	}
+	if (this.state.mode == 'figureeditoradd') {
+		switch (eventType) {
+			case 'mouseup':
+				this.figureEditorController.addVertex(ird.currentWEPos); break;
+			break;
+		}
+	}
+	if (this.state.mode == 'figureeditordelete') {
+		switch (eventType) {
+			case 'mouseup':
+				this.figureEditorController.deleteVertex(ird.currentWEPos); break;
+			break;
+		}
+	}
+	if (this.state.mode == 'figureeditormove') {
+		switch (eventType) {
+			case 'mouseup':
+				this.figureEditorController.moveVertex(ird.currentWEPos); break;
 			break;
 		}
 	}

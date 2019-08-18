@@ -9,7 +9,10 @@ function testRunner()
 	      tangentDetectorBehavior                 = new TangentDetectorBehavior,
 	      echolocationBehavior                    = new EcholocationBehavior,
 	      distanceHenceBehavior                   = new DistanceHenceBehavior,
+	      verticePathClickAlgebraBehavior         = new VerticePathClickAlgebraBehavior,
+	      figureEditorByProximityHeuristicBehavior = new FigureEditorByProximityHeuristicBehavior,
 	      infinityBehavior                        = new InfinityBehavior,
+	      infinitesimalBehavior                   = new InfinitesimalBehavior,
 	      boardBehavior                           = new BoardBehavior,
 	      polynomialBehavior                      = new PolynomialBehavior,
 	      ratioBehavior                           = new RatioBehavior,
@@ -25,6 +28,7 @@ function testRunner()
 	hilbertGeometryBehavior                .shouldTestHilbertGeometryBehavior                () &&
 	geometryBehavior                       .shouldTestGeometryBehavior                       () &&
 	infinityBehavior                       .shouldTestInfinityBehavior                       () &&
+	infinitesimalBehavior                  .shouldTestInfinitesimalBehavior                  () &&
 	boardBehavior                          .shouldTestBoardBehavior                          () &&
 	polynomialBehavior                     .shouldTestPolynomialBehavior                     () &&
 	ratioBehavior                          .shouldTestRatioBehavior                          () &&
@@ -34,6 +38,8 @@ function testRunner()
 	tangentDetectorBehavior                .shouldTestTangentDetectorBehavior                () &&
 	echolocationBehavior                   .shouldTestEcholocationBehavior                   () &&
 	distanceHenceBehavior                  .shouldTestDistanceHenceBehavior                  () &&
+	verticePathClickAlgebraBehavior        .shouldTestVerticePathClickAlgebraBehavior        () &&
+	figureEditorByProximityHeuristicBehavior.shouldTestFigureEditorByProximityHeuristicBehavior() &&
 	ccSubtreeBehavior                      .shouldTestCcSubtreeBehavior                      () &&
 	true;
 }

@@ -43,3 +43,11 @@ WidgetFactory.prototype.createWidgetFromLow = function (svgPolygon)
 	var domainObject = this.bijectionGeomToDomain.get(geomFigure);
 	return new Widget(this.bijectionGeomToDomain, this.coordSysTransformer, this.bijectionSvgToGeom, this.svgLowLevel, domainObject, geomFigure, svgPolygon);
 };
+
+
+WidgetFactory.prototype.createWidgetFromMedium = function (geomFigure)
+{
+	var svgPolygon    = this.bijectionSvgToGeom.getInverse(geomFigure);
+	var domainObject = this.bijectionGeomToDomain.get(geomFigure);
+	return new Widget(this.bijectionGeomToDomain, this.coordSysTransformer, this.bijectionSvgToGeom, this.svgLowLevel, domainObject, geomFigure, svgPolygon);
+};

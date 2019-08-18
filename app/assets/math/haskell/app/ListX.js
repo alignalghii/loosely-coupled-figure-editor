@@ -33,6 +33,15 @@ function zipWith(f, as, bs)
 	return res;
 }
 
+function flatSubvec(as, bs)
+{
+	let flag = true;
+	for (let i in as) if (!(i in bs) || as[i] != bs[i]) flag = false;
+	return flag;
+}
+
+const flatVecEq = (as, bs) => flatSubvec(as, bs) && flatSubvec(bs, as);
+
 const homogenityBy_ = (paramEq, list) =>
 	skippableReduce_(
 		(acc, curr) =>

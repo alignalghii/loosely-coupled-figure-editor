@@ -1,7 +1,7 @@
 function InfinityBehavior () {}
 
 
-InfinityBehavior.prototype.shouldTestInfinityBehavior = function () {return this.shouldSafeMin() && this.shouldMixedMinPosInfWithNormalNumber() && this.shouldPMInfMixedMin() && this.shouldBoardMin1() && this.shouldBoardMin2() && this.shouldBoardMinSelectSet() && this.shouldPlusMinusInfinityExtensionToMaybePlusInfinityExtension() && this.shouldMaybePlusInfinityExtensionToPlusMinusInfinityExtension();};
+InfinityBehavior.prototype.shouldTestInfinityBehavior = function () {return this.shouldSafeMin() && this.shouldVal_compareCases_pIVal() && this.shouldMixedMinPosInfWithNormalNumber() && this.shouldPMInfMixedMin() && this.shouldBoardMin1() && this.shouldBoardMin2() && this.shouldBoardMinSelectSet() && this.shouldPlusMinusInfinityExtensionToMaybePlusInfinityExtension() && this.shouldMaybePlusInfinityExtensionToPlusMinusInfinityExtension();};
 
 
 
@@ -12,6 +12,17 @@ InfinityBehavior.prototype.shouldSafeMin = function ()
 	vecEq(safeMin([1, 6, 8, 2, -3, 67, 5]), ['just', -3]) &&
 	true;
 };
+
+InfinityBehavior.prototype.shouldVal_compareCases_pIVal = () =>
+	val_compareCases_pIVal(1  , ['nothing'], 'lt', 'eq', 'gt') == 'lt' &&
+	val_compareCases_pIVal(999, ['nothing'], 'lt', 'eq', 'gt') == 'lt' &&
+	val_compareCases_pIVal(1  , ['just', 3], 'lt', 'eq', 'gt') == 'lt' &&
+	val_compareCases_pIVal(1  , ['just', 2], 'lt', 'eq', 'gt') == 'lt' &&
+	val_compareCases_pIVal(1  , ['just', 1], 'lt', 'eq', 'gt') == 'eq' &&
+	val_compareCases_pIVal(  1, ['just', 1.0000001], 'lt', 'eq', 'gt') == 'lt' &&
+	val_compareCases_pIVal(  1, ['just', 0.9999999], 'lt', 'eq', 'gt') == 'gt' &&
+	val_compareCases_pIVal(1  , ['just', 0], 'lt', 'eq', 'gt') == 'gt' &&
+	true;
 
 InfinityBehavior.prototype.shouldMixedMinPosInfWithNormalNumber = function ()
 {

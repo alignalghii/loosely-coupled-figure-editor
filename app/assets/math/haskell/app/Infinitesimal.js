@@ -8,6 +8,24 @@ function ccNeq(a, b) {return           !ccEq(a, b);}
 
 function ccIs(n) {return x => ccEq(x, n);}
 
+function ccCompareCases(a, b, ltCase, eqCase, gtCase)
+{
+	switch (true) {
+		case ccEq(a, b): return eqCase;
+		case ccLt(a, b): return ltCase;
+		case ccGt(a, b): return gtCase;
+		default        : throw 'Invalid `compare` label at `ccCompareCases`';
+	}
+}
+
+const val_ccCompareCases_pIVal = (val1, pIVal2, ltCase, eqCase, gtCase) =>
+	maybe(
+		ltCase,
+		val2 => ccCompareCases(val1, val2, ltCase, eqCase, gtCase),
+		pIVal2
+	);
+
+
 //acos_safe, asin_safe, mend :: Float -> Float
 function acos_safe(x) {return Math.acos(mend(x));}
 function asin_safe(x) {return Math.asin(mend(x));}

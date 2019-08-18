@@ -48,3 +48,8 @@
  - Az ütközésnél a rugalmas fogómegcsúszás visszahajlása is, és az átbuktatás is végre rendben működik, de objktumot egy másik objektum éle mentén csusztatni, reszelni nem lehet. Ezt is valósítsuk meg!
 
  - A körüljárásdetektálási hiba javítása (amikor sem +360 fok sem -360 fok nem jön ki a külső szögek összegére - átnyúló konkáv szögeknél jelenik meg ilyesmi).
+
+ - `flat` and `flatMap` are experimental, do not use them, define them expilcitly!
+ - Define a  `mbMinBy2WayCmp` and `minsBy3WayCmp` function, and redefine `nearestFiguresHence` and `nearestVerticesHence` and `maybeNearestFigureHence` and `maybeNearestVerticeHence` (and possibly others as well) by them (lift out the common pattern).
+ - put to a separate class? Figure is already a too large class. `addVertex`, `deleteVertex`, `moveVertex` by proximity heurietics should come directly into `Figure`, or should we use a spearate `FigureEditor` class?
+ - Amikor az alakzatszerkesztővel nagyon hegyes, sziklaszerű kitüremkedésű alakzatot állítok elő, néha az ilyen sziklaszerű kitüremkedés áthatolható marad az ütközésérzékelés számára. Ez persze hiba. lehet, hogy a háttérben átmetsző vonalmetszésű, invalid poligon áll, amelyen ez nem látszik szemre.
