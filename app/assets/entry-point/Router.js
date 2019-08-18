@@ -99,10 +99,20 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 			break;
 		}
 	}
-	if (this.state.mode == 'figureeditormove') {
+	if (this.state.mode == 'figureeditormove') { // @TODO: delegate more responsibility from the router to the controller
 		switch (eventType) {
+			case 'mousedown':
+				this.figureEditorController.moveVertex(ird.currentWEPos);
+				this.figureEditorController.state.editorMoveFlag = true;
+				break;
+			case 'mousemove':
+				if (this.figureEditorController.state.editorMoveFlag)
+					this.figureEditorController.moveVertex(ird.currentWEPos);
+				break;
 			case 'mouseup':
-				this.figureEditorController.moveVertex(ird.currentWEPos); break;
+				this.figureEditorController.moveVertex(ird.currentWEPos);
+				this.figureEditorController.state.editorMoveFlag = false;
+				break;
 			break;
 		}
 	}

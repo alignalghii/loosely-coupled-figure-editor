@@ -6,6 +6,8 @@ function State(toBeDomainStamp)
 
 	this.setDomainStampFrom(toBeDomainStamp);
 	this.forgetDrag();
+
+	this.editorMoveFlag = false;
 }
 
 State.prototype.setDomainStampFrom = function (domainObject) /** MenuUI */
