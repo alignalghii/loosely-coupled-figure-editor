@@ -30,3 +30,12 @@ const ccSegmentHasStrictly = (sgm, p) => ccSatisfiesLinearEquation(lineOfSegment
       ccSegmentHasWeakly   = (sgm, p) => ccSatisfiesLinearEquation(lineOfSegment(sgm), p) && ccWeaklyInsideThalesCircleWithDiameter  (sgm, p);
 
 const ccSatisfiesLinearEquation = ([a, b, c], [x, y]) => ccEq(a*x + b*y, c);
+
+function degAOA_(A, O, A_)
+{
+	const a  = fromTo(O, A ),
+	      a_ = fromTo(O, A_);
+	return signedRotAngleOfVectors(a, a_);
+}
+
+const radAOA_ = (A, O, A_) => degAOA_(A, O, A_) * Math.PI / 180;

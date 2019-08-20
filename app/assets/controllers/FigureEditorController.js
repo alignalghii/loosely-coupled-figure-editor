@@ -9,7 +9,7 @@ FigureEditorController.prototype.addVertex    = function (point) {this.work('add
 FigureEditorController.prototype.deleteVertex = function (point) {this.work('deleteVertex', point, 'Elveszem'   , 'alakzatból');};
 FigureEditorController.prototype.moveVertex   = function (point) {this.work('moveVertex'  , point, 'Megmozdítom', 'alakzatnál');};
 
-FigureEditorController.prototype.work = function (command, currentWEPos, template1, template2)
+FigureEditorController.prototype.work = function (command, currentWEPos, template1, template2) // @TODO: reuse: almost the same algorithm exists in `GeomTransforamtionController` (or in its section in `Router`).
 {
 	const board = this.widgetFactory.bijectionSvgToGeom;
 	const editorMessage = maybe(

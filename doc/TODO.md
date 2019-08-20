@@ -53,3 +53,22 @@
  - Define a  `mbMinBy2WayCmp` and `minsBy3WayCmp` function, and redefine `nearestFiguresHence` and `nearestVerticesHence` and `maybeNearestFigureHence` and `maybeNearestVerticeHence` (and possibly others as well) by them (lift out the common pattern).
  - put to a separate class? Figure is already a too large class. `addVertex`, `deleteVertex`, `moveVertex` by proximity heurietics should come directly into `Figure`, or should we use a spearate `FigureEditor` class?
  - Amikor az alakzatszerkesztővel nagyon hegyes, sziklaszerű kitüremkedésű alakzatot állítok elő, néha az ilyen sziklaszerű kitüremkedés áthatolható marad az ütközésérzékelés számára. Ez persze hiba. lehet, hogy a háttérben átmetsző vonalmetszésű, invalid poligon áll, amelyen ez nem látszik szemre.
+ - `injectorMain`, `Router`, `FigureEditorController`, `GeomTransformationController`: dönteni kell abban, hogy e kontrollerek a `NormalModeController`-rel és a `CompactModeConroller`-rel közös nagy `State` állapotosztályt használják-e, vagy saját állapotterük legyen, akár úgy, hogy közvetlen az adott kontroller attributumaként, akár minden egyes kotrollerhez külön-külön egy-egy a kotrollerhez tartozó State* osztályként.
+     - Valószínűleg inkább mégis érdemes megtartani a `NormalModeController`-rel és a `CompactModeConroller`-rel közös nagy `State` állapotosztályt a `FigureEditorController` és a `GeomTransformationController` számára is. Ugyanis egyáltalán nem biztos, hogy ezeknél továbbra is a ,,legközelebbi alakzat heurusztukéjéra'' fogunk támaszkodni. A legközelebbi pont és él (adott lakazaton belül) heurisztikája megmaradhat, de magát a szekesztendő vagy transzformálandó alakzatot a fókusz fogja megadni, nem közelségi heurisztika. Ebben tehát az a `FigureEditorController` és a `GeomTransformationController` használni fogja az alakzatfókuszt, sőt, lehet, hogy maguk e kontrollerek maguk is beleolvadnak a `NormalModeController`-be. Ennek fő oka, hogy előfordulhat, hogy oly alakzat csúcsát akarom elmozgatni, amely alakzat épp abban a csúcsban közös csúcsot alkot egy másik alakzat ccsúcsával. Ekkor a két csúcsa közelségi heurisztika számára megkülönböztethetetlen, de az alakzatfókusz tökéletes megoldást adna. Ezért a `FigureEditorController`-nak mindenképp át kéne venni a fókusz használatát. A `GeomTransformationController` esetleg használhatná a közleségi heurisztikát, de talán az is jobb ha fókuszalapú.
+ - Megcsináltam az egérrel való vonszolós, interaktív forgatást, és hamarosan kész lesz a többi transzformáció itisztán egeres-interaktív változata is. Egyylre még nem végez ütközésvizsgálatot, tehát egy alakzatot bele lehet forgatni egy másik alakzattal érvénytelen helyzetbe is. Ennek során kiderült, hogy a program ilyenkor hibaüzenett ad, tehát nem talál rá valamiféle erre előkészített kivételere. Bár nyilván hamar meg lesz írva a transzformációk ütközésvizsgálata, de a probléma túlmutat ezen. Alacsony szinten is legyen jól lekezelve az érvénytelen helyzet. A hibaüzenet:
+        Uncaught TypeError: pMInf1 is not iterable
+            at pMInfCompare (Infinity.js:64)
+            at reducer (Infinity.js:164)
+            at boardReduce (Board.js:5)
+            at boardMinSelectSet (Infinity.js:175)
+            at fallFigureOnBoard_allMins (FiguresBoard.js:5)
+            at mbVectorTransformer (collision-as-vector-transformation.js:5)
+            at infinitezimalDisplacement (collision-as-vector-transformation.js:1)
+            at NormalModeController.mouseMove (NormalModeController.js:33)
+            at Router.dispatch (Router.js:28)
+            at mergelessSubscribe (WidgetEventPillar.js:18)
+
+ - Az ütközés invalidus helyzetei más érdekeségre is rávilágítanak. Van két nagyon pici négyzet, az egyik pont a nagyon konkávalakzatnál. Ez érzékeltlen az ütközésre beforgatáskor. Miért? Akr direkt volt így, akr nemszándékolt melékhatása valaminek, érdemes lenne utánanézni. Ez az átjárhatóság ugyanis pont jól jönne nyilászáróknál.
+ - Az Alakzatszerkesztő (Figure Editor) rendelkezzék területtartási kapcsolóval, opcióval is!
+ - Amikor az alaprajzot natív  formátumban mentjük, tervezzük meg ezt a natív formátumot minél nyitttabra! Lehessen az alkalmazás nélkül is, sima szövegszerkesztőben is alaprajzokat szerekszteni! Lehetőleg legyen olyan ebben a nyitottsgban, mint a LaTeX!
+ - Ha már natív mentés: legyen Redo (az alakalmazásban), a metést pedig kísérje valamiféle saját verziókövetés!
