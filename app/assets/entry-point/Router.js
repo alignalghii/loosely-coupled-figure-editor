@@ -108,7 +108,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 			case 'mousemove':
 				if (this.figureEditorController.state.editorMoveFlag)
 					this.figureEditorController.moveVertex(ird.currentWEPos);
-					break;
+				break;
 			case 'mouseup':
 				this.figureEditorController.moveVertex(ird.currentWEPos);
 				this.figureEditorController.state.editorMoveFlag = false; // @TODO: should not use the same `State` as `NormalModeController`
@@ -116,57 +116,16 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 		}
 	}
 	if (this.state.mode == 'geomtransformationrotation') { // @TODO: should not use the same `State` as `NormalModeController`
-		const board = this.geomTransformationController.widgetFactory.bijectionSvgToGeom;
-		var editorMessage;
 		switch (eventType) {
 			case 'mousedown': // @TODO: reuse: almost the same algorithm exists in `FigureEditorController`.
-				editorMessage = maybe(
-					'A forgatáshoz nem határozható meg egyértelműen legközelebbi alakzat.',
-					nearestFigure => {
-						const widget = this.geomTransformationController.widgetFactory.createWidgetFromMedium(nearestFigure);
-						this.geomTransformationController.state.rotationArc = ['just', {start: ird.currentWEPos, last: ird.currentWEPos, figure: nearestFigure, startReferenceAngle: nearestFigure.referenceAngle, widget: widget, board: board}];
-						return "Kifeszítendő AOA'∡ forgatásív irányszöge: 0° [ref: " + nearestFigure.referenceAngle*180/Math.PI + "°] (O: " + JSON.stringify(nearestFigure.grasp) + "A, A': " + JSON.stringify(ird.currentWEPos) + ")";
-					},
-					maybeNearestFigureHence(board, ird.currentWEPos)
-				);
-				this.geomTransformationController.msgConsole.innerHTML = editorMessage;
+				this.geomTransformationController.openRotationArc(ird.currentWEPos);
 				break;
-			case 'mousemove': // @TODO: reuse: almost the same algorithm exists in `FigureEditorController`.
-				editorMessage = maybe(
-					'Jelöld ki a kifeszítendő forgatásív kezdőpozícióját...',
-					({start: detectedPositionForStart, last: last, figure: nearestFigure, startReferenceAngle: startReferenceAngle, widget: widget, board: board}) => {
-						widget.updateDownward();
-						let A    = detectedPositionForStart,
-						    A_   = ird.currentWEPos,
-						    O    = nearestFigure.grasp,
-						    AOA_ =  radAOA_(A, O, A_),
-						    dRad = startReferenceAngle + AOA_ - nearestFigure.referenceAngle;
-						const probeFigure = nearestFigure.translation([0,0]);
-						probeFigure.doRotation(dRad);
-						if (!invalidSituationOnBoardBut(probeFigure, nearestFigure, board)) {
-							widget.rotate(dRad);
-							this.geomTransformationController.state.rotationArc[1].last = ird.currentWEPos.map(i=>i);
-							return "Kifeszítendő AOA'∡ forgatásív irányszöge: " + degAOA_(A, O, A_) + "° [ref: " + nearestFigure.referenceAngle*180/Math.PI + "°] (O: " + JSON.stringify(O) +  ", A: " + JSON.stringify(A) + ", A': " + JSON.stringify(A_) + ")";
-						} else {
-							return "Kifeszítendő AOA'∡ forgatásív irányszöge: " + degAOA_(A, O, last) + "° (+ " + degAOA_(last, O, A_) +  " sikertelen) [ref: " + nearestFigure.referenceAngle*180/Math.PI + "°] (O: " + JSON.stringify(O) +  ", A: " + JSON.stringify(A) + ", A': " + JSON.stringify(last) + "). Ütközés, esetleges visszapattanással!";
-						}
-					},
-					this.geomTransformationController.state.rotationArc
-				);
-				this.geomTransformationController.msgConsole.innerHTML = editorMessage;
+			case 'mousemove': // @TODO: reuse: almost the same algorithm exists in `FigureEditorController`. @TODO: Ha a vásznan belül lenyomott egérgombot vásznonkívül engedem fel: dragbanragad
+				this.geomTransformationController.spanRotationArcByDragging(ird.currentWEPos);
 				break;
 			case 'mouseup':
-				this.geomTransformationController.state.rotationArc = ['nothing'];
-				this.geomTransformationController.msgConsole.innerHTML = 'Forgatásív véglegesítve és végrehajtva.';
+				this.geomTransformationController.closeRotationArc();
 				break;
-/*			case 'mousemovearchive':
-				const consoleMessage = maybe(
-					'Forgatási mód...',
-					detectedPositionForStart => 'Forgatás kezdőszögéhez detektált pozíció: ' + JSON.stringify(detectedPositionForStart) + ', kifeszítve e pozícióig: ' + JSON.stringify(ird.currentWEPos),
-					this.geomTransformationController.state.rotationStart
-				);
-				this.geomTransformationController.msgConsole.innerHTML = consoleMessage;
-				break;*/
 		}
 	}
 };
