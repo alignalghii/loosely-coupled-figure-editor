@@ -8,8 +8,8 @@ function State(toBeDomainStamp)
 	this.forgetDrag();
 
 	// @TODO: should not use this same `State` as `NormalModeController`, move them from here into separate in future:
-	this.editorMoveFlag = false      ; // FigureEditorController
-	this.mbRotationArc    = ['nothing']; // GeomTransformationController
+	this.editorMoveFlag       = false      ; // FigureEditorController
+	this.maybeRotationArcSpan = ['nothing']; // GeomTransformationController
 }
 
 State.prototype.setDomainStampFrom = function (domainObject) /** MenuUI */

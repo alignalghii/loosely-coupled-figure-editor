@@ -28,6 +28,20 @@ function couldTeleport(fallingFigure, board, infinitezimalDisplacement)
 	return !invalidSituationOnBoardBut(probeFigure, fallingFigure, board);
 }
 
+function couldTeleportByFigTransformCommand(fallingFigure, board, figTransformCommand, args)
+{
+	const probeFigure = fallingFigure.translation([0, 0]);
+	figTransformCommand(probeFigure);
+	return !invalidSituationOnBoardBut(probeFigure, fallingFigure, board);
+}
+
+function couldTeleportByFigTransformCommand_(fallingFigure, board, figTransformCommand, args)
+{
+	const probeFigure = fallingFigure.translation([0, 0]);
+	probeFigure[figTransformCommand].apply(probeFigure, args);
+	return !invalidSituationOnBoardBut(probeFigure, fallingFigure, board);
+}
+
 function detectSlide(fallingFigure, board, infinitezimalDisplacement, minFallTargetFigures, contractScale)
 {
 	const slides = minFallTargetFigures.map(targetFigure => polygonSlideDirection(fallingFigure.vertices, targetFigure.vertices)),
