@@ -5,7 +5,7 @@ function GeomTransformationController(state, widgetFactory, msgConsole)
 	this.msgConsole    = msgConsole;
 }
 
-GeomTransformationController.prototype.openRotationArc = function (currentWEPos)
+GeomTransformationController.prototype.openRotationArcSpan = function (currentWEPos)
 {
 	const board = this.widgetFactory.bijectionSvgToGeom;
 	const consoleMessage = maybe(
@@ -20,7 +20,7 @@ GeomTransformationController.prototype.openRotationArc = function (currentWEPos)
 	this.msgConsole.innerHTML = consoleMessage;
 };
 
-GeomTransformationController.prototype.spanRotationArcByDragging = function (currentWEPos)
+GeomTransformationController.prototype.sustainRotationArcSpan = function (currentWEPos)
 {
 	maybe_exec(
 		() => {this.msgConsole.innerHTML = 'Jelöld ki a kifeszítendő forgatásív kezdőpozícióját...';},
@@ -32,7 +32,7 @@ GeomTransformationController.prototype.spanRotationArcByDragging = function (cur
 	);
 };
 
-GeomTransformationController.prototype.closeRotationArc = function ()
+GeomTransformationController.prototype.closeRotationArcSpan = function ()
 {
 	this.state.maybeRotationArcSpan = ['nothing'];
 	this.msgConsole.innerHTML = 'Forgatásív véglegesítve és végrehajtva.';

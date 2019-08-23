@@ -118,13 +118,13 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 	if (this.state.mode == 'geomtransformationrotation') { // @TODO: should not use the same `State` as `NormalModeController`
 		switch (eventType) {
 			case 'mousedown': // @TODO: reuse: almost the same algorithm exists in `FigureEditorController`.
-				this.geomTransformationController.openRotationArc(ird.currentWEPos);
+				this.geomTransformationController.openRotationArcSpan(ird.currentWEPos);
 				break;
 			case 'mousemove': // @TODO: reuse: almost the same algorithm exists in `FigureEditorController`. @TODO: Ha a vásznan belül lenyomott egérgombot vásznonkívül engedem fel: dragbanragad
-				this.geomTransformationController.spanRotationArcByDragging(ird.currentWEPos);
+				this.geomTransformationController.sustainRotationArcSpan(ird.currentWEPos);
 				break;
 			case 'mouseup':
-				this.geomTransformationController.closeRotationArc();
+				this.geomTransformationController.closeRotationArcSpan();
 				break;
 		}
 	}
