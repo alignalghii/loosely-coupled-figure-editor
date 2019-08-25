@@ -38,4 +38,5 @@ function degAOA_(A, O, A_)
 	return signedRotAngleOfVectors(a, a_);
 }
 
-const radAOA_ = (A, O, A_) => degAOA_(A, O, A_) * Math.PI / 180;
+const radAOA_   = (A, O, A_) => degAOA_(A, O, A_) * Math.PI / 180;
+const ratioAOA_ = (A, O, A_) => distancePointHence(A_, O) / distancePointHence(A, O);

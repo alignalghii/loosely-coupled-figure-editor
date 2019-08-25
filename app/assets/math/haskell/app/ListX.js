@@ -33,6 +33,18 @@ function zipWith(f, as, bs)
 	return res;
 }
 
+const zip = (as, bs) => zipWith((a, b) => [a, b], as, bs);
+
+function zip3(as, bs, cs)
+{
+	var n = Math.min(as.length, bs.length, cs.length);
+	var res = [];
+	for (let i = 0; i < n; i++) {
+		res.push([as[i], bs[i], cs[i]]);
+	}
+	return res;
+}
+
 function flatSubvec(as, bs)
 {
 	let flag = true;

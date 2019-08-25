@@ -1,6 +1,6 @@
 function ListXBehavior() {}
 
-ListXBehavior.prototype.shouldTestListXBehavior = function () {return this.shouldDescartesProduct() && this.shouldDescartesWith() && this.shouldConsX() && this.shouldAppend() && this.shouldUncons() && this.shouldListBind() && this.shouldZipWith() && this.shouldHomogenityByEq() && this.shouldIsHomogenousByEq();};
+ListXBehavior.prototype.shouldTestListXBehavior = function () {return this.shouldDescartesProduct() && this.shouldDescartesWith() && this.shouldConsX() && this.shouldAppend() && this.shouldUncons() && this.shouldListBind() && this.shouldZipWith() && this.shouldZip() && this.shouldZip3() && this.shouldHomogenityByEq() && this.shouldIsHomogenousByEq();};
 
 
 ListXBehavior.prototype.shouldDescartesProduct = function ()
@@ -58,6 +58,14 @@ ListXBehavior.prototype.shouldZipWith = function ()
 	vecEq(zipWith((a, b) => a + b, [1, 3, 67], [4, 12]), [5, 15]) &&
 	true;
 };
+
+ListXBehavior.prototype.shouldZip = () =>
+	treeEq(zip([1, 2, 3], ['a', 'b', 'c']), [[1, 'a'], [2, 'b'], [3, 'c']]) &&
+	true;
+
+ListXBehavior.prototype.shouldZip3 = () =>
+	treeEq(zip3([1, 2, 3], ['a', 'b', 'c'], [true, true, false]), [[1, 'a', true], [2, 'b', true], [3, 'c', false]]) &&
+	true;
 
 // @TODO: not used: ratioEq would have used it, but its new implementation does not use it
 ListXBehavior.prototype.shouldIsHomogenousByEq = function ()

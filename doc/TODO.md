@@ -77,3 +77,4 @@
 Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet alakzatot tilos helyzetbe beforgatni). Ugyanakkor, ez az ütközésvizsgálat az alakzatszerkesztés (csúcspontok hozzáadása, mozgatása) esetében nem működik! Pl. csúcsot mozgatva bele lehet trappolni egy másik alakzaba.
  - Ettől függetlenül is, a közelségi heurisztika kissé katasztrofális az alakzatszerkesztőben. Nem a csúcsok, élek közelségi megsejtésével van a baj, hanem a legközelebbi alakzat közelséi heurisztikájával. Nagyon csúnyá össze lehet kuszálni az  alakzatszekesztés vele (pl. egy mozgatott csúcs esetén, ha túl közel megyünk vele egy szomszéd alakzathoz, akkor a szekesztés váratlanul átugrik a szomszéd alakzatra).
  - És ettől is függetlenül, baj, hogy az alakzatszekesztő megengedni, hogy kereszteződő élű, kifordult alakzatok jöjjenek létre.
+ - ,,Abszolút'' magyarítása: önmagábanálló?

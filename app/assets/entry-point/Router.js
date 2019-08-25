@@ -128,7 +128,80 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 				break;
 		}
 	}
+
+
+	{// @TODO: even more DRY
+		const scaleCases = {
+			geomtransformationscale         : ['doScale'                     , 'scale'                     ],
+
+			geomtransformationscalexref     : ['doScaleXRef'                 , 'scaleXRef'                 ],
+			geomtransformationscaleyref     : ['doScaleYRef'                 , 'scaleYRef'                 ],
+			geomtransformationscalexyarearef: ['doScaleXYArealInvariantRef'  , 'scaleXYArealInvariantRef'  ],
+			geomtransformationscaleyxarearef: ['doUnscaleXYArealInvariantRef', 'unscaleXYArealInvariantRef'],
+
+			geomtransformationscalex        : ['doScaleX'                    , 'scaleX'                    ],
+			geomtransformationscaley        : ['doScaleY'                    , 'scaleY'                    ],
+			geomtransformationscalexyarea   : ['doScaleXYArealInvariant'     , 'scaleXYArealInvariant'     ],
+			geomtransformationscaleyxarea   : ['doUnscaleXYArealInvariant'   , 'unscaleXYArealInvariant'   ] 
+		};
+		console.log(this.state.mode);
+		if (this.state.mode in scaleCases) {console.log('!!!!!!!!!!!');
+			const commands = scaleCases[this.state.mode];
+			this.routeDragCasesOpen2Sustain1Close0ScaleStressSpan(commands, eventType, ird.currentWEPos);
+		}
+	}
+
+
+	if (this.state.mode == 'geomtransformationreflectionhorizontallyref') { // @TODO: should not use the same `State` as `NormalModeController`
+		switch (eventType) {
+			case 'mouseup':
+				this.geomTransformationController.reflectionFlip(['doReflectHorizontallyRef', 'reflectHorizontallyRef'], ird.currentWEPos);
+				break;
+		}
+	}
+	if (this.state.mode == 'geomtransformationreflectionverticallyref') { // @TODO: should not use the same `State` as `NormalModeController`
+		switch (eventType) {
+			case 'mouseup':
+				this.geomTransformationController.reflectionFlip(['doReflectVerticallyRef', 'reflectVerticallyRef'], ird.currentWEPos);
+				break;
+		}
+	}
+	if (this.state.mode == 'geomtransformationreflectionhorizontally') { // @TODO: should not use the same `State` as `NormalModeController`
+		switch (eventType) {
+			case 'mouseup':
+				this.geomTransformationController.reflectionFlip(['doReflectHorizontally', 'reflectHorizontally'], ird.currentWEPos);
+				break;
+		}
+	}
+	if (this.state.mode == 'geomtransformationreflectionvertically') { // @TODO: should not use the same `State` as `NormalModeController`
+		switch (eventType) {
+			case 'mouseup':
+				this.geomTransformationController.reflectionFlip(['doReflectVertically', 'reflectVertiycally'], ird.currentWEPos);
+				break;
+		}
+	}
 };
+
+/** A compound route method: */
+Router.prototype.routeCasesWithOptParamAndArg = function (aritiesTuple, eventNamesTuple, methodNamesTuple, optParameter, eventType, arg)
+{
+	const cases = zip3(aritiesTuple, eventNamesTuple, methodNamesTuple);
+	for (let [arity, eventName, methodName] of cases) {
+		if (eventType == eventName) {
+			console.log([arity, eventName, methodName]);
+			switch (arity) {
+				case 0: this.geomTransformationController[methodName](                 ); break;
+				case 1: this.geomTransformationController[methodName](              arg); break;
+				case 2: this.geomTransformationController[methodName](optParameter, arg); break;
+				default: throw 'Invalid arity given in Router::routeCasesWithParamAndArg)';
+			}
+		}
+	}
+};
+
+Router.prototype.routeDragCases210 = function (methodNamesTuple, optParameter, eventType, arg) {this.routeCasesWithOptParamAndArg([2, 1, 0], ['mousedown', 'mousemove', 'mouseup'], methodNamesTuple, optParameter, eventType, arg);};
+
+Router.prototype.routeDragCasesOpen2Sustain1Close0ScaleStressSpan = function (optParameter, eventType, arg) {this.routeDragCases210(['openScaleStressSpan', 'sustainScaleStressSpan', 'closeScaleStressSpan'], optParameter, eventType, arg);};
 
 /** Actions */
 
