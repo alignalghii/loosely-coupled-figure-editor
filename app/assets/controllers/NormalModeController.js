@@ -1,9 +1,9 @@
-function NormalModeController(state, widgetFactories, widgetCollision, msgConsole) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function NormalModeController(state, widgetFactories, msgConsole) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
 	this.widgetFactories   = widgetFactories;
-	this.widgetCollision = widgetCollision;
+	//this.widgetCollision = widgetCollision;
 
 	this.msgConsole = msgConsole;
 	this.msgConsole.innerHTML = 'Üdvözlet! Jó munkát!';
@@ -11,6 +11,9 @@ function NormalModeController(state, widgetFactories, widgetCollision, msgConsol
 	this.epsilonDistance = widgetFactories[0].coordSysTransformer.epsilonDistance(); // @TODO Demeter priciple // @TODO: this arbitrary choice hides a conceptual smell
 	this.epsilonAngle    = widgetFactories[0].coordSysTransformer.epsilonAngle();    // @TODO Demeter priciple // @TODO: this arbitrary choice hides a conceptual smell
 }
+
+NormalModeController.prototype = Object.create(Controller.prototype);
+NormalModeController.prototype.constructor = NormalModeController;
 
 // @TODO The GU API should introduce a Mouse object/interface? (like many APIs introduce a Context obejct)
 NormalModeController.prototype.mouseDown = function (position, eitherTarget)
@@ -36,9 +39,9 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 		var infinitezimalDisplacement  = fromTo(this.state.prevWEPos, currentWEPos);
 		if (vectorLength(infinitezimalDisplacement) > 0) { // drag event provides sometimes also 0-displacements, we filter them out for better clarity's sake
 			const targetCanvas = canvasOfEitherTarget(eitherTarget);
-			this.jumpToIfNeeded(targetCanvas);
-			const board = this.boardOfCanvas(targetCanvas);
-			const mbAllowable = this.state.prevWidget.domainObject.mbVectorTransfomationForAllowance(board)(infinitezimalDisplacement);
+			const {bijectionSvgToGeom: targetBoard, bijectionGeomToDomain: targetBusinessBoard} = this.widgetFactoryForCanvas(targetCanvas);
+			this.jumpWidgetToIfNeeded(targetCanvas, targetBoard, targetBusinessBoard);
+			const mbAllowable = this.state.prevWidget.domainObject.mbVectorTransfomationForAllowance(targetBoard)(infinitezimalDisplacement);
 			const allowable = fromMaybe_exec(
 				() => {this.msgConsole.innerHTML = 'Tiltott zóna!'; return [0, 0];},
 				mbAllowable
@@ -50,11 +53,11 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 	}
 };
 
-NormalModeController.prototype.jumpToIfNeeded = function (targetCanvas)
+NormalModeController.prototype.jumpWidgetToIfNeeded = function (targetCanvas, targetBoard, targetBusinessBoard)
 {
 	maybeMap(
 		jumpingWidget => {
-			targetCanvas.appendChild(jumpingWidget.low);
+			jumpingWidget.jumpTo(targetCanvas, targetBoard, targetBusinessBoard);
 			this.msgConsole.innerHTML = 'Alakzat átugrasztása vásznak között!';
 		},
 		this.maybeJumpingWidget(targetCanvas)
@@ -67,25 +70,6 @@ NormalModeController.prototype.maybeJumpingWidget = function (targetCanvas)
 	     ? ['just', this.state.prevWidget]
 	     : ['nothing'];
 };
-
-NormalModeController.prototype.boardOfCanvas = function (targetCanvas) // @TODO optimize
-{
-	const maybeTargetWidgetFactory = maybeFind(factorsOn(targetCanvas), this.widgetFactories);
-	return maybe_exec(
-		() => {throw 'Empty `widgetFactories`, or empty `filter` matching with target canvas';},
-		targetWidgetFactory => targetWidgetFactory.bijectionSvgToGeom,
-		maybeTargetWidgetFactory
-	);
-};
-
-const canvasOfEitherTarget = eitherTarget =>
-	either(
-		canvas        => canvas,
-		currentWidget => currentWidget.low.parentNode,
-		eitherTarget
-	);
-
-const factorsOn = canvas => widgetFactory => widgetFactory.svgLowLevel.svgRootElement == canvas;
 
 NormalModeController.prototype.translatePrevWidgetAndRememberItsNewPosition = function (allowableDisplacement)
 {
@@ -199,7 +183,6 @@ NormalModeController.prototype.focusUnscaleXYArealInvariantFastRef = function ()
 NormalModeController.prototype.rememberWidget            = function (currentWidget) {this.state.prevWidget = currentWidget;};
 NormalModeController.prototype.rememberPosition          = function (currentWEPos ) {this.state.prevWEPos  = currentWEPos;};
 NormalModeController.prototype.addToRememberedPosition   = function (displacement ) {this.state.prevWEPos  = addVec(this.state.prevWEPos, displacement);};
-NormalModeController.prototype.followWhileCheckCollision = function (currentWEPos ) {return this.state.hasCollided = this.widgetCollision.checkAndHandleCollision(this.state.prevWidget, this.state.prevWEPos, currentWEPos);};
 
 /** Conditions */
 

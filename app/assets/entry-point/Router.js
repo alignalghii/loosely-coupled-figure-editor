@@ -124,7 +124,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 	if (this.state.mode == 'geomtransformationrotation') { // @TODO: should not use the same `State` as `NormalModeController`
 		switch (eventType) {
 			case 'mousedown': // @TODO: reuse: almost the same algorithm exists in `FigureEditorController`.
-				this.geomTransformationController.openRotationArcSpan(ird.currentWEPos);
+				this.geomTransformationController.openRotationArcSpan(ird.currentWEPos, ird.eitherTarget);
 				break;
 			case 'mousemove': // @TODO: reuse: almost the same algorithm exists in `FigureEditorController`. @TODO: Ha a vásznan belül lenyomott egérgombot vásznonkívül engedem fel: dragbanragad
 				this.geomTransformationController.sustainRotationArcSpan(ird.currentWEPos);
@@ -153,7 +153,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 		console.log(this.state.mode);
 		if (this.state.mode in scaleCases) {console.log('!!!!!!!!!!!');
 			const commands = scaleCases[this.state.mode];
-			this.routeDragCasesOpen2Sustain1Close0ScaleStressSpan(commands, eventType, ird.currentWEPos);
+			this.routeDragCasesOpen3Sustain1Close0ScaleStressSpan(commands, eventType, ird.currentWEPos, ird.eitherTarget);
 		}
 	}
 
@@ -161,53 +161,53 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 	if (this.state.mode == 'geomtransformationreflectionhorizontallyref') { // @TODO: should not use the same `State` as `NormalModeController`
 		switch (eventType) {
 			case 'mouseup':
-				this.geomTransformationController.reflectionFlip(['doReflectHorizontallyRef', 'reflectHorizontallyRef'], ird.currentWEPos);
+				this.geomTransformationController.reflectionFlip(['doReflectHorizontallyRef', 'reflectHorizontallyRef'], ird.currentWEPos, ird.eitherTarget);
 				break;
 		}
 	}
 	if (this.state.mode == 'geomtransformationreflectionverticallyref') { // @TODO: should not use the same `State` as `NormalModeController`
 		switch (eventType) {
 			case 'mouseup':
-				this.geomTransformationController.reflectionFlip(['doReflectVerticallyRef', 'reflectVerticallyRef'], ird.currentWEPos);
+				this.geomTransformationController.reflectionFlip(['doReflectVerticallyRef', 'reflectVerticallyRef'], ird.currentWEPos, ird.eitherTarget);
 				break;
 		}
 	}
 	if (this.state.mode == 'geomtransformationreflectionhorizontally') { // @TODO: should not use the same `State` as `NormalModeController`
 		switch (eventType) {
 			case 'mouseup':
-				this.geomTransformationController.reflectionFlip(['doReflectHorizontally', 'reflectHorizontally'], ird.currentWEPos);
+				this.geomTransformationController.reflectionFlip(['doReflectHorizontally', 'reflectHorizontally'], ird.currentWEPos, ird.eitherTarget);
 				break;
 		}
 	}
 	if (this.state.mode == 'geomtransformationreflectionvertically') { // @TODO: should not use the same `State` as `NormalModeController`
 		switch (eventType) {
 			case 'mouseup':
-				this.geomTransformationController.reflectionFlip(['doReflectVertically', 'reflectVertiycally'], ird.currentWEPos);
+				this.geomTransformationController.reflectionFlip(['doReflectVertically', 'reflectVertically'], ird.currentWEPos, ird.eitherTarget);
 				break;
 		}
 	}
 };
 
 /** A compound route method: */
-Router.prototype.routeCasesWithOptParamAndArg = function (aritiesTuple, eventNamesTuple, methodNamesTuple, optParameter, eventType, arg)
+Router.prototype.routeCasesWithOptParamAndArgs = function (aritiesTuple, eventNamesTuple, methodNamesTuple, optParameter, eventType, arg1, arg2)
 {
 	const cases = zip3(aritiesTuple, eventNamesTuple, methodNamesTuple);
 	for (let [arity, eventName, methodName] of cases) {
 		if (eventType == eventName) {
 			console.log([arity, eventName, methodName]);
 			switch (arity) {
-				case 0: this.geomTransformationController[methodName](                 ); break;
-				case 1: this.geomTransformationController[methodName](              arg); break;
-				case 2: this.geomTransformationController[methodName](optParameter, arg); break;
-				default: throw 'Invalid arity given in Router::routeCasesWithParamAndArg)';
+				case 0: this.geomTransformationController[methodName](                        ); break;
+				case 1: this.geomTransformationController[methodName](              arg1      ); break;
+				case 3: this.geomTransformationController[methodName](optParameter, arg1, arg2); break;
+				default: throw 'Invalid arity given in Router::routeCasesWithParamAndArgs)';
 			}
 		}
 	}
 };
 
-Router.prototype.routeDragCases210 = function (methodNamesTuple, optParameter, eventType, arg) {this.routeCasesWithOptParamAndArg([2, 1, 0], ['mousedown', 'mousemove', 'mouseup'], methodNamesTuple, optParameter, eventType, arg);};
+Router.prototype.routeDragCases310 = function (methodNamesTuple, optParameter, eventType, arg1, arg2) {this.routeCasesWithOptParamAndArgs([3, 1, 0], ['mousedown', 'mousemove', 'mouseup'], methodNamesTuple, optParameter, eventType, arg1, arg2);};
 
-Router.prototype.routeDragCasesOpen2Sustain1Close0ScaleStressSpan = function (optParameter, eventType, arg) {this.routeDragCases210(['openScaleStressSpan', 'sustainScaleStressSpan', 'closeScaleStressSpan'], optParameter, eventType, arg);};
+Router.prototype.routeDragCasesOpen3Sustain1Close0ScaleStressSpan = function (optParameter, eventType, arg1, arg2) {this.routeDragCases310(['openScaleStressSpan', 'sustainScaleStressSpan', 'closeScaleStressSpan'], optParameter, eventType, arg1, arg2);};
 
 /** Actions */
 

@@ -66,6 +66,31 @@ Widget.prototype.delete = function ()
 	deletePolygonChild(this.low);
 };
 
+// Jump over between two canvasses
+
+Widget.prototype.jumpTo = function (targetCanvas, targetBoard, targetBusinessBoard)
+{
+	targetCanvas.appendChild(this.low);
+	this.changeBoardsFor(targetBoard, targetBusinessBoard);
+};
+
+Widget.prototype.changeBoardsFor = function (targetBoard, targetBusinessBoard)
+{
+	// Subscribe for new boards:
+	targetBoard        .set(this.low , this.high        );
+	targetBusinessBoard.set(this.high, this.domainObject);
+
+	// Unsubscribe from own (collaborator) boards:
+	this.bijectionSvgToGeom   .delete(this.low );
+	this.bijectionGeomToDomain.delete(this.high);
+
+	// Update collaborators:
+	this.bijectionSvgToGeom    = targetBoard;
+	this.bijectionGeomToDomain = targetBusinessBoard;
+};
+
+// Geometrical transforamtions
+
 Widget.prototype.translate = function (displacement) {this.high.doTranslation(displacement); this.updateDownward();};
 Widget.prototype.rotate    = function (phi) {this.high.doRotation(phi); this.updateDownward();};
 Widget.prototype.reflectHorizontally = function () {this.high.doReflectHorizontally(); this.updateDownward();};

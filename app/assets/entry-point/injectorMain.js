@@ -5,14 +5,10 @@ onload = function (event)
 	var svgLowLevels           = [svgLowLevel_mainCanvas, svgLowLevel_experimentCanvas];
 
 	var coordSysTransformer = new CoordSysTransformer([300, 200], 10, [true, false]);
-	var bijectionSvgToGeom  = new Bijection();
 
 	var roomFactory           = new RoomFactory();
-	var bijectionGeomToDomain = new Bijection();
-	var widgetFactories       = svgLowLevels.map(svgLowLevel => new WidgetFactory(bijectionGeomToDomain, coordSysTransformer, bijectionSvgToGeom, svgLowLevel));
+	var widgetFactories       = svgLowLevels.map(svgLowLevel => new WidgetFactory(new Bijection, coordSysTransformer, new Bijection, svgLowLevel));
 	const widgetFactory       = widgetFactories[0];
-
-	var board               = bijectionSvgToGeom; // when using bijectionSvgToGeom as a set of high-level figures, we call it a board
 
 	var audio               = new MyAudio(new Audio('assets/sonar.ogg'));
 
@@ -24,14 +20,12 @@ onload = function (event)
 
 	var msgConsole          = document.getElementById('msgConsole');
 
-	var widgetCollision     = new WidgetCollision(board, audio);
-
 	var state               = new State(domainStamp);
-	var compactModeController = new CompactModeController(state, widgetFactory, widgetCollision, msgConsole);
-	var normalModeController  = new NormalModeController (state, widgetFactories, widgetCollision, msgConsole);
+	var compactModeController = new CompactModeController(state, widgetFactory, undefined, msgConsole); // widgetCollision = new WidgetCollision(board, audio) // board: Bijection low->fig as fig set
+	var normalModeController  = new NormalModeController (state, widgetFactories, msgConsole);
 	var roomController        = new RoomController       (state, roomFactory, widgetFactory, msgConsole);
 	var figureEditorController = new FigureEditorController(state, widgetFactory, msgConsole);  // @TODO: should not use the same `State` as `NormalModeController`
-	var geomTransformationController = new GeomTransformationController(state, widgetFactory, msgConsole);  // @TODO: should not use the same `State` as `NormalModeController`
+	var geomTransformationController = new GeomTransformationController(state, widgetFactories, msgConsole);  // @TODO: should not use the same `State` as `NormalModeController`
 	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(widgetFactories, router);
 	var roomStampUI         = new RoomStampUI(document, roomBank, router);
