@@ -1,16 +1,15 @@
-function RoomController(state, roomFactory, widgetFactory, msgConsole)
+function RoomController(state, roomFactory, msgConsole)
 {
 	this.state             = state;
 	this.roomFactory       = roomFactory;
-	this.widgetFactory     = widgetFactory;
 	this.msgConsole        = msgConsole;
 }
 
 RoomController.prototype.createSquareByArea = function (area)
 {
 	if (this.state.spaceFocus) {
-		  var squareRoom =   this.roomFactory.createSquareByArea(area, this.state.spaceFocus);
-		/*var roomWidget =*/ this.widgetFactory.createWidgetFromDomain0(squareRoom);
+		  var squareRoom =   this.roomFactory.createSquareByArea(area, this.state.spaceFocus.position);
+		/*var roomWidget =*/ this.state.spaceFocus.widgetFactory.createWidgetFromDomain0(squareRoom);
 		this.msgConsole.innerHTML = 'Új négyzetes szoba beszúrva, területe ' + area + ' egység.';
 	} else {
 		this.msgConsole.innerHTML = 'Nincs kijelölve üreshelyfókusz, nincs hova beszúrni új szobát.';

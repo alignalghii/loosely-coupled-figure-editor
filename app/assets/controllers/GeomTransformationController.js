@@ -26,9 +26,6 @@ GeomTransformationController.prototype.openRotationArcSpan = function (currentWE
 	this.msgConsole.innerHTML = consoleMessage;
 };
 
-
-GeomTransformationController.prototype.widgetFactoryForEitherTarget = function (eitherTarget) {return this.widgetFactoryForCanvas(canvasOfEitherTarget(eitherTarget));};
-
 GeomTransformationController.prototype.sustainRotationArcSpan = function (currentWEPos)
 {
 	maybe_exec(

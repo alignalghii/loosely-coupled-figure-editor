@@ -81,7 +81,7 @@ NormalModeController.prototype.mouseUp = function (currentWEPos, eitherTarget)
 {
 	either(
 		canvas => {
-			this.state.spaceFocus = currentWEPos;
+			this.state.spaceFocus = {position: currentWEPos, widgetFactory: this.widgetFactoryForEitherTarget(eitherTarget)};
 			if (this.state.focus) {
 				this.state.focus.unshowFocus();
 				this.state.focus = null;
@@ -123,7 +123,7 @@ NormalModeController.prototype.changeStamp = function (selectedDomainObject)
 NormalModeController.prototype.createAtPosFocus = function ()
 {
 	if (this.state.spaceFocus) {
-		this.widgetFactories[0].stampAt(this.state.domainStamp, this.state.spaceFocus);  // @TODO: parent-child autodetect, or explicit arg passing
+		this.state.spaceFocus.widgetFactory.stampAt(this.state.domainStamp, this.state.spaceFocus.position);  // @TODO: refactor to standalone method?
 		this.state.spaceFocus = null;
 		this.msgConsole.innerHTML = 'Új alakzat beszúrása az üreshelyfókusz által mutatott helyre. Üreshelyfókusz levétele.';
 	} else this.msgConsole.innerHTML = 'Nincs kijelölve üreshelyfókusz, nincs hova beszúrni új alakzatot.';
