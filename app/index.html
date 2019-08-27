@@ -43,6 +43,7 @@
 
 		<script src="assets/low-level-system/DOM-manipulation.js"></script>
 		<script src="assets/low-level-system/SvgLowLevel.js"></script>
+		<script src="assets/low-level-system/SvgsPool.js"></script>
 		<script src="assets/low-level-system/MyAudio.js"></script>
 
 		<script src="assets/math/geometry.js"></script>
@@ -219,7 +220,9 @@
 		</ul>
 		<div><em>Rendszerüzenetek:</em> <span id="msgConsole"></span></div>
 
-		<h2>Vászon</h2>
+		<h2>Vásznak</h2>
+		A forrásvászonról a célvászonra az alakzatok egyszerűen áthúzhatóak (és visszafelé is).
+		<div><em>Forrásvászon:</em></div>
 		<!-- Credit to https://www.w3schools.com/graphics/svg_feoffset.asp -->
 		<svg id="svgRoot" width="600" height="400">
 			<defs>
@@ -230,6 +233,9 @@
 					<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
 				</filter>
 			</defs>
+		</svg>
+		<div><em>Célvászon:</em></div>
+		<svg id="svgRoot2" width="600" height="400">
 		</svg>
 	</body>
 </html>

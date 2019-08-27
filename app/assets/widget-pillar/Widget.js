@@ -2,12 +2,11 @@
 // A widget is a cache of a record (assignment item/element, ordered pair) of a bijection, possibly a ternary or multiple-attribute bijection
 
 // @TODO common ancestor with `WigetEventPosition`. Note also the formal sameness of the constructors (only the typing differs)
-function Widget(bijectionGeomToDomain, coordSysTransformer, bijectionSvgToGeom, svgLowLevel,    domainObject, high, low)
+function Widget(bijectionGeomToDomain, coordSysTransformer, bijectionSvgToGeom,    domainObject, high, low)
 {
 	this.bijectionGeomToDomain = bijectionGeomToDomain;
 	this.coordSysTransformer = coordSysTransformer;
 	this.bijectionSvgToGeom         = bijectionSvgToGeom;
-	this.svgLowLevel         = svgLowLevel;
 
 	this.domainObject = domainObject;
 	this.high = high;
@@ -58,13 +57,13 @@ Widget.prototype.update = function (prevWEPos, currentWEPos)
 Widget.prototype.updateDownward = function ()
 {
 	var svgVertices = this.high.vertices.map((p) => this.coordSysTransformer.highToLow(p));
-	this.svgLowLevel.updatePolygonChild(this.low, svgVertices);
+	updatePolygonChild(this.low, svgVertices);
 };
 
 Widget.prototype.delete = function ()
 {
 	this.bijectionSvgToGeom.delete(this.low);
-	this.svgLowLevel.deletePolygonChild(this.low);
+	deletePolygonChild(this.low);
 };
 
 Widget.prototype.translate = function (displacement) {this.high.doTranslation(displacement); this.updateDownward();};

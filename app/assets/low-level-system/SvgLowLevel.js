@@ -2,10 +2,10 @@ const svgNS = 'http://www.w3.org/2000/svg';
 const xmlns = 'http://www.w3.org/2000/xmlns/';
 const xlink = 'http://www.w3.org/1999/xlink';
 
-function SvgLowLevel(aDocument)
+function SvgLowLevel(aDocument, id)
 {
 	this.document       = aDocument;
-	this.svgRootElement = aDocument.getElementById('svgRoot');//createElementWithAttributes('svg' , {id:'screen', width:svgWidth, height:svgHeight}, svgNS);
+	this.svgRootElement = aDocument.getElementById(id);//createElementWithAttributes('svg' , {id:'screen', width:svgWidth, height:svgHeight}, svgNS);
 	this.svgPoint       = this.svgRootElement.createSVGPoint();
 };
 
@@ -21,18 +21,18 @@ SvgLowLevel.prototype.eventPosition = function (event)
 SvgLowLevel.prototype.createPolygonChild = function (svgVertices, svgAttributes)
 {
 	var polygonChild = createElementWithAttributes('polygon', svgAttributes, svgNS); //this.document.createElementNS(svgNS, 'polygon');
-	this.svgRootElement.appendChild(polygonChild);
-	this.updatePolygonChild(polygonChild, svgVertices);
+	this.svgRootElement.appendChild(polygonChild); // @TODO: in case of more canvases, an svg-polynomelement should be able to be added to more canvases (drag a furniture to be copied to the  floorplan canvas)
+	updatePolygonChild(polygonChild, svgVertices);
 	return polygonChild;
 };
 
-SvgLowLevel.prototype.updatePolygonChild = function (polygonChild, svgVertices)
+function updatePolygonChild(polygonChild, svgVertices)
 {
 	var points   = pointsArgValue(svgVertices);
 	polygonChild.setAttribute('points', points);
 };
 
-SvgLowLevel.prototype.deletePolygonChild = function (polygonChild) {polygonChild.parentNode.removeChild(polygonChild);};  // childNode.remove() is easier, nicer, but not so portable
+const deletePolygonChild = polygonChild => polygonChild.parentNode.removeChild(polygonChild);  // childNode.remove() is easier, nicer, but not so portable
 
 function pointsArgValue(svgVertices) {return svgVertices.map(stringifyPositionWithComma).join(' ');}
 /**
@@ -43,12 +43,13 @@ function stringifyPositionWithComma([x, y]) {return '' + x + ',' + y + '';}
 
 SvgLowLevel.prototype.subscribe = function (typeName, emptyCase, polygonCase) // @TODO a `return` valószínűleg fölösleges itt is, és az ezt használó  hivatkozott WidgetEventPillar.subscribe-on is
 {
-	var svgLowLevel = this;
-	function handler(event)
+	const svgRootElement = this.svgRootElement;
+	const handler = event =>
 	{
-		var target = event.target;
-		var svgPosition  = svgLowLevel.eventPosition(event);
-		return target == svgLowLevel.svgRootElement ? emptyCase(svgPosition) : polygonCase(target, svgPosition);
-	}
-	this.svgRootElement.addEventListener(typeName, handler);
+		const target = event.target;
+		const svgPosition  = this.eventPosition(event);
+		const runCase = target == svgRootElement ? emptyCase : polygonCase;
+		return runCase(target, svgPosition);  // @TODO: use `Either` at the code parts that will call this
+	};
+	svgRootElement.addEventListener(typeName, handler);
 };

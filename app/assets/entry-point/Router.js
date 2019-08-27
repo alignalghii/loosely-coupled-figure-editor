@@ -17,16 +17,22 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 	}
 	if (this.state.mode == 'compact') {
 		switch (eventType) {
-			case 'mousedown': this.compactModeController.mouseDown(ird.currentWEPos, ird.currentWidget); break;
-			case 'mousemove': this.compactModeController.mouseMove(ird.currentWEPos                   ); break;
-			case 'mouseup'  : this.compactModeController.mouseUp  (ird.currentWEPos, ird.currentWidget); break;
+			case 'mousedown': this.compactModeController.mouseDown(ird.currentWEPos, ird.eitherTarget); break;
+			case 'mousemove': this.compactModeController.mouseMove(ird.currentWEPos, ird.eitherTarget); break;
+			case 'mouseup'  : this.compactModeController.mouseUp  (ird.currentWEPos, ird.eitherTarget); break;
 		}
 	}
 	if (this.state.mode == 'normal') {
 		switch (eventType) {
-			case 'mousedown': this.normalModeController.mouseDown(ird.currentWEPos, ird.currentWidget); break;
-			case 'mousemove': this.normalModeController.mouseMove(ird.currentWEPos                   ); break;
-			case 'mouseup'  : this.normalModeController.mouseUp  (ird.currentWEPos, ird.currentWidget); break;
+			case 'mousedown':
+				this.normalModeController.mouseDown(ird.currentWEPos, ird.eitherTarget);
+				break;
+			case 'mousemove':
+				this.normalModeController.mouseMove(ird.currentWEPos, ird.eitherTarget);
+				break;
+			case 'mouseup'  :
+				this.normalModeController.mouseUp  (ird.currentWEPos, ird.eitherTarget);
+				break;
 			case 'click':
 				if (Eq.eq(inputSignature, ['string'])) {
 					switch (ird.operation) {

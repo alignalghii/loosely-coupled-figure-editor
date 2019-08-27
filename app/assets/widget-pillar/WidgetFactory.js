@@ -19,7 +19,7 @@ WidgetFactory.prototype.createWidgetFromReplacedGeom = function (geomFigure, dom
 	var svgNewPolygonCild = this.svgLowLevel.createPolygonChild(svgVertices, geomFigure.svgAttributes); // @TODO consider `this.originFigure.svgAttributes`
 	this.bijectionSvgToGeom.set(svgNewPolygonCild, geomFigure);
 	this.bijectionGeomToDomain.set(geomFigure, domainObject);
-	return new Widget(this.bijectionGeomToDomain, this.coordSysTransformer, this.bijectionSvgToGeom, this.svgLowLevel, domainObject, geomFigure, svgNewPolygonCild);
+	return new Widget(this.bijectionGeomToDomain, this.coordSysTransformer, this.bijectionSvgToGeom, domainObject, geomFigure, svgNewPolygonCild);
 };
 
 WidgetFactory.prototype.createWidgetFromDomain1 = function (domainObjectOriginal)
@@ -41,7 +41,7 @@ WidgetFactory.prototype.createWidgetFromLow = function (svgPolygon)
 {
 	var geomFigure = this.bijectionSvgToGeom.get(svgPolygon);
 	var domainObject = this.bijectionGeomToDomain.get(geomFigure);
-	return new Widget(this.bijectionGeomToDomain, this.coordSysTransformer, this.bijectionSvgToGeom, this.svgLowLevel, domainObject, geomFigure, svgPolygon);
+	return new Widget(this.bijectionGeomToDomain, this.coordSysTransformer, this.bijectionSvgToGeom, domainObject, geomFigure, svgPolygon);
 };
 
 
@@ -49,5 +49,21 @@ WidgetFactory.prototype.createWidgetFromMedium = function (geomFigure)
 {
 	var svgPolygon    = this.bijectionSvgToGeom.getInverse(geomFigure);
 	var domainObject = this.bijectionGeomToDomain.get(geomFigure);
-	return new Widget(this.bijectionGeomToDomain, this.coordSysTransformer, this.bijectionSvgToGeom, this.svgLowLevel, domainObject, geomFigure, svgPolygon);
+	return new Widget(this.bijectionGeomToDomain, this.coordSysTransformer, this.bijectionSvgToGeom, domainObject, geomFigure, svgPolygon);
+};
+
+WidgetFactory.prototype.mergelessSubscribe = function (eventTypeName, emptyCase, widgetCase) // @TODO a `return` valószínűleg fölösleges itt is, és a hivatkozott svgLowLevel.subscribe-on is
+{
+	const svgEmptyCase = (canvas, svgPosition) =>
+	{
+		var widgetEventPosition  = this.coordSysTransformer.lowToHigh(svgPosition);
+		return emptyCase(canvas, widgetEventPosition);
+	}
+	const svgPolygonCase = (svgPolygon, svgPosition) =>
+	{
+		var widget               = this.createWidgetFromLow          (svgPolygon );
+		var widgetEventPosition  = this.coordSysTransformer.lowToHigh(svgPosition);  // @TODO Demeter principle
+		return widgetCase(widget, widgetEventPosition);
+	}
+	this.svgLowLevel.subscribe(eventTypeName, svgEmptyCase, svgPolygonCase); // @TODO Demeter principle
 };

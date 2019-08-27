@@ -1,6 +1,6 @@
-function WidgetEventPillar (widgetFactory, routerInterface)
+function WidgetEventPillar (widgetFactories, routerInterface)
 {
-	this.widgetFactory = widgetFactory;
+	this.widgetFactories = widgetFactories;
 	this.router = routerInterface;
 }
 
@@ -14,24 +14,14 @@ WidgetEventPillar.prototype.pipeToSM = function ()
 WidgetEventPillar.prototype.mergeAndPipeSubsribe = function (eventType)
 {
 	this.mergelessSubscribe(eventType,
-		(currentWEPos)                => this.router.dispatch(eventType, [          'WEPos'], {                             currentWEPos:currentWEPos}),
-		(currentWidget, currentWEPos) => this.router.dispatch(eventType, ['Widget', 'WEPos'], {currentWidget:currentWidget, currentWEPos:currentWEPos})
+		(canvas       , currentWEPos) => this.router.dispatch(eventType, ['Canvas', 'WEPos'], {eitherTarget: ['left' , canvas       ], currentWEPos: currentWEPos}), // @TODO: use `Either`
+		(currentWidget, currentWEPos) => this.router.dispatch(eventType, ['Widget', 'WEPos'], {eitherTarget: ['right', currentWidget], currentWEPos: currentWEPos})  // @TODO: use `Either`
 	);
 };
 
-WidgetEventPillar.prototype.mergelessSubscribe = function (eventTypeName, emptyCase, widgetCase) // @TODO a `return` valószínűleg fölösleges itt is, és a hivatkozott svgLowLevel.subscribe-on is
+WidgetEventPillar.prototype.mergelessSubscribe = function (eventTypeName, emptyCase, widgetCase)
 {
-	var widgetFactory = this.widgetFactory;
-	function svgEmptyCase(svgPosition)
-	{
-		var widgetEventPosition  = widgetFactory.coordSysTransformer.lowToHigh(svgPosition);
-		return emptyCase(widgetEventPosition);
+	for (let widgetFactory of this.widgetFactories) {
+		widgetFactory.mergelessSubscribe(eventTypeName, emptyCase, widgetCase);
 	}
-	function svgPolygonCase(svgPolygon, svgPosition)
-	{
-		var widget               = widgetFactory.createWidgetFromLow          (svgPolygon );
-		var widgetEventPosition  = widgetFactory.coordSysTransformer.lowToHigh(svgPosition);  // @TODO Demeter principle
-		return widgetCase(widget, widgetEventPosition);
-	}
-	this.widgetFactory.svgLowLevel.subscribe(eventTypeName, svgEmptyCase, svgPolygonCase); // @TODO Demeter principle
 };

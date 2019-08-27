@@ -54,6 +54,8 @@ function flatSubvec(as, bs)
 
 const flatVecEq = (as, bs) => flatSubvec(as, bs) && flatSubvec(bs, as);
 
+const maybeFind = (pred, list) => listToMaybe(list.filter(pred)); // in Haskell, simply `find`, but in JavaScript the `find` name has already been reserved for a native function. :(
+
 const homogenityBy_ = (paramEq, list) =>
 	skippableReduce_(
 		(acc, curr) =>
