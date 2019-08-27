@@ -94,29 +94,29 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 	if (this.state.mode == 'figureeditoradd') {
 		switch (eventType) {
 			case 'mouseup':
-				this.figureEditorController.addVertex(ird.currentWEPos);
+				this.figureEditorController.addVertex(ird.currentWEPos, ird.eitherTarget);
 				break;
 		}
 	}
 	if (this.state.mode == 'figureeditordelete') {
 		switch (eventType) {
 			case 'mouseup':
-				this.figureEditorController.deleteVertex(ird.currentWEPos);
+				this.figureEditorController.deleteVertex(ird.currentWEPos, ird.eitherTarget);
 				break;
 		}
 	}
 	if (this.state.mode == 'figureeditormove') { // @TODO: delegate more responsibility from the router to the controller. @TODO: should not use the same `State` as `NormalModeController`
 		switch (eventType) {
 			case 'mousedown':
-				this.figureEditorController.moveVertex(ird.currentWEPos);
+				this.figureEditorController.moveVertex(ird.currentWEPos, ird.eitherTarget);
 				this.figureEditorController.state.editorMoveFlag = true;
 				break;
 			case 'mousemove':
 				if (this.figureEditorController.state.editorMoveFlag)
-					this.figureEditorController.moveVertex(ird.currentWEPos);
+					this.figureEditorController.moveVertex(ird.currentWEPos, ird.eitherTarget);
 				break;
 			case 'mouseup':
-				this.figureEditorController.moveVertex(ird.currentWEPos);
+				this.figureEditorController.moveVertex(ird.currentWEPos, ird.eitherTarget);
 				this.figureEditorController.state.editorMoveFlag = false; // @TODO: should not use the same `State` as `NormalModeController`
 				break;
 		}
