@@ -53,24 +53,6 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 	}
 };
 
-NormalModeController.prototype.jumpWidgetToIfNeeded = function (targetCanvas, targetBoard, targetBusinessBoard)
-{
-	maybeMap(
-		jumpingWidget => {
-			jumpingWidget.jumpTo(targetCanvas, targetBoard, targetBusinessBoard);
-			this.msgConsole.innerHTML = 'Alakzat átugrasztása vásznak között!';
-		},
-		this.maybeJumpingWidget(targetCanvas)
-	);
-};
-
-NormalModeController.prototype.maybeJumpingWidget = function (targetCanvas)
-{
-	return this.state.prevWidget && this.state.prevWidget.low.parentNode != targetCanvas
-	     ? ['just', this.state.prevWidget]
-	     : ['nothing'];
-};
-
 NormalModeController.prototype.translatePrevWidgetAndRememberItsNewPosition = function (allowableDisplacement)
 {
 	this.state.prevWidget.translate(allowableDisplacement);

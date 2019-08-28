@@ -6,3 +6,8 @@ function either(funLeft, funRight, eitherAB)
 		default     : throw 'Invalid `Either` tag';
 	}
 }
+
+const left  = a => ['left' , a],
+      right = b => ['right', b];
+
+const eitherAMap = (fBC, eitherAB) => either(left, b => ['right', fBC(b)], eitherAB);

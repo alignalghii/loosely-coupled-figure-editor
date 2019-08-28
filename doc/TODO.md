@@ -80,3 +80,4 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - És ettől is függetlenül, baj, hogy az alakzatszekesztő megengedni, hogy kereszteződő élű, kifordult alakzatok jöjjenek létre.
  - ,,Abszolút'' magyarítása: önmagábanálló?
  - Most, hogy több vászon van, és egymás közt át lehet húzogatni az alakzatokat, látszik, hogy valójában a vásznak még mindig közös board-on osztoznak, ezértpl. ha egy sűrűn benépesített vászonról egy üres vászonra húzok átt egyetlen alakzatot, az az alakzat az új vásznon belül furcsán, botladozva lesz csak mozgatható (szellemütközés), ugyanis pont úgy fog viselkedni, mintha ütköznék azokkal az alakzatokkal, amelyek a másik vásznon vannak, de ugyanazon a koordinátákon (ghost collisions).
+ - make two audios. One for collision, another for jumping over to another canvas. Maybe a third one for teleporting over a figure or a group of figures.

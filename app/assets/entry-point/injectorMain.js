@@ -8,9 +8,9 @@ onload = function (event)
 
 	var roomFactory           = new RoomFactory();
 	var widgetFactories       = svgLowLevels.map(svgLowLevel => new WidgetFactory(new Bijection, coordSysTransformer, new Bijection, svgLowLevel));
-	const widgetFactory       = widgetFactories[0];
 
 	var audio               = new MyAudio(new Audio('assets/sonar.ogg'));
+	var widgetCollision = new WidgetCollision(audio);
 
 	var roomBank             = roomFactory.sampleRoomBank();
 	var domainStamp          = roomBank.namedRooms[roomBank.selected].room.centering();
@@ -21,7 +21,7 @@ onload = function (event)
 	var msgConsole          = document.getElementById('msgConsole');
 
 	var state               = new State(domainStamp);
-	var compactModeController = new CompactModeController(state, widgetFactory, undefined, msgConsole); // widgetCollision = new WidgetCollision(board, audio) // board: Bijection low->fig as fig set
+	var compactModeController = new CompactModeController(state, widgetFactories, widgetCollision, msgConsole); // widgetCollision = new WidgetCollision(board, audio) // board: Bijection low->fig as fig set
 	var normalModeController  = new NormalModeController (state, widgetFactories, msgConsole);
 	var roomController        = new RoomController       (state, roomFactory, msgConsole);
 	var figureEditorController = new FigureEditorController(state, widgetFactories, msgConsole);  // @TODO: should not use the same `State` as `NormalModeController`
