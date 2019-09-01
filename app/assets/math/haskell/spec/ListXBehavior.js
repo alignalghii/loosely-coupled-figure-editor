@@ -1,6 +1,6 @@
 function ListXBehavior() {}
 
-ListXBehavior.prototype.shouldTestListXBehavior = function () {return this.shouldDescartesProduct() && this.shouldDescartesWith() && this.shouldConsX() && this.shouldAppend() && this.shouldUncons() && this.shouldListBind() && this.shouldZipWith() && this.shouldZip() && this.shouldZip3() && this.shouldHomogenityByEq() && this.shouldIsHomogenousByEq();};
+ListXBehavior.prototype.shouldTestListXBehavior = function () {return this.shouldDescartesProduct() && this.shouldDescartesWith() && this.shouldConsX() && this.shouldAppend() && this.shouldUncons() && this.shouldListBind() && this.shouldZipWith() && this.shouldZip() && this.shouldZip3() && this.shouldHomogenityByEq() && this.shouldIsHomogenousByEq() && this.shouldRotListRight1();};
 
 
 ListXBehavior.prototype.shouldDescartesProduct = function ()
@@ -91,3 +91,9 @@ ListXBehavior.prototype.shouldHomogenityByEq = function ()
 	vecEq(homogenityByEq(absEq, [3]), ['just', ['just', 3]]) &&
 	true;
 }
+
+ListXBehavior.prototype.shouldRotListRight1 = () =>
+	vecEq(rotListRight1([]), []) &&
+	vecEq(rotListRight1(['ab']), ['ab']) &&
+	vecEq(rotListRight1(['ab', 'bc', 'ca']), ['ca', 'ab', 'bc']) &&
+	true;

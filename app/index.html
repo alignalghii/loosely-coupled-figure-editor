@@ -19,6 +19,7 @@
 		<script src="assets/controllers/RoomController.js"></script>
 		<script src="assets/controllers/FigureEditorController.js"></script>
 		<script src="assets/controllers/GeomTransformationController.js"></script>
+		<script src="assets/controllers/FigurePropertyEditorController.js"></script>
 
 		<script src="assets/physics/Figure.js"></script>
 		<script src="assets/physics/Hypothetical.js"></script>
@@ -107,6 +108,7 @@
 		<script src="assets/math/haskell/app/LineRepresentationForms.js"></script>
 		<script src="assets/math/haskell/app/VerticePathClickAlgebra.js"></script>
 		<script src="assets/math/haskell/app/FigureEditorByProximityHeuristic.js"></script>
+		<script src="assets/math/haskell/app/polygon-property-algebra.js"></script>
 		<script src="assets/math/haskell/app/RotationArcSpan.js"></script>
 		<script src="assets/math/haskell/app/RotationArcSpanLog.js"></script>
 		<script src="assets/math/haskell/app/ScaleStressSpan.js"></script>
@@ -145,6 +147,7 @@
 		<script src="assets/math/haskell/spec/VerticePathClickAlgebraBehavior.js"></script>
 		<script src="assets/math/haskell/spec/NonEmptyFootListBehavior.js"></script>
 		<script src="assets/math/haskell/spec/FigureEditorByProximityHeuristicBehavior.js"></script>
+		<script src="assets/math/haskell/spec/PolygonPropertyAlgebraBehavior.js"></script>
 		<script src="assets/math/haskell/spec/RotationArcSpanLogBehavior.js"></script>
 		<script src="assets/math/haskell/spec/ListXBehavior.js"></script>
 		<script src="assets/math/haskell/spec/MaybeXBehavior.js"></script>
@@ -218,6 +221,8 @@
 			<li><input id="modeGeomtransformationreflectionverticallyref" name="mode" value="geomtransformationreflectionverticallyref" type="radio"/> <label for="modeGeomtransformationreflectionverticallyref">Geometriai transzformáció: alakzat tükrözése - függőleges, viszonylagos (saját magához viszonyított)</label></li>
 			<li><input id="modeGeomtransformationreflectionhorizontally" name="mode" value="geomtransformationreflectionhorizontally" type="radio"/> <label for="modeGeomtransformationreflectionhorizontally">Geometriai transzformáció: alakzat tükrözése - vízszintes, abszolút (rajzvászonhoz viszonyított)</label></li>
 			<li><input id="modeGeomtransformationreflectionvertically" name="mode" value="geomtransformationreflectionvertically" type="radio"/> <label for="modeGeomtransformationreflectionvertically">Geometriai transzformáció: alakzat tükrözése - függőleges, abszolút (rajzvászonhoz viszonyított)</label></li>
+
+			<li><input id="modeFigurepropertyeditor" name="mode" value="figurepropertyeditor" type="radio"/> <label for="modeFigurepropertyeditor">Alakzatalapadatok szöveges szerkeszthetősége + tulajdonságinfók</label></li>
 		</ul>
 		<div><em>Rendszerüzenetek:</em> <span id="msgConsole"></span></div>
 

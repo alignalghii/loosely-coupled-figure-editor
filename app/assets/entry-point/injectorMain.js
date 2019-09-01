@@ -26,7 +26,9 @@ onload = function (event)
 	var roomController        = new RoomController       (state, roomFactory, msgConsole);
 	var figureEditorController = new FigureEditorController(state, widgetFactories, msgConsole);  // @TODO: should not use the same `State` as `NormalModeController`
 	var geomTransformationController = new GeomTransformationController(state, widgetFactories, msgConsole);  // @TODO: should not use the same `State` as `NormalModeController`
-	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController); // @TODO make globalOriginFigure obsolete
+	const figurePropertyEditorController = new FigurePropertyEditorController(state, document, msgConsole);
+
+	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(widgetFactories, router);
 	var roomStampUI         = new RoomStampUI(document, roomBank, router);
 	var modeUI              = new ModeUI(document, router);

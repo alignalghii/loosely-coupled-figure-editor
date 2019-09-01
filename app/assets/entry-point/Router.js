@@ -1,4 +1,4 @@
-function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
@@ -7,6 +7,7 @@ function Router(state, normalModeController, compactModeController, roomControll
 	this.roomController        = roomController;
 	this.figureEditorController = figureEditorController;
 	this.geomTransformationController = geomTransformationController;
+	this.figurePropertyEditorController = figurePropertyEditorController;
 }
 
 Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: inputRoledData
@@ -135,7 +136,6 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 		}
 	}
 
-
 	{// @TODO: even more DRY
 		const scaleCases = {
 			geomtransformationscale         : ['doScale'                     , 'scale'                     ],
@@ -183,6 +183,14 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 		switch (eventType) {
 			case 'mouseup':
 				this.geomTransformationController.reflectionFlip(['doReflectVertically', 'reflectVertically'], ird.currentWEPos, ird.eitherTarget);
+				break;
+		}
+	}
+
+	if (this.state.mode == 'figurepropertyeditor') {
+		switch (eventType) {
+			case 'mouseup':
+				this.figurePropertyEditorController.main(ird.currentWEPos, ird.eitherTarget)
 				break;
 		}
 	}

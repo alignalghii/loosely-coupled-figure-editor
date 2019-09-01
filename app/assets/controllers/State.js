@@ -11,6 +11,8 @@ function State(toBeDomainStamp)
 	this.editorMoveFlag       = false      ; // FigureEditorController
 	this.maybeRotationArcSpan = ['nothing']; // GeomTransformationController
 	this.maybeScaleStressSpan = ['nothing']; // GeomTransformationController
+
+	this.mbFigurePropertyEditorForm = ['nothing']; // FigurePropertyEditorController
 }
 
 State.prototype.setDomainStampFrom = function (domainObject) /** MenuUI */

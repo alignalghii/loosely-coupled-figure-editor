@@ -124,3 +124,5 @@ const homogenityByEq = (paramEq, list) =>
 		['just', ['nothing']],
 		list
 	);
+
+const rotListRight1 = list => list.length == 0 ? [] : [list[list.length-1]].concat(list.filter((el, i) => i < list.length-1));

@@ -11,6 +11,7 @@ function testRunner()
 	      distanceHenceBehavior                   = new DistanceHenceBehavior,
 	      verticePathClickAlgebraBehavior         = new VerticePathClickAlgebraBehavior,
 	      figureEditorByProximityHeuristicBehavior = new FigureEditorByProximityHeuristicBehavior,
+	      polygonPropertyAlgebraBehavior          = new PolygonPropertyAlgebraBehavior,
 	      rotationArcSpanLogBehavior              = new RotationArcSpanLogBehavior,
 	      infinityBehavior                        = new InfinityBehavior,
 	      infinitesimalBehavior                   = new InfinitesimalBehavior,
@@ -41,6 +42,7 @@ function testRunner()
 	distanceHenceBehavior                  .shouldTestDistanceHenceBehavior                  () &&
 	verticePathClickAlgebraBehavior        .shouldTestVerticePathClickAlgebraBehavior        () &&
 	figureEditorByProximityHeuristicBehavior.shouldTestFigureEditorByProximityHeuristicBehavior() &&
+	polygonPropertyAlgebraBehavior         .shouldTestPolygonPropertyAlgebraBehavior         () &&
 	rotationArcSpanLogBehavior             .shouldTestRotationArcSpanLogBehavior             () &&
 	ccSubtreeBehavior                      .shouldTestCcSubtreeBehavior                      () &&
 	true;
