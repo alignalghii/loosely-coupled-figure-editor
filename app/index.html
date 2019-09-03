@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="UTF-8"/>
 		<title>Alakzatszerkesztő</title>
+		<link rel="stylesheet" href="assets/holy-grail.css"/>
 		<link rel="stylesheet" href="assets/graphics.css"/>
 		<link rel="stylesheet" href="../doc/doc.css"/>
 
@@ -162,64 +163,73 @@
 		<script src="assets/math/haskell/spec/RatioBehavior.js"></script>
 	</head>
 	<body>
-		<a href="../doc/help.html">Súgó</a>
-		<h1>Alakzatszerkesztő (refaktorizált változat)</h1>
-		<label for="sampleRoomBank">A következő beszúrható szobasablon:</label>
-		<select id="sampleRoomBank">
-		</select>
-		<br/>
-		<em>Egérértelmezési módok:</em>
-		<ul id="modes">
-			<li><input id="modeNormal"  name="mode" value="normal"  type="radio"/> <label for="modeNormal" >Normál vonszolás és fókuszkezelés</label></li>
-			<li><input id="modeCompact" name="mode" value="compact" type="radio"/> <label for="modeCompact">Kompakt mód (csak gyorstesztre, összevetésekre használt, &bdquo;mindentegybe&rdquo;-jellegű, elavult mód)</label></li>
-			<li><input id="modeFigureeditoradd"    name="mode" value="figureeditoradd"    type="radio"/> <label for="modeFigureeditoradd"   >Alakzatszerkesztés: csúcspont hozzáadása</label></li>
-			<li><input id="modeFigureeditordelete" name="mode" value="figureeditordelete" type="radio"/> <label for="modeFigureeditordelete">Alakzatszerkesztés: csúcspont törlése</label></li>
-			<li><input id="modeFigureeditormove"   name="mode" value="figureeditormove"   type="radio"/> <label for="modeFigureeditormove"  >Alakzatszerkesztés: csúcspont mozgatása</label></li>
-			<li><input id="modeGeomtransformationrotation" name="mode" value="geomtransformationrotation" type="radio"/> <label for="modeGeomtransformationrotation">Geometriai transzformáció: alakzat forgatása</label></li>
+		<div id="HolyGrail_header">
+			<a href="../doc/help.html">Súgó</a>
+			<h1>Alakzatszerkesztő (refaktorizált változat)</h1>
+		</div>
+		<div id="HolyGrail_left">
+			<em>Egérértelmezési módok:</em>
+			<ul id="modes">
+				<li><input id="modeNormal"  name="mode" value="normal"  type="radio"/> <label for="modeNormal" >Normál vonszolás és fókuszkezelés</label></li>
+				<li><input id="modeCompact" name="mode" value="compact" type="radio"/> <label for="modeCompact">Kompakt mód (csak gyorstesztre, összevetésekre használt, &bdquo;mindentegybe&rdquo;-jellegű, elavult mód)</label></li>
+				<li><input id="modeFigureeditoradd"    name="mode" value="figureeditoradd"    type="radio"/> <label for="modeFigureeditoradd"   >Alakzatszerkesztés: csúcspont hozzáadása</label></li>
+				<li><input id="modeFigureeditordelete" name="mode" value="figureeditordelete" type="radio"/> <label for="modeFigureeditordelete">Alakzatszerkesztés: csúcspont törlése</label></li>
+				<li><input id="modeFigureeditormove"   name="mode" value="figureeditormove"   type="radio"/> <label for="modeFigureeditormove"  >Alakzatszerkesztés: csúcspont mozgatása</label></li>
+				<li><input id="modeGeomtransformationrotation" name="mode" value="geomtransformationrotation" type="radio"/> <label for="modeGeomtransformationrotation">Geometriai transzformáció: alakzat forgatása</label></li>
 
-			<li><input id="modeGeomtransformationscale" name="mode" value="geomtransformationscale" type="radio"/> <label for="modeGeomtransformationscale">Geometriai transzformáció: alakzat átméretezése</label></li>
-			<li><input id="modeGeomtransformationscaleXRef" name="mode" value="geomtransformationscalexref" type="radio"/> <label for="modeGeomtransformationscaleXRef">Geometriai transzformáció: alakzat átméretezése vízszintes aránytorzítással, területtorzító, relatív viszonyítás</label></li>
-			<li><input id="modeGeomtransformationscaleYRef" name="mode" value="geomtransformationscaleyref" type="radio"/> <label for="modeGeomtransformationscaleYRef">Geometriai transzformáció: alakzat átméretezése függőleges aránytorzítással, területtorzító, relatív viszonyítás</label></li>
-			<li><input id="modeGeomtransformationscaleXYAreaRef" name="mode" value="geomtransformationscalesyarearef" type="radio"/> <label for="modeGeomtransformationscaleXYAreaRef">Geometriai transzformáció: alakzat átméretezése vízszintes aránytorzítással, területtartó, relatív viszonyítás</label></li>
-			<li><input id="modeGeomtransformationscaleYXAreaRef" name="mode" value="geomtransformationscaleyxarearef" type="radio"/> <label for="modeGeomtransformationscaleYXAreaRef">Geometriai transzformáció: alakzat átméretezése függőleges aránytorzítással, területtartó, relatív viszonyítás</label></li>
-			<li><input id="modeGeomtransformationscaleX" name="mode" value="geomtransformationscalex" type="radio"/> <label for="modeGeomtransformationscaleX">Geometriai transzformáció: alakzat átméretezése vízszintes aránytorzítással, területtorzító, abszolút viszonyítás</label></li>
-			<li><input id="modeGeomtransformationscaleY" name="mode" value="geomtransformationscaley" type="radio"/> <label for="modeGeomtransformationscaleY">Geometriai transzformáció: alakzat átméretezése függőleges aránytorzítással, területtorzító, abszolút viszonyítás</label></li>
-			<li><input id="modeGeomtransformationscaleXYArea" name="mode" value="geomtransformationscalesyarea" type="radio"/> <label for="modeGeomtransformationscaleXYArea">Geometriai transzformáció: alakzat átméretezése vízszintes aránytorzítással, területtartó, abszolút viszonyítás</label></li>
-			<li><input id="modeGeomtransformationscaleYXArea" name="mode" value="geomtransformationscaleyxarea" type="radio"/> <label for="modeGeomtransformationscaleYXArea">Geometriai transzformáció: alakzat átméretezése függőleges aránytorzítással, területtartó, abszolút viszonyítás</label></li>
+				<li><input id="modeGeomtransformationscale" name="mode" value="geomtransformationscale" type="radio"/> <label for="modeGeomtransformationscale">Geometriai transzformáció: alakzat átméretezése</label></li>
+				<li><input id="modeGeomtransformationscaleXRef" name="mode" value="geomtransformationscalexref" type="radio"/> <label for="modeGeomtransformationscaleXRef">Geometriai transzformáció: alakzat átméretezése vízszintes aránytorzítással, területtorzító, relatív viszonyítás</label></li>
+				<li><input id="modeGeomtransformationscaleYRef" name="mode" value="geomtransformationscaleyref" type="radio"/> <label for="modeGeomtransformationscaleYRef">Geometriai transzformáció: alakzat átméretezése függőleges aránytorzítással, területtorzító, relatív viszonyítás</label></li>
+				<li><input id="modeGeomtransformationscaleXYAreaRef" name="mode" value="geomtransformationscalesyarearef" type="radio"/> <label for="modeGeomtransformationscaleXYAreaRef">Geometriai transzformáció: alakzat átméretezése vízszintes aránytorzítással, területtartó, relatív viszonyítás</label></li>
+				<li><input id="modeGeomtransformationscaleYXAreaRef" name="mode" value="geomtransformationscaleyxarearef" type="radio"/> <label for="modeGeomtransformationscaleYXAreaRef">Geometriai transzformáció: alakzat átméretezése függőleges aránytorzítással, területtartó, relatív viszonyítás</label></li>
+				<li><input id="modeGeomtransformationscaleX" name="mode" value="geomtransformationscalex" type="radio"/> <label for="modeGeomtransformationscaleX">Geometriai transzformáció: alakzat átméretezése vízszintes aránytorzítással, területtorzító, abszolút viszonyítás</label></li>
+				<li><input id="modeGeomtransformationscaleY" name="mode" value="geomtransformationscaley" type="radio"/> <label for="modeGeomtransformationscaleY">Geometriai transzformáció: alakzat átméretezése függőleges aránytorzítással, területtorzító, abszolút viszonyítás</label></li>
+				<li><input id="modeGeomtransformationscaleXYArea" name="mode" value="geomtransformationscalesyarea" type="radio"/> <label for="modeGeomtransformationscaleXYArea">Geometriai transzformáció: alakzat átméretezése vízszintes aránytorzítással, területtartó, abszolút viszonyítás</label></li>
+				<li><input id="modeGeomtransformationscaleYXArea" name="mode" value="geomtransformationscaleyxarea" type="radio"/> <label for="modeGeomtransformationscaleYXArea">Geometriai transzformáció: alakzat átméretezése függőleges aránytorzítással, területtartó, abszolút viszonyítás</label></li>
 
-			<li><input id="modeGeomtransformationreflectionhorizontallyref" name="mode" value="geomtransformationreflectionhorizontallyref" type="radio"/> <label for="modeGeomtransformationreflectionhorizontallyref">Geometriai transzformáció: alakzat tükrözése - vízszintes, viszonylagos (saját magához viszonyított)</label></li>
-			<li><input id="modeGeomtransformationreflectionverticallyref" name="mode" value="geomtransformationreflectionverticallyref" type="radio"/> <label for="modeGeomtransformationreflectionverticallyref">Geometriai transzformáció: alakzat tükrözése - függőleges, viszonylagos (saját magához viszonyított)</label></li>
-			<li><input id="modeGeomtransformationreflectionhorizontally" name="mode" value="geomtransformationreflectionhorizontally" type="radio"/> <label for="modeGeomtransformationreflectionhorizontally">Geometriai transzformáció: alakzat tükrözése - vízszintes, abszolút (rajzvászonhoz viszonyított)</label></li>
-			<li><input id="modeGeomtransformationreflectionvertically" name="mode" value="geomtransformationreflectionvertically" type="radio"/> <label for="modeGeomtransformationreflectionvertically">Geometriai transzformáció: alakzat tükrözése - függőleges, abszolút (rajzvászonhoz viszonyított)</label></li>
+				<li><input id="modeGeomtransformationreflectionhorizontallyref" name="mode" value="geomtransformationreflectionhorizontallyref" type="radio"/> <label for="modeGeomtransformationreflectionhorizontallyref">Geometriai transzformáció: alakzat tükrözése - vízszintes, viszonylagos (saját magához viszonyított)</label></li>
+				<li><input id="modeGeomtransformationreflectionverticallyref" name="mode" value="geomtransformationreflectionverticallyref" type="radio"/> <label for="modeGeomtransformationreflectionverticallyref">Geometriai transzformáció: alakzat tükrözése - függőleges, viszonylagos (saját magához viszonyított)</label></li>
+				<li><input id="modeGeomtransformationreflectionhorizontally" name="mode" value="geomtransformationreflectionhorizontally" type="radio"/> <label for="modeGeomtransformationreflectionhorizontally">Geometriai transzformáció: alakzat tükrözése - vízszintes, abszolút (rajzvászonhoz viszonyított)</label></li>
+				<li><input id="modeGeomtransformationreflectionvertically" name="mode" value="geomtransformationreflectionvertically" type="radio"/> <label for="modeGeomtransformationreflectionvertically">Geometriai transzformáció: alakzat tükrözése - függőleges, abszolút (rajzvászonhoz viszonyított)</label></li>
 
-			<li><input id="modeFigurepropertyeditor" name="mode" value="figurepropertyeditor" type="radio"/> <label for="modeFigurepropertyeditor">Alakzatalapadatok szöveges szerkeszthetősége + tulajdonságinfók</label></li>
-		</ul>
-		<div><em>Rendszerüzenetek:</em> <span id="msgConsole"></span></div>
-		<form id="figurepropertyeditor"></form>
-<div id="section-operations">
-		<div><em>Fókuszált alakzathoz kötődő gomb- és gyorsbilentyűparancsok (kattints a dobozkára, vagy alternatívaként nyomd meg a megadott billentyű-gyorsparancsot a billentyűzeten):</em></div>
-		<ul id="operations">
-			<li><button id="operationCreate">Új alakzat beszúrása</button> (vagy &bdquo;<span class="keystroke">+</span>&rdquo;-billentyű)</li>
-			<li><button id="operationDelete">Fókuszált alakzat törlése</button> (vagy &bdquo;<span class="keystroke">-</span>&rdquo;, vagy &bdquo;<span class="keystroke">DEL</span>&rdquo;-billentyű)</li>
-			<li><button id="operationUnfigfocus">Alakzatfókusz levétele</button> (vagy &bdquo;<span class="keystroke">ESC</span>&rdquo;-billentyű)</li>
-		</ul>
-
-		<h2>Vásznak</h2>
-		A forrásvászonról a célvászonra az alakzatok egyszerűen áthúzhatóak (és visszafelé is). Mindkét vásznon értelemszerűen működik az összes egyéb művelet (alakzatszerkesztés csúcsok hozzáadásával, törlésével, mozgatásával, geometriai transzformációk, alakzat hozzáadása vagy törlése listából kiválalasztott sablonalak alapján).
-		<div><em>Forrásvászon:</em></div>
-		<!-- Credit to https://www.w3schools.com/graphics/svg_feoffset.asp -->
-		<svg id="svgRoot" width="600" height="400">
-			<defs>
-				<filter id="shadow" x="-0.2" y="-0.2" width="200%" height="200%">
-					<feOffset result="offOut" in="SourceGraphic" dx="8" dy="8" />
-					<feColorMatrix result="matrixOut" in="offOut" type="matrix" values="0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0" />
-					<feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="3" />
-					<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-				</filter>
-			</defs>
+				<li><input id="modeFigurepropertyeditor" name="mode" value="figurepropertyeditor" type="radio"/> <label for="modeFigurepropertyeditor">Alakzatalapadatok szöveges szerkeszthetősége + tulajdonságinfók</label></li>
+			</ul>
+			<div><em>Alakzattulajdonság-szerkesztés</em></div>
+			<form id="figurepropertyeditor"></form>
+		</div>
+		<div id="HolyGrail_main">
+			<h2>Vásznak</h2>
+			A forrásvászonról a célvászonra az alakzatok egyszerűen áthúzhatóak (és visszafelé is). Mindkét vásznon értelemszerűen működik az összes egyéb művelet (alakzatszerkesztés csúcsok hozzáadásával, törlésével, mozgatásával, geometriai transzformációk, alakzat hozzáadása vagy törlése listából kiválalasztott sablonalak alapján).
+			<div><em>Célvászon:</em></div>
+			<svg id="svgRoot2" width="600" height="400">
 		</svg>
-		<div><em>Célvászon:</em></div>
-		<svg id="svgRoot2" width="600" height="400">
-		</svg>
+		</div>
+		<div id="HolyGrail_right">
+			<label for="sampleRoomBank">A következő beszúrható szobasablon:</label>
+			<select id="sampleRoomBank">
+			</select>
+			<br/>
+			<div id="section-operations">
+				<div><em>Fókuszált alakzathoz kötődő gomb- és gyorsbilentyűparancsok (kattints a dobozkára, vagy alternatívaként nyomd meg a megadott billentyű-gyorsparancsot a billentyűzeten):</em></div>
+				<ul id="operations">
+					<li><button id="operationCreate">Új alakzat beszúrása</button> (vagy &bdquo;<span class="keystroke">+</span>&rdquo;-billentyű)</li>
+					<li><button id="operationDelete">Fókuszált alakzat törlése</button> (vagy &bdquo;<span class="keystroke">-</span>&rdquo;, vagy &bdquo;<span class="keystroke">DEL</span>&rdquo;-billentyű)</li>
+					<li><button id="operationUnfigfocus">Alakzatfókusz levétele</button> (vagy &bdquo;<span class="keystroke">ESC</span>&rdquo;-billentyű)</li>
+				</ul>
+			</div>
+			<div><em>Forrásvászon:</em></div>
+			<!-- Credit to https://www.w3schools.com/graphics/svg_feoffset.asp -->
+			<svg id="svgRoot" width="600" height="400">
+				<defs>
+					<filter id="shadow" x="-0.2" y="-0.2" width="200%" height="200%">
+						<feOffset result="offOut" in="SourceGraphic" dx="8" dy="8" />
+						<feColorMatrix result="matrixOut" in="offOut" type="matrix" values="0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0" />
+						<feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="3" />
+						<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+					</filter>
+				</defs>
+			</svg>
+		</div>
+		<div id="HolyGrail_footer"><em>Rendszerüzenetek:</em> <span id="msgConsole"></span></div>
 	</body>
 </html>

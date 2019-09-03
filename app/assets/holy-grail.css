@@ -1,0 +1,14 @@
+	body {
+	display: grid;
+	grid-template-columns: auto auto auto;
+	grid-template-areas:
+		"header header header"
+		"left   main   right"
+		"footer footer footer";
+}
+
+#HolyGrail_header {grid-area: header}
+#HolyGrail_left   {grid-area: left  }
+#HolyGrail_main   {grid-area: main  }
+#HolyGrail_right  {grid-area: right }
+#HolyGrail_footer {grid-area: footer}
