@@ -62,7 +62,7 @@ const internalAngle = (rotDir, ev, fv) =>
 function editEdge_aux(makeTransformationToBeConjugated, vertices, i, a)
 {
 	if (i < 0 || i >= vertices.length || i != Math.floor(i)) throw '`editEdge`: invalid edge index';
-	const O = centroid(vertices);
+	const O = centroid(vertices);  // @TODO works around centroid, does not handle the case when figure's grasp point does not coincide with its centroid
 	const edgeVector = vectorOfSegment(tour(vertices)[i]);
 	const q = a / vectorLength(edgeVector);
 	const phi = signedRotAngleOfVectors([1, 0], edgeVector) * Math.PI / 180;

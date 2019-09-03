@@ -158,3 +158,54 @@ Figure.prototype.doUnscaleXYArealInvariantRef = function (q)
 Figure.prototype.perimeter = function () {return perimeter(this.vertices);};
 
 // @TODO: put to a spearate class? Figure is already a too large class. `addVertex`, `deleteVertex`, `moveVertex` by proximity heurietics should come directly into `Figure`, or should we use a spearate `FigureEditorByProximityHeuristic` class?
+
+
+Figure.prototype.editEdge = function (i, a) // reuse common part with `editEdge_aux`
+{
+	const vertices = this.vertices;
+
+	const O = centroid(vertices);  // @TODO works around centroid, does not handle the case when figure's grasp point does not coincide with its centroid
+	const edgeVector = vectorOfSegment(tour(vertices)[i]);
+	const q = a / vectorLength(edgeVector);
+	const phi = signedRotAngleOfVectors([1, 0], edgeVector) * Math.PI / 180;
+	const rotate     = makeRotate(-phi, O);
+	const rotateBack = makeRotate( phi, O);
+	const transformationToBeConjugated = makeScaleX(q, O[0]);
+	const edit = p => rotateBack(transformationToBeConjugated(rotate(p)));
+
+	this.vertices = vertices.map(edit);
+
+	this.referenceAngle = signedRotAngleOfVectors(
+		[1, 0],
+		edit(
+			orientUnitVector(
+				this.referenceAngle
+			)
+		)
+	) * Math.PI / 180;
+};
+
+Figure.prototype.editEdge_areaInvariant = function (i, a) // @TODO works around centroid, does not handle the case when figure's grasp point does not coincide with its centroid
+{
+	const vertices = this.vertices;
+
+	const O = centroid(vertices);  // @TODO works around centroid, does not handle the case when figure's grasp point does not coincide with its centroid
+	const edgeVector = vectorOfSegment(tour(vertices)[i]);
+	const q = a / vectorLength(edgeVector);
+	const phi = signedRotAngleOfVectors([1, 0], edgeVector) * Math.PI / 180;
+	const rotate     = makeRotate(-phi, O);
+	const rotateBack = makeRotate( phi, O);
+	const transformationToBeConjugated = makeScaleXYArealInvariant(q, O);
+	const edit = p => rotateBack(transformationToBeConjugated(rotate(p)));
+
+	this.vertices = vertices.map(edit);
+
+	this.referenceAngle = signedRotAngleOfVectors(
+		[1, 0],
+		edit(
+			orientUnitVector(
+				this.referenceAngle
+			)
+		)
+	) * Math.PI / 180;
+};

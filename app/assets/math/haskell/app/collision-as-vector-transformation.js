@@ -28,7 +28,7 @@ function couldTeleport(fallingFigure, board, infinitezimalDisplacement)
 	return !invalidSituationOnBoardBut(probeFigure, fallingFigure, board);
 }
 
-function couldTeleportByFigTransformCommand(fallingFigure, board, figTransformCommand, args)
+function couldTeleportByFigTransformCommand(fallingFigure, board, figTransformCommand)
 {
 	const probeFigure = fallingFigure.translation([0, 0]);
 	figTransformCommand(probeFigure);
@@ -40,6 +40,31 @@ function couldTeleportByFigTransformCommand_(fallingFigure, board, figTransformC
 	const probeFigure = fallingFigure.translation([0, 0]);
 	probeFigure[figTransformCommand].apply(probeFigure, args);
 	return !invalidSituationOnBoardBut(probeFigure, fallingFigure, board);
+}
+
+function confirm_or_interpolate_realParamOfCommand(fallingFigure, board, figTransformCommandWithRealParameter, safeOldValue, challengingNewValue, counterLimit)
+{
+	const probeFigure = fallingFigure.translation([0, 0]);
+	figTransformCommandWithRealParameter(probeFigure, challengingNewValue);
+	return !invalidSituationOnBoardBut(probeFigure, fallingFigure, board) ?
+	         [true , challengingNewValue]
+	       : [false, interpolate_realParamOfCommand(fallingFigure, board, figTransformCommandWithRealParameter, safeOldValue, challengingNewValue, counterLimit)];
+}
+
+function interpolate_realParamOfCommand(fallingFigure, board, figTransformCommandWithRealParameter, validValue, invalidValue, counterLimit)
+{
+	for (let counter = 0; counter < counterLimit; counter++) {
+		const tryValue = (validValue + invalidValue) / 2;
+		const probeFigure = fallingFigure.translation([0, 0]);
+		figTransformCommandWithRealParameter(probeFigure, tryValue);
+		const isValid = !invalidSituationOnBoardBut(probeFigure, fallingFigure, board);
+		if (isValid) {
+			validValue = tryValue;
+		} else {
+			invalidValue = tryValue;
+		}
+	}
+	return validValue;
 }
 
 function detectSlide(fallingFigure, board, infinitezimalDisplacement, minFallTargetFigures, contractScale)

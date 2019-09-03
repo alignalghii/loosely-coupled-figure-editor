@@ -14,6 +14,36 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 {
 	if (eventType == 'change') {
 		if (Eq.eq(inputSignature, ['string', 'string'])) this.normalModeController.changeMode (ird.mode        ); // @TODO common
+		if (Eq.eq(inputSignature, ['edge'  , 'number'])) {
+			maybeMap(
+				widget => {
+					const board = this.figureEditorController.widgetFactoryForEitherTarget(['right', widget]).bijectionSvgToGeom; // @TODO: !!!!!!!!!!!!!!!!!
+					const oldValue = getEdgeMeasures(widget.high.vertices)[ird.edge];
+					const areaInvariance = this.figurePropertyEditorController.state.areaInvariance;
+					const [indirect, validValue] = confirm_or_interpolate_realParamOfCommand(
+						widget.high,
+						board,
+						areaInvariance ? (fig, val) => fig.editEdge_areaInvariant(ird.edge, val)
+						               : (fig, val) => fig.editEdge              (ird.edge, val),
+						oldValue,
+						ird.value,
+						8 + Math.log2(ird.value)
+					);
+					if (areaInvariance) {
+						widget.editEdge_areaInvariant(ird.edge, validValue);
+					} else {
+						widget.editEdge              (ird.edge, validValue);
+					}
+					this.figurePropertyEditorController.open(widget);
+					this.figurePropertyEditorController.msgConsole.innerHTML = indirect ? `Alakzattulajdonság szöveges szerkesztése közvetlenül sikeres: ${widget.domainObject.name} alakzat ${this.figurePropertyEditorController.edgeNames[ird.edge]} éle ${oldValue} -> ${validValue}` : `Alakzattulajdonság szöveges szerkesztése a kért ${ird.value} értékkel ütközéshez vezetne, ezért interpolációval közelítünk: ${widget.domainObject.name} alakzat ${this.figurePropertyEditorController.edgeNames[ird.edge]} éle ${oldValue} -> ${validValue}`;
+				},
+				this.figurePropertyEditorController.state.mbFigurePropertyEditorForm
+			);
+		}
+		if (Eq.eq(inputSignature, ['areaInvariance', 'bool'])) {
+			this.figurePropertyEditorController.state.areaInvariance = ird.areaInvariance;
+			console.log(this.figurePropertyEditorController.state.areaInvariance);
+		}
 		if (Eq.eq(inputSignature, ['Room'            ])) this.normalModeController.changeStamp(ird.selectedRoom); // @TODO common
 	}
 	if (this.state.mode == 'compact') {

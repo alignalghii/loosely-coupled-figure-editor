@@ -87,3 +87,6 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
     - érintkezni csak kölcsönösen végpontjaikban érintkezhetnek
     - csúcsból csak két szakasz indulhat ki.
  - A protabilitást, hordozhatóságot mindenképp vizsgálni kell, legfontosabb a dokumentáltan is experimental vonások kiváltása. Két ilye nbiztos van: `Array::flatMap` és `DOM-Node::after`.
+ - Ha az alakzattulajdonságok űrlapján területtartás kérek, és nagyon hosszúra nyújtatok egy téglalapot, akkor szélessége epszilon alá fog keskenyedni, ilyekor az ütközésérzékelő a holtjáték-ráhagyás miatt nem fogja érzékelni az ürközést! Lesz egy szomzédokba beledöfő hosszú vonal. Ezt vissza lehet zsugorítani, de csak nem-ütköző méretre. a 90000-es hosszúságot vissza lehet venni 80000-re (hisz az sem ütközik), 300-ra már nem lehet visszavenni (hisz az már nem megy epszilon alá, így már ütküzik). Kicsi, valóban nem ütköző értékre, pl. 2-re vissza lehet venni.
+ - Eldönteni, hogy a jelenleg a `textual-widgets` mappában a ...`UI.js` fájlokat ne nevezzük át `widgets` mappára és ...`Widget.js` névre.
+ - Status bar (Statusleiste): a jelenleg msgConsole nevű tájékokatató kis konzolüzenetes rész kerüljön legalul egy teljesszéles sorba!

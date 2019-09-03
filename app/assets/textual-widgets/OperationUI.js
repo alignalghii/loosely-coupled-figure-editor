@@ -1,3 +1,5 @@
+/** Az ,,fókuszált alakzatokhoz kötődő műveletek'' listájában a gombbal is kezdememényezhető műveletek kattintáskezelése */
+
 function OperationUI(aDocument, router)
 {
 	this.router = router;

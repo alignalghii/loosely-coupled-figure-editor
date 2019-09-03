@@ -8,6 +8,8 @@ function FigurePropertyEditorController(state, aDocument, msgConsole)
 	this.vertexNames =      'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 	this.angleNames  =      'αβγδεζηθικλμνξοπρστυφχψω'  .split('');
 	this.edgeNames   = tour('ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')).map(([A, B]) => `${A}${B}`);
+
+	this.element = aDocument.getElementById('figurepropertyeditor');
 }
 
 FigurePropertyEditorController.prototype.main = function (currentWEPos, eitherTarget)
@@ -22,8 +24,8 @@ FigurePropertyEditorController.prototype.main = function (currentWEPos, eitherTa
 
 FigurePropertyEditorController.prototype.open = function (widget)
 {
-	const form_old = this.document.getElementById('figurepropertyeditor');
-	if (form_old) form_old.remove();
+	const content_old = this.document.getElementById('figurepropertyeditor_content');
+	if (content_old) content_old.remove();
 
 	this.state.mbFigurePropertyEditorForm = ['just', widget];
 
@@ -33,11 +35,16 @@ FigurePropertyEditorController.prototype.open = function (widget)
 	const perimeter     = getPerimeter(vertices);
 	const area          = getArea(vertices);
 	const n             = vertices.length;
-	const form = this.document.createElement('form');
-	form.id = 'figurepropertyeditor';
+	const content = this.document.createElement('div');
+	content.id = 'figurepropertyeditor_content';
+	this.element.appendChild(content);
+
 	const spanN = this.document.createElement('span');
 	spanN.id = 'n';
 	spanN.innerHTML = `${n}-szög`;
+	const spanName = this.document.createElement('span');
+	spanName.id = 'name';
+	spanName.innerHTML = widget.domainObject.name;
 	const spanArea = this.document.createElement('span');
 	spanArea.id = 'area';
 	spanArea.innerHTML = area;
@@ -45,23 +52,38 @@ FigurePropertyEditorController.prototype.open = function (widget)
 	spanPerimeter.id = 'perimeter';
 	spanPerimeter.innerHTML = perimeter;
 	const ulAP  = this.document.createElement('ul');
+	const liName = this.document.createElement('li');
 	const liN = this.document.createElement('li');
 	const liA = this.document.createElement('li');
 	const liP = this.document.createElement('li');
+	liName.innerHTML = 'Név: ';
+	liName.appendChild(spanName);
 	liN.appendChild(spanN);
 	liA.innerHTML = 'Terület: ';
 	liA.appendChild(spanArea);
 	liP.innerHTML = 'Kerület: ';
 	liP.appendChild(spanPerimeter);
+	ulAP.appendChild(liName);
 	ulAP.appendChild(liN);
 	ulAP.appendChild(liA);
 	ulAP.appendChild(liP);
-	form.appendChild(ulAP);
-	this.msgConsole.after(form); // @TODO experimental, not portable
+	content.appendChild(ulAP);
+
+	const areaInvarianceRadioDiv = this.document.createElement('div');
+	const areaInvarianceRadioSpan = this.document.createElement('span');
+	areaInvarianceRadioSpan.innerHTML = 'Területtartás';
+	const areaInvarianceRadio = this.document.createElement('input');
+	areaInvarianceRadio.type   = 'checkbox';
+	areaInvarianceRadio.id   = 'areainvariance';
+	areaInvarianceRadio.name = 'areainvariance';
+	areaInvarianceRadio.checked = this.state.areaInvariance;
+	content.appendChild(areaInvarianceRadioDiv);
+	areaInvarianceRadioDiv.appendChild(areaInvarianceRadio);
+	areaInvarianceRadioDiv.appendChild(areaInvarianceRadioSpan);
 
 	const table = this.document.createElement('table');
 	table.id = 'edgeAndAngleMeasures';
-	form.appendChild(table);
+	content.appendChild(table);
 	const edgeAndAngleMeasures = getEdgeAndAngleMeasures(vertices);
 	for (let i in edgeAndAngleMeasures) {
 		const [edge, angle] = edgeAndAngleMeasures[i];
@@ -95,6 +117,6 @@ FigurePropertyEditorController.prototype.close = function ()
 {
 	this.state.mbFigurePropertyEditorForm = ['nothing'];
 
-	const form = this.document.getElementById('figurepropertyeditor');
-	if (form) form.remove();
+	const content = this.document.getElementById('figurepropertyeditor_content');
+	if (content) content.remove();
 };

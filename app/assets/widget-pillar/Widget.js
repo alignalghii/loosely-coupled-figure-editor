@@ -4,8 +4,8 @@
 // @TODO common ancestor with `WigetEventPosition`. Note also the formal sameness of the constructors (only the typing differs)
 function Widget(bijectionGeomToDomain, coordSysTransformer, bijectionSvgToGeom,    domainObject, high, low)
 {
-	this.bijectionGeomToDomain = bijectionGeomToDomain;
-	this.coordSysTransformer = coordSysTransformer;
+	this.bijectionGeomToDomain = bijectionGeomToDomain; // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
+	this.coordSysTransformer = coordSysTransformer;     // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
 	this.bijectionSvgToGeom         = bijectionSvgToGeom;
 
 	this.domainObject = domainObject;
@@ -62,7 +62,7 @@ Widget.prototype.updateDownward = function ()
 
 Widget.prototype.delete = function ()
 {
-	this.bijectionSvgToGeom.delete(this.low);
+	this.bijectionSvgToGeom.delete(this.low); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
 	deletePolygonChild(this.low);
 };
 
@@ -81,12 +81,12 @@ Widget.prototype.changeBoardsFor = function (targetBoard, targetBusinessBoard)
 	targetBusinessBoard.set(this.high, this.domainObject);
 
 	// Unsubscribe from own (collaborator) boards:
-	this.bijectionSvgToGeom   .delete(this.low );
-	this.bijectionGeomToDomain.delete(this.high);
+	this.bijectionSvgToGeom   .delete(this.low ); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
+	this.bijectionGeomToDomain.delete(this.high); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
 
 	// Update collaborators:
-	this.bijectionSvgToGeom    = targetBoard;
-	this.bijectionGeomToDomain = targetBusinessBoard;
+	this.bijectionSvgToGeom    = targetBoard;         // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
+	this.bijectionGeomToDomain = targetBusinessBoard; // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
 };
 
 // Geometrical transforamtions
@@ -108,3 +108,8 @@ Widget.prototype.scaleXRef = function (q) {this.high.doScaleXRef(q); this.update
 Widget.prototype.scaleYRef = function (q) {this.high.doScaleYRef(q); this.updateDownward();};
 Widget.prototype.scaleXYArealInvariantRef = function (q) {this.high.doScaleXYArealInvariantRef(q); this.updateDownward();};
 Widget.prototype.unscaleXYArealInvariantRef = function (q) {this.high.doUnscaleXYArealInvariantRef(q); this.updateDownward();};
+
+// Figure property editor
+
+Widget.prototype.editEdge               = function (i, a) {this.high.editEdge              (i, a); this.updateDownward();};
+Widget.prototype.editEdge_areaInvariant = function (i, a) {this.high.editEdge_areaInvariant(i, a); this.updateDownward();};

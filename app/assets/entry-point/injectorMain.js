@@ -34,7 +34,9 @@ onload = function (event)
 	var modeUI              = new ModeUI(document, router);
 	var operationUI         = new OperationUI(document, router);
 	var keyboardUI          = new KeyboardUI(document, router);
-	var app                 = new App(widgetEventPillar, roomStampUI, modeUI, operationUI, keyboardUI); // @TODO Law of Demeter, see inside
+	const figurePropertyEditorUI = new FigurePropertyEditorUI(document, router);
+
+	var app                 = new App(widgetEventPillar, roomStampUI, modeUI, operationUI, keyboardUI, figurePropertyEditorUI); // @TODO Law of Demeter, see inside
 
 	//console.log('App: live run');
 	app.run();
