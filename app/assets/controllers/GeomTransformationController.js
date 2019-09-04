@@ -1,8 +1,8 @@
-function GeomTransformationController(state, widgetFactories, msgConsole)
+function GeomTransformationController(state, widgetFactories, statusBarDriver)
 {
 	this.state           = state;
 	this.widgetFactories = widgetFactories;
-	this.msgConsole      = msgConsole;
+	this.statusBarDriver = statusBarDriver;
 }
 
 GeomTransformationController.prototype = Object.create(Controller.prototype);
@@ -23,16 +23,16 @@ GeomTransformationController.prototype.openRotationArcSpan = function (currentWE
 		},
 		maybeNearestFigureHence(board, currentWEPos)
 	);
-	this.msgConsole.innerHTML = consoleMessage;
+	this.statusBarDriver.report(consoleMessage);
 };
 
 GeomTransformationController.prototype.sustainRotationArcSpan = function (currentWEPos)
 {
 	maybe_exec(
-		() => {this.msgConsole.innerHTML = 'Jelöld ki a kifeszítendő forgatásív kezdőpozícióját...';},
+		() => this.statusBarDriver.report('Jelöld ki a kifeszítendő forgatásív kezdőpozícióját...'),
 		rotationArcSpan => {
 			const log = rotationArcSpan.stepOrWaitAlsoLog(currentWEPos); // @TODO: Discuss breach of command-query separation principle
-			this.msgConsole.innerHTML = log.message();
+			this.statusBarDriver.report(log.message());
 		},
 		this.state.maybeRotationArcSpan
 	);
@@ -41,7 +41,7 @@ GeomTransformationController.prototype.sustainRotationArcSpan = function (curren
 GeomTransformationController.prototype.closeRotationArcSpan = function ()
 {
 	this.state.maybeRotationArcSpan = ['nothing'];
-	this.msgConsole.innerHTML = 'Forgatásív véglegesítve és végrehajtva.';
+	this.statusBarDriver.report('Forgatásív véglegesítve és végrehajtva.');
 };
 
 /** Scale: */
@@ -59,16 +59,16 @@ GeomTransformationController.prototype.openScaleStressSpan = function (commandNa
 		},
 		maybeNearestFigureHence(board, currentWEPos)
 	);
-	this.msgConsole.innerHTML = consoleMessage;
+	this.statusBarDriver.report(consoleMessage);
 };
 
 GeomTransformationController.prototype.sustainScaleStressSpan = function (currentWEPos)
 {
 	maybe_exec(
-		() => {this.msgConsole.innerHTML = 'Jelöld ki a kifeszítendő átméretezőfeszültség kezdőpozícióját...';},
+		() => this.statusBarDriver.report('Jelöld ki a kifeszítendő átméretezőfeszültség kezdőpozícióját...'),
 		scaleStressSpan => {
 			const log = scaleStressSpan.stepOrWaitAlsoLog(currentWEPos); // @TODO: Discuss breach of command-query separation principle
-			this.msgConsole.innerHTML = '......';//log.message();
+			this.statusBarDriver.report('......');//log.message(); // @TODO: Plan log message
 		},
 		this.state.maybeScaleStressSpan
 	);
@@ -77,7 +77,7 @@ GeomTransformationController.prototype.sustainScaleStressSpan = function (curren
 GeomTransformationController.prototype.closeScaleStressSpan = function ()
 {
 	this.state.maybeScaleStressSpan = ['nothing'];
-	this.msgConsole.innerHTML = 'Forgatásív véglegesítve és végrehajtva.';
+	this.statusBarDriver.report('Forgatásív véglegesítve és végrehajtva.');
 };
 
 /** Reflection: */
@@ -92,9 +92,9 @@ GeomTransformationController.prototype.reflectionFlip = function ([figCommandNam
 		nearestFigure => {
 			const reflectionFlip = new ReflectionFlip([figCommandName, wdgCommandName], nearestFigure, widgetFactory);
 			const log = reflectionFlip.stepOrWaitAlsoLog();
-			return '...';//log.message();
+			return '...';//log.message(); // @TODO: Plan log message
 		},
 		maybeNearestFigureHence(board, currentWEPos)
 	);
-	this.msgConsole.innerHTML = consoleMessage;
+	this.statusBarDriver.report(consoleMessage);
 };

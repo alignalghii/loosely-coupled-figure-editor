@@ -1,8 +1,8 @@
-function FigureEditorController(state, widgetFactories, msgConsole)
+function FigureEditorController(state, widgetFactories, statusBarDriver)
 {
 	this.state           = state;
 	this.widgetFactories = widgetFactories;
-	this.msgConsole      = msgConsole;
+	this.statusBarDriver = statusBarDriver;
 }
 
 FigureEditorController.prototype = Object.create(Controller.prototype);
@@ -29,5 +29,5 @@ FigureEditorController.prototype.work = function (command, currentWEPos, eitherT
 		},
 		maybeNearestFigureHence(board, currentWEPos)
 	);
-	this.msgConsole.innerHTML = editorMessage;
+	this.statusBarDriver.report(editorMessage);
 };

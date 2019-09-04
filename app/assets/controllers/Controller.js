@@ -8,7 +8,7 @@ Controller.prototype.jumpWidgetToIfNeeded = function (targetCanvas, targetBoard,
 	maybeMap(
 		jumpingWidget => {
 			jumpingWidget.jumpTo(targetCanvas, targetBoard, targetBusinessBoard);
-			this.msgConsole.innerHTML = 'Alakzat átugrasztása vásznak között!';
+			this.statusBarDriver.report('Alakzat átugrasztása vásznak között!');
 		},
 		this.maybeJumpingWidget(targetCanvas)
 	);

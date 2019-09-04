@@ -18,27 +18,28 @@ onload = function (event)
 	// `.copy` is needed -- for another reason -- also at `widgetFactory.stampAt` and probably also at `app.populate` (hidden in `createWidgetFromDomain1`),
 	// because otherwise, any user transformations on the last stamped object would affect the future stamps (see `spec/last-inserted-room-owns-stamp--clone-error.mp4`).
 
-	var msgConsole          = document.getElementById('msgConsole');
+	const statusBarODriver           = new StatusBarDriver(document);
+	var roomStampDriver              = new RoomStampDriver(document, roomBank);
+	var modeIODriver                 = new ModeDriver(document);
+	var operationDriver              = new OperationDriver(document);
+	var keyboardDriver               = new KeyboardDriver(document);
+	const figurePropertyEditorDriver = new FigurePropertyEditorDriver(document);
+	const configIODriver             = new ConfigDriver(document);
 
 	var state               = new State(domainStamp);
-	var compactModeController = new CompactModeController(state, widgetFactories, widgetCollision, msgConsole); // widgetCollision = new WidgetCollision(board, audio) // board: Bijection low->fig as fig set
-	var normalModeController  = new NormalModeController (state, widgetFactories, msgConsole);
-	var roomController        = new RoomController       (state, roomFactory, msgConsole);
-	var figureEditorController = new FigureEditorController(state, widgetFactories, msgConsole);  // @TODO: should not use the same `State` as `NormalModeController`
-	var geomTransformationController = new GeomTransformationController(state, widgetFactories, msgConsole);  // @TODO: should not use the same `State` as `NormalModeController`
-	const figurePropertyEditorController = new FigurePropertyEditorController(state, document, msgConsole);
-	const configController  = new ConfigController(state, document, msgConsole);
+
+	var compactModeController            = new CompactModeController(state, widgetFactories, widgetCollision, statusBarODriver); // widgetCollision = new WidgetCollision(board, audio) // board: Bijection low->fig as fig set
+	var normalModeController             = new NormalModeController (state, widgetFactories, statusBarODriver);
+	var roomController                   = new RoomController       (state, roomFactory, statusBarODriver);
+	var figureEditorController           = new FigureEditorController(state, widgetFactories, statusBarODriver);  // @TODO: should not use the same `State` as `NormalModeController`
+	var geomTransformationController     = new GeomTransformationController(state, widgetFactories, statusBarODriver);  // @TODO: should not use the same `State` as `NormalModeController`
+	const figurePropertyEditorController = new FigurePropertyEditorController(state, document, statusBarODriver);
+	const configController               = new ConfigController(state, configIODriver, statusBarODriver);
 
 	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController); // @TODO make globalOriginFigure obsolete
-	var widgetEventPillar   = new WidgetEventPillar(widgetFactories, router);
-	var roomStampUI         = new RoomStampUI(document, roomBank, router);
-	var modeUI              = new ModeUI(document, router);
-	var operationUI         = new OperationUI(document, router);
-	var keyboardUI          = new KeyboardUI(document, router);
-	const figurePropertyEditorUI = new FigurePropertyEditorUI(document, router);
-	const configUI          = new ConfigUI(document, router);
+	var widgetEventPillar   = new WidgetEventPillar(widgetFactories, router); // @TODO: could it be regarded as a kind of device driver, and renamed + moved appropriately?
 
-	var app                 = new App(widgetEventPillar, roomStampUI, modeUI, operationUI, keyboardUI, figurePropertyEditorUI, configUI); // @TODO Law of Demeter, see inside
+	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorDriver, configIODriver); // @TODO Law of Demeter, see inside
 
 	//console.log('App: live run');
 	app.run();

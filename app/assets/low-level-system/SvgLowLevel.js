@@ -41,6 +41,9 @@ function pointsArgValue(svgVertices) {return svgVertices.map(stringifyPositionWi
  */
 function stringifyPositionWithComma([x, y]) {return '' + x + ',' + y + '';}
 
+
+/** @TODO: This is something very similar to what the `devices/*Device.js` (`textual-widgets/*UI.js`) modules do: */
+
 SvgLowLevel.prototype.subscribe = function (typeName, emptyCase, polygonCase) // @TODO a `return` valószínűleg fölösleges itt is, és az ezt használó  hivatkozott WidgetEventPillar.subscribe-on is
 {
 	const svgRootElement = this.svgRootElement;

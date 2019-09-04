@@ -1,12 +1,12 @@
-function CompactModeController(state, widgetFactories, widgetCollision, msgConsole) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function CompactModeController(state, widgetFactories, widgetCollision, statusBarDriver) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
 	this.widgetFactories = widgetFactories;
 	this.widgetCollision = widgetCollision;
 
-	this.msgConsole      = msgConsole;
-	this.msgConsole.innerHTML = 'Üdvözlet! Jó munkát!';
+	this.statusBarDriver = statusBarDriver;
+	this.statusBarDriver.greet();
 }
 
 CompactModeController.prototype = Object.create(Controller.prototype);

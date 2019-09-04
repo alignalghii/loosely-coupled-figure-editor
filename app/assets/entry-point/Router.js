@@ -36,7 +36,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 						widget.editEdge              (ird.edge, validValue);
 					}
 					this.figurePropertyEditorController.open(widget);
-					this.figurePropertyEditorController.msgConsole.innerHTML = indirect ? `Alakzattulajdonság szöveges szerkesztése közvetlenül sikeres: ${widget.domainObject.name} alakzat ${this.figurePropertyEditorController.edgeNames[ird.edge]} éle ${oldValue} -> ${validValue}` : `Alakzattulajdonság szöveges szerkesztése a kért ${ird.value} értékkel ütközéshez vezetne, ezért interpolációval közelítünk: ${widget.domainObject.name} alakzat ${this.figurePropertyEditorController.edgeNames[ird.edge]} éle ${oldValue} -> ${validValue}`;
+					this.figurePropertyEditorController.statusBarDriver.report(indirect ? `Alakzattulajdonság szöveges szerkesztése közvetlenül sikeres: ${widget.domainObject.name} alakzat ${this.figurePropertyEditorController.edgeNames[ird.edge]} éle ${oldValue} -> ${validValue}` : `Alakzattulajdonság szöveges szerkesztése a kért ${ird.value} értékkel ütközéshez vezetne, ezért interpolációval közelítünk: ${widget.domainObject.name} alakzat ${this.figurePropertyEditorController.edgeNames[ird.edge]} éle ${oldValue} -> ${validValue}`);
 				},
 				this.figurePropertyEditorController.state.mbFigurePropertyEditorForm
 			);

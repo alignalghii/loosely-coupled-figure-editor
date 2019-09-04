@@ -1,12 +1,12 @@
-function NormalModeController(state, widgetFactories, msgConsole) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function NormalModeController(state, widgetFactories, statusBarDriver) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
 	this.widgetFactories   = widgetFactories;
 	//this.widgetCollision = widgetCollision;
 
-	this.msgConsole = msgConsole;
-	this.msgConsole.innerHTML = 'Üdvözlet! Jó munkát!';
+	this.statusBarDriver = statusBarDriver;
+	this.statusBarDriver.greet();
 
 	this.epsilonDistance = widgetFactories[0].coordSysTransformer.epsilonDistance(); // @TODO Demeter priciple // @TODO: this arbitrary choice hides a conceptual smell
 	this.epsilonAngle    = widgetFactories[0].coordSysTransformer.epsilonAngle();    // @TODO Demeter priciple // @TODO: this arbitrary choice hides a conceptual smell
@@ -20,14 +20,12 @@ NormalModeController.prototype.mouseDown = function (position, eitherTarget)
 {
 	this.state.forgetDrag();
 	either(
-		canvas => {
-			this.msgConsole.innerHTML = 'Üres helyhez vagy helypozícióhoz kötődő művelet várható...';
-		},
+		canvas => this.statusBarDriver.report('Üres helyhez vagy helypozícióhoz kötődő művelet várható...'),
 		currentWidget => {
 			this.rememberWidget(currentWidget);
 			this.rememberPosition(position);
 			currentWidget.showGlittering();
-			this.msgConsole.innerHTML = 'Adott alakzaton vagy vonszolás, vagy egyéb művelet várható...';
+			this.statusBarDriver.report('Adott alakzaton vagy vonszolás, vagy egyéb művelet várható...');
 		},
 		eitherTarget
 	);
@@ -43,11 +41,11 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 			this.jumpWidgetToIfNeeded(targetCanvas, targetBoard, targetBusinessBoard);
 			const mbAllowable = this.state.prevWidget.domainObject.mbVectorTransfomationForAllowance(targetBoard)(infinitezimalDisplacement);
 			const allowable = fromMaybe_exec(
-				() => {this.msgConsole.innerHTML = 'Tiltott zóna!'; return [0, 0];},
+				() => {this.statusBarDriver.report('Tiltott zóna!'); return [0, 0];}, // @TODO: an axception should be thrown rather
 				mbAllowable
 			);
 			this.translatePrevWidgetAndRememberItsNewPosition(allowable);
-			if (vectorLength(infinitezimalDisplacement) > 0 && vectorLength(allowable) == 0) this.msgConsole.innerHTML = 'Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ' + JSON.stringify(infinitezimalDisplacement) + ' irányban.';
+			if (vectorLength(infinitezimalDisplacement) > 0 && vectorLength(allowable) == 0) this.statusBarDriver.report(`Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ${JSON.stringify(infinitezimalDisplacement)} irányban.`);
 			this.state.dragHasAlreadyBegun = true;
 		}
 	}
@@ -67,9 +65,9 @@ NormalModeController.prototype.mouseUp = function (currentWEPos, eitherTarget)
 			if (this.state.focus) {
 				this.state.focus.unshowFocus();
 				this.state.focus = null;
-				this.msgConsole.innerHTML = 'Helyfókusz megjegyezve, alakzatfókusz levéve.';
+				this.statusBarDriver.report('Helyfókusz megjegyezve, alakzatfókusz levéve.');
 			}
-			else this.msgConsole.innerHTML = 'Helyfókusz megjegyezve, leveendő alakzatfókusz nem volt.';
+			else this.statusBarDriver.report('Helyfókusz megjegyezve, leveendő alakzatfókusz nem volt.');
 		},
 		currentWidget => {
 			if (this.state.prevWidgetHasNotCollidedYet() && !this.state.dragHasAlreadyBegun) {
@@ -77,14 +75,14 @@ NormalModeController.prototype.mouseUp = function (currentWEPos, eitherTarget)
 				this.state.focus = currentWidget; this.state.spaceFocus = null;
 				this.state.focus.showFocus();
 				currentWidget.unshowGlittering();
-				this.msgConsole.innerHTML = 'Alakzatfókusz megjegyezve, üreshelyfókusz levéve.';
+				this.statusBarDriver.report('Alakzatfókusz megjegyezve, üreshelyfókusz levéve.');
 			}
 		},
 		eitherTarget
 	);
 	if (this.state.prevWidgetHasNotCollidedYet() && this.state.dragHasAlreadyBegun) {
 		this.state.prevWidget.unshowGlittering();
-		this.msgConsole.innerHTML = 'Vonszolás vége.';
+		this.statusBarDriver.report('Vonszolás vége.');
 	}
 	this.state.forgetDrag();
 };
@@ -92,13 +90,13 @@ NormalModeController.prototype.mouseUp = function (currentWEPos, eitherTarget)
 NormalModeController.prototype.changeMode = function (mode)
 {
 	this.state.mode = mode;
-	this.msgConsole.innerHTML = 'Módváltozás.';
+	this.statusBarDriver.report('Módváltozás.');
 };
 
 NormalModeController.prototype.changeStamp = function (selectedDomainObject)
 {
 	this.state.setDomainStampFrom(selectedDomainObject);
-	this.msgConsole.innerHTML = 'Pecsétváltozás.';
+	this.statusBarDriver.report('Pecsétváltozás.');
 };
 
 // @TODO The GU API should introduce a Focus object/interface (like many APIs introduce a Context obejct)
@@ -107,14 +105,14 @@ NormalModeController.prototype.createAtPosFocus = function ()
 	if (this.state.spaceFocus) {
 		this.state.spaceFocus.widgetFactory.stampAt(this.state.domainStamp, this.state.spaceFocus.position);  // @TODO: refactor to standalone method?
 		this.state.spaceFocus = null;
-		this.msgConsole.innerHTML = 'Új alakzat beszúrása az üreshelyfókusz által mutatott helyre. Üreshelyfókusz levétele.';
-	} else this.msgConsole.innerHTML = 'Nincs kijelölve üreshelyfókusz, nincs hova beszúrni új alakzatot.';
+		this.statusBarDriver.report('Új alakzat beszúrása az üreshelyfókusz által mutatott helyre. Üreshelyfókusz levétele.');
+	} else this.statusBarDriver.report('Nincs kijelölve üreshelyfókusz, nincs hova beszúrni új alakzatot.');
 };
 
 NormalModeController.prototype.deleteFigFocus = function ()
 {
-	if (this.state.focus) {this.state.focus.delete(); this.state.focus = null; this.msgConsole.innerHTML = 'A fókuszált alakat törlése.';} // @TODO code reuse, DRY
-	else this.msgConsole.innerHTML = 'Nincs kijelölve alakzatfókusz, nincs mit törölni.';
+	if (this.state.focus) {this.state.focus.delete(); this.state.focus = null; this.statusBarDriver.report('A fókuszált alakat törlése.');} // @TODO code reuse, DRY
+	else this.statusBarDriver.report('Nincs kijelölve alakzatfókusz, nincs mit törölni.');
 };
 
 NormalModeController.prototype.leaveFigFocus = function ()
@@ -122,9 +120,9 @@ NormalModeController.prototype.leaveFigFocus = function ()
 	if (this.state.focus) {
 		this.state.focus.unshowFocus();
 		this.state.focus = null;
-		this.msgConsole.innerHTML = 'Alakzatfókusz levétele.';
+		this.statusBarDriver.report('Alakzatfókusz levétele.');
 	}
-	else this.msgConsole.innerHTML = 'Nincs kijelölve alakzatfókusz, nincs miről a fókuszt levenni, defókuszálni.';
+	else this.statusBarDriver.report('Nincs kijelölve alakzatfókusz, nincs miről a fókuszt levenni, defókuszálni.');
 };
 
 NormalModeController.prototype.focusLeft  = function () {if (this.state.focus) {this.state.focus.translate([-this.epsilonDistance,  0]);}};

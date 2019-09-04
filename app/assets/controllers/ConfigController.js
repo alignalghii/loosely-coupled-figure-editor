@@ -1,10 +1,11 @@
-function ConfigController(state, aDocument, msgConsole)
+function ConfigController(state, configDriver, statusBarDriver)
 {
-	this.state          = state;
-	this.areaInvariance = aDocument.getElementById('config_areainvariance');
-	this.msgConsole     = msgConsole;
+	this.state           = state;
 
-	this.areaInvariance.checked = this.state.areaInvariance;
+	this.configDriver    = configDriver;
+	this.statusBarDriver = statusBarDriver; // not used yet
+
+	this.configDriver.checkOrUncheckAreaInvarianceCheckbox(this.state.areaInvariance);
 }
 
 ConfigController.prototype.setAreaInvariance = function (flag) {this.state.areaInvariance = flag;};

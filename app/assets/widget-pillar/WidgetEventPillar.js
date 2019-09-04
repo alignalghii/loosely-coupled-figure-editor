@@ -1,3 +1,7 @@
+/** @TODO: This is something very similar to what the `devices/*Device.js` (`textual-widgets/*UI.js`) modules do.
+ * Should be renamed and moved to `devices/Canvas(ses)Device`?
+ */
+
 function WidgetEventPillar (widgetFactories, routerInterface)
 {
 	this.widgetFactories = widgetFactories;

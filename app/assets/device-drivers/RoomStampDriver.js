@@ -1,9 +1,6 @@
-function RoomStampUI(aDocument, roomBank, router)
+function RoomStampDriver(aDocument, roomBank)
 {
-	this.router = router;
-
-	this.document = aDocument;
-	this.roomBankSelectList = this.document.getElementById('sampleRoomBank');
+	this.roomBankSelectList = aDocument.getElementById('sampleRoomBank');
 	this.roomBank = roomBank;
 
 	var roomBankSelectList = this.roomBankSelectList;
@@ -12,16 +9,13 @@ function RoomStampUI(aDocument, roomBank, router)
 	roomBankSelectList.selectedIndex = roomBank.selected;
 }
 
-RoomStampUI.prototype.pipeToSM = function ()
+RoomStampDriver.prototype.pipeToSM = function (dispatch)
 {
-	var roomStampUI = this;
-	function changeStamp(event)
+	const changeStamp = event =>
 	{
 		var i              = event.target.selectedIndex; // @TODO consider `parseInt(event.target.value)`
-		var selectedRoom = roomStampUI.roomBank.namedRooms[i].room;
-		roomStampUI.router.dispatch('change', ['Room'], {selectedRoom:selectedRoom});
+		var selectedRoom = this.roomBank.namedRooms[i].room;
+		dispatch('change', ['Room'], {selectedRoom:selectedRoom});
 	}
 	this.roomBankSelectList.addEventListener('change', changeStamp);
 };
-
-

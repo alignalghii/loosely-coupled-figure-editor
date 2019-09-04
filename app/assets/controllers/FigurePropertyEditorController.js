@@ -1,8 +1,8 @@
-function FigurePropertyEditorController(state, aDocument, msgConsole)
+function FigurePropertyEditorController(state, aDocument, statusBarDriver)
 {
 	this.state = state;
 	this.document = aDocument
-	this.msgConsole = msgConsole;
+	this.statusBarDriver = statusBarDriver;
 
 	// @TODO: Handle boundary ( > 26)
 	this.vertexNames =      'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -14,7 +14,7 @@ function FigurePropertyEditorController(state, aDocument, msgConsole)
 
 FigurePropertyEditorController.prototype.main = function (currentWEPos, eitherTarget)
 {
-	this.msgConsole.innerHTML = `Alakzat szerkeszthető tulajdonságai. Kattintási pozíció: ${JSON.stringify(currentWEPos)}. Kattintás ${either(_ => 'üres vászonfelületre', _ => 'widgetre', eitherTarget)}.`;
+	this.statusBarDriver.report(`Alakzat szerkeszthető tulajdonságai. Kattintási pozíció: ${JSON.stringify(currentWEPos)}. Kattintás ${either(_ => 'üres vászonfelületre', _ => 'widgetre', eitherTarget)}.`);
 	either(
 		canvas => this.close(),
 		widget => this.open(widget),

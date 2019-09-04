@@ -1,30 +1,33 @@
-function App(widgetEventPillar, roomStampUI, modeUI, operationUI, keyboardUI, figurePropertyEditorUI, configUI)
+function App(router, widgetEventPillar, roomStampDriver, modeDriver, operationDriver, keyboardDriver, figurePropertyEditorDriver, configDriver)
 {
-	this.widgetEventPillar = widgetEventPillar;
-	this.roomStampUI       = roomStampUI;
-	this.modeUI            = modeUI;
-	this.operationUI       = operationUI;
-	this.keyboardUI        = keyboardUI;
-	this.figurePropertyEditorUI = figurePropertyEditorUI;
-	this.configUI          = configUI;
+	this.router = router;
+
+	this.widgetEventPillar          = widgetEventPillar;
+	this.roomStampDriver            = roomStampDriver;
+	this.modeDriver                 = modeDriver;
+	this.operationDriver            = operationDriver;
+	this.keyboardDriver             = keyboardDriver;
+	this.figurePropertyEditorDriver = figurePropertyEditorDriver;
+	this.configDriver               = configDriver;
 }
 
 App.prototype.run = function ()
 {
 	this.populate(0);
 
-	this.widgetEventPillar.pipeToSM(); // subscribe mouse events on SVG raised up to Widget level
-	this.roomStampUI      .pipeToSM(); // subsribe also for events listened to by GUI widgets
-	this.modeUI           .pipeToSM();
-	this.operationUI      .pipeToSM();
-	this.keyboardUI       .pipeToSM();
-	this.figurePropertyEditorUI.pipeToSM();
-	this.configUI         .pipeToSM();
+	const dispatch = (eventType, signature, ird) => this.router.dispatch(eventType, signature, ird); // @TODO depends too much on Router interface
+	this.widgetEventPillar         .pipeToSM(dispatch); // subscribe mouse events on SVG raised up to Widget level
+	this.roomStampDriver           .pipeToSM(dispatch); // subsribe also for events listened to by GUI widgets
+	this.modeDriver                .pipeToSM(dispatch);
+	this.operationDriver           .pipeToSM(dispatch);
+	this.keyboardDriver            .pipeToSM(dispatch);
+	this.figurePropertyEditorDriver.pipeToSM(dispatch);
+	this.configDriver              .pipeToSM(dispatch);
 };
 
 App.prototype.populate = function (i)
 {
-	this.roomStampUI.roomBank.namedRooms.map((namedRoom) => this.widgetEventPillar.widgetFactories[i].createWidgetFromDomain1(namedRoom.room));// @TODO Law of Demeter
+	this.roomStampDriver.roomBank.namedRooms.map((namedRoom) => this.widgetEventPillar.widgetFactories[i].createWidgetFromDomain1(namedRoom.room));// @TODO Law of Demeter
 	var massPoint1Factory = new MassPoint1Factory;
 	var massPoint2Factory = new MassPoint2Factory;
 	this.widgetEventPillar.widgetFactories[i].createWidgetFromDomain1(massPoint1Factory.testMassPoint1('red' , [ 8,  4]));
