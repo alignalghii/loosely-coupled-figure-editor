@@ -12,7 +12,7 @@ function State(toBeDomainStamp)
 	this.maybeRotationArcSpan = ['nothing']; // GeomTransformationController
 	this.maybeScaleStressSpan = ['nothing']; // GeomTransformationController
 
-	this.mbFigurePropertyEditorForm = ['nothing']; // FigurePropertyEditorController // @TODO: rename to ...widget
+	this.maybeWidgetActualOnFigurePropertyEditor = ['nothing']; // FigurePropertyEditorController
 	this.areaInvariance = true;
 }
 

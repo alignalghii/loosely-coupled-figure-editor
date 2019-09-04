@@ -23,7 +23,7 @@ onload = function (event)
 	var modeIODriver                 = new ModeDriver(document);
 	var operationDriver              = new OperationDriver(document);
 	var keyboardDriver               = new KeyboardDriver(document);
-	const figurePropertyEditorDriver = new FigurePropertyEditorDriver(document);
+	const figurePropertyEditorIODriver = new FigurePropertyEditorDriver(document);
 	const configIODriver             = new ConfigDriver(document);
 
 	var state               = new State(domainStamp);
@@ -33,13 +33,13 @@ onload = function (event)
 	var roomController                   = new RoomController       (state, roomFactory, statusBarODriver);
 	var figureEditorController           = new FigureEditorController(state, widgetFactories, statusBarODriver);  // @TODO: should not use the same `State` as `NormalModeController`
 	var geomTransformationController     = new GeomTransformationController(state, widgetFactories, statusBarODriver);  // @TODO: should not use the same `State` as `NormalModeController`
-	const figurePropertyEditorController = new FigurePropertyEditorController(state, document, statusBarODriver);
+	const figurePropertyEditorController = new FigurePropertyEditorController(state, widgetFactories, figurePropertyEditorIODriver, statusBarODriver);
 	const configController               = new ConfigController(state, configIODriver, statusBarODriver);
 
 	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(widgetFactories, router); // @TODO: could it be regarded as a kind of device driver, and renamed + moved appropriately?
 
-	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorDriver, configIODriver); // @TODO Law of Demeter, see inside
+	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorIODriver, configIODriver); // @TODO Law of Demeter, see inside
 
 	//console.log('App: live run');
 	app.run();

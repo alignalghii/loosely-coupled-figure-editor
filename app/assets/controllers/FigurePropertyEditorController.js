@@ -1,18 +1,46 @@
-function FigurePropertyEditorController(state, aDocument, statusBarDriver)
+function FigurePropertyEditorController(state, widgetFactories, figurePropertyEditorDriver, statusBarDriver)
 {
 	this.state = state;
-	this.document = aDocument
-	this.statusBarDriver = statusBarDriver;
 
-	// @TODO: Handle boundary ( > 26)
-	this.vertexNames =      'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-	this.angleNames  =      'αβγδεζηθικλμνξοπρστυφχψω'  .split('');
-	this.edgeNames   = tour('ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')).map(([A, B]) => `${A}${B}`);
-
-	this.element = aDocument.getElementById('figurepropertyeditor');
+	this.widgetFactories = widgetFactories; // @TODO widgetFactories has also a drive-like nature
+	this.figurePropertyEditorDriver = figurePropertyEditorDriver
+	this.statusBarDriver            = statusBarDriver;
 }
 
-FigurePropertyEditorController.prototype.main = function (currentWEPos, eitherTarget)
+FigurePropertyEditorController.prototype = Object.create(Controller.prototype);
+
+FigurePropertyEditorController.prototype.constructor = FigurePropertyEditorController;
+
+FigurePropertyEditorController.prototype.editEdge = function (edgeIndex, value)
+{
+	maybeMap(
+		widget => {
+			const board = this.widgetFactoryForEitherTarget(['right', widget]).bijectionSvgToGeom;
+			const oldValue = getEdgeMeasures(widget.high.vertices)[edgeIndex];
+			const areaInvariance = this.state.areaInvariance;
+			const [indirect, validValue] = confirm_or_interpolate_realParamOfCommand(
+				widget.high,
+				board,
+				areaInvariance ? (fig, val) => fig.editEdge_areaInvariant(edgeIndex, val)
+					       : (fig, val) => fig.editEdge              (edgeIndex, val),
+				oldValue,
+				value,
+				8 + Math.log2(value)
+			);
+			if (areaInvariance) {
+				widget.editEdge_areaInvariant(edgeIndex, validValue);
+			} else {
+				widget.editEdge              (edgeIndex, validValue);
+			}
+			this.open(widget);
+			this.statusBarDriver.report(indirect ? `Alakzattulajdonság szöveges szerkesztése közvetlenül sikeres: ${widget.domainObject.name} alakzat ${this.figurePropertyEditorDriver.edgeNames[edgeIndex]} éle ${oldValue} -> ${validValue}` : `Alakzattulajdonság szöveges szerkesztése a kért ${value} értékkel ütközéshez vezetne, ezért interpolációval közelítünk: ${widget.domainObject.name} alakzat ${this.figurePropertyEditorDriver.edgeNames[edgeIndex]} éle ${oldValue} -> ${validValue}`);
+		},
+		this.state.maybeWidgetActualOnFigurePropertyEditor
+	);
+};
+
+
+FigurePropertyEditorController.prototype.modeOn = function (currentWEPos, eitherTarget)
 {
 	this.statusBarDriver.report(`Alakzat szerkeszthető tulajdonságai. Kattintási pozíció: ${JSON.stringify(currentWEPos)}. Kattintás ${either(_ => 'üres vászonfelületre', _ => 'widgetre', eitherTarget)}.`);
 	either(
@@ -24,86 +52,22 @@ FigurePropertyEditorController.prototype.main = function (currentWEPos, eitherTa
 
 FigurePropertyEditorController.prototype.open = function (widget)
 {
-	const content_old = this.document.getElementById('figurepropertyeditor_content');
-	if (content_old) content_old.remove();
-
-	this.state.mbFigurePropertyEditorForm = ['just', widget];
+	this.state.maybeWidgetActualOnFigurePropertyEditor = ['just', widget];
 
 	const vertices = widget.high.vertices;
-	const edgeMeasures  = getEdgeMeasures(vertices);
-	const angleMeasures = getAngleMeasures(vertices);
-	const perimeter     = getPerimeter(vertices);
-	const area          = getArea(vertices);
-	const n             = vertices.length;
-	const content = this.document.createElement('div');
-	content.id = 'figurepropertyeditor_content';
-	this.element.appendChild(content);
 
-	const spanN = this.document.createElement('span');
-	spanN.id = 'n';
-	spanN.innerHTML = `${n}-szög`;
-	const spanName = this.document.createElement('span');
-	spanName.id = 'name';
-	spanName.innerHTML = widget.domainObject.name;
-	const spanArea = this.document.createElement('span');
-	spanArea.id = 'area';
-	spanArea.innerHTML = area;
-	const spanPerimeter = this.document.createElement('span');
-	spanPerimeter.id = 'perimeter';
-	spanPerimeter.innerHTML = perimeter;
-	const ulAP  = this.document.createElement('ul');
-	const liName = this.document.createElement('li');
-	const liN = this.document.createElement('li');
-	const liA = this.document.createElement('li');
-	const liP = this.document.createElement('li');
-	liName.innerHTML = 'Név: ';
-	liName.appendChild(spanName);
-	liN.appendChild(spanN);
-	liA.innerHTML = 'Terület: ';
-	liA.appendChild(spanArea);
-	liP.innerHTML = 'Kerület: ';
-	liP.appendChild(spanPerimeter);
-	ulAP.appendChild(liName);
-	ulAP.appendChild(liN);
-	ulAP.appendChild(liA);
-	ulAP.appendChild(liP);
-	content.appendChild(ulAP);
-
-	const table = this.document.createElement('table');
-	table.id = 'edgeAndAngleMeasures';
-	content.appendChild(table);
+	const name                 = widget.domainObject.name;
+	const n                    = vertices.length;
+	const perimeter            = getPerimeter(vertices);
+	const area                 = getArea(vertices);
 	const edgeAndAngleMeasures = getEdgeAndAngleMeasures(vertices);
-	for (let i in edgeAndAngleMeasures) {
-		const [edge, angle] = edgeAndAngleMeasures[i];
-		const trA = this.document.createElement('tr');
-		table.appendChild(trA);
-		const tdAN =  this.document.createElement('td');
-		tdAN.innerHTML = `${this.angleNames[i]} (${this.vertexNames[i]}<sub>∡</sub>):`;
-		const tdA = this.document.createElement('td');
-		tdA.innerHTML = `${angle}°`;
-		trA.appendChild(tdAN);
-		trA.appendChild(tdA);
-		trA.appendChild(this.document.createElement('td'));
-		trA.appendChild(this.document.createElement('td'));
-		const trE = this.document.createElement('tr');
-		table.appendChild(trE);
-		trE.appendChild(this.document.createElement('td'));
-		trE.appendChild(this.document.createElement('td'));
-		const tdEN = this.document.createElement('td');
-		tdEN.innerHTML = `${this.edgeNames[i]}:`;
-		trE.appendChild(tdEN);
-		const tdE = this.document.createElement('td');
-		const inputE = this.document.createElement('input');
-		inputE.id = `edge_${i}`;
-		inputE.value = edge;
-		trE.appendChild(tdE);
-		tdE.appendChild(inputE);
-	}
+
+	this.figurePropertyEditorDriver.open(name, n, perimeter, area, edgeAndAngleMeasures);
 };
 
 FigurePropertyEditorController.prototype.close = function ()
 {
-	this.state.mbFigurePropertyEditorForm = ['nothing'];
+	this.state.maybeWidgetActualOnFigurePropertyEditor = ['nothing'];
 
 	const content = this.document.getElementById('figurepropertyeditor_content');
 	if (content) content.remove();
