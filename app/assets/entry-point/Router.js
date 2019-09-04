@@ -1,4 +1,4 @@
-function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
@@ -8,6 +8,7 @@ function Router(state, normalModeController, compactModeController, roomControll
 	this.figureEditorController = figureEditorController;
 	this.geomTransformationController = geomTransformationController;
 	this.figurePropertyEditorController = figurePropertyEditorController;
+	this.configController = configController;
 }
 
 Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: inputRoledData
@@ -40,9 +41,8 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 				this.figurePropertyEditorController.state.mbFigurePropertyEditorForm
 			);
 		}
-		if (Eq.eq(inputSignature, ['areaInvariance', 'bool'])) {
-			this.figurePropertyEditorController.state.areaInvariance = ird.areaInvariance;
-			console.log(this.figurePropertyEditorController.state.areaInvariance);
+		if (Eq.eq(inputSignature, ['string', 'checkbox']) && ('optionName' in ird) && ird.optionName == 'areainvariance') {
+			this.configController.setAreaInvariance(ird.value);
 		}
 		if (Eq.eq(inputSignature, ['Room'            ])) this.normalModeController.changeStamp(ird.selectedRoom); // @TODO common
 	}

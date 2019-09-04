@@ -1,4 +1,4 @@
-function App(widgetEventPillar, roomStampUI, modeUI, operationUI, keyboardUI, figurePropertyEditorUI)
+function App(widgetEventPillar, roomStampUI, modeUI, operationUI, keyboardUI, figurePropertyEditorUI, configUI)
 {
 	this.widgetEventPillar = widgetEventPillar;
 	this.roomStampUI       = roomStampUI;
@@ -6,6 +6,7 @@ function App(widgetEventPillar, roomStampUI, modeUI, operationUI, keyboardUI, fi
 	this.operationUI       = operationUI;
 	this.keyboardUI        = keyboardUI;
 	this.figurePropertyEditorUI = figurePropertyEditorUI;
+	this.configUI          = configUI;
 }
 
 App.prototype.run = function ()
@@ -18,6 +19,7 @@ App.prototype.run = function ()
 	this.operationUI      .pipeToSM();
 	this.keyboardUI       .pipeToSM();
 	this.figurePropertyEditorUI.pipeToSM();
+	this.configUI         .pipeToSM();
 };
 
 App.prototype.populate = function (i)

@@ -69,18 +69,6 @@ FigurePropertyEditorController.prototype.open = function (widget)
 	ulAP.appendChild(liP);
 	content.appendChild(ulAP);
 
-	const areaInvarianceRadioDiv = this.document.createElement('div');
-	const areaInvarianceRadioSpan = this.document.createElement('span');
-	areaInvarianceRadioSpan.innerHTML = 'Területtartás';
-	const areaInvarianceRadio = this.document.createElement('input');
-	areaInvarianceRadio.type   = 'checkbox';
-	areaInvarianceRadio.id   = 'areainvariance';
-	areaInvarianceRadio.name = 'areainvariance';
-	areaInvarianceRadio.checked = this.state.areaInvariance;
-	content.appendChild(areaInvarianceRadioDiv);
-	areaInvarianceRadioDiv.appendChild(areaInvarianceRadio);
-	areaInvarianceRadioDiv.appendChild(areaInvarianceRadioSpan);
-
 	const table = this.document.createElement('table');
 	table.id = 'edgeAndAngleMeasures';
 	content.appendChild(table);

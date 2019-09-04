@@ -21,6 +21,7 @@
 		<script src="assets/controllers/FigureEditorController.js"></script>
 		<script src="assets/controllers/GeomTransformationController.js"></script>
 		<script src="assets/controllers/FigurePropertyEditorController.js"></script>
+		<script src="assets/controllers/ConfigController.js"></script>
 
 		<script src="assets/physics/Figure.js"></script>
 		<script src="assets/physics/Hypothetical.js"></script>
@@ -31,6 +32,7 @@
 		<script src="assets/textual-widgets/OperationUI.js"></script>
 		<script src="assets/textual-widgets/KeyboardUI.js"></script>
 		<script src="assets/textual-widgets/FigurePropertyEditorUI.js"></script>
+		<script src="assets/textual-widgets/ConfigUI.js"></script>
 
 		<script src="assets/widget-pillar/WidgetFactory.js"></script>
 		<script src="assets/widget-pillar/WidgetEventPillar.js"></script>
@@ -168,6 +170,10 @@
 			<h1>Alakzatszerkesztő (refaktorizált változat)</h1>
 		</div>
 		<div id="HolyGrail_left">
+			<div id="config">
+				<input type="checkbox" id="config_areainvariance" name="areainvariance"/>
+				<span>Területtartás</span>
+			</div>
 			<em>Egérértelmezési módok:</em>
 			<ul id="modes">
 				<li><input id="modeNormal"  name="mode" value="normal"  type="radio"/> <label for="modeNormal" >Normál vonszolás és fókuszkezelés</label></li>
