@@ -177,27 +177,67 @@
 			</div>
 			<em>Egérértelmezési módok:</em>
 			<ul id="modes">
-				<li><input id="modeNormal"  name="mode" value="normal"  type="radio"/> <label for="modeNormal" >Normál vonszolás és fókuszkezelés</label></li>
-				<li><input id="modeCompact" name="mode" value="compact" type="radio"/> <label for="modeCompact">Kompakt mód (csak gyorstesztre, összevetésekre használt, &bdquo;mindentegybe&rdquo;-jellegű, elavult mód)</label></li>
-				<li><input id="modeFigureeditoradd"    name="mode" value="figureeditoradd"    type="radio"/> <label for="modeFigureeditoradd"   >Alakzatszerkesztés: csúcspont hozzáadása</label></li>
-				<li><input id="modeFigureeditordelete" name="mode" value="figureeditordelete" type="radio"/> <label for="modeFigureeditordelete">Alakzatszerkesztés: csúcspont törlése</label></li>
-				<li><input id="modeFigureeditormove"   name="mode" value="figureeditormove"   type="radio"/> <label for="modeFigureeditormove"  >Alakzatszerkesztés: csúcspont mozgatása</label></li>
-				<li><input id="modeGeomtransformationrotation" name="mode" value="geomtransformationrotation" type="radio"/> <label for="modeGeomtransformationrotation">Geometriai transzformáció: alakzat forgatása</label></li>
-
-				<li><input id="modeGeomtransformationscale" name="mode" value="geomtransformationscale" type="radio"/> <label for="modeGeomtransformationscale">Geometriai transzformáció: alakzat átméretezése</label></li>
-				<li><input id="modeGeomtransformationscaleXRef" name="mode" value="geomtransformationscalexref" type="radio"/> <label for="modeGeomtransformationscaleXRef">Geometriai transzformáció: alakzat átméretezése vízszintes aránytorzítással, területtorzító, relatív viszonyítás</label></li>
-				<li><input id="modeGeomtransformationscaleYRef" name="mode" value="geomtransformationscaleyref" type="radio"/> <label for="modeGeomtransformationscaleYRef">Geometriai transzformáció: alakzat átméretezése függőleges aránytorzítással, területtorzító, relatív viszonyítás</label></li>
-				<li><input id="modeGeomtransformationscaleXYAreaRef" name="mode" value="geomtransformationscalesyarearef" type="radio"/> <label for="modeGeomtransformationscaleXYAreaRef">Geometriai transzformáció: alakzat átméretezése vízszintes aránytorzítással, területtartó, relatív viszonyítás</label></li>
-				<li><input id="modeGeomtransformationscaleYXAreaRef" name="mode" value="geomtransformationscaleyxarearef" type="radio"/> <label for="modeGeomtransformationscaleYXAreaRef">Geometriai transzformáció: alakzat átméretezése függőleges aránytorzítással, területtartó, relatív viszonyítás</label></li>
-				<li><input id="modeGeomtransformationscaleX" name="mode" value="geomtransformationscalex" type="radio"/> <label for="modeGeomtransformationscaleX">Geometriai transzformáció: alakzat átméretezése vízszintes aránytorzítással, területtorzító, abszolút viszonyítás</label></li>
-				<li><input id="modeGeomtransformationscaleY" name="mode" value="geomtransformationscaley" type="radio"/> <label for="modeGeomtransformationscaleY">Geometriai transzformáció: alakzat átméretezése függőleges aránytorzítással, területtorzító, abszolút viszonyítás</label></li>
-				<li><input id="modeGeomtransformationscaleXYArea" name="mode" value="geomtransformationscalesyarea" type="radio"/> <label for="modeGeomtransformationscaleXYArea">Geometriai transzformáció: alakzat átméretezése vízszintes aránytorzítással, területtartó, abszolút viszonyítás</label></li>
-				<li><input id="modeGeomtransformationscaleYXArea" name="mode" value="geomtransformationscaleyxarea" type="radio"/> <label for="modeGeomtransformationscaleYXArea">Geometriai transzformáció: alakzat átméretezése függőleges aránytorzítással, területtartó, abszolút viszonyítás</label></li>
-
-				<li><input id="modeGeomtransformationreflectionhorizontallyref" name="mode" value="geomtransformationreflectionhorizontallyref" type="radio"/> <label for="modeGeomtransformationreflectionhorizontallyref">Geometriai transzformáció: alakzat tükrözése - vízszintes, viszonylagos (saját magához viszonyított)</label></li>
-				<li><input id="modeGeomtransformationreflectionverticallyref" name="mode" value="geomtransformationreflectionverticallyref" type="radio"/> <label for="modeGeomtransformationreflectionverticallyref">Geometriai transzformáció: alakzat tükrözése - függőleges, viszonylagos (saját magához viszonyított)</label></li>
-				<li><input id="modeGeomtransformationreflectionhorizontally" name="mode" value="geomtransformationreflectionhorizontally" type="radio"/> <label for="modeGeomtransformationreflectionhorizontally">Geometriai transzformáció: alakzat tükrözése - vízszintes, abszolút (rajzvászonhoz viszonyított)</label></li>
-				<li><input id="modeGeomtransformationreflectionvertically" name="mode" value="geomtransformationreflectionvertically" type="radio"/> <label for="modeGeomtransformationreflectionvertically">Geometriai transzformáció: alakzat tükrözése - függőleges, abszolút (rajzvászonhoz viszonyított)</label></li>
+				<li>
+					Mozgatás<sup>&lrarr;</sup> és fókusz<sup>&ofcir;</sup>:<br/><!-- circled bullet http://www.amp-what.com/unicode/search/circle -->
+					<input id="modeNormal"  name="mode" value="normal"  type="radio"/><label title="Normál mód"for="modeNormal" >&lrarr;&ofcir;</label>
+					<!-- normál mód -->
+					|
+					<input id="modeCompact" name="mode" value="compact" type="radio"/><label title="Kompakt mód (gyorsteszt)"for="modeCompact">&lrarr;+-</label>
+					<!-- kompakt (gyorsteszt) -->
+				</li>
+				<li>
+					Csúcspontszerkesztés:<br/>
+					<input id="modeFigureeditoradd" name="mode" value="figureeditoradd"    type="radio"/><label title="Hozzáad" for="modeFigureeditoradd">+</label>
+					<!-- hozzáad -->
+					|
+					<input id="modeFigureeditordelete" name="mode" value="figureeditordelete" type="radio"/><label title="Töröl" for="modeFigureeditordelete">-</label>
+					|
+					<input id="modeFigureeditormove"   name="mode" value="figureeditormove"   type="radio"/><label title="Mozgat" for="modeFigureeditormove">&Equilibrium;</label>
+				</li>
+				<li>
+					Geometriai transzformációk:<br/>
+					<input id="modeGeomtransformationrotation" name="mode" value="geomtransformationrotation" type="radio"/><label title="Forgat" for="modeGeomtransformationrotation">&#10226;</label>
+					<!-- ANTICLOCKWISE GAPPED CIRCLE ARROW toptal.com/designers/htmlarrows/ -->
+					|
+					<input id="modeGeomtransformationscale" name="mode" value="geomtransformationscale" type="radio"/><label title="Átméretez" for="modeGeomtransformationscale">&#10530;</label>
+					<!-- NORTH EAST AND SOUTH WEST ARROW -->
+					<br/>
+					<input id="modeGeomtransformationscaleXRef" name="mode" value="geomtransformationscalexref" type="radio"/><label title="Átméretezés vízszintes aránytorzítással, területtorzító, relatív viszonyítás" for="modeGeomtransformationscaleXRef">&hArr;<sup>&ne;?</sup></label>
+					<!-- left right double arrow -->
+					|
+					<input id="modeGeomtransformationscaleYRef" name="mode" value="geomtransformationscaleyref" type="radio"/><label title="Átméretezés függőleges aránytorzítással, területtorzító, relatív viszonyítás" for="modeGeomtransformationscaleYRef">&DoubleUpDownArrow;<sup>&ne;?</sup></label>
+					<!-- up down double arrow -->
+					<br/>
+					<input id="modeGeomtransformationscaleXYAreaRef" name="mode" value="geomtransformationscalexyarearef" type="radio"/><label title="Átméretezés vízszintes aránytorzítással, területtartó, relatív viszonyítás" for="modeGeomtransformationscaleXYAreaRef">&hArr;<sup>=?</label>
+					<!-- left right double arrow -->
+					|
+					<input id="modeGeomtransformationscaleYXAreaRef" name="mode" value="geomtransformationscaleyxarearef" type="radio"/><label title="Átméretezés függőleges aránytorzítással, területtartó, relatív viszonyítás" for="modeGeomtransformationscaleYXAreaRef">&DoubleUpDownArrow;<sup>=?</sup></label>
+					<!-- up down double arrow -->
+					<br/>
+					<input id="modeGeomtransformationscaleX" name="mode" value="geomtransformationscalex" type="radio"/><label title="Átméretezés vízszintes aránytorzítással, területtorzító, abszolút viszonyítás" for="modeGeomtransformationscaleX">&hArr;<sup>&ne;!</sup></label>
+					<!-- left right double arrow -->
+					|
+					<input id="modeGeomtransformationscaleY" name="mode" value="geomtransformationscaley" type="radio"/><label title="Átméretezés függőleges aránytorzítással, területtorzító, abszolút viszonyítás" for="modeGeomtransformationscaleY">&DoubleUpDownArrow;<sup>&ne;!</sup></label>
+					<!-- up down double arrow -->
+					<br/>
+					<input id="modeGeomtransformationscaleXYArea" name="mode" value="geomtransformationscalexyarea" type="radio"/><label title="Átméretezés vízszintes aránytorzítással, területtartó, abszolút viszonyítás" for="modeGeomtransformationscaleXYArea">&hArr;<sup>=!</label>
+					<!-- left right double arrow -->
+					|
+					<input id="modeGeomtransformationscaleYXArea" name="mode" value="geomtransformationscaleyxarea" type="radio"/><label title="Átméretezés függőleges aránytorzítással, területtartó, abszolút viszonyítás" for="modeGeomtransformationscaleYXArea">&DoubleUpDownArrow;<sup>=!</sup></label>
+					<!-- up down double arrow -->
+					<br/>
+					<input id="modeGeomtransformationreflectionhorizontallyref" name="mode" value="geomtransformationreflectionhorizontallyref" type="radio"/><label title="Tükrözés - vízszintes, viszonylagos (saját magához viszonyított)" for="modeGeomtransformationreflectionhorizontallyref">&#8697;<sup>?</sup></label>
+					<!-- LEFT RIGHT ARROW WITH VERTICAL STROKE -->
+					|
+					<input id="modeGeomtransformationreflectionverticallyref" name="mode" value="geomtransformationreflectionverticallyref" type="radio"/><label title="Tükrözés - függőleges, viszonylagos (saját magához viszonyított)" for="modeGeomtransformationreflectionverticallyref">&#10505;<sup>?</sup></label>
+					<!-- UP ARROW WITH HORIZONTAL STROKE -->
+					<br/>
+					<input id="modeGeomtransformationreflectionhorizontally" name="mode" value="geomtransformationreflectionhorizontally" type="radio"/><label title="Tükrözés - vízszintes, abszolút (rajzvászonhoz viszonyított)" for="modeGeomtransformationreflectionhorizontally">&#8697;<sup>!</sup></label>
+					<!-- LEFT RIGHT ARROW WITH VERTICAL STROKE -->
+					|
+					<input id="modeGeomtransformationreflectionvertically" name="mode" value="geomtransformationreflectionvertically" type="radio"/><label title="Tükrözés - függőleges, abszolút (rajzvászonhoz viszonyított)" for="modeGeomtransformationreflectionvertically">&#10505;<sup>!</sup></label>
+					<!-- UP ARROW WITH HORIZONTAL STROKE -->
+				</li>
 
 				<li><input id="modeFigurepropertyeditor" name="mode" value="figurepropertyeditor" type="radio"/> <label for="modeFigurepropertyeditor">Alakzatalapadatok szöveges szerkeszthetősége + tulajdonságinfók</label></li>
 			</ul>

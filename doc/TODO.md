@@ -104,3 +104,5 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - A FigurePropertyEditor mutassa az alakzat aktuális referenciaszögét is!
  - A FigurePropertyEditor-ban lehessen a szoba nevét is átírni!
  - A FigurePropertyEditor jobb hiján felhasználható átmenetileg arra, hogy falréseket hozzunk létre: közvetlen szereszhetőv étehetjük benne az SVG elem stroke-dasharray attribútumát. Ez nagyon alacsonszintű, de azonnal bizton működő megoldás, a felhasználóbarátságot adandóó matematikai rutinok meg utólag is megírhatóak ,,föléje''.
+ - A space fókusz (poziciófókusz),  ami kijelöli a következő beszúrható alakzat helyét: Attila kérése volt, hogy vizuálisan is látszódjék. Ez lehetséges lenne, ez e célt szolgáló alakzato nem teszzük be a board-ba, így könnyűvé válik elkülönítése a többi alakzattól. Esetleg bekerülhet a boardba, de külön domain fajtája különíti el őt a többitől.
+ - A jobb oldali vászon legyen gombnyomásra benépesíthatő. Hiszen ha onnan rakodok át alakokat a baloldali vászonra, akkor a jobboldalinak bármikor gombnyomásra megújíthatóan kell lennie (vagy pedig másolós vonszolás kell).
