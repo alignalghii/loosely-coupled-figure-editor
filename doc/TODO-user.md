@@ -1,0 +1,9 @@
+ - Legyenek egymással is jól kombinálható menü/gyorsbillentyű-opciók (területtartás, relatív/abszolút viszonyítás), így kevés opcióból/gyorsbillentyűből is sokféle opciót lehessen kikeverni.
+ - A gyorsbillentyű-rendszer elkészítése (ez a leggyorsabb megoldás, ami kétely nélkül azonnal megvalósítható, mellette persze azért utánagondolni a többi lehetséges megoldásnak is: közeli ikonok, különleges pontok és szegélyek). Szükség esetén a szerkesztések során használt segédpontok megjelölése (pl. alakzat forgásának középpontja, referenciairánya).
+ - A jobb oldali ,,mintavászon'' alakzatai legyenek valóban típus- és mintalakzatok: legyenek ikonjellegűbbek, legyen kisebb a léptékük, és képezzenek önmagukból automatikusan másolatot, amikor a bal oldali ,,munkavászonra'' húzzuk át őket.
+ - A bútorok mozogjanak együtt a szobákkal akkor, amikor magát a szobát mozgatjuk,viszont minden egyes bútor mozoghasson önállóan, ha az egérrel kifejezetten őt magát fogjuk meg.
+ - Legyen padlóháttér (mintázat), legyenek bekötve ebbe a kapott képminták.
+ - Nyílászárók: ajtó, ablak, falrések
+ - A gyakori alakzatok (L-alakú szoba) és a sarkalatos szögek (derékszög, 45°) szerkesztésének támogatása.
+ - Az alakzattulajdonságok szöveges szerkesztőűrlapja legyen pontosan és intuitíven összekapcsolva az összes egyéb, egeres geometriai transzformációval (mozgatással fordgatással, átméretezéssel, tükrözéssel).
+ - Az adatbázist szimulálja valami előkészített csonk, így lehessen tesztelni a mentés, beolvasás képességét legalább elvi szinten.
