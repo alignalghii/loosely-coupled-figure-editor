@@ -91,3 +91,9 @@ FigurePropertyEditorDriver.prototype.open = function (name, n, perimeter, area, 
 		tdE.appendChild(inputE);
 	}
 };
+
+FigurePropertyEditorDriver.prototype.close = function ()
+{
+	const content = this.document.getElementById('figurepropertyeditor_content');
+	if (content) content.remove();
+};

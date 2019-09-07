@@ -68,7 +68,5 @@ FigurePropertyEditorController.prototype.open = function (widget)
 FigurePropertyEditorController.prototype.close = function ()
 {
 	this.state.maybeWidgetActualOnFigurePropertyEditor = ['nothing'];
-
-	const content = this.document.getElementById('figurepropertyeditor_content');
-	if (content) content.remove();
+	this.figurePropertyEditorDriver.close();
 };
