@@ -46,14 +46,14 @@ GeomTransformationController.prototype.closeRotationArcSpan = function ()
 
 /** Scale: */
 
-GeomTransformationController.prototype.openScaleStressSpan = function (commandNames, currentWEPos, eitherTarget)
+GeomTransformationController.prototype.openScaleStressSpan = function (commandNamePair, currentWEPos, eitherTarget)
 {
 	const widgetFactory = this.widgetFactoryForEitherTarget(eitherTarget),
 	      board         = widgetFactory.bijectionSvgToGeom;
 	const consoleMessage = maybe(
 		'Az átméretezéshez nem határozható meg egyértelműen legközelebbi alakzat.',
 		nearestFigure => {
-			this.state.maybeScaleStressSpan = ['just', new ScaleStressSpan(commandNames, currentWEPos, nearestFigure, widgetFactory)];
+			this.state.maybeScaleStressSpan = ['just', new ScaleStressSpan(this.state.interpret(commandNamePair), currentWEPos, nearestFigure, widgetFactory)];
 			//const log = new ScaleStressSpanLog(radAOA_, [currentWEPos, nearestFigure.grasp, currentWEPos], nearestFigure.referenceAngle, ['nothing']);
 			return '...';//log.message();
 		},
@@ -83,14 +83,14 @@ GeomTransformationController.prototype.closeScaleStressSpan = function ()
 /** Reflection: */
 
 
-GeomTransformationController.prototype.reflectionFlip = function ([figCommandName, wdgCommandName], currentWEPos, eitherTarget)
+GeomTransformationController.prototype.reflectionFlip = function (commandNamePair, currentWEPos, eitherTarget)
 {
 	const widgetFactory = this.widgetFactoryForEitherTarget(eitherTarget),
 	      board         = widgetFactory.bijectionSvgToGeom;
 	const consoleMessage = maybe(
 		'A tükrözéshez nem határozható meg egyértelműen legközelebbi alakzat.',
 		nearestFigure => {
-			const reflectionFlip = new ReflectionFlip([figCommandName, wdgCommandName], nearestFigure, widgetFactory);
+			const reflectionFlip = new ReflectionFlip(this.state.interpret(commandNamePair), nearestFigure, widgetFactory);
 			const log = reflectionFlip.stepOrWaitAlsoLog();
 			return '...';//log.message(); // @TODO: Plan log message
 		},

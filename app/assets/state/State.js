@@ -13,7 +13,9 @@ function State(toBeDomainStamp)
 	this.maybeScaleStressSpan = ['nothing']; // GeomTransformationController
 
 	this.maybeWidgetActualOnFigurePropertyEditor = ['nothing']; // FigurePropertyEditorController
+
 	this.areaInvariance = true;
+	this.isRelative     = true;
 }
 
 State.prototype.setDomainStampFrom = function (domainObject) /** MenuUI */

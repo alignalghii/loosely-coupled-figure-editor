@@ -16,7 +16,13 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 	if (eventType == 'change') {
 		if (Eq.eq(inputSignature, ['string', 'string'])) this.normalModeController          .changeMode(ird.mode        ); // @TODO common
 		if (Eq.eq(inputSignature, ['edge'  , 'number'])) this.figurePropertyEditorController.editEdge  (ird.edge, ird.value);
-		if (Eq.eq(inputSignature, ['string', 'checkbox']) && ('optionName' in ird) && ird.optionName == 'areainvariance') this.configController.setAreaInvariance(ird.value);
+		if (Eq.eq(inputSignature, ['string', 'checkbox']) && ('optionName' in ird)) {
+			switch (ird.optionName) {
+				case 'areainvariance'           : this.configController.setAreaInvariance(ird.value); break;
+				case 'relativeinsteadofabsolute': this.configController.setIsRelative    (ird.value); break;
+				default                         : throw 'Invalid option name'                       ; break;
+			}
+		}
 		if (Eq.eq(inputSignature, ['Room'            ])) this.normalModeController.changeStamp(ird.selectedRoom); // @TODO common
 	}
 	if (this.state.mode == 'compact') {
@@ -143,15 +149,8 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 		const scaleCases = {
 			geomtransformationscale         : ['doScale'                     , 'scale'                     ],
 
-			geomtransformationscalexref     : ['doScaleXRef'                 , 'scaleXRef'                 ],
-			geomtransformationscaleyref     : ['doScaleYRef'                 , 'scaleYRef'                 ],
-			geomtransformationscalexyarearef: ['doScaleXYArealInvariantRef'  , 'scaleXYArealInvariantRef'  ],
-			geomtransformationscaleyxarearef: ['doUnscaleXYArealInvariantRef', 'unscaleXYArealInvariantRef'],
-
 			geomtransformationscalex        : ['doScaleX'                    , 'scaleX'                    ],
 			geomtransformationscaley        : ['doScaleY'                    , 'scaleY'                    ],
-			geomtransformationscalexyarea   : ['doScaleXYArealInvariant'     , 'scaleXYArealInvariant'     ],
-			geomtransformationscaleyxarea   : ['doUnscaleXYArealInvariant'   , 'unscaleXYArealInvariant'   ] 
 		};
 		console.log(this.state.mode);
 		if (this.state.mode in scaleCases) {console.log('!!!!!!!!!!!');

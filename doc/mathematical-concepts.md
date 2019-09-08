@@ -38,3 +38,5 @@ c ◯◯
 2 
 |
 V
+
+Gyakorlati megvalósítás terén: a parancsoknak (scalex, scaley, flip) legyen egy absztrakt nevük. és legyen egy opció osztály, amelynek attribútumai maguk a lehetséges opciók. És legyen egy parancsnévkonrretizáló függvény: abasztraktparancsnév -> aktuálconfig -> konkrétparancsnév.
