@@ -200,23 +200,40 @@
 					<input id="modeFigureeditormove"   name="mode" value="figureeditormove"   type="radio"/><label title="Mozgat" for="modeFigureeditormove">&Equilibrium;</label>
 				</li>
 				<li>
-					Geometriai transzformációk:<br/>
-					<input id="modeGeomtransformationrotation" name="mode" value="geomtransformationrotation" type="radio"/><label title="Forgat" for="modeGeomtransformationrotation">&#10226;</label>
-					<!-- ANTICLOCKWISE GAPPED CIRCLE ARROW toptal.com/designers/htmlarrows/ -->
-					<br/>
-					<input id="modeGeomtransformationscale" name="mode" value="geomtransformationscale" type="radio"/><label title="Átméretez" for="modeGeomtransformationscale">&#10530;</label>
-					|
-					<input id="modeGeomtransformationscaleX" name="mode" value="geomtransformationscalex" type="radio"/><label title="Átméretezés vízszintes aránytorzítással, területtorzító, abszolút viszonyítás" for="modeGeomtransformationscaleX">&hArr;<sup>&ne;!</sup></label>
-					<!-- left right double arrow -->
-					|
-					<input id="modeGeomtransformationscaleY" name="mode" value="geomtransformationscaley" type="radio"/><label title="Átméretezés függőleges aránytorzítással, területtorzító, abszolút viszonyítás" for="modeGeomtransformationscaleY">&DoubleUpDownArrow;<sup>&ne;!</sup></label>
-					<!-- up down double arrow -->
-					<br/>
-					<input id="modeGeomtransformationreflectionvertically" name="mode" value="geomtransformationreflectionvertically" type="radio"/><label title="Tükrözés - függőleges, abszolút (rajzvászonhoz viszonyított)" for="modeGeomtransformationreflectionvertically">&#8697;<sup>!</sup></label>
-					<!-- LEFT RIGHT ARROW WITH VERTICAL STROKE -->
-					|
-					<input id="modeGeomtransformationreflectionhorizontally" name="mode" value="geomtransformationreflectionhorizontally" type="radio"/><label title="Tükrözés - vízszintes, abszolút (rajzvászonhoz viszonyított)" for="modeGeomtransformationreflectionhorizontally">&#10505;<sup>!</sup></label>
-					<!-- UP ARROW WITH HORIZONTAL STROKE -->
+					<span>Geometriai transzformációk:</span>
+					<table>
+						<tr>
+							<td>
+								<input id="modeGeomtransformationrotation" name="mode" value="geomtransformationrotation" type="radio"/><label title="Forgat" for="modeGeomtransformationrotation">&#10226;</label>
+								<!-- ANTICLOCKWISE GAPPED CIRCLE ARROW toptal.com/designers/htmlarrows/ -->
+							</td>
+							<td colspan="2"></td>
+						</tr>
+						<tr>
+							<td>
+								<input id="modeGeomtransformationscale" name="mode" value="geomtransformationscale" type="radio"/><label title="Átméretez" for="modeGeomtransformationscale">&#10530;</label>
+							</td>
+							<td>
+								<input id="modeGeomtransformationscaleX" name="mode" value="geomtransformationscalex" type="radio"/><label title="Átméretezés vízszintes aránytorzítással, területtorzító, abszolút viszonyítás" for="modeGeomtransformationscaleX">&hArr;</label>
+								<!-- left right double arrow -->
+							</td>
+							<td>
+								<input id="modeGeomtransformationscaleY" name="mode" value="geomtransformationscaley" type="radio"/><label title="Átméretezés függőleges aránytorzítással, területtorzító, abszolút viszonyítás" for="modeGeomtransformationscaleY">&DoubleUpDownArrow;</label>
+								<!-- up down double arrow -->
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<input id="modeGeomtransformationreflectionvertically" name="mode" value="geomtransformationreflectionvertically" type="radio"/><label title="Tükrözés - függőleges, abszolút (rajzvászonhoz viszonyított)" for="modeGeomtransformationreflectionvertically">&#8697;</label>
+								<!-- LEFT RIGHT ARROW WITH VERTICAL STROKE -->
+							</td>
+							<td>
+								<input id="modeGeomtransformationreflectionhorizontally" name="mode" value="geomtransformationreflectionhorizontally" type="radio"/><label title="Tükrözés - vízszintes, abszolút (rajzvászonhoz viszonyított)" for="modeGeomtransformationreflectionhorizontally">&#10505;</label>
+								<!-- UP ARROW WITH HORIZONTAL STROKE -->
+							</td>
+						</tr>
+					</table>
 				</li>
 
 				<li><input id="modeFigurepropertyeditor" name="mode" value="figurepropertyeditor" type="radio"/> <label for="modeFigurepropertyeditor">Alakzatalapadatok szöveges szerkeszthetősége + tulajdonságinfók</label></li>
