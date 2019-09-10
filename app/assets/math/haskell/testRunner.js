@@ -1,6 +1,7 @@
 function testRunner()
 {
 	const polygonBehavior                         = new PolygonBehavior,
+	      polygonReverseDeductionBehavior         = new PolygonReverseDeductionBehavior,
 	      fourierMotzkinEliminationBehavior       = new FourierMotzkinEliminationBehavior,
 	      logicalFormsBehavior                    = new LogicalFormsBehavior,
 	      collisionAsVectorTransformationBehavior = new CollisionAsVectorTransformationBehavior,
@@ -24,6 +25,7 @@ function testRunner()
 	      ccSubtreeBehavior                       = new CcSubtreeBehavior;
 	return true &&
 	polygonBehavior                        .shouldTestPolygonBehavior                        () &&
+	polygonReverseDeductionBehavior        .shouldTestPolygonReverseDeductionBehavior        () &&
 	fourierMotzkinEliminationBehavior      .shouldTestFourierMotzkinEliminationBehavior      () &&
 	logicalFormsBehavior                   .shouldTestLogicalFormsBehavior                   () &&
 	collisionAsVectorTransformationBehavior.shouldTestCollisionAsVectorTransformationBehavior() &&
