@@ -5,8 +5,8 @@
 function Widget(bijectionGeomToDomain, coordSysTransformer, bijectionSvgToGeom,    domainObject, high, low)
 {
 	this.bijectionGeomToDomain = bijectionGeomToDomain; // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
-	this.coordSysTransformer = coordSysTransformer;     // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
-	this.bijectionSvgToGeom         = bijectionSvgToGeom;
+	this.coordSysTransformer = coordSysTransformer;
+	this.bijectionSvgToGeom         = bijectionSvgToGeom; // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
 
 	this.domainObject = domainObject;
 	this.high = high;
