@@ -1,4 +1,4 @@
-const mbVectorTransfomationForAllowance = (fallingFigure, board) => infinitezimalDisplacement => mbVectorTransformer(fallingFigure, board, infinitezimalDisplacement);
+const mbVectorTransformationForAllowance = (fallingFigure, board) => infinitezimalDisplacement => mbVectorTransformer(fallingFigure, board, infinitezimalDisplacement);
 
 function mbVectorTransformer(fallingFigure, board, infinitezimalDisplacement)
 {

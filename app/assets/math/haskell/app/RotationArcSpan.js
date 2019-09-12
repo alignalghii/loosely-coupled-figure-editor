@@ -6,7 +6,7 @@ function RotationArcSpan(currentWEPos, nearestFigure, widgetFactory)
 	this.last   = currentWEPos; // @TODO: `last` is not used by the user-observable functioning, really it is only used in logging (console message). Move it into `RotationArcSpanLog`!
 	this.figure = nearestFigure;
 	this.startReferenceAngle = nearestFigure.referenceAngle,
-	this.widget = widgetFactory.createWidgetFromMedium(nearestFigure);
+	this.widget = widgetFactory.createFigureWidgetFromMedium(nearestFigure);
 	this.board  = widgetFactory.bijectionSvgToGeom;
 }
 

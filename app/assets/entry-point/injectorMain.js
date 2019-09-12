@@ -7,7 +7,7 @@ onload = function (event)
 	var coordSysTransformer = new CoordSysTransformer([300, 200], 10, [true, false]);
 
 	var roomFactory           = new RoomFactory();
-	var widgetFactories       = svgLowLevels.map(svgLowLevel => new WidgetFactory(new Bijection, coordSysTransformer, new Bijection, svgLowLevel));
+	var widgetFactories       = svgLowLevels.map(svgLowLevel => new WidgetFactory(new Map, coordSysTransformer, new Bijection, svgLowLevel)); // Use a PartialMap class, that should yield Nothing's
 
 	var audio               = new MyAudio(new Audio('assets/sonar.ogg'));
 	var widgetCollision = new WidgetCollision(audio);

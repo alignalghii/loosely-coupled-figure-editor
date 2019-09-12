@@ -56,3 +56,24 @@ SvgLowLevel.prototype.subscribe = function (typeName, emptyCase, polygonCase) //
 	};
 	svgRootElement.addEventListener(typeName, handler);
 };
+
+SvgLowLevel.prototype.createText = function (name, [x, y])
+{
+	const textChild = createElementWithAttributes('text', {x: x, y: y}, svgNS);
+	textChild.textContent = name;
+	this.svgRootElement.appendChild(textChild);
+	const w = textChild.getComputedTextLength();
+	textChild.setAttribute('x', x -  w/2);
+	textChild.setAttribute('y', y +  4);
+	return textChild;
+};
+
+
+function updateTextName(textChild, name) {textChild.textContent = name;}  // @TODO: !!!!!!!!!!!!
+
+function updateTextPosition(textChild, [x, y]) // @TODO: !!!!!!!!!!!!
+{
+	const w = textChild.getComputedTextLength();
+	textChild.setAttribute('x', x -  w/2);
+	textChild.setAttribute('y', y +  4);
+}

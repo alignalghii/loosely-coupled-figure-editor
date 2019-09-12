@@ -2,7 +2,8 @@ function boardReduce(reducer, initialValue, board)
 {
 	var accumulator = initialValue;
 	for (let currentValue of board.range()) {
-		accumulator = reducer(accumulator, currentValue);
+		if (isJust(currentValue.isCollidable())) // @TODO OOP polymorphism @TODO raise level in module hierarchy
+			accumulator = reducer(accumulator, currentValue);
 	}
 	return accumulator;
 }
@@ -19,7 +20,8 @@ function boardMap_opt(mapper, board)
 {
 	const results = [];
 	for (let currentValue of board.range()) {
-		results.push(mapper(currentValue));
+		if (isJust(currentValue.isCollidable())) // @TODO raise level in module hierarchy
+			results.push(mapper(currentValue));
 	}
 	return results;
 }
@@ -27,7 +29,8 @@ function boardMap_opt(mapper, board)
 function boardAll(predicate, board)
 {
 	for (let currentValue of board.range()) {
-		if (!predicate(currentValue)) return false;
+		if (isJust(currentValue.isCollidable())) // @TODO OOP polymorphism @TODO raise level in module hierarchy
+			if (!predicate(currentValue)) return false;
 	}
 	return true;
 }
@@ -35,7 +38,8 @@ function boardAll(predicate, board)
 function boardAny(predicate, board)
 {
 	for (let currentValue of board.range()) {
-		if (predicate(currentValue)) return true;
+		if (isJust(currentValue.isCollidable())) // @TODO OOP polymorphism @TODO raise level in module hierarchy
+			if (predicate(currentValue)) return true;
 	}
 	return false;
 }

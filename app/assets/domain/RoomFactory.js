@@ -18,7 +18,7 @@ RoomFactory.prototype.sampleRoomBank = function () { return {
 
 RoomFactory.prototype.createGeneral = function (figure)
 {
-	var roomType = 'living'; // @TODO should come from database
+	var roomType = 'Konyha'; // @TODO should come from database
 
 	// @TODO should depend on `roomType`
 	var openings = [
@@ -33,6 +33,8 @@ RoomFactory.prototype.createGeneral = function (figure)
 	var furniture = [];
 
 	return new Room(roomType, figure, openings, generalSizes, furniture);
+	//console.log(r);
+	//return r;
 };
 
 RoomFactory.prototype.createSquareByArea = function (area, [x, y])

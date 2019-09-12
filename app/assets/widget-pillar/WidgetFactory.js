@@ -1,31 +1,45 @@
 // A widget is an architectually columnal, pillar-like thing holding a high-level (geometrical) and a low-level (SVG) part
 // A widget is a cache of a record (assignment item/element, ordered pair) of a bijection, possibly a ternary or multiple-attribute bijection
 
-function WidgetFactory(bijectionGeomToDomain, coordSysTransformer, bijectionSvgToGeom, svgLowLevel)
+function WidgetFactory(partialFunctionGeomToBusiness, coordSysTransformer, bijectionSvgToGeom, svgLowLevel)
 {
-	this.bijectionGeomToDomain = bijectionGeomToDomain;
+	this.partialFunctionGeomToBusiness = partialFunctionGeomToBusiness;
 	this.coordSysTransformer   = coordSysTransformer;
 	this.bijectionSvgToGeom    = bijectionSvgToGeom;
 	this.svgLowLevel           = svgLowLevel;
 }
 
-WidgetFactory.prototype.createWidgetFromDomain0 = function (domainObject) {return this.createWidgetFromReplacedGeom(domainObject.figure, domainObject);};
+WidgetFactory.prototype.createFigureWidgetFromDomain0 = function (domainObject) {return this.createFigureWidgetFromReplacedGeom(domainObject.figure, domainObject);};
 
 
-WidgetFactory.prototype.createWidgetFromReplacedGeom = function (geomFigure, domainObject)
+WidgetFactory.prototype.createFigureWidgetFromReplacedGeom = function (geomFigure, domainObject) // @TODO: there will be also other businessobjects than rooms with titles
 {
 	domainObject.figure = geomFigure;
 	var svgVertices       = geomFigure.vertices.map((p) => this.coordSysTransformer.highToLow(p));//console.log('Origin figure: low-level (SVG) coordinates: {'+svgVertices.join(' | ')+'}');
 	var svgNewPolygonCild = this.svgLowLevel.createPolygonChild(svgVertices, geomFigure.svgAttributes); // @TODO consider `this.originFigure.svgAttributes`
 	this.bijectionSvgToGeom.set(svgNewPolygonCild, geomFigure);
-	this.bijectionGeomToDomain.set(geomFigure, domainObject);
-	return new Widget(this.bijectionGeomToDomain, this.coordSysTransformer, this.bijectionSvgToGeom, domainObject, geomFigure, svgNewPolygonCild);
+	this.partialFunctionGeomToBusiness.set(geomFigure, domainObject);
+
+	// @TODO: not necessarily all figures have a title
+	//const titleName     = domainObject.name;
+	//const titlePosition = titlePositionFor(geomFigure.vertices);
+	const title = domainObject.title;  // @TODO: there will be also other businessobjects than rooms with titles
+	const textElem = this.svgLowLevel.createText(title.name, this.coordSysTransformer.highToLow(title.position));
+	//const title    = new Title(titleName, titlePosition);
+	this.bijectionSvgToGeom.set(textElem, title);
+	console.log(textElem, title);
+	const tw = new TitleWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom,    ['nothing'], title, textElem);
+	console.log('tw',);
+
+	return new FigureWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, ['just', domainObject], geomFigure, svgNewPolygonCild);
 };
 
-WidgetFactory.prototype.createWidgetFromDomain1 = function (domainObjectOriginal)
+WidgetFactory.prototype.createFigureWidgetFromDomain1 = function (domainObjectOriginal)
 {
+	console.log('Original: ', domainObjectOriginal);
 	var domainObject = domainObjectOriginal.copy();
-	this.createWidgetFromDomain0(domainObject);
+	console.log('Copy: ', domainObject);
+	this.createFigureWidgetFromDomain0(domainObject);
 };
 
 WidgetFactory.prototype.stampAt = function (domainStamp, geomCoords) // @TODO swap object receiver and argument around method
@@ -33,23 +47,52 @@ WidgetFactory.prototype.stampAt = function (domainStamp, geomCoords) // @TODO sw
 	var domainObject      = domainStamp.copy();
 	var geomNewFigure     = domainObject.figure.centering();
 	geomNewFigure.doTranslation(geomCoords);
-	return this.createWidgetFromReplacedGeom(geomNewFigure, domainObject);
+	return this.createFigureWidgetFromReplacedGeom(geomNewFigure, domainObject);
 };
-
 
 WidgetFactory.prototype.createWidgetFromLow = function (svgPolygon)
 {
-	var geomFigure = this.bijectionSvgToGeom.get(svgPolygon);
-	var domainObject = this.bijectionGeomToDomain.get(geomFigure);
-	return new Widget(this.bijectionGeomToDomain, this.coordSysTransformer, this.bijectionSvgToGeom, domainObject, geomFigure, svgPolygon);
+	const [maybeDomainObject, geomFigure] = this.prepareWidgetFromLow(svgPolygon);
+	switch (svgPolygon.tagName) {
+		case 'polygon': return new FigureWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, maybeDomainObject, geomFigure, svgPolygon);
+		case 'text'   : return new TitleWidget (this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, maybeDomainObject, geomFigure, svgPolygon);
+		default       : throw 'Invalid low-level SVG-subelement, unable to convert upwards to higher-level objects';
+	}
+};
+//WidgetFactory.prototype.createTitleWidgetFromLow = function (svgPolygon) {};
+
+WidgetFactory.prototype.createFigureWidgetFromMedium = function (geomFigure)
+{
+	const [maybeDomainObject, svgPolygon] = this.prepareWidgetFromMedium(geomFigure);
+	return new FigureWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, maybeDomainObject, geomFigure, svgPolygon);
+};
+
+WidgetFactory.prototype.createTitleWidgetFromMedium = function (geomFigure)
+{
+	const [maybeDomainObject, svgPolygon] = this.prepareWidgetFromMedium(geomFigure);
+	return new TitleWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, maybeDomainObject, geomFigure, svgPolygon);
 };
 
 
-WidgetFactory.prototype.createWidgetFromMedium = function (geomFigure)
+WidgetFactory.prototype.prepareWidgetFromLow = function (svgPolygon)
+{
+	console.log(svgPolygon);
+	var geomFigure = this.bijectionSvgToGeom.get(svgPolygon);
+	console.log(geomFigure);
+	const domNull = this.partialFunctionGeomToBusiness.get(geomFigure);
+	var maybeDomainObject = domNull ? ['just', domNull] : ['nothing'];
+	if (!geomFigure) throw 'Event on orphan (unregistered) SVG-subelement triggers widget creation, but the higher-level component is lacking'
+	return [maybeDomainObject, geomFigure];
+};
+
+
+WidgetFactory.prototype.prepareWidgetFromMedium = function (geomFigure)
 {
 	var svgPolygon    = this.bijectionSvgToGeom.getInverse(geomFigure);
-	var domainObject = this.bijectionGeomToDomain.get(geomFigure);
-	return new Widget(this.bijectionGeomToDomain, this.coordSysTransformer, this.bijectionSvgToGeom, domainObject, geomFigure, svgPolygon);
+	if (!svgPolygon) throw 'Event on orphan (unregistered) MathematicalObject triggers widget creation, but the low-level component is lacking'
+	const domNull = this.partialFunctionGeomToBusiness.get(geomFigure);
+	var maybeDomainObject = domNull ? ['just', domNull] : ['nothing'];
+	return [maybeDomainObject, svgPolygon];
 };
 
 WidgetFactory.prototype.mergelessSubscribe = function (eventTypeName, emptyCase, widgetCase) // @TODO a `return` valószínűleg fölösleges itt is, és a hivatkozott svgLowLevel.subscribe-on is
@@ -61,7 +104,7 @@ WidgetFactory.prototype.mergelessSubscribe = function (eventTypeName, emptyCase,
 	}
 	const svgPolygonCase = (svgPolygon, svgPosition) =>
 	{
-		var widget               = this.createWidgetFromLow          (svgPolygon );
+		var widget               = this.createWidgetFromLow    (svgPolygon );
 		var widgetEventPosition  = this.coordSysTransformer.lowToHigh(svgPosition);  // @TODO Demeter principle
 		return widgetCase(widget, widgetEventPosition);
 	}

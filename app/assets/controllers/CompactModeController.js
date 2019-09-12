@@ -31,7 +31,7 @@ CompactModeController.prototype.mouseMove = function (currentWEPos, eitherTarget
 {
 	if (this.state.prevWidgetHasNotCollidedYet()) {
 		const targetCanvas = canvasOfEitherTarget(eitherTarget);
-		const {bijectionSvgToGeom: targetBoard, bijectionGeomToDomain: targetBusinessBoard} = this.widgetFactoryForEitherTarget(eitherTarget);
+		const {bijectionSvgToGeom: targetBoard, partialFunctionGeomToBusiness: targetBusinessBoard} = this.widgetFactoryForEitherTarget(eitherTarget);
 		this.jumpWidgetToIfNeeded(targetCanvas, targetBoard, targetBusinessBoard);
 
 		if (this.followWhileCheckCollision(currentWEPos, targetBoard)) this.state.prevWidget.unshowGlittering(); // @TODO

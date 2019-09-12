@@ -7,7 +7,7 @@ const FOCUS = [{name: 'filter', value: 'url(#shadow)'}];
  * Geometric transformations (translation, reflection, rotation)
  **************************/
 
-function Figure(vertices, svgAttributes = {}, grasp, referenceAngle)
+function Figure(vertices, svgAttributes = {}, grasp, referenceAngle)  // @TODO: inherit `Figure` and `Title` from a common `MathematicalLevelObject` ancestor
 {
 	this.grasp         = grasp || (vertices.length > 0 ? centroid(vertices) : [0,0]); // referencePoint
 	this.referenceAngle = referenceAngle || 0;
@@ -16,6 +16,14 @@ function Figure(vertices, svgAttributes = {}, grasp, referenceAngle)
 	if (!('stroke-width' in svgAttributes)) svgAttributes['stroke-width'] = 5;
 	this.svgAttributes = svgAttributes;
 }
+
+Figure.prototype = Object.create(MathematicalObject.prototype);
+
+Figure.prototype.constructor = Figure;
+
+Figure.prototype.isCollidable = function () {return ['just', function (board) {return mbVectorTransfomationForAllowance(this, board);}];};
+
+//Figure.prototype.mbVectorTransfomationForAllowance = function (board) {return mbVectorTransfomationForAllowance(this, board);}; // @TODO: reconsider
 
 Figure.prototype.translation = function ([dx, dy])
 {
@@ -209,3 +217,5 @@ Figure.prototype.editEdge_areaInvariant = function (i, a) // @TODO works around 
 		)
 	) * Math.PI / 180;
 };
+
+Figure.prototype.titlePosition = function () {return titlePositionFor(this.vertices);};

@@ -8,7 +8,7 @@ function ScaleStressSpan([figCommandName, wdgCommandName], currentWEPos, nearest
 	this.start  = currentWEPos;
 	this.last   = currentWEPos; // @TODO: `last` is not used by the user-observable functioning, really it is only used in logging (console message). Move it into `ScaleStressSpanLog`!
 	this.figure = nearestFigure;
-	this.widget = widgetFactory.createWidgetFromMedium(nearestFigure);
+	this.widget = widgetFactory.createFigureWidgetFromMedium(nearestFigure);
 	this.board  = widgetFactory.bijectionSvgToGeom;
 }
 

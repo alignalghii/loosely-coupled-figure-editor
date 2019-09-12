@@ -6,7 +6,7 @@ function ReflectionFlip([figCommandName, wdgCommandName], nearestFigure, widgetF
 	this.wdgCommandName = wdgCommandName;
 
 	this.figure = nearestFigure;
-	this.widget = widgetFactory.createWidgetFromMedium(nearestFigure);
+	this.widget = widgetFactory.createFigureWidgetFromMedium(nearestFigure);
 	this.board  = widgetFactory.bijectionSvgToGeom;
 }
 

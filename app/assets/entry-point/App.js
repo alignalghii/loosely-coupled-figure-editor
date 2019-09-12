@@ -27,9 +27,11 @@ App.prototype.run = function ()
 
 App.prototype.populate = function (i)
 {
-	this.roomStampDriver.roomBank.namedRooms.map((namedRoom) => this.widgetEventPillar.widgetFactories[i].createWidgetFromDomain1(namedRoom.room));// @TODO Law of Demeter
-	var massPoint1Factory = new MassPoint1Factory;
+	this.roomStampDriver.roomBank.namedRooms.map((namedRoom) => this.widgetEventPillar.widgetFactories[i].createFigureWidgetFromDomain1(namedRoom.room));// @TODO Law of Demeter
+
+	// @TODO: title-less domain objects make the app fail!
+	/*var massPoint1Factory = new MassPoint1Factory;
 	var massPoint2Factory = new MassPoint2Factory;
-	this.widgetEventPillar.widgetFactories[i].createWidgetFromDomain1(massPoint1Factory.testMassPoint1('red' , [ 8,  4]));
-	this.widgetEventPillar.widgetFactories[i].createWidgetFromDomain1(massPoint2Factory.testMassPoint2('blue', [10, -6]));
+	this.widgetEventPillar.widgetFactories[i].createFigureWidgetFromDomain1(massPoint1Factory.testMassPoint1('red' , [ 8,  4]));
+	this.widgetEventPillar.widgetFactories[i].createFigureWidgetFromDomain1(massPoint2Factory.testMassPoint2('blue', [10, -6]));*/
 };

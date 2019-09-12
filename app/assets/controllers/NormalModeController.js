@@ -21,7 +21,7 @@ NormalModeController.prototype.mouseDown = function (position, eitherTarget)
 	this.state.forgetDrag();
 	either(
 		canvas => this.statusBarDriver.report('Üres helyhez vagy helypozícióhoz kötődő művelet várható...'),
-		currentWidget => {
+		currentWidget => {console.log('cccc', currentWidget);
 			this.rememberWidget(currentWidget);
 			this.rememberPosition(position);
 			currentWidget.showGlittering();
@@ -37,13 +37,28 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 		var infinitezimalDisplacement  = fromTo(this.state.prevWEPos, currentWEPos);
 		if (vectorLength(infinitezimalDisplacement) > 0) { // drag event provides sometimes also 0-displacements, we filter them out for better clarity's sake
 			const targetCanvas = canvasOfEitherTarget(eitherTarget);
-			const {bijectionSvgToGeom: targetBoard, bijectionGeomToDomain: targetBusinessBoard} = this.widgetFactoryForCanvas(targetCanvas);
+			const {bijectionSvgToGeom: targetBoard, partialFunctionGeomToBusiness: targetBusinessBoard} = this.widgetFactoryForCanvas(targetCanvas);
 			this.jumpWidgetToIfNeeded(targetCanvas, targetBoard, targetBusinessBoard);
-			const mbAllowable = this.state.prevWidget.domainObject.mbVectorTransfomationForAllowance(targetBoard)(infinitezimalDisplacement);
+			console.log(targetBoard);
+			console.log('-------', this.state.prevWidget.high.isCollidable());
+			const allowable = maybe(
+				infinitezimalDisplacement,
+				mbVectorTransformationForAllowance444 => { // @TODO: !!!!
+					console.log('vvvvvvvvvv', targetBoard, infinitezimalDisplacement);
+					const mbAllowable = mbVectorTransformationForAllowance(this.state.prevWidget.high, targetBoard)(infinitezimalDisplacement);
+					console.log('wwwwwwwwww', mbAllowable);
+					return fromMaybe_exec(
+						() => {this.statusBarDriver.report('Tiltott zóna!'); return [0, 0];}, // @TODO: an axception should be thrown rather
+						mbAllowable
+					);
+				},
+				this.state.prevWidget.high.isCollidable()
+			);
+			/*const mbAllowable = this.state.prevWidget.high.mbVectorTransfomationForAllowance(targetBoard)(infinitezimalDisplacement);
 			const allowable = fromMaybe_exec(
 				() => {this.statusBarDriver.report('Tiltott zóna!'); return [0, 0];}, // @TODO: an axception should be thrown rather
 				mbAllowable
-			);
+			);*/
 			this.translatePrevWidgetAndRememberItsNewPosition(allowable);
 			if (vectorLength(infinitezimalDisplacement) > 0 && vectorLength(allowable) == 0) this.statusBarDriver.report(`Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ${JSON.stringify(infinitezimalDisplacement)} irányban.`);
 			this.state.dragHasAlreadyBegun = true;
@@ -53,6 +68,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 
 NormalModeController.prototype.translatePrevWidgetAndRememberItsNewPosition = function (allowableDisplacement)
 {
+	console.log('dddd', this.state.prevWidget);
 	this.state.prevWidget.translate(allowableDisplacement);
 	this.addToRememberedPosition(allowableDisplacement);
 };
