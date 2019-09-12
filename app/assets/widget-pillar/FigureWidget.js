@@ -17,6 +17,22 @@ FigureWidget.prototype.updateDownward = function ()
 };
 
 
+// @TODO: can be raised to abstract Widget class?
+FigureWidget.prototype.updateUpAndDownward = function ()
+{
+	maybeMap(
+		domainObject => {
+			domainObject.goUpdatedByOwnFigure();
+			// @TODO: DRY: try to reuse widgetfactory.createTitleWidgetFromMedium
+			const title = domainObject.title;
+			const textElem = this.bijectionSvgToGeom.getInverse(title);
+			const titleWidget = new TitleWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, ['nothing'], title, textElem);
+			titleWidget.updateDownward();
+		},
+		this.maybeDomainObject
+	)
+	this.updateDownward();
+};
 
 
 FigureWidget.prototype.showGlittering = function ()
@@ -56,7 +72,7 @@ FigureWidget.prototype.unshowFocus = function ()
 
 // Geometrical transforamtions
 
-FigureWidget.prototype.translate = function (displacement)
+FigureWidget.prototype.translate = function (displacement) // @TODO: DRY
 {
 	console.log('ffff', this);
 	maybeMap(
@@ -74,7 +90,23 @@ FigureWidget.prototype.translate = function (displacement)
 	this.updateDownward(); // it relates to figure only
 };
 
-FigureWidget.prototype.rotate    = function (phi) {this.high.doRotation(phi); this.updateDownward();};
+FigureWidget.prototype.rotate = function (phi) // @TODO: DRY
+{
+	maybeMap(
+		domainObject => {
+			domainObject.doRotation(phi); // domainobject will update `figure` and `title` mathobjects silently
+			const title = domainObject.title; // @TODO: not every domainobject has a title
+			const textElem = this.bijectionSvgToGeom.getInverse(title); // @TODO: bug: textelem is undefined!
+			console.log('textelem:', textElem);
+			const titleWidget = new TitleWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom,   ['nothing'], title, textElem); // @TODO bug
+			console.log('titlewidget:', titleWidget);
+			titleWidget.updateDownward();
+		},
+		this.maybeDomainObject
+	);
+	this.updateDownward(); // it relates to figure only
+};
+
 FigureWidget.prototype.reflectHorizontally = function () {this.high.doReflectHorizontally(); this.updateDownward();};
 FigureWidget.prototype.reflectVertically   = function () {this.high.doReflectVertically();   this.updateDownward();};
 FigureWidget.prototype.scale  = function (q) {this.high.doScale (q); this.updateDownward();};

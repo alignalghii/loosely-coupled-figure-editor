@@ -24,7 +24,7 @@ FigureEditorController.prototype.work = function (command, currentWEPos, eitherT
 			const figureEditor  = new FigureEditorByProximityHeuristic(nearestFigure);
 			figureEditor[command](currentWEPos);
 			const widget = widgetFactory.createFigureWidgetFromMedium(nearestFigure);
-			widget.updateDownward();
+			widget.updateUpAndDownward();
 			return 'Alakzatszerkesztő. ' + template1 + ' a ' + JSON.stringify(currentWEPos) + ' pontot a legközelebbi ' + template2 + '. Ennek változása: ' + oldVertices + ' --> ' + JSON.stringify(nearestFigure.vertices) + '.';
 		},
 		maybeNearestFigureHence(board, currentWEPos)

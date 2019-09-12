@@ -13,3 +13,5 @@ Title.prototype.doTranslation = function (displacement)
 	const [dx, dy] = displacement;
 	this.position[0] += dx; this.position[1] += dy;
 }
+
+Title.prototype.readaptTo = function (figure) {this.position = figure.titlePosition();};
