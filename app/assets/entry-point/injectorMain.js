@@ -1,13 +1,19 @@
 onload = function (event)
 {
-	var svgLowLevel_mainCanvas       = new SvgLowLevel(document, 'svgRoot' ); // [600, 400]
-	var svgLowLevel_experimentCanvas = new SvgLowLevel(document, 'svgRoot2'); // [600, 400]
-	var svgLowLevels           = [svgLowLevel_mainCanvas, svgLowLevel_experimentCanvas];
+	var svgLowLevel_menuCanvas = new SvgLowLevel(document, 'svgRoot_menuCanvas'); // [250, 400]
+	var svgLowLevel_workCanvas = new SvgLowLevel(document, 'svgRoot_workCanvas'); // [600, 400]
+	var svgLowLevels           = [svgLowLevel_menuCanvas, svgLowLevel_workCanvas];
 
-	var coordSysTransformer = new CoordSysTransformer([300, 200], 10, [true, false]);
+	const coordSysTransformer_menuCanvas = new CoordSysTransformer([125, 200], 10, [true, false]), // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
+	      coordSysTransformer_workCanvas = new CoordSysTransformer([300, 200], 20, [true, false]); // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
 
 	var roomFactory           = new RoomFactory();
-	var widgetFactories       = svgLowLevels.map(svgLowLevel => new WidgetFactory(new Map, coordSysTransformer, new Bijection, svgLowLevel)); // Use a PartialMap class, that should yield Nothing's
+	// var widgetFactories       = svgLowLevels.map(svgLowLevel => new WidgetFactory(new Map, coordSysTransformer, new Bijection, svgLowLevel)); // Use a PartialMap class, that should yield Nothing's
+	// @TODO restore the more generic solutions soon, but now I want micromanage for experimental purpose.
+	const widgetFactories = [
+		new WidgetFactory(new Map, coordSysTransformer_menuCanvas, new Bijection, svgLowLevel_menuCanvas),
+		new WidgetFactory(new Map, coordSysTransformer_workCanvas, new Bijection, svgLowLevel_workCanvas)
+	];
 
 	var audio               = new MyAudio(new Audio('assets/sonar.ogg'));
 	var widgetCollision = new WidgetCollision(audio);

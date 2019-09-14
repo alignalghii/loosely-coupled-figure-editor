@@ -2,6 +2,7 @@
 // A widget is a cache of a record (assignment item/element, ordered pair) of a bijection, possibly a ternary or multiple-attribute bijection
 
 // @TODO common ancestor with `WigetEventPosition`. Note also the formal sameness of the constructors (only the typing differs)
+// @TODO: use widgetfactory as a component/collaborator instead of coordSysTransformer!
 function Widget(partialFunctionGeomToBusiness, coordSysTransformer, bijectionSvgToGeom,    maybeDomainObject, high, low)
 {
 	this.partialFunctionGeomToBusiness = partialFunctionGeomToBusiness; // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
@@ -28,7 +29,7 @@ Widget.prototype.delete = function ()
 
 // Jump over between two canvasses
 
-Widget.prototype.jumpTo = function (targetCanvas, targetBoard, targetBusinessBoard)
+Widget.prototype.jumpTo = function (targetCanvas, targetBoard, targetBusinessBoard, targetCoordSysTransfomer) // @TODO: use widgetfactory as a component/collaborator instead of coordSysTransformer!
 {
 	targetCanvas.appendChild(this.low);
 	maybeMap(
@@ -37,15 +38,15 @@ Widget.prototype.jumpTo = function (targetCanvas, targetBoard, targetBusinessBoa
 				// @TODO use WidgetFactory.prototype.createTitleWidgetFromMedium
 				const titleWidget = new TitleWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, ['nothing'], domainObject.title, this.bijectionSvgToGeom.getInverse(domainObject.title));
 				targetCanvas.appendChild(titleWidget.low);
-				titleWidget.changeBoardsFor(targetBoard, targetBusinessBoard);
+				titleWidget.changeBoardsFor(targetBoard, targetBusinessBoard, targetCoordSysTransfomer);
 			}
 		},
 		this.maybeDomainObject
 	);
-	this.changeBoardsFor(targetBoard, targetBusinessBoard);
+	this.changeBoardsFor(targetBoard, targetBusinessBoard, targetCoordSysTransfomer);
 };
 
-Widget.prototype.changeBoardsFor = function (targetBoard, targetBusinessBoard)
+Widget.prototype.changeBoardsFor = function (targetBoard, targetBusinessBoard, targetCoordSysTransfomer) // @TODO: use widgetfactory as a component/collaborator instead of coordSysTransformer!
 {
 	// Subscribe for new boards:
 	targetBoard        .set(this.low , this.high        );
@@ -59,8 +60,9 @@ Widget.prototype.changeBoardsFor = function (targetBoard, targetBusinessBoard)
 	if (this.partialFunctionGeomToBusiness.get(this.high)) this.partialFunctionGeomToBusiness.delete(this.high); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
 
 	// Update collaborators:
-	this.bijectionSvgToGeom    = targetBoard;         // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
-	this.partialFunctionGeomToBusiness = targetBusinessBoard; // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
+	this.coordSysTransformer           = targetCoordSysTransfomer; // @TODO: use widgetfactory as a component/collaborator instead of coordSysTransformer!
+	this.bijectionSvgToGeom            = targetBoard;              // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
+	this.partialFunctionGeomToBusiness = targetBusinessBoard;      // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
 };
 
 // Abstract function: Widget.prototype.updateDownward

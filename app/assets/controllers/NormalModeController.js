@@ -38,7 +38,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 		if (vectorLength(infinitezimalDisplacement) > 0) { // drag event provides sometimes also 0-displacements, we filter them out for better clarity's sake
 			const targetCanvas = canvasOfEitherTarget(eitherTarget);
 			const {bijectionSvgToGeom: targetBoard, partialFunctionGeomToBusiness: targetBusinessBoard} = this.widgetFactoryForCanvas(targetCanvas);
-			this.jumpWidgetToIfNeeded(targetCanvas, targetBoard, targetBusinessBoard);
+			this.jumpWidgetToIfNeeded(targetCanvas, targetBoard, targetBusinessBoard); // @TODO: rossz helyen van, szervesen részt kell vennie az ütközésvizgálatban
 			console.log(targetBoard);
 			console.log('-------', this.state.prevWidget.high.isCollidable());
 			const allowable = maybe(

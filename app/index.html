@@ -261,7 +261,7 @@
 			<h2>Vásznak</h2>
 			A forrásvászonról a célvászonra az alakzatok egyszerűen áthúzhatóak (és visszafelé is). Mindkét vásznon értelemszerűen működik az összes egyéb művelet (alakzatszerkesztés csúcsok hozzáadásával, törlésével, mozgatásával, geometriai transzformációk, alakzat hozzáadása vagy törlése listából kiválalasztott sablonalak alapján).
 			<div><em>Célvászon:</em></div>
-			<svg id="svgRoot2" width="600" height="400">
+			<svg id="svgRoot_workCanvas" width="600" height="400">
 		</svg>
 		</div>
 		<div id="HolyGrail_right">
@@ -279,7 +279,7 @@
 			</div>
 			<div><em>Forrásvászon:</em></div>
 			<!-- Credit to https://www.w3schools.com/graphics/svg_feoffset.asp -->
-			<svg id="svgRoot" width="600" height="400">
+			<svg id="svgRoot_menuCanvas" width="250" height="400">
 				<defs>
 					<filter id="shadow" x="-0.2" y="-0.2" width="200%" height="200%">
 						<feOffset result="offOut" in="SourceGraphic" dx="8" dy="8" />
