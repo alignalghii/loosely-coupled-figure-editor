@@ -1,4 +1,4 @@
-body {
+#appContainer {
 	display: grid;
 	grid-template-columns: auto auto auto;
 	grid-template-areas:

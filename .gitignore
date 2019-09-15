@@ -1,3 +1,11 @@
-sonar.ogg
 *.o
 *.hi
+
+vendor/sell/*
+!vendor/sell/README.md
+
+vendor/buy/*
+!vendor/buy/README.md
+sonar.ogg
+logo.jpeg
+#favicon?
