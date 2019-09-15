@@ -15,7 +15,7 @@ onload = function (event)
 		new WidgetFactory(new Map, coordSysTransformer_workCanvas, new Bijection, svgLowLevel_workCanvas)
 	];
 
-	var audio               = new MyAudio(new Audio('assets/sonar.ogg'));
+	var audio               = new MyAudio(new Audio('assets-proper/sonar.ogg'));
 	var widgetCollision = new WidgetCollision(audio);
 
 	var roomBank             = roomFactory.sampleRoomBank();
