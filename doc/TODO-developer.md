@@ -145,3 +145,34 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - Súlyos baj, hogy invalidus ütközés, ha bekövetkezés (léptékváló ugrásnál sincs ellene védelem még), akkor a felhasználó onnan már nem tud kiszabadulni, és az alkalmazás valójában JvaScript-hibábal áll le.
  - Sokszor merül fel a z-kkordináta (a ,,mélység'') kérdése. Erre véletlen mellékhatásként egész jó megoldás született: át kellhúzni az alakzatot a másik vászoonra, és visszahúzni. Ekkor automatikusan topre kerül. Ha egész berbútorzott szobát húzok át, akkor egyszerre az összes alakzat topra kerül. Ha a cím mélyebbben lenne, mint egy szoba, a cím önálló át és visszahúzásával a cím is topra kerül. A baj csak az, hogy ha a menüvászon automatikusan mindig újrafrissül, amikor onnan kihúzok valamit, akkor az ilyenfajta topraemelés már nem lesz szimmetrikus. Önmagában ez még nem akadly,a de akkor a szabálynak annak kell lennie: a menüvászonra való ráhúzás még nem resetteli a menüvsznat, csak az onnan való elhúzás. Fontos az is, hogy a munkavászonról való elhúzás ne resettelje a munkavásznat. Az áugrási resettelő szabály tehát aszimmetrikus, és kiemelt vásznakat ismer.
  - Ha a topraemelésre külön ikont, funkciót hozunk létre, akkor a vásznak átugrási resettelő szabálya szimmetrikusabb lehet!
+
+ - Elromlott az alakzattulajdonság-szerkesztő:
+
+        FigurePropertyEditorController.js:59 Uncaught TypeError: Cannot read property 'name' of undefined
+            at FigurePropertyEditorController.open (FigurePropertyEditorController.js:59)
+            at widget (FigurePropertyEditorController.js:48)
+            at either (Either.js:5)
+            at FigurePropertyEditorController.modeOn (FigurePropertyEditorController.js:46)
+            at Router.dispatch (Router.js:195)
+            at mergelessSubscribe (WidgetEventPillar.js:22)
+            at svgPolygonCase (WidgetFactory.js:109)
+            at SVGSVGElement.handler (SvgLowLevel.js:55)
+
+  Fontos, hogy a hiba megjavítása után azt is nézzük meg pluszban, hogy az sem zavarja-e meg, ha egy szoba **címére** kattintok rá.
+
+ - `../spec` alakú elérhetőségű modulokat ne töltsön be az `index.html`, mert a documentroorból úgysem láthat ki, és ez nagyon lelassítja a betöltést. Elvileg nem ördögtől való, ha az index rálát saját tesztjeire (bár érdemels lehet külön html-oldalra tenni), de ha mégis az indexre szeretnénk, akkor linkelődjenek elérhető helyről és módon. Felhasználói szempotból a (kijaított linkelésű) spec-ek betöltése csak időt vesz el, de egyelőre még bennhagyhatjuk (majd végső élesítéskor lehet gonsolkodni valamiféle optimalizációs célú kivevésen).
+ - Nem jó, hogy néhány fájl elhelyezésében nincs emgállapodás (a css és a logó az index mellett is, meg az assets alkönyvtárban is van (az ingyenes vs a céges változat)
+
+
+# Fontend
+ - Freeze lenne jó, mint ahogy az excelben táblasorokat lehet rögzíteni. itt persze a statussort lenne jó így. (Úgy tűnik, az overflow scroll erre elfogadható eszköz lesz)
+ - Az Attila által mutatott balfölső ,,globális beállítások'' féle panelbe bekerülhetne az Attila által kért zoom, + - ikonnal (esetleg a böngészök mintájára 0 defaulthelyreállító ikonnal). Könnyű a működési tartalmat mögévarázsolni most immár: a munkavászon coordSysTransformer-ét állítaná.
+ - Átgondolni az <a href target...>-et a helpnél és részeinél, és a Central Home logónál is. A linkek legyenek jók ,műkdjenek documentrootból. A CSS-nek is be kell töltődnie.
+
+ - A ,,fúkusz'' fogalmat jelképezű circledot ikon nem jó, mert pont keveredik a rádiógombbal, amely mellette áll. Legyen inkább valami csillag, asterisk, * vagy ★(&#9733;),   ⭐(&#11088;, &#x2B50;).
+ - Jó, hogy a doc nincs a documentrootban, hisz pl. a TODO-developer nem publikus, de a help igen, és a helphez tartozó CSS is. Azok kerüljenek át az assets-ba pl. egy help alkönyvtárba téve! A nempublikus doc-nak meg valami kifejezőbb nevet kéne adni (a TODO-developer pl jogosan nempublikus, és a developer manual statusa is kérdéses, de az user manualok sőt akár a TODO user szűk éértelemben is publikus. Amúgy minden publikus (nyíltkódú program lesz), kivéve a cégspecikfikusan testreszabott dolgokat.
+ - A súgót és formázását tehát javítsuk meg. A súgó kerüljön fejlécsorba pl. ? ikonnnal. Zoom magnifier ikonnal, +, - és 0 felsőindexszel. Csúszka is kerülhetne a zoom magnifiere-i mellé, itt viszont fifyelni érdemes rá, hogy a +, -, 0 gomb automatikusan mozgassa magával a csúszkát is!
+ - Az index.html-ek ne különbözzenek áttekinthetetlenül sok dologban (pl. lehetőleg ne legyen az, hogy mindenütt egy tabbal több van, mert másképp van behúzva).
+ - ne legyen az, hogy a logó és a CSS két helyen is lehet, és a céges változat itt, a szabad pedig ott van.
+ - app -> public, és azon belül index.html, app, spec, help/html, és assets-proper (a CSS és a logó épp ez utóbbiba kerül, app és spec pedig a javascripté).
+ - a frre vs company szétválasztást úgy oldjuk meg, ahogy a jelszókonfigurációt és más érszékeny adatoknál szokás: tpl-fájlok, gitignore. Legyen egy kis konzolalkalmazás is.
