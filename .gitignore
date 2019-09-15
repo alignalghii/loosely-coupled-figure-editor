@@ -3,6 +3,8 @@
 
 vendor/sell/*
 !vendor/sell/README.md
+index.html
+holy-grail.css
 
 vendor/buy/*
 !vendor/buy/README.md
