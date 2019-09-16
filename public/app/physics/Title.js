@@ -1,5 +1,6 @@
-function Title(name, position) // @TODO: inherit `Figure` and `Title` from a common `MathematicalLevelObject` ancestor
+function Title(host, name, position) // @TODO: inherit `Figure` and `Title` from a common `MathematicalLevelObject` ancestor
 {
+	this.host = host;
 	this.name = name;
 	this.position = position;
 }

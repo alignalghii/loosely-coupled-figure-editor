@@ -52,21 +52,45 @@ FigurePropertyEditorController.prototype.modeOn = function (currentWEPos, either
 
 FigurePropertyEditorController.prototype.open = function (widget)
 {
-	this.state.maybeWidgetActualOnFigurePropertyEditor = ['just', widget];
+	const widget_ =	this.widgetDirectlyOrViaTitle(widget);
 
-	const vertices = widget.high.vertices;
+	const vertices = widget_.high.vertices;
+	const name = maybe('<<<Bútor>>>', domainObject => domainObject.title.name, widget_.maybeDomainObject); // @TODO a bútor esetét le kell kezelni
+	this.openDriverWithCalculations(name, vertices);
 
-	const name                 = widget.domainObject.name;
+	this.state.maybeWidgetActualOnFigurePropertyEditor = ['just', widget_];
+};
+
+FigurePropertyEditorController.prototype.openDriverWithCalculations = function (name, vertices) // @TODO most of its body belongs to math or model, not to controller
+{
 	const n                    = vertices.length;
 	const perimeter            = getPerimeter(vertices);
 	const area                 = getArea(vertices);
 	const edgeAndAngleMeasures = getEdgeAndAngleMeasures(vertices);
-
 	this.figurePropertyEditorDriver.open(name, n, perimeter, area, edgeAndAngleMeasures);
 };
+
 
 FigurePropertyEditorController.prototype.close = function ()
 {
 	this.state.maybeWidgetActualOnFigurePropertyEditor = ['nothing'];
 	this.figurePropertyEditorDriver.close();
+};
+
+FigurePropertyEditorController.prototype.widgetDirectlyOrViaTitle = function (widget)
+{
+	return maybe_exec(
+		()  => {
+			const widgetFactory = this.widgetFactoryForEitherTarget(['right', widget]); // @TODO code smell. Should exist both widgetFactoryForCanvas and widgetFactoryForWidget
+			const room = widget.high.host; // @TODO what if host is not a room
+			this.statusBarDriver.report(`Szoba címére kattintottál (&bdquo;${room.title.name}&rdquo;), a hozzátartozó szobát veszem. Magát a címet sajnos egyelőre csak a tulajdonság szerkesztáben szerkesztheted át, itt helyben közvetlenül még nem 😞💣🗲🌧💧`);
+			return widgetFactory.createFigureWidgetFromMedium(room.figure);
+		},
+		domainObject => {
+			if (!widget.high.vertices || !domainObject.title.name) throw 'Tervezési hiba!'; // @TODO: hogy a legjobb? Lekezelni? Kivételt dobni? Loggolni? Áttervezni? Milyen mély a tervezési probléma?
+			this.statusBarDriver.report('Közvetlenül magára a szobára kattintottál, minden világos.');
+			return widget;
+		},
+		widget.maybeDomainObject
+	);
 };

@@ -176,3 +176,4 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - ne legyen az, hogy a logó és a CSS két helyen is lehet, és a céges változat itt, a szabad pedig ott van.
  - app -> public, és azon belül index.html, app, spec, help/html, és assets-proper (a CSS és a logó épp ez utóbbiba kerül, app és spec pedig a javascripté).
  - a frre vs company szétválasztást úgy oldjuk meg, ahogy a jelszókonfigurációt és más érszékeny adatoknál szokás: tpl-fájlok, gitignore. Legyen egy kis konzolalkalmazás is.
+ - Az alakzattulajdonsgszereksztő érzékeli már most is, ha szoba helyett annak a címére katintok (még ha a cím távolra is van húzva a szobától). Fel is hozza korrektül a hozzátartozó szobát. De a címet közvetlenül nem lehet szerkeszteni helyben, csak az alakzatszerkesztőben.
