@@ -61,6 +61,19 @@ case "$1" in
 		echo '+-----------------+';
 		echo;
 		diff ../loosely-coupled-figure-editor--vendor/vendor/sell/holy-grail.css vendor/sell/holy-grail.css;;
+	status)
+		echo ' ================================================';
+		echo '||                    D I F F                   ||';
+		echo ' ================================================';
+		echo;
+		./console.bash diff;
+		echo;
+		echo ' ================================================';
+		echo '||             S Y N C S T A T U S              ||';
+		echo ' ================================================';
+		echo;
+		./console.bash syncstatus;
+		echo;;
 	push)
 		cp public/index.html ../loosely-coupled-figure-editor--vendor/vendor/sell/index.html;
 		cp public/assets-proper/holy-grail.css ../loosely-coupled-figure-editor--vendor/vendor/sell/holy-grail.css;;
@@ -85,7 +98,7 @@ case "$1" in
 		echo '=========';
 		echo;
 		echo './console.bash';
-		echo -e "\thelp\n\tpull || checkout-sell  | checkout-buy | checkout-free\n\tpush || commit-sell    | commit-buy\n\t        clean-sell     | clean-buy    | clean-all\n\t        branches       | diff         | syncstatus";;
+		echo -e "\thelp\n\tpull || checkout-sell  | checkout-buy | checkout-free\n\tpush || commit-sell    | commit-buy\n\t        clean-sell     | clean-buy    | clean-all\n\t        branches       | diff         | syncstatus    | status";;
 	*)
 		echo "Invalid console command [$1], type [./console.bash help] for details.";;
 esac;
