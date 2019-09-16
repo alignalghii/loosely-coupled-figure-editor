@@ -1,19 +1,19 @@
 #!/bin/bash
 
 case "$1" in
-	free)
+	checkout-free)
 		cp public/index.tpl.html public/index.html;
 		cp public/assets-proper/holy-grail.tpl.css public/assets-proper/holy-grail.css;;
-	sell)
+	checkout-sell)
 		cp vendor/sell/index.html public/index.html;
 		cp vendor/sell/holy-grail.css public/assets-proper/holy-grail.css;;
-	buy)
+	checkout-buy)
 		cp vendor/buy/logo.jpeg public/assets-proper/logo.jpeg;
 		cp vendor/buy/sonar.ogg public/assets-proper/sonar.ogg;;
-	unsell)
+	commit-sell)
 		cp public/index.html vendor/sell/index.html;
 		cp public/assets-proper/holy-grail.css vendor/sell/holy-grail.css;;
-	unbuy)
+	commit-buy)
 		cp public/assets-proper/logo.jpeg vendor/buy/logo.jpeg;
 		cp public/assets-proper/sonar.ogg vendor/buy/sonar.ogg;;
 	clean-sell)
@@ -23,9 +23,9 @@ case "$1" in
 		rm public/assets-proper/logo.jpeg;
 		rm public/assets-proper/sonar.ogg;;
 	clean-all)
-		./console.bash unsell; # call user-defined bash-function instead
-		./console.bash unbuy;; # call user-defined bash-function instead
-	diff-in)
+		./console.bash clean-sell; # call user-defined bash-function instead
+		./console.bash clean-buy;; # call user-defined bash-function instead
+	branches)
 		echo '+-------------+';
 		echo '| index.html: |';
 		echo '+-------------+';
@@ -37,21 +37,35 @@ case "$1" in
 		echo '+-----------------+';
 		echo;
 		diff public/assets-proper/holy-grail.tpl.css vendor/sell/holy-grail.css;;
-	diff-out)
+	diff)
 		echo '+-------------+';
 		echo '| index.html: |';
 		echo '+-------------+';
 		echo;
-		diff ../loosely-coupled-figure-editor--vendor/vendor/sell/index.html public/index.html;
+		diff vendor/sell/index.html public/index.html;
 		echo;
 		echo '+-----------------+';
 		echo '| holy-grail.css: |';
 		echo '+-----------------+';
 		echo;
-		diff ../loosely-coupled-figure-editor--vendor/vendor/sell/holy-grail.css public/assets-proper/holy-grail.css;;
+		diff vendor/sell/holy-grail.css public/assets-proper/holy-grail.css;;
+	syncstatus)
+		echo '+-------------+';
+		echo '| index.html: |';
+		echo '+-------------+';
+		echo;
+		diff ../loosely-coupled-figure-editor--vendor/vendor/sell/index.html vendor/sell/index.html;
+		echo;
+		echo '+-----------------+';
+		echo '| holy-grail.css: |';
+		echo '+-----------------+';
+		echo;
+		diff ../loosely-coupled-figure-editor--vendor/vendor/sell/holy-grail.css vendor/sell/holy-grail.css;;
 	push)
 		cp public/index.html ../loosely-coupled-figure-editor--vendor/vendor/sell/index.html;
 		cp public/assets-proper/holy-grail.css ../loosely-coupled-figure-editor--vendor/vendor/sell/holy-grail.css;;
+	pull)
+		echo 'Not implemented for security reasons. Do it manually.';;
 	help)
 		echo 'Take special care of these vendor-like files:';
 		echo '============================================='
@@ -71,7 +85,7 @@ case "$1" in
 		echo '=========';
 		echo;
 		echo './console.bash';
-		echo -e "\tfree\n\tsell       | buy\n\tunsell     | unbuy\n\tclean-sell | clean-buy | clean-all\n\tdiff-in    | diff-out\n\tpush\n\thelp";;
+		echo -e "\thelp\n\tpull || checkout-sell  | checkout-buy | checkout-free\n\tpush || commit-sell    | commit-buy\n\t        clean-sell     | clean-buy    | clean-all\n\t        branches       | diff         | syncstatus";;
 	*)
 		echo "Invalid console command [$1], type [./console.bash help] for details.";;
 esac;
