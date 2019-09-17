@@ -1,10 +1,10 @@
 onload = function (event)
 {
-	var svgLowLevel_menuCanvas = new SvgLowLevel(document, 'svgRoot_menuCanvas'); // [250, 400]
+	var svgLowLevel_menuCanvas = new SvgLowLevel(document, 'svgRoot_menuCanvas'); // [250, 374]
 	var svgLowLevel_workCanvas = new SvgLowLevel(document, 'svgRoot_workCanvas'); // [600, 400]
 	var svgLowLevels           = [svgLowLevel_menuCanvas, svgLowLevel_workCanvas];
 
-	const coordSysTransformer_menuCanvas = new CoordSysTransformer([125, 200], 10, [true, false]), // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
+	const coordSysTransformer_menuCanvas = new CoordSysTransformer([125, 187], 10, [true, false]), // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
 	      coordSysTransformer_workCanvas = new CoordSysTransformer([300, 200], 20, [true, false]); // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
 
 	var roomFactory           = new RoomFactory();
