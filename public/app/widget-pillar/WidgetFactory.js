@@ -45,9 +45,8 @@ WidgetFactory.prototype.createFigureWidgetFromDomain1 = function (domainObjectOr
 WidgetFactory.prototype.stampAt = function (domainStamp, geomCoords) // @TODO swap object receiver and argument around method
 {
 	var domainObject      = domainStamp.copy();
-	var geomNewFigure     = domainObject.figure.centering();
-	geomNewFigure.doTranslation(geomCoords);
-	return this.createFigureWidgetFromReplacedGeom(geomNewFigure, domainObject);
+	domainObject.doTranslation(geomCoords);
+	return this.createFigureWidgetFromDomain0(domainObject);
 };
 
 WidgetFactory.prototype.createWidgetFromLow = function (svgPolygon)
