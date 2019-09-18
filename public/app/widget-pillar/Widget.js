@@ -24,7 +24,22 @@ Widget.prototype.update = function (prevWEPos, currentWEPos)
 Widget.prototype.delete = function ()
 {
 	this.bijectionSvgToGeom.delete(this.low); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
-	deletePolygonChild(this.low);             // @TODO: why do we not delete the high-level part as well (the figure)?
+	if (this.partialFunctionGeomToBusiness.get(this.high)) this.partialFunctionGeomToBusiness.delete(this.high);
+
+	deletePolygonChild(this.low);             // @TODO: why do we not delete the high-level connection as well (the business object)?
+
+	// Use a better, more general soulution (OOP, polymorphism), and raise it in abstraction level
+	maybeMap(
+		domainObject => {
+			if ('title' in domainObject) {
+				// @TODO: widget should use widgetfactory as collaborator, and the folowwing lines should be substituted by: this.widgetFactory.createTitleWidget(...).delete();
+				const textElem = this.bijectionSvgToGeom.getInverse(domainObject.title);
+				this.bijectionSvgToGeom.delete(textElem);
+				deletePolygonChild(textElem);
+			}
+		},
+		this.maybeDomainObject
+	);
 };
 
 // Jump over between two canvasses
