@@ -39,14 +39,10 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 			const targetCanvas = canvasOfEitherTarget(eitherTarget);
 			const {bijectionSvgToGeom: targetBoard, partialFunctionGeomToBusiness: targetBusinessBoard} = this.widgetFactoryForCanvas(targetCanvas);
 			this.jumpWidgetToIfNeeded(targetCanvas, targetBoard, targetBusinessBoard); // @TODO: rossz helyen van, szervesen részt kell vennie az ütközésvizgálatban
-			console.log(targetBoard);
-			console.log('-------', this.state.prevWidget.high.isCollidable());
 			const allowable = maybe(
 				infinitezimalDisplacement,
-				mbVectorTransformationForAllowance444 => { // @TODO: !!!!
-					console.log('vvvvvvvvvv', targetBoard, infinitezimalDisplacement);
-					const mbAllowable = mbVectorTransformationForAllowance(this.state.prevWidget.high, targetBoard)(infinitezimalDisplacement);
-					console.log('wwwwwwwwww', mbAllowable);
+				mbVectorTransformationForAllowance => { // @TODO: !!!!
+					const mbAllowable = mbVectorTransformationForAllowance.call(this.state.prevWidget.high, targetBoard)(infinitezimalDisplacement); // @TODO
 					return fromMaybe_exec(
 						() => {this.statusBarDriver.report('Tiltott zóna!'); return [0, 0];}, // @TODO: an axception should be thrown rather
 						mbAllowable

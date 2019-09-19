@@ -21,7 +21,8 @@ Figure.prototype = Object.create(MathematicalObject.prototype);
 
 Figure.prototype.constructor = Figure;
 
-Figure.prototype.isCollidable = function () {return ['just', function (board) {return mbVectorTransfomationForAllowance(this, board);}];};
+Figure.prototype.isCollidable = function () {return ['just', function (board) {return mbVectorTransformationForAllowance(this, board);}];}; // @TODO should be raised to business object level?
+
 
 //Figure.prototype.mbVectorTransfomationForAllowance = function (board) {return mbVectorTransfomationForAllowance(this, board);}; // @TODO: reconsider
 
