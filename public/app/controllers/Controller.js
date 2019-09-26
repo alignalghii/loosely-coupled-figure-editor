@@ -7,10 +7,16 @@ Controller.prototype.jumpWidgetToIfNeeded = function (targetCanvas, targetBoard,
 {
 	const targetWidgetFactory = this.widgetFactoryForCanvas(targetCanvas);
 	const targetCoordSysTransfomer = targetWidgetFactory.coordSysTransformer; // @TODO: in the `Widget` class, use widgetfactory as a component/collaborator instead of coordSysTransformer!
-	maybeMap(
+	return maybeMap(
 		jumpingWidget => {
-			jumpingWidget.jumpTo(targetCanvas, targetBoard, targetBusinessBoard, targetCoordSysTransfomer);
-			this.statusBarDriver.report('Alakzat átugrasztása vásznak között!');
+			const isHostless = jumpingWidget.isHostless();
+			if (isHostless) {
+				jumpingWidget.jumpTo(targetCanvas, targetBoard, targetBusinessBoard, targetCoordSysTransfomer);
+				this.statusBarDriver.report('Alakzat átugrasztása vásznak között!');
+			} else {
+				this.statusBarDriver.report('Gazdaobjektuma nélkül nem ugrasztható át!');
+			}
+			return isHostless;
 		},
 		this.maybeJumpingWidget(targetCanvas)
 	);

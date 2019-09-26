@@ -16,9 +16,9 @@ TitleWidget.prototype.updateDownward = function ()
 	const svgPosition = this.coordSysTransformer.highToLow(this.high.position);
 	updateTextPosition(this.low, svgPosition);
 };
+TitleWidget.prototype.isHostless   = () => false; //function () {console.log(this.high.host.figure); return Boolean(this.bijectionSvgToGeom.getInverse(this.high.host./*@TODO*/figure));};
 
-
-
+// Focus handling:
 
 TitleWidget.prototype.showGlittering = function () {};
 

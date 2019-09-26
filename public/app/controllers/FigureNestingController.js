@@ -31,6 +31,7 @@ FigureNestingController.prototype.onInsteadOfOff = function (currentWEPos, eithe
 							if (isOn) {
 								if (i < 0) {
 									room.furniture.push(chair);
+									chair.maybeHost = ['just', room]; // @TODO
 									notes.push(`&bdquo;${chair.title.name}&rdquo; gazdája immár &bdquo;${room.title.name}&rdquo;`);
 								} else {
 									notes.push(`&bdquo;${chair.title.name}&rdquo; ismerős már &bdquo;${room.title.name}&rdquo; számára, többszörösen ne adjuk hozzá.`);
@@ -38,6 +39,7 @@ FigureNestingController.prototype.onInsteadOfOff = function (currentWEPos, eithe
 							} else {
 								if (i >= 0) {
 									const [chairCheck] = room.furniture.splice(i, 1); //@TODO make it a ListX method @TODO do more throw assertions
+									chair.maybeHost = ['nothing'];
 									notes.push(`&bdquo;${chairCheck.title.name}&rdquo; gazdája immár nem &bdquo;${room.title.name}&rdquo;`);
 								} else {
 									notes.push(`&bdquo;${chair.title.name}&rdquo; ismeretlen &bdquo;${room.title.name}&rdquo; számára, nincs mit törölni.`);

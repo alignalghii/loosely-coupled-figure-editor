@@ -54,7 +54,8 @@ const listToMaybe = list =>
 		list
 	);
 
-const isJust = mbX => maybe(false, x => true, mbX);
+const isJust    = mbX => maybe(false, x => true , mbX);
+const isNothing = mbX => maybe(true , x => false, mbX);
 
 const catMaybes = mXs => mapMaybe(x=>x, mXs);
 

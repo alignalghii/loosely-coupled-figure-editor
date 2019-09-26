@@ -167,6 +167,14 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - Ha ,,galériát'' szobába húzok, akkor a két title nem legfelül lesz, hanem a szoba title-jét eltakarhatja a galéria alakzata, és ez zavaró. (Bár lehet, hogy pont így logikus, és az lenne végső soron zavaró, ha a szoba title-je is legfelső szinten lenne.)
  - Automatikusan frissüljön a szoba alakzattulajdonság-űrlapja (mármint persze ha amúgy megvan nyitva) akkor, amikor bútorokat adok a szobához vagy veszek el. Ugyanígy transzformáció és átszerkesztés esetén is!
  - Szoba mozgatásakor ugyan végre vele együttmozognak a bútorok (a ,,kíséret''), de 1) a bútorok címe ott marad 2) csak magára szobára végez ütközésviszgálatot, a kíséretre nem! A kíséret tagjai szelleméként belemásznak egyéb szobákba!
+ - Explicit, ,,külső'', önálló fa adatstruktúrát használjunk a business objektumok tartalmazási hierarchiájának nyivántartására: `Tree<BusinessObject>`
+ - A hibák úgy reprodukálhatóak a legegyszerűbb módon, hogy a menüvászonról a munkavásznr húzom egy alakzat címét (magát az alakzatot **nem**). Innentől kezve akár az alakzat megmozgatása hibát fog kiváltani. A cím mozgatása **nem** vált ki hibát. A cím visszamozgatása megszünteti a kényes, error-prone helyzetet.
+ - Bár már jól átugrk a részalakzat, de a részalakzat nem ütközik
+ - Vlaójában a részalakzat is ütközik, de a régi vaszon helyére visszaképzelve! (Szellemütközés.)
+ - Háromszoros tartalmazás esetén a (szoba-galria-galériabútor) a galériabútor viselkedése furcsa:
+    - csak apjával mozog együtt, nagyapjával nem (apját követi, nagyapját nem)
+    - a nagyapát (szoba) átugrasztva, az apa (galéria) vele ugrik, de a galériabútor eltűnik, viszont visszaugasztáskor újra megjelenik.
+
 
 
 # Fontend

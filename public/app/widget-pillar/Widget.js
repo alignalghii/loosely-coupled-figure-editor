@@ -44,7 +44,8 @@ Widget.prototype.delete = function ()
 
 // Jump over between two canvasses
 
-Widget.prototype.jumpTo = function (targetCanvas, targetBoard, targetBusinessBoard, targetCoordSysTransfomer) // @TODO: use widgetfactory as a component/collaborator instead of coordSysTransformer!
+// @TODO: use widgetfactory as a component/collaborator instead of coordSysTransformer!
+Widget.prototype.jumpTo = function (targetCanvas, targetBoard, targetBusinessBoard, targetCoordSysTransfomer)
 {
 	targetCanvas.appendChild(this.low);
 	maybeMap(
@@ -91,4 +92,22 @@ Widget.prototype.changeBoardsFor = function (targetBoard, targetBusinessBoard, t
 	this.partialFunctionGeomToBusiness = targetBusinessBoard;      // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
 };
 
-// Abstract function: Widget.prototype.updateDownward
+// Abstract methods:
+Widget.prototype.updateDownward = function () {throw 'This is an abstract method';};
+Widget.prototype.isHostless     = function () {throw 'This is an abstract method';};
+
+
+Widget.prototype.allowable = function (infinitezimalDisplacement)
+{
+       return maybe(
+               infinitezimalDisplacement,
+               mbVectorTransformationForAllowance => { // @TODO: !!!!
+                       const mbAllowable = mbVectorTransformationForAllowance.call(this.high, this.bijectionSvgToGeom)(infinitezimalDisplacement); // @TODO
+                       return fromMaybe_exec(
+                               () => {throw 'Tiltott zóna!';/*this.statusBarDriver.report('Tiltott zóna!'); return [0, 0];*/}, // @TODO: an axception should be thrown rather
+                               mbAllowable
+                       );
+               },
+               this.high.isCollidable()
+       );
+};

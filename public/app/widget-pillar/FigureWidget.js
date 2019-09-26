@@ -9,11 +9,20 @@ FigureWidget.prototype = Object.create(Widget.prototype);
 
 FigureWidget.prototype.constructor = FigureWidget;
 
+// Abstract methods of super concretized here:
 // @TODO: consider - this function alone justifies inheriting
 FigureWidget.prototype.updateDownward = function ()
 {
 	var svgVertices = this.high.vertices.map((p) => this.coordSysTransformer.highToLow(p));
 	updatePolygonChild(this.low, svgVertices);
+};
+FigureWidget.prototype.isHostless = function ()
+{
+	return maybe_exec(
+		()           => {throw 'TODO';}, // @TODO
+		domainObject => isNothing(domainObject.maybeHost),
+		this.maybeDomainObject
+	);
 };
 
 

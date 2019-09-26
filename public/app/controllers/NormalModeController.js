@@ -38,24 +38,16 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 		if (vectorLength(infinitezimalDisplacement) > 0) { // drag event provides sometimes also 0-displacements, we filter them out for better clarity's sake
 			const targetCanvas = canvasOfEitherTarget(eitherTarget);
 			const {bijectionSvgToGeom: targetBoard, partialFunctionGeomToBusiness: targetBusinessBoard} = this.widgetFactoryForCanvas(targetCanvas);
-			this.jumpWidgetToIfNeeded(targetCanvas, targetBoard, targetBusinessBoard); // @TODO: rossz helyen van, szervesen részt kell vennie az ütközésvizgálatban
-			const allowable = maybe(
-				infinitezimalDisplacement,
-				mbVectorTransformationForAllowance => { // @TODO: !!!!
-					const mbAllowable = mbVectorTransformationForAllowance.call(this.state.prevWidget.high, targetBoard)(infinitezimalDisplacement); // @TODO
-					return fromMaybe_exec(
-						() => {this.statusBarDriver.report('Tiltott zóna!'); return [0, 0];}, // @TODO: an axception should be thrown rather
-						mbAllowable
-					);
-				},
-				this.state.prevWidget.high.isCollidable()
-			);
+			const maybeAllowJump = this.jumpWidgetToIfNeeded(targetCanvas, targetBoard, targetBusinessBoard); // @TODO: rossz helyen van, szervesen részt kell vennie az ütközésvizgálatban
+			const allowable = this.state.prevWidget.allowable(infinitezimalDisplacement);
 			/*const mbAllowable = this.state.prevWidget.high.mbVectorTransfomationForAllowance(targetBoard)(infinitezimalDisplacement);
 			const allowable = fromMaybe_exec(
 				() => {this.statusBarDriver.report('Tiltott zóna!'); return [0, 0];}, // @TODO: an axception should be thrown rather
 				mbAllowable
 			);*/
-			this.translatePrevWidgetAndRememberItsNewPosition(allowable);
+			console.log('IIIIIII', maybeAllowJump);
+			if (!vecEq(maybeAllowJump, ['just', false]))
+				this.translatePrevWidgetAndRememberItsNewPosition(allowable);
 			if (vectorLength(infinitezimalDisplacement) > 0 && vectorLength(allowable) == 0) this.statusBarDriver.report(`Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ${JSON.stringify(infinitezimalDisplacement)} irányban.`);
 			this.state.dragHasAlreadyBegun = true;
 		}
