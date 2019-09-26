@@ -1,4 +1,4 @@
-function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
@@ -9,6 +9,7 @@ function Router(state, normalModeController, compactModeController, roomControll
 	this.geomTransformationController = geomTransformationController;
 	this.figurePropertyEditorController = figurePropertyEditorController;
 	this.configController = configController;
+	this.figureNestingController = figureNestingController;
 }
 
 Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: inputRoledData
@@ -152,8 +153,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 			geomtransformationscalex        : ['doScaleX'                    , 'scaleX'                    ],
 			geomtransformationscaley        : ['doScaleY'                    , 'scaleY'                    ],
 		};
-		console.log(this.state.mode);
-		if (this.state.mode in scaleCases) {console.log('!!!!!!!!!!!');
+		if (this.state.mode in scaleCases) {
 			const commands = scaleCases[this.state.mode];
 			this.routeDragCasesOpen3Sustain1Close0ScaleStressSpan(commands, eventType, ird.currentWEPos, ird.eitherTarget);
 		}
@@ -193,6 +193,13 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 		switch (eventType) {
 			case 'mouseup':
 				this.figurePropertyEditorController.modeOn(ird.currentWEPos, ird.eitherTarget)
+				break;
+		}
+	}
+	if (this.state.mode == 'figurenestingon' || this.state.mode == 'figurenestingoff') {
+		switch (eventType) {
+			case 'mouseup':
+				this.figureNestingController.onInsteadOfOff(ird.currentWEPos, ird.eitherTarget, this.state.mode == 'figurenestingon')
 				break;
 		}
 	}

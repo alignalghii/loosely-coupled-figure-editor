@@ -23,17 +23,20 @@ FigureWidget.prototype.updateUpAndDownward = function ()
 	maybeMap(
 		domainObject => {
 			domainObject.goUpdatedByOwnFigure();
-			// @TODO: DRY: try to reuse widgetfactory.createTitleWidgetFromMedium
-			const title = domainObject.title;
-			const textElem = this.bijectionSvgToGeom.getInverse(title);
-			const titleWidget = new TitleWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, ['nothing'], title, textElem);
-			titleWidget.updateDownward();
+			this.updateMyTitleSuchAs(domainObject.title); // @TODO: DRY: try to reuse widgetfactory.createTitleWidgetFromMedium
 		},
 		this.maybeDomainObject
 	)
 	this.updateDownward();
 };
 
+// @TODO: DRY: try to reuse widgetfactory.createTitleWidgetFromMedium. This function does not really belong to FigureWidget, it belongs to WidgetFactory, but unfortunately figureWidget does not contain yet WidgetFactory as itscollaborator
+FigureWidget.prototype.updateMyTitleSuchAs = function (title)
+{
+	const textElem = this.bijectionSvgToGeom.getInverse(title);
+	const titleWidget = new TitleWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, ['nothing'], title, textElem);
+	titleWidget.updateDownward();
+};
 
 FigureWidget.prototype.showGlittering = function ()
 {
@@ -74,16 +77,21 @@ FigureWidget.prototype.unshowFocus = function ()
 
 FigureWidget.prototype.translate = function (displacement) // @TODO: DRY
 {
-	console.log('ffff', this);
 	maybeMap(
 		domainObject => {
 			domainObject.doTranslation(displacement); // domainobject will update `figure` and `title` mathobjects silently
-			const title = domainObject.title; // @TODO: not every domainobject has a title
-			const textElem = this.bijectionSvgToGeom.getInverse(title); // @TODO: bug: textelem is undefined!
-			console.log('textelem:', textElem);
-			const titleWidget = new TitleWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom,   ['nothing'], title, textElem); // @TODO bug
-			console.log('titlewidget:', titleWidget);
-			titleWidget.updateDownward();
+			// @TODO: use `WidgetFactory.prototype.create*WidgetFrom*` instead (of course, for that, refactor `Widget` class to contain a widgetFactory collaborator):
+			this.updateMyTitleSuchAs(domainObject.title);
+
+			domainObject.furniture.map( // @TODO
+				chair => {
+					// @TODO: use `WidgetFactory.prototype.createFigureWidgetFromMedium` instead (of course, for that, refactor `Widget` class to contain a widgetFactory collaborator):
+					const polyElem = this.bijectionSvgToGeom.getInverse(chair.figure);
+					const figWidget = new FigureWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom,  ['just', chair], chair.figure, polyElem);
+					figWidget.updateDownward();
+					figWidget.updateMyTitleSuchAs(chair.title);
+				}
+			);
 		},
 		this.maybeDomainObject
 	);
@@ -97,9 +105,7 @@ FigureWidget.prototype.rotate = function (phi) // @TODO: DRY
 			domainObject.doRotation(phi); // domainobject will update `figure` and `title` mathobjects silently
 			const title = domainObject.title; // @TODO: not every domainobject has a title
 			const textElem = this.bijectionSvgToGeom.getInverse(title); // @TODO: bug: textelem is undefined!
-			console.log('textelem:', textElem);
 			const titleWidget = new TitleWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom,   ['nothing'], title, textElem); // @TODO bug
-			console.log('titlewidget:', titleWidget);
 			titleWidget.updateDownward();
 		},
 		this.maybeDomainObject

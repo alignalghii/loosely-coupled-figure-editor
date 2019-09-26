@@ -22,7 +22,7 @@ FigurePropertyEditorDriver.prototype.pipeToSM = function (dispatch)
 	this.figurePropertyEditor.addEventListener('change', changeInput);
 };
 
-FigurePropertyEditorDriver.prototype.open = function (name, n, perimeter, area, edgeAndAngleMeasures)
+FigurePropertyEditorDriver.prototype.open = function (name, n, perimeter, area, edgeAndAngleMeasures, furnitureNames)
 {
 	const content_old = this.document.getElementById('figurepropertyeditor_content');
 	if (content_old) content_old.remove();
@@ -89,6 +89,15 @@ FigurePropertyEditorDriver.prototype.open = function (name, n, perimeter, area, 
 		inputE.value = edge;
 		trE.appendChild(tdE);
 		tdE.appendChild(inputE);
+	}
+
+	const furnitureList = this.document.createElement('ul');
+	furnitureList.id = 'furnitureNames';
+	content.appendChild(furnitureList);
+	for (let furnitureName of furnitureNames) {
+		const li = this.document.createElement('li');
+		furnitureList.appendChild(li);
+		li.innerHTML = furnitureName;
 	}
 };
 

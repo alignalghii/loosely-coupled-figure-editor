@@ -55,6 +55,17 @@ Widget.prototype.jumpTo = function (targetCanvas, targetBoard, targetBusinessBoa
 				targetCanvas.appendChild(titleWidget.low);
 				titleWidget.changeBoardsFor(targetBoard, targetBusinessBoard, targetCoordSysTransfomer);
 			}
+			if (domainObject.furniture) {
+				domainObject.furniture.map(
+					chair => {
+						// @TODO
+						const chFig  = chair.figure;
+						const chPoly = this.bijectionSvgToGeom.getInverse(chFig);
+						const chWidg = new FigureWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, ['just', chair], chFig, chPoly);
+						chWidg.jumpTo(targetCanvas, targetBoard, targetBusinessBoard, targetCoordSysTransfomer);
+					}
+				)
+			}
 		},
 		this.maybeDomainObject
 	);

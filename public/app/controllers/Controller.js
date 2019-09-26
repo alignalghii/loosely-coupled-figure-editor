@@ -22,3 +22,22 @@ Controller.prototype.maybeJumpingWidget = function (targetCanvas)
 	     ? ['just', this.state.prevWidget]
 	     : ['nothing'];
 };
+
+
+Controller.prototype.widgetDirectlyOrViaTitle = function (widget)
+{
+	return maybe_exec(
+		()  => {
+			const widgetFactory = this.widgetFactoryForEitherTarget(['right', widget]); // @TODO code smell. Should exist both widgetFactoryForCanvas and widgetFactoryForWidget
+			const room = widget.high.host; // @TODO what if host is not a room
+			this.statusBarDriver.report(`Szoba címére kattintottál (&bdquo;${room.title.name}&rdquo;), a hozzátartozó szobát veszem. Magát a címet sajnos egyelőre csak a tulajdonság szerkesztáben szerkesztheted át, itt helyben közvetlenül még nem 😞💣🗲🌧💧`);
+			return widgetFactory.createFigureWidgetFromMedium(room.figure);
+		},
+		domainObject => {
+			if (!widget.high.vertices || !domainObject.title.name) throw 'Tervezési hiba!'; // @TODO: hogy a legjobb? Lekezelni? Kivételt dobni? Loggolni? Áttervezni? Milyen mély a tervezési probléma?
+			this.statusBarDriver.report('Közvetlenül magára a szobára kattintottál, minden világos.');
+			return widget;
+		},
+		widget.maybeDomainObject
+	);
+};

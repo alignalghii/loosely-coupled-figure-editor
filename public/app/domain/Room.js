@@ -31,9 +31,11 @@ Room.prototype.copy = function ()
 
 Room.prototype.doTranslation = function (displacement)
 {
-	console.log('Domain object attempts to translate');
 	this.figure.doTranslation(displacement);
 	this.title.doTranslation(displacement);
+	this.furniture.map(
+		chair => chair.doTranslation(displacement)
+	);
 };
 
 Room.prototype.doRotation = function (phi)

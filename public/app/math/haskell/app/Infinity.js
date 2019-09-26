@@ -174,3 +174,24 @@ function boardMinSelectSet(filterPred, mapFun, parametricCompare, posInf, board)
 	}
 	return boardReduce(reducer, [posInf, []], board);
 }
+
+function boardMinSelectSet_logged(filterPred, mapFun, parametricCompare, posInf, board)
+{
+	function reducer(accumulator, currentItem) {
+		if (filterPred(currentItem)) {
+			const [currentValue, logItem]                        = mapFun(currentItem),
+			      [accumulatorValue, accumulatorItems, logItems] = accumulator,
+			      logItems_                                      = logItems.concat([logItem]),
+                              comparison                                     = parametricCompare(currentValue, accumulatorValue);
+			switch (comparison) {
+				case -1: return [currentValue    , [currentItem]                         , logItems_];
+				case  0: return [accumulatorValue, accumulatorItems.concat([currentItem]), logItems_];
+				case  1: return [accumulatorValue, accumulatorItems                      , logItems_];
+				default: throw 'Invalid `compare` label at `boardMinSelectSet`';
+			};
+		} else {
+			return accumulator;
+		}
+	}
+	return boardReduce(reducer, [posInf, [], []], board);
+}

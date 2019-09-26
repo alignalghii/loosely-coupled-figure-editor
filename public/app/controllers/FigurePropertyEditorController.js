@@ -55,19 +55,23 @@ FigurePropertyEditorController.prototype.open = function (widget)
 	const widget_ =	this.widgetDirectlyOrViaTitle(widget);
 
 	const vertices = widget_.high.vertices;
-	const name = maybe('<<<Bútor>>>', domainObject => domainObject.title.name, widget_.maybeDomainObject); // @TODO a bútor esetét le kell kezelni
-	this.openDriverWithCalculations(name, vertices);
+	const [name, furnitureNames] = maybe(
+		'<<<Bútor>>>',  // @TODO a bútor esetét le kell kezelni
+		domainObject => [domainObject.title.name, domainObject.furniture.map(chair => chair.title.name)], // @TODO bútornak a végső változatban nincs címe (kivétel: galéria)
+		widget_.maybeDomainObject
+	);
+	this.openDriverWithCalculations(name, vertices, furnitureNames); // @TODO furniture shouldbe partly editable from the form directly
 
 	this.state.maybeWidgetActualOnFigurePropertyEditor = ['just', widget_];
 };
 
-FigurePropertyEditorController.prototype.openDriverWithCalculations = function (name, vertices) // @TODO most of its body belongs to math or model, not to controller
+FigurePropertyEditorController.prototype.openDriverWithCalculations = function (name, vertices, furnitureNames) // @TODO most of its body belong to math or model, not to controller @TODO editable furniture
 {
 	const n                    = vertices.length;
 	const perimeter            = getPerimeter(vertices);
 	const area                 = getArea(vertices);
 	const edgeAndAngleMeasures = getEdgeAndAngleMeasures(vertices);
-	this.figurePropertyEditorDriver.open(name, n, perimeter, area, edgeAndAngleMeasures);
+	this.figurePropertyEditorDriver.open(name, n, perimeter, area, edgeAndAngleMeasures, furnitureNames);
 };
 
 
@@ -77,7 +81,7 @@ FigurePropertyEditorController.prototype.close = function ()
 	this.figurePropertyEditorDriver.close();
 };
 
-FigurePropertyEditorController.prototype.widgetDirectlyOrViaTitle = function (widget)
+/*FigurePropertyEditorController.prototype.widgetDirectlyOrViaTitle = function (widget)
 {
 	return maybe_exec(
 		()  => {
@@ -93,4 +97,4 @@ FigurePropertyEditorController.prototype.widgetDirectlyOrViaTitle = function (wi
 		},
 		widget.maybeDomainObject
 	);
-};
+};*/

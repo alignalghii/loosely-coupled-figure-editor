@@ -163,6 +163,11 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - `../spec` alakú elérhetőségű modulokat ne töltsön be az `index.html`, mert a documentroorból úgysem láthat ki, és ez nagyon lelassítja a betöltést. Elvileg nem ördögtől való, ha az index rálát saját tesztjeire (bár érdemels lehet külön html-oldalra tenni), de ha mégis az indexre szeretnénk, akkor linkelődjenek elérhető helyről és módon. Felhasználói szempotból a (kijaított linkelésű) spec-ek betöltése csak időt vesz el, de egyelőre még bennhagyhatjuk (majd végső élesítéskor lehet gonsolkodni valamiféle optimalizációs célú kivevésen).
  - Nem jó, hogy néhány fájl elhelyezésében nincs emgállapodás (a css és a logó az index mellett is, meg az assets alkönyvtárban is van (az ingyenes vs a céges változat)
 
+ - Az alakzatok pecsételős beszúrása (NormalModeController) sem végez ütközésviszgálatot!
+ - Ha ,,galériát'' szobába húzok, akkor a két title nem legfelül lesz, hanem a szoba title-jét eltakarhatja a galéria alakzata, és ez zavaró. (Bár lehet, hogy pont így logikus, és az lenne végső soron zavaró, ha a szoba title-je is legfelső szinten lenne.)
+ - Automatikusan frissüljön a szoba alakzattulajdonság-űrlapja (mármint persze ha amúgy megvan nyitva) akkor, amikor bútorokat adok a szobához vagy veszek el. Ugyanígy transzformáció és átszerkesztés esetén is!
+ - Szoba mozgatásakor ugyan végre vele együttmozognak a bútorok (a ,,kíséret''), de 1) a bútorok címe ott marad 2) csak magára szobára végez ütközésviszgálatot, a kíséretre nem! A kíséret tagjai szelleméként belemásznak egyéb szobákba!
+
 
 # Fontend
  - Freeze lenne jó, mint ahogy az excelben táblasorokat lehet rögzíteni. itt persze a statussort lenne jó így. (Úgy tűnik, az overflow scroll erre elfogadható eszköz lesz)
@@ -177,3 +182,9 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - app -> public, és azon belül index.html, app, spec, help/html, és assets-proper (a CSS és a logó épp ez utóbbiba kerül, app és spec pedig a javascripté).
  - a frre vs company szétválasztást úgy oldjuk meg, ahogy a jelszókonfigurációt és más érszékeny adatoknál szokás: tpl-fájlok, gitignore. Legyen egy kis konzolalkalmazás is.
  - Az alakzattulajdonsgszereksztő érzékeli már most is, ha szoba helyett annak a címére katintok (még ha a cím távolra is van húzva a szobától). Fel is hozza korrektül a hozzátartozó szobát. De a címet közvetlenül nem lehet szerkeszteni helyben, csak az alakzatszerkesztőben.
+ - A  NormalModeController-hez kötődő beszúróka (helyfókusz, +-parancs vagy gomb, pecsétválasztás) nem kezeli szépen a szobacímeket: a címek a vászon közepére kerülnek, a pecsétalakzattól és a helyfókusztól függetlenül.
+ - - A  NormalModeController-hez kötődő törlőke (alakzatfókusz, --parancs vagy gomb) nem kezeli szépen a szobacímeket: a címeket nem törli a szobákkal.
+ - A ,,Ment'' gombra kattinva, nyisson új böngézőfület, és oda tegye ki az alaprajz magasszintű, de egyértelmű leírásának JSON-szövegét. A szöveget textarea elembe tegye ki, egyrészt azéért, hogy szépen tabulálva és sorbatördelve legyen, másrészt azért, mert ugyanez a textarea a visszatötésre (load) is alkalmas lehet. Tehát tulajdonképp ebben a munkaszakszban a Save és a Load gomb ugyanazt csinálja: tabot nyit, és abban felhoz egy textareát.
+ - Az Info (help) ikon méretét kicsinyitsük le akkorára, ahogy a korábbi verzióban volt (van róla screenshot).
+ - Maradhat a menüvásznak gördítősávos kialakítása, de akkor a `.scrollLeft` tulajdonság állításával kell a nyílászáró/bútor/típus választásnak megfelelő pozícióba göríttetni a kocsit.
+ - Szobához követőkíséretként hozzáadhatok olyan alszobákat/bútorokat is, amelyek még egy másik vásznon vannak! Vajon mi történik vonszoláskor?

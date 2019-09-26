@@ -1,5 +1,7 @@
 onload = function (event)
 {
+	//var SUPERGLOBAL = {}; // @TODO !!!!
+
 	var svgLowLevel_menuCanvas = new SvgLowLevel(document, 'svgRoot_menuCanvas'); // [250, 374]
 	var svgLowLevel_workCanvas = new SvgLowLevel(document, 'svgRoot_workCanvas'); // [600, 400]
 	var svgLowLevels           = [svgLowLevel_menuCanvas, svgLowLevel_workCanvas];
@@ -41,8 +43,9 @@ onload = function (event)
 	var geomTransformationController     = new GeomTransformationController(state, widgetFactories, statusBarODriver);  // @TODO: should not use the same `State` as `NormalModeController`
 	const figurePropertyEditorController = new FigurePropertyEditorController(state, widgetFactories, figurePropertyEditorIODriver, statusBarODriver);
 	const configController               = new ConfigController(state, configIODriver, statusBarODriver);
+	const figureNestingController        = new FigureNestingController(state, widgetFactories, statusBarODriver);
 
-	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController); // @TODO make globalOriginFigure obsolete
+	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(widgetFactories, router); // @TODO: could it be regarded as a kind of device driver, and renamed + moved appropriately?
 
 	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorIODriver, configIODriver); // @TODO Law of Demeter, see inside

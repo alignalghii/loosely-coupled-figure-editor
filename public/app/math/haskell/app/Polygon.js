@@ -165,20 +165,20 @@ function invalidSituation(verticesSrc, verticesTgt) {return !validSituation(vert
 // @TODO! optimize!
 function situationStatus(verticesSrc, verticesTgt)
 {
-	var disjoint     = !intersectExcludingTouch  (verticesSrc, verticesTgt),
-	    disjoint1    = !intersectIncludingTouch  (verticesSrc, verticesTgt);
-	var contains     =  containsIncludingTouch   (verticesSrc, verticesTgt),
-	    contains1    =  containsExcludingTouch   (verticesSrc, verticesTgt);
-	var containedBy  =  containedByIncludingTouch(verticesSrc, verticesTgt);
-	    containedBy1 =  containedByExcludingTouch(verticesSrc, verticesTgt);
+	var disjoint_weak      = !intersectExcludingTouch  (verticesSrc, verticesTgt),
+	    disjoint_strict    = !intersectIncludingTouch  (verticesSrc, verticesTgt);
+	var contains_weak      =  containsIncludingTouch   (verticesSrc, verticesTgt),
+	    contains_strict    =  containsExcludingTouch   (verticesSrc, verticesTgt);
+	var containedBy_weak   =  containedByIncludingTouch(verticesSrc, verticesTgt),
+	    containedBy_strict =  containedByExcludingTouch(verticesSrc, verticesTgt);
 
 	var status = {};
-	if (disjoint    && !disjoint1   ) status.disjoint    = 0;
-	if (disjoint    &&  disjoint1   ) status.disjoint    = 1;
-	if (contains    && !contains1   ) status.contains    = 0;
-	if (contains    &&  contains1   ) status.contains    = 1;
-	if (containedBy && !containedBy1) status.containedBy = 0;
-	if (containedBy &&  containedBy1) status.containedBy = 1;
+	if (disjoint_weak    && !disjoint_strict   ) status.disjoint    = 0;
+	if (disjoint_weak    &&  disjoint_strict   ) status.disjoint    = 1;
+	if (contains_weak    && !contains_strict   ) status.contains    = 0;
+	if (contains_weak    &&  contains_strict   ) status.contains    = 1;
+	if (containedBy_weak && !containedBy_strict) status.containedBy = 0;
+	if (containedBy_weak &&  containedBy_strict) status.containedBy = 1;
 	return status;
 }
 
