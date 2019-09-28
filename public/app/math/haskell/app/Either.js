@@ -10,4 +10,11 @@ function either(funLeft, funRight, eitherAB)
 const left  = a => ['left' , a],
       right = b => ['right', b];
 
-const eitherAMap = (fBC, eitherAB) => either(left, b => ['right', fBC(b)], eitherAB);
+const eitherEMap = (fBC, eitherAB) => either(left, b => ['right', fBC(b)], eitherAB);
+
+const maybeToEitherE = (errCode, maybeValue) =>
+	maybe(
+		left(errCode),
+		right,
+		maybeValue
+	);

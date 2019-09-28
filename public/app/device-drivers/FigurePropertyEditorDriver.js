@@ -1,4 +1,4 @@
-function FigurePropertyEditorDriver(aDocument)
+function FigurePropertyEditorDriver(aDocument, numberHelperAndValidator) // @TODO `numberHelperAndValidator` collaborator should come rather to the controller
 {
 	this.document = aDocument;
 	this.figurePropertyEditor = aDocument.getElementById('figurepropertyeditor');
@@ -7,6 +7,8 @@ function FigurePropertyEditorDriver(aDocument)
 	this.vertexNames =      'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 	this.angleNames  =      'αβγδεζηθικλμνξοπρστυφχψω'  .split('');
 	this.edgeNames   = tour('ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')).map(([A, B]) => `${A}${B}`);
+
+	this.numberHelperAndValidator = numberHelperAndValidator;
 }
 
 FigurePropertyEditorDriver.prototype.pipeToSM = function (dispatch)
@@ -15,7 +17,14 @@ FigurePropertyEditorDriver.prototype.pipeToSM = function (dispatch)
 	{
 		const target = event.target;
 		const [fullMatch, edgeSubmatch, invarianceSubmatch] = /edge_(.*)|(areainvariance)/.exec(target.id);
-		if ( edgeSubmatch && !invarianceSubmatch) dispatch('change', ['edge', 'number'], {edge: parseInt(edgeSubmatch), value: Number(target.value)});
+		if ( edgeSubmatch && !invarianceSubmatch) {
+			const edgeIndex = parseInt(edgeSubmatch);
+			either(
+				errMsg     => {this.document.getElementById(`error_${edgeIndex}`).innerHTML = errMsg;},
+				edgeLength => dispatch('change', ['edge', 'number'], {edge: edgeIndex, value: edgeLength}),
+				this.numberHelperAndValidator.eitherERead(`Nem szám!`, target.value)
+			);
+		}
 		if (!edgeSubmatch &&  invarianceSubmatch) dispatch('change', ['areaInvariance', 'bool'], {areaInvariance: target.checked});
 		if ( edgeSubmatch &&  invarianceSubmatch || !edgeSubmatch && !invarianceSubmatch) throw 'Change event piping bug';
 	}
@@ -71,9 +80,10 @@ FigurePropertyEditorDriver.prototype.open = function (name, n, perimeter, area, 
 		const tdAN =  this.document.createElement('td');
 		tdAN.innerHTML = `${this.angleNames[i]} (${this.vertexNames[i]}<sub>∡</sub>):`;
 		const tdA = this.document.createElement('td');
-		tdA.innerHTML = `${angle}°`;
+		tdA.innerHTML = `${this.numberHelperAndValidator.show(angle)}°`;
 		trA.appendChild(tdAN);
 		trA.appendChild(tdA);
+		trA.appendChild(this.document.createElement('td'));
 		trA.appendChild(this.document.createElement('td'));
 		trA.appendChild(this.document.createElement('td'));
 		const trE = this.document.createElement('tr');
@@ -86,9 +96,13 @@ FigurePropertyEditorDriver.prototype.open = function (name, n, perimeter, area, 
 		const tdE = this.document.createElement('td');
 		const inputE = this.document.createElement('input');
 		inputE.id = `edge_${i}`;
-		inputE.value = edge;
+		inputE.value = this.numberHelperAndValidator.show(edge);
 		trE.appendChild(tdE);
 		tdE.appendChild(inputE);
+		const tdErr = this.document.createElement('td');
+		tdErr.id = `error_${i}`;
+		tdErr.className = 'error';
+		trE.appendChild(tdErr);
 	}
 
 	const furnitureList = this.document.createElement('ul');

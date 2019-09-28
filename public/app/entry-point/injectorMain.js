@@ -20,6 +20,8 @@ onload = function (event)
 	var audio               = new MyAudio(new Audio('assets-proper/sonar.ogg'));
 	var widgetCollision = new WidgetCollision(audio);
 
+	const numberHelperAndValidator = new NumberHelperAndValidator(3);
+
 	var roomBank             = roomFactory.sampleRoomBank();
 	var domainStamp          = roomBank.namedRooms[roomBank.selected].room.centering();
 	// `.copy` (hidden in `centering`) is needed here, because the blue suare rendered during `app.populate` must remain intact
@@ -31,7 +33,7 @@ onload = function (event)
 	var modeIODriver                 = new ModeDriver(document);
 	var operationDriver              = new OperationDriver(document);
 	var keyboardDriver               = new KeyboardDriver(document);
-	const figurePropertyEditorIODriver = new FigurePropertyEditorDriver(document);
+	const figurePropertyEditorIODriver = new FigurePropertyEditorDriver(document, numberHelperAndValidator);
 	const configIODriver             = new ConfigDriver(document);
 
 	var state               = new State(domainStamp);

@@ -17,7 +17,7 @@ CompactModeController.prototype.constructor = CompactModeController;
 CompactModeController.prototype.mouseDown = function (position, eitherTarget)
 {
 	this.state.forgetDrag();
-	eitherAMap(
+	eitherEMap(
 		currentWidget => {
 			this.rememberWidget(currentWidget);
 			this.rememberPosition(position);
@@ -42,7 +42,7 @@ CompactModeController.prototype.mouseMove = function (currentWEPos, eitherTarget
 
 CompactModeController.prototype.mouseUp = function (currentWEPos, eitherTarget)
 {
-	eitherAMap(
+	eitherEMap(
 		currentWidget => {
 			if (this.state.prevWidgetHasNotCollidedYet() && !this.state.dragHasAlreadyBegun)
 				currentWidget.delete();
