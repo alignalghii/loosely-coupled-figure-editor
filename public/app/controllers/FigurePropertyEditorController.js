@@ -33,7 +33,7 @@ FigurePropertyEditorController.prototype.editEdge = function (edgeIndex, value)
 				widget.editEdge              (edgeIndex, validValue);
 			}
 			this.open(widget);
-			this.statusBarDriver.report(indirect ? `Alakzattulajdonság szöveges szerkesztése közvetlenül sikeres: ${widget.domainObject.name} alakzat ${this.figurePropertyEditorDriver.edgeNames[edgeIndex]} éle ${oldValue} -> ${validValue}` : `Alakzattulajdonság szöveges szerkesztése a kért ${value} értékkel ütközéshez vezetne, ezért interpolációval közelítünk: ${widget.domainObject.name} alakzat ${this.figurePropertyEditorDriver.edgeNames[edgeIndex]} éle ${oldValue} -> ${validValue}`);
+			this.statusBarDriver.report(indirect ? `Alakzattulajdonság szöveges szerkesztése közvetlenül sikeres: ${fromJust(widget.maybeDomainObject).title.name} alakzat ${this.figurePropertyEditorDriver.edgeNames[edgeIndex]} éle ${oldValue} -> ${validValue}` : `Alakzattulajdonság szöveges szerkesztése a kért ${value} értékkel ütközéshez vezetne, ezért interpolációval közelítünk: ${fromJust(widget.maybeDomainObject).title.name} alakzat ${this.figurePropertyEditorDriver.edgeNames[edgeIndex]} éle ${oldValue} -> ${validValue}`);
 		},
 		this.state.maybeWidgetActualOnFigurePropertyEditor
 	);
