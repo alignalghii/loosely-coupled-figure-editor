@@ -170,11 +170,15 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - Explicit, ,,külső'', önálló fa adatstruktúrát használjunk a business objektumok tartalmazási hierarchiájának nyivántartására: `Tree<BusinessObject>`
  - A hibák úgy reprodukálhatóak a legegyszerűbb módon, hogy a menüvászonról a munkavásznr húzom egy alakzat címét (magát az alakzatot **nem**). Innentől kezve akár az alakzat megmozgatása hibát fog kiváltani. A cím mozgatása **nem** vált ki hibát. A cím visszamozgatása megszünteti a kényes, error-prone helyzetet.
  - Bár már jól átugrk a részalakzat, de a részalakzat nem ütközik
- - Vlaójában a részalakzat is ütközik, de a régi vaszon helyére visszaképzelve! (Szellemütközés.)
+ - Vlaójában a részalakzat is ütközik, de a régi vaszon helyére visszaképzelve! (Szellemütközés.) Ez amúgy nem igaz, a szemmelüközések megjelenése egyelőre kaotikusnak tűnik, oka nem ismert, és valójában **nem** szellemütközésről van szó. Az egér valamiért megcsúszik olyan 1:3 arányban az objektumon, ,,lassan'' csúszik.
+ - Bár a gerekobjektumok nem ürköznek, elvileg ettől még jól használható a program. Ugyanis az ütközésvizsgálat többnyire akkor érdekes, amikor egyedi tőrgyat mozgatunk bebútorzott szobában. Itt működik az ütközésvzisgálat.
  - Háromszoros tartalmazás esetén a (szoba-galria-galériabútor) a galériabútor viselkedése furcsa:
     - csak apjával mozog együtt, nagyapjával nem (apját követi, nagyapját nem)
     - a nagyapát (szoba) átugrasztva, az apa (galéria) vele ugrik, de a galériabútor eltűnik, viszont visszaugasztáskor újra megjelenik.
 
+ - Ütközésvizsgálatot emeljük a business szintre, mert az isemri a legjobban a tartalmazási hierarchiát
+ - A Figure, Title, szoval a MathlevelObject callback property-je  (this.mbVectorTransformation) nem szép, váltsuk ki valami mással ezt a megoldást
+ - Widget class should have a WidgetFactory collaborator
 
 
 # Fontend
