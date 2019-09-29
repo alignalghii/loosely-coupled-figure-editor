@@ -48,10 +48,10 @@ FigurePropertyEditorDriver.prototype.open = function (name, n, perimeter, area, 
 	spanName.innerHTML = name;
 	const spanArea = this.document.createElement('span');
 	spanArea.id = 'area';
-	spanArea.innerHTML = area;
+	spanArea.innerHTML = this.numberHelperAndValidator.show(area);
 	const spanPerimeter = this.document.createElement('span');
 	spanPerimeter.id = 'perimeter';
-	spanPerimeter.innerHTML = perimeter;
+	spanPerimeter.innerHTML = this.numberHelperAndValidator.show(perimeter);
 	const ulPA  = this.document.createElement('ul');
 	const liName = this.document.createElement('li');
 	const liN = this.document.createElement('li');
@@ -96,6 +96,7 @@ FigurePropertyEditorDriver.prototype.open = function (name, n, perimeter, area, 
 		const tdE = this.document.createElement('td');
 		const inputE = this.document.createElement('input');
 		inputE.id = `edge_${i}`;
+		inputE.size = 5;
 		inputE.value = this.numberHelperAndValidator.show(edge);
 		trE.appendChild(tdE);
 		tdE.appendChild(inputE);
