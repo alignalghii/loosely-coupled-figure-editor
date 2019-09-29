@@ -1,5 +1,8 @@
 const GLITTERING_ATTR_NAME = 'opacity', GLITTERING_VALUE = 0.5;
-const FOCUS = [{name: 'filter', value: 'url(#shadow)'}];
+//const FOCUS = [{name: 'filter', value: 'url(#shadow)'}]; //[{name: 'filter', value: 'url(#shadow)'}];
+const   FOCUS = [[{name: 'stroke', value: 'red'  }], []]  // @TODO [[{stroke: 'red'  }], []]
+      UNFOCUS = [[{name: 'stroke', value: 'black'}], []]; // @TODO [[{stroke: 'black'}], []]
+
 
 // @TODO make a `clone` function in `Figure` and resuse it the more occasions as possible
 

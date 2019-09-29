@@ -1,4 +1,4 @@
-function Controller () {} // abstract
+function Controller () {} // abstract // @TODO should initialize state, statusBarDriver
 
 Controller.prototype.widgetFactoryForEitherTarget = function (eitherTarget) {return this.widgetFactoryForCanvas(canvasOfEitherTarget(eitherTarget));};
 Controller.prototype.widgetFactoryForCanvas       = function (canvas      ) {return selectWidgetFactoryForCanvas(canvas, this.widgetFactories     );};

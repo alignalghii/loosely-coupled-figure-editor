@@ -62,23 +62,35 @@ FigureWidget.prototype.unshowGlittering = function ()
 FigureWidget.prototype.showFocus = function ()
 {
 	var widget = this;
-	function loop (attr)
+	function add (attr) // @TODO make reuseable
 	{
 		widget.high.svgAttributes[attr.name] = attr.value; // widget.updateDownward();
 		widget.low.setAttribute(attr.name, attr.value);
 	}
-	FOCUS.map(loop);
+	function del (attr) // @TODO make reuseable
+	{
+		delete widget.high.svgAttributes[attr.name];
+		widget.low.removeAttribute(attr.name);
+	}
+	FOCUS[1].map(del);
+	FOCUS[0].map(add);
 };
 
 FigureWidget.prototype.unshowFocus = function ()
 {
 	var widget = this;
-	function loop (attr)
+	function add (attr) // @TODO make reuseable
+	{
+		widget.high.svgAttributes[attr.name] = attr.value; // widget.updateDownward();
+		widget.low.setAttribute(attr.name, attr.value);
+	}
+	function del (attr) // @TODO make reuseable
 	{
 		delete widget.high.svgAttributes[attr.name];
 		widget.low.removeAttribute(attr.name);
 	}
-	FOCUS.map(loop);
+	UNFOCUS[1].map(del);
+	UNFOCUS[0].map(add);
 };
 
 

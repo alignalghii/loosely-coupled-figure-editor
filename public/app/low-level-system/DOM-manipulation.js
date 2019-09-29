@@ -1,3 +1,5 @@
+// @TODO: Merge with `helpers-validators/DomHelper` module
+
 function deleteElementsWithTagNames(names) {names.forEach(deleteElementsWithTagName);}
 function deleteElementsWithTagName(name)
 {

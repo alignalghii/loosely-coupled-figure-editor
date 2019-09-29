@@ -62,7 +62,7 @@ SvgLowLevel.prototype.createText = function (name, [x, y])
 	const textChild = createElementWithAttributes('text', {x: x, y: y}, svgNS);
 	textChild.textContent = name;
 	this.svgRootElement.appendChild(textChild);
-	const w = textChild.getComputedTextLength();
+	const w = name.length*8;//textChild.getComputedTextLength(); // @TODO: no magical numbers
 	textChild.setAttribute('x', x -  w/2);
 	textChild.setAttribute('y', y +  4);
 	return textChild;

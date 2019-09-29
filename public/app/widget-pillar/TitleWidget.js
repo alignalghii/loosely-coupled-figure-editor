@@ -1,7 +1,6 @@
 function TitleWidget(partialFunctionGeomToBusiness, coordSysTransformer, bijectionSvgToGeom,    maybeDomainObject, high, low)
 {
 	Widget.call(this, partialFunctionGeomToBusiness, coordSysTransformer, bijectionSvgToGeom,    maybeDomainObject, high, low);
-	console.log('?????', coordSysTransformer, this.coordSysTransformer, '~~~~~~~~~');
 }
 
 TitleWidget.prototype = Object.create(Widget.prototype);
@@ -33,7 +32,6 @@ TitleWidget.prototype.unshowFocus = function () {};
 
 TitleWidget.prototype.translate = function (displacement)
 {
-	console.log('Title widget is translated');
 	this.high.doTranslation(displacement);
 	this.updateDownward();
 };

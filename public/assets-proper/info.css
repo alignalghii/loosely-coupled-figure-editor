@@ -2,3 +2,13 @@
 	color: red;
 	font-weight: bold;
 }
+
+.quote-name {
+	font-style: italic;
+}
+
+.pressed {
+	font-weight: bold;
+	color: white;
+	background-color: blue;
+}

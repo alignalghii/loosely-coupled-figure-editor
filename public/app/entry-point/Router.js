@@ -1,4 +1,4 @@
-function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
@@ -10,6 +10,7 @@ function Router(state, normalModeController, compactModeController, roomControll
 	this.figurePropertyEditorController = figurePropertyEditorController;
 	this.configController = configController;
 	this.figureNestingController = figureNestingController;
+	this.tabSelectorController = tabSelectorController;
 }
 
 Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: inputRoledData
@@ -26,6 +27,9 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 		}
 		if (Eq.eq(inputSignature, ['Room'            ])) this.normalModeController.changeStamp(ird.selectedRoom); // @TODO common
 	}
+	if (eventType == 'click' && Eq.eq(inputSignature, ['void']) && 'tabName' in ird) {
+		this.tabSelectorController.select(ird.tabName);
+	}
 	if (this.state.mode == 'compact') {
 		switch (eventType) {
 			case 'mousedown': this.compactModeController.mouseDown(ird.currentWEPos, ird.eitherTarget); break;
@@ -34,16 +38,17 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 		}
 	}
 	if (this.state.mode == 'normal') {
+		const isGraphicalEvent = !('tabName' in ird); // @TODO refactor this condition jungle below:
 		switch (eventType) {
-			case 'mousedown':
-				this.normalModeController.mouseDown(ird.currentWEPos, ird.eitherTarget);
-				break;
-			case 'mousemove':
-				this.normalModeController.mouseMove(ird.currentWEPos, ird.eitherTarget);
-				break;
-			case 'mouseup'  :
-				this.normalModeController.mouseUp  (ird.currentWEPos, ird.eitherTarget);
-				break;
+				case 'mousedown':
+					if (isGraphicalEvent) this.normalModeController.mouseDown(ird.currentWEPos, ird.eitherTarget);
+					break;
+				case 'mousemove':
+					if (isGraphicalEvent) this.normalModeController.mouseMove(ird.currentWEPos, ird.eitherTarget);
+					break;
+				case 'mouseup'  :
+					if (isGraphicalEvent) this.normalModeController.mouseUp  (ird.currentWEPos, ird.eitherTarget);
+					break;
 			case 'click':
 				if (Eq.eq(inputSignature, ['string'])) {
 					switch (ird.operation) {

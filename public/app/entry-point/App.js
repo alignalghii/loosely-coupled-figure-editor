@@ -1,4 +1,4 @@
-function App(router, widgetEventPillar, roomStampDriver, modeDriver, operationDriver, keyboardDriver, figurePropertyEditorDriver, configDriver)
+function App(router, widgetEventPillar, roomStampDriver, modeDriver, operationDriver, keyboardDriver, figurePropertyEditorDriver, configDriver, tabSelectorDriver)
 {
 	this.router = router;
 
@@ -9,11 +9,12 @@ function App(router, widgetEventPillar, roomStampDriver, modeDriver, operationDr
 	this.keyboardDriver             = keyboardDriver;
 	this.figurePropertyEditorDriver = figurePropertyEditorDriver;
 	this.configDriver               = configDriver;
+	this.tabSelectorDriver          = tabSelectorDriver;
 }
 
 App.prototype.run = function ()
 {
-	this.populate(0);
+	this.populate();
 
 	const dispatch = (eventType, signature, ird) => this.router.dispatch(eventType, signature, ird); // @TODO depends too much on Router interface
 	this.widgetEventPillar         .pipeToSM(dispatch); // subscribe mouse events on SVG raised up to Widget level
@@ -23,15 +24,31 @@ App.prototype.run = function ()
 	this.keyboardDriver            .pipeToSM(dispatch);
 	this.figurePropertyEditorDriver.pipeToSM(dispatch);
 	this.configDriver              .pipeToSM(dispatch);
+	this.tabSelectorDriver         .pipeToSM(dispatch);
 };
 
-App.prototype.populate = function (i)
+App.prototype.populate = function ()
 {
-	this.roomStampDriver.roomBank.namedRooms.map((namedRoom) => this.widgetEventPillar.widgetFactories[i].createFigureWidgetFromDomain1(namedRoom.room));// @TODO Law of Demeter
+	this.roomStampDriver.roomBank.namedRooms.map(
+		namedRoom => {
+			const i = this.tabOrder(namedRoom.tab);
+			return this.widgetEventPillar.widgetFactories[i].createFigureWidgetFromDomain1(namedRoom.room); // @TODO Law of Demeter
+		}
+	);
 
 	// @TODO: title-less domain objects make the app fail!
 	/*var massPoint1Factory = new MassPoint1Factory;
 	var massPoint2Factory = new MassPoint2Factory;
 	this.widgetEventPillar.widgetFactories[i].createFigureWidgetFromDomain1(massPoint1Factory.testMassPoint1('red' , [ 8,  4]));
 	this.widgetEventPillar.widgetFactories[i].createFigureWidgetFromDomain1(massPoint2Factory.testMassPoint2('blue', [10, -6]));*/
+};
+
+App.prototype.tabOrder = function (tabName)
+{
+	const i = this.tabSelectorDriver.names.indexOf(tabName);
+	if (i >= 0) {
+		return i;
+	} else {
+		throw `Invalid tabName [${tabName}] in populating pool`;
+	}
 };
