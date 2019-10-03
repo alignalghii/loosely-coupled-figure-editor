@@ -46,7 +46,7 @@ onload = function (event)
 	var modeIODriver                 = new ModeDriver(document);
 	var operationDriver              = new OperationDriver(document);
 	var keyboardDriver               = new KeyboardDriver(document);
-	const figurePropertyEditorIODriver = new FigurePropertyEditorDriver(document, numberHelperAndValidator);
+	const figurePropertyEditorIODriver = new FigurePropertyEditorDriver(document, numberHelperAndValidator, quoteHelper);
 	const configIODriver             = new ConfigDriver(document);
 	const tabSelectorIODriver        = new TabSelectorDriver(document, domHelper);
 

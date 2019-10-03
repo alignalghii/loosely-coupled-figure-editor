@@ -1,4 +1,4 @@
-function FigurePropertyEditorDriver(aDocument, numberHelperAndValidator) // @TODO `numberHelperAndValidator` collaborator should come rather to the controller
+function FigurePropertyEditorDriver(aDocument, numberHelperAndValidator, quoteHelper) // @TODO `numberHelperAndValidator` collaborator should come rather to the controller
 {
 	this.document = aDocument;
 	this.figurePropertyEditor = aDocument.getElementById('figurepropertyeditor');
@@ -9,6 +9,7 @@ function FigurePropertyEditorDriver(aDocument, numberHelperAndValidator) // @TOD
 	this.edgeNames   = tour('ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')).map(([A, B]) => `${A}${B}`);
 
 	this.numberHelperAndValidator = numberHelperAndValidator;
+	this.quoteHelper              = quoteHelper;
 }
 
 FigurePropertyEditorDriver.prototype.pipeToSM = function (dispatch)
@@ -16,8 +17,8 @@ FigurePropertyEditorDriver.prototype.pipeToSM = function (dispatch)
 	const changeInput = event =>
 	{
 		const target = event.target;
-		const [fullMatch, edgeSubmatch, invarianceSubmatch] = /edge_(.*)|(areainvariance)/.exec(target.id);
-		if ( edgeSubmatch && !invarianceSubmatch) {
+		const [fullMatch, edgeSubmatch, invarianceSubmatch, dasharraySubmatch] = /edge_(.*)|(areainvariance)|dasharray_(.*)|/.exec(target.id);
+		if ( edgeSubmatch && !invarianceSubmatch && !dasharraySubmatch) {
 			const edgeIndex = parseInt(edgeSubmatch);
 			either(
 				errMsg     => {this.document.getElementById(`error_${edgeIndex}`).innerHTML = errMsg;},
@@ -25,13 +26,15 @@ FigurePropertyEditorDriver.prototype.pipeToSM = function (dispatch)
 				this.numberHelperAndValidator.eitherERead(`Nem szám!`, target.value)
 			);
 		}
-		if (!edgeSubmatch &&  invarianceSubmatch) dispatch('change', ['areaInvariance', 'bool'], {areaInvariance: target.checked});
-		if ( edgeSubmatch &&  invarianceSubmatch || !edgeSubmatch && !invarianceSubmatch) throw 'Change event piping bug';
+		if (!edgeSubmatch &&  invarianceSubmatch && !dasharraySubmatch) dispatch('change', ['areaInvariance', 'bool'], {areaInvariance: target.checked});
+		if (!edgeSubmatch && !invarianceSubmatch &&  dasharraySubmatch) dispatch('change', ['string', 'string'], {dasharrayAttribute: dasharraySubmatch, value: target.value});
+		const checkFlags = [edgeSubmatch, invarianceSubmatch, dasharraySubmatch].filter(Boolean);
+		if (checkFlags.length != 1) throw 'Change event piping bug';
 	}
 	this.figurePropertyEditor.addEventListener('change', changeInput);
 };
 
-FigurePropertyEditorDriver.prototype.open = function (name, n, perimeter, area, edgeAndAngleMeasures, furnitureNames)
+FigurePropertyEditorDriver.prototype.open = function (name, n, perimeter, area, edgeAndAngleMeasures, furnitureNames, svgAttributes)
 {
 	const content_old = this.document.getElementById('figurepropertyeditor_content');
 	if (content_old) content_old.remove();
@@ -57,6 +60,8 @@ FigurePropertyEditorDriver.prototype.open = function (name, n, perimeter, area, 
 	const liN = this.document.createElement('li');
 	const liP = this.document.createElement('li');
 	const liA = this.document.createElement('li');
+	const liDA  = this.document.createElement('li');
+	const liDAO = this.document.createElement('li');
 	liName.innerHTML = 'Név: ';
 	liName.appendChild(spanName);
 	liN.appendChild(spanN);
@@ -68,7 +73,24 @@ FigurePropertyEditorDriver.prototype.open = function (name, n, perimeter, area, 
 	ulPA.appendChild(liN);
 	ulPA.appendChild(liP);
 	ulPA.appendChild(liA);
+	ulPA.appendChild(liDA);
+	ulPA.appendChild(liDAO);
 	content.appendChild(ulPA);
+	const inDA  = this.document.createElement('input');
+	inDA.type = 'text';
+	inDA.id = 'dasharray_stroke-dasharray';
+	if ('stroke-dasharray' in svgAttributes) inDA.value = svgAttributes['stroke-dasharray'];
+	const inDAO = this.document.createElement('input');
+	inDAO.type = 'number';
+	inDAO.id = 'dasharray_stroke-dashoffset';
+	if ('stroke-dashoffset' in svgAttributes) inDAO.value = svgAttributes['stroke-dashoffset'];
+	liDA .appendChild(inDA);
+	const spanDA = this.document.createElement('span');
+	spanDA.innerHTML = 'dasharray';
+	liDA .appendChild(spanDA);
+	liDAO.innerHTML = this.quoteHelper.onlyTechnicalSpan('dasharray-offset');
+	liDAO.prepend(inDAO);
+	//liDAO.appendChild(this.quoteHelper.onlyTechnicalSpan('daooffset'));
 
 	const table = this.document.createElement('table');
 	table.id = 'edgeAndAngleMeasures';

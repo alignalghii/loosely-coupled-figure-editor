@@ -179,6 +179,11 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - Ütközésvizsgálatot emeljük a business szintre, mert az isemri a legjobban a tartalmazási hierarchiát
  - A Figure, Title, szoval a MathlevelObject callback property-je  (this.mbVectorTransformation) nem szép, váltsuk ki valami mással ezt a megoldást
  - Widget class should have a WidgetFactory collaborator
+ - A CompactModeConroller (vagyis a kompakt mód maga) elromlott (talán a címek bevezetésekor).
+   - Vonszoláskor bug
+   - Ha alakzatot törlök, létrehozok, az rendben működik. Ha viszont alakzat **címét** törlöm, akkor később az alakzatot nem tudom már törölni: valamiféle árvasági hiba jelenik meg
+ - Szobához követőkíséretként hozzáadhatok olyan alszobákat/bútorokat is, amelyek még egy másik vásznon vannak! Vajon mi történik vonszoláskor?
+ - A falrések kezelését jelenleg a dasharray-tulajdonságcsaláddal oldottam meg. A dasharray elromlik egyes transformációkra, és a vásznak közti átugrálásokra is. Bár ezen ,,felszorzással'' segíteni lehet, de a részaránytorzító transzformációkra, és a nagyon fontos éltolásos transfromációra is el fog romolni. Megoldás: alapvetően magaszinten (business level szinten) tároljuk és kezeljük a nyílászáróinformációkat, amelyek aztán innen update-lődnek le az alacsonyabb szintekre (egészen az SVG dasharray szintig), a megfelelő, külön e célra megírt matematikai függvények segítségével.
 
 
 # Fontend
@@ -199,4 +204,3 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - A ,,Ment'' gombra kattinva, nyisson új böngézőfület, és oda tegye ki az alaprajz magasszintű, de egyértelmű leírásának JSON-szövegét. A szöveget textarea elembe tegye ki, egyrészt azéért, hogy szépen tabulálva és sorbatördelve legyen, másrészt azért, mert ugyanez a textarea a visszatötésre (load) is alkalmas lehet. Tehát tulajdonképp ebben a munkaszakszban a Save és a Load gomb ugyanazt csinálja: tabot nyit, és abban felhoz egy textareát.
  - Az Info (help) ikon méretét kicsinyitsük le akkorára, ahogy a korábbi verzióban volt (van róla screenshot).
  - Maradhat a menüvásznak gördítősávos kialakítása, de akkor a `.scrollLeft` tulajdonság állításával kell a nyílászáró/bútor/típus választásnak megfelelő pozícióba göríttetni a kocsit.
- - Szobához követőkíséretként hozzáadhatok olyan alszobákat/bútorokat is, amelyek még egy másik vásznon vannak! Vajon mi történik vonszoláskor?

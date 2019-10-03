@@ -16,7 +16,7 @@ function Router(state, normalModeController, compactModeController, roomControll
 Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: inputRoledData
 {
 	if (eventType == 'change') {
-		if (Eq.eq(inputSignature, ['string', 'string'])) this.normalModeController          .changeMode(ird.mode        ); // @TODO common
+		if (Eq.eq(inputSignature, ['string', 'string']) && 'mode' in ird) this.normalModeController.changeMode(ird.mode); // @TODO common
 		if (Eq.eq(inputSignature, ['edge'  , 'number'])) this.figurePropertyEditorController.editEdge  (ird.edge, ird.value);
 		if (Eq.eq(inputSignature, ['string', 'checkbox']) && ('optionName' in ird)) {
 			switch (ird.optionName) {
@@ -27,6 +27,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 		}
 		if (Eq.eq(inputSignature, ['Room'            ])) this.normalModeController.changeStamp(ird.selectedRoom); // @TODO common
 	}
+	if ((eventType == 'change' || eventType == 'input') && Eq.eq(inputSignature, ['string', 'string']) && 'dasharrayAttribute' in ird) this.figurePropertyEditorController.changeDasharray(ird.dasharrayAttribute, ird.value);
 	if (eventType == 'click' && Eq.eq(inputSignature, ['void']) && 'tabName' in ird) {
 		this.tabSelectorController.select(ird.tabName);
 	}

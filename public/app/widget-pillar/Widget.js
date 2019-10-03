@@ -21,6 +21,19 @@ Widget.prototype.update = function (prevWEPos, currentWEPos)
 	this.updateDownward();
 };
 
+Widget.prototype.addSvgAttribute = function (name, value)
+{
+	this.high.svgAttributes[name] = value; // @TODO should appear on an abstracter level of the widget @TODO modularize out to Widget class
+	this.low.setAttribute(name, value);
+};
+
+Widget.prototype.removeSvgAttribute = function (name)
+{
+	delete this.high.svgAttributes[name]; // @TODO modularize out to Widget class
+	this.low.removeAttribute(name);
+};
+
+
 Widget.prototype.delete = function ()
 {
 	this.bijectionSvgToGeom.delete(this.low); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
@@ -75,6 +88,29 @@ Widget.prototype.jumpTo = function (targetCanvas, targetBoard, targetBusinessBoa
 
 Widget.prototype.changeBoardsFor = function (targetBoard, targetBusinessBoard, targetCoordSysTransfomer) // @TODO: use widgetfactory as a component/collaborator instead of coordSysTransformer!
 {
+	// Dasharray must be taken special care of:
+	const q = targetCoordSysTransfomer.scalingFactor_hl / this.coordSysTransformer.scalingFactor_hl;
+	if (this.high && this.high.svgAttributes) { // @TODO modularize out
+		if (this.high.svgAttributes['stroke-dasharray']) {
+			this.addSvgAttribute(
+				'stroke-dasharray',
+				attributeListMap(
+					n => n * q,
+					this.high.svgAttributes['stroke-dasharray']
+				)
+			);
+		}
+		if (this.high.svgAttributes['stroke-dashoffset']) {
+			this.addSvgAttribute(
+				'stroke-dashoffset',
+				calcWithAttr(
+					n => n * q,
+					this.high.svgAttributes['stroke-dashoffset']
+				)
+			);
+		}
+	}
+
 	// Subscribe for new boards:
 	targetBoard        .set(this.low , this.high        );
 	maybeMap(

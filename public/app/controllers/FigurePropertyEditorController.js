@@ -25,7 +25,7 @@ FigurePropertyEditorController.prototype.editEdge = function (edgeIndex, value)
 					       : (fig, val) => fig.editEdge              (edgeIndex, val),
 				oldValue,
 				value,
-				8 + Math.log2(value)
+				8 + Math.log2(value) // @TODO is this a heuristic?
 			);
 			if (areaInvariance) {
 				widget.editEdge_areaInvariant(edgeIndex, validValue);
@@ -60,18 +60,18 @@ FigurePropertyEditorController.prototype.open = function (widget)
 		domainObject => [domainObject.title.name, domainObject.furniture.map(chair => chair.title.name)], // @TODO bútornak a végső változatban nincs címe (kivétel: galéria)
 		widget_.maybeDomainObject
 	);
-	this.openDriverWithCalculations(name, vertices, furnitureNames); // @TODO furniture shouldbe partly editable from the form directly
+	this.openDriverWithCalculations(name, vertices, furnitureNames, widget.high.svgAttributes); // @TODO furniture shouldbe partly editable from the form directly
 
 	this.state.maybeWidgetActualOnFigurePropertyEditor = ['just', widget_];
 };
 
-FigurePropertyEditorController.prototype.openDriverWithCalculations = function (name, vertices, furnitureNames) // @TODO most of its body belong to math or model, not to controller @TODO editable furniture
+FigurePropertyEditorController.prototype.openDriverWithCalculations = function (name, vertices, furnitureNames, svgAttributes) // @TODO most of its body belong to math or model, not to controller @TODO editable furniture
 {
 	const n                    = vertices.length;
 	const perimeter            = getPerimeter(vertices);
 	const area                 = getArea(vertices);
 	const edgeAndAngleMeasures = getEdgeAndAngleMeasures(vertices);
-	this.figurePropertyEditorDriver.open(name, n, perimeter, area, edgeAndAngleMeasures, furnitureNames);
+	this.figurePropertyEditorDriver.open(name, n, perimeter, area, edgeAndAngleMeasures, furnitureNames, svgAttributes);
 };
 
 
@@ -98,3 +98,21 @@ FigurePropertyEditorController.prototype.close = function ()
 		widget.maybeDomainObject
 	);
 };*/
+
+FigurePropertyEditorController.prototype.changeDasharray = function (attrName, attrValue)
+{
+	maybeMap(
+		widget => {
+			if (attrValue) {
+				widget.addSvgAttribute(attrName, attrValue); // @TODO should appear on an abstracter level of the widget
+				this.statusBarDriver.report(`Alkalmaz &mdash; ${attrName}: ${attrValue}`);
+			} else {
+				delete widget.removeSvgAttribute(attrName); // @TODO should appear on an abstracter level of the widget
+				this.statusBarDriver.report(`Visszavon &mdash; ${attrName}`);
+			}
+			//this.open(widget);
+			this.statusBarDriver.report(`Falréstulajdonság szöveges szerkesztése közvetlenül sikeres`);
+		},
+		this.state.maybeWidgetActualOnFigurePropertyEditor
+	);
+};

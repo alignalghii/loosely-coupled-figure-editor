@@ -108,6 +108,8 @@ Figure.prototype.doScale = function (q)
 {
 	var scale = makeScale(q, this.grasp);
 	this.vertices = this.vertices.map(scale);
+	if ('stroke-dasharray'  in this.svgAttributes) this.svgAttributes['stroke-dasharray' ] = attributeListMap(n => n * q, this.svgAttributes['stroke-dasharray' ]);
+	if ('stroke-dashoffset' in this.svgAttributes) this.svgAttributes['stroke-dashoffset'] = String(Number(this.svgAttributes['stroke-dashoffset']) * q);
 };
 Figure.prototype.doScaleX = function (q)
 {

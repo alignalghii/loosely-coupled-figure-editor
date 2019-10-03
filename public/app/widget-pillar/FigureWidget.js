@@ -39,6 +39,19 @@ FigureWidget.prototype.updateUpAndDownward = function ()
 	this.updateDownward();
 };
 
+FigureWidget.prototype.updateDasharray = function () {['stroke-dasharray', 'stroke-dashoffset'].map(attrName => this.updateSvgAttribute(attrName));};
+
+FigureWidget.prototype.updateSvgAttribute = function (svgAttributeName)
+{
+	if (this.high && this.high.svgAttributes) {
+		if (svgAttributeName in this.high.svgAttributes) {
+			this.low.setAttribute(svgAttributeName, this.high.svgAttributes[svgAttributeName]);
+		} else {
+			this.low.removeAttribute(svgAttributeName);
+		}
+	}
+};
+
 // @TODO: DRY: try to reuse widgetfactory.createTitleWidgetFromMedium. This function does not really belong to FigureWidget, it belongs to WidgetFactory, but unfortunately figureWidget does not contain yet WidgetFactory as itscollaborator
 FigureWidget.prototype.updateMyTitleSuchAs = function (title)
 {
@@ -136,7 +149,12 @@ FigureWidget.prototype.rotate = function (phi) // @TODO: DRY
 
 FigureWidget.prototype.reflectHorizontally = function () {this.high.doReflectHorizontally(); this.updateDownward();};
 FigureWidget.prototype.reflectVertically   = function () {this.high.doReflectVertically();   this.updateDownward();};
-FigureWidget.prototype.scale  = function (q) {this.high.doScale (q); this.updateDownward();};
+FigureWidget.prototype.scale  = function (q)
+{
+	this.high.doScale (q);
+	this.updateDownward();
+	this.updateDasharray();
+};
 FigureWidget.prototype.scaleX = function (q) {this.high.doScaleX(q); this.updateDownward();};
 FigureWidget.prototype.scaleY = function (q) {this.high.doScaleY(q); this.updateDownward();};
 FigureWidget.prototype.scaleXYArealInvariant = function (q) {this.high.doScaleXYArealInvariant(q); this.updateDownward();};
