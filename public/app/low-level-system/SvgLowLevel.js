@@ -26,6 +26,14 @@ SvgLowLevel.prototype.createPolygonChild = function (svgVertices, svgAttributes)
 	return polygonChild;
 };
 
+SvgLowLevel.prototype.createImage = function (filePath, [width, height], [x, y])
+{
+	const imageElement = createElementWithAttributes('image', {width: width, height: height, x: x, y: y}, svgNS);
+	imageElement.setAttributeNS('http://www.w3.org/1999/xlink', 'href', filePath);
+	this.svgRootElement.appendChild(imageElement);
+	return imageElement;
+};
+
 function updatePolygonChild(polygonChild, svgVertices)
 {
 	var points   = pointsArgValue(svgVertices);

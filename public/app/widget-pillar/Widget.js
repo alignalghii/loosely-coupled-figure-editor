@@ -135,15 +135,11 @@ Widget.prototype.isHostless     = function () {throw 'This is an abstract method
 
 Widget.prototype.allowable = function (infinitezimalDisplacement)
 {
-       return maybe(
-               infinitezimalDisplacement,
-               mbVectorTransformationForAllowance => { // @TODO: !!!!
-                       const mbAllowable = mbVectorTransformationForAllowance.call(this.high, this.bijectionSvgToGeom)(infinitezimalDisplacement); // @TODO
-                       return fromMaybe_exec(
-                               () => {throw 'Tiltott zóna!';/*this.statusBarDriver.report('Tiltott zóna!'); return [0, 0];*/}, // @TODO: an axception should be thrown rather
-                               mbAllowable
-                       );
-               },
-               this.high.isCollidable()
-       );
+	return maybe(
+		['just', infinitezimalDisplacement],
+		mbVectorTransformationForAllowance => { // @TODO: !!!!
+			return mbVectorTransformationForAllowance.call(this.high, this.bijectionSvgToGeom)(infinitezimalDisplacement); // @TODO
+		},
+		this.high.isCollidable()
+	);
 };

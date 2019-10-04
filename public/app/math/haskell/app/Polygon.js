@@ -247,6 +247,8 @@ function fallPolygonOnPolygon_IMPROVED(verticesSrc, verticesTgt, fallDirectionVe
 	if ('disjoint'    in status) return fallFromOutside(fallDirectionVector, verticesSrc, verticesTgt);
 	if ('containedBy' in status) return fallFromInside (fallDirectionVector, verticesSrc, verticesTgt);
 	if ('contains'    in status) return fallFromAround (fallDirectionVector, verticesSrc, verticesTgt);
+	// if control reaches here, it means empty situation status, and that means collision:
+	return minusInfinity;
 }
 
 

@@ -184,7 +184,18 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
    - Ha alakzatot törlök, létrehozok, az rendben működik. Ha viszont alakzat **címét** törlöm, akkor később az alakzatot nem tudom már törölni: valamiféle árvasági hiba jelenik meg
  - Szobához követőkíséretként hozzáadhatok olyan alszobákat/bútorokat is, amelyek még egy másik vásznon vannak! Vajon mi történik vonszoláskor?
  - A falrések kezelését jelenleg a dasharray-tulajdonságcsaláddal oldottam meg. A dasharray elromlik egyes transformációkra, és a vásznak közti átugrálásokra is. Bár ezen ,,felszorzással'' segíteni lehet, de a részaránytorzító transzformációkra, és a nagyon fontos éltolásos transfromációra is el fog romolni. Megoldás: alapvetően magaszinten (business level szinten) tároljuk és kezeljük a nyílászáróinformációkat, amelyek aztán innen update-lődnek le az alacsonyabb szintekre (egészen az SVG dasharray szintig), a megfelelő, külön e célra megírt matematikai függvények segítségével.
-
+ - A mostan `Audio.js`-nek nevezett modul és osztály legyen `AudioDriver`, és kerüljön is az eszközmeghajtók közé! Ez amúgy output driver. Kétféée hangot tudjon:
+    - amikor ütközik
+    - amikor - ami amúgy egy bug - eleve invalidus helyzetben van valami. Elvileg erre kivételt kéne dobni, mert elivleg az alkalmazásnak ki kéne zárnia, hogy ilyes előfordulhasson, csak túl jellegzetes a hiba és túl nagy az esélye annak, hogy valahogy mégis előfordul, ezért inkább rendelünk hozzá viselkedést.
+    - Jelenjék meg a statussorban is pirosbetűs, kiemelt szöveg!
+ - A galériát tegyük be egyszrre két fülébe is a menüvászonnak: bútor és szoba!
+    - Vagy külön fül neki, valami tartalmazott szoba. Ilyenek kerülhetnek még ide, a galléria mellett, mint gardrób, mosdóparaván. italbár... Amúgy a galéria valójában szoba, hiszen címe (kiírt neve) van.
+ - Hangok hozzádása az `/usr/share/sounds/....*.ogg`-ból. Főleg az alkalmazás indítására, bezárására kéne (pl. `/usr/share/sounds/ubuntu/stereo/service-login.ogg` és `/usr/share/sounds/ubuntu/stereo/service-logout.ogg`), de a többit is érdemes nézegetni. A `bark.ogg` nagyon jó az invalidus helyzetbe kerülés (elivleg bug, de gyakorlatilag egyelőre még kivédhetetlen esemény) jelzésére
+    - Amúgy lehet, hogya hangfileokat szét kéne osztani az egyes driverek közt, és nem egy közös audioDriverbe összeseregletni őket.
+ - Változzék az egérmutató aszerint, ohog épp alakzat (cím , bútor) fölé emelem, és azerint is, hogy milyen módban (kontrollermódban) vagyunk!
+ - Az image widget (pl bútor) fókusz-stylingja hogyan legyen? (Jelenleg opacity-vel oldottam meg, ami működik ugyan, de nem elég kifejező, és figyelmet igényel a GLITTERING-gel való összeakadás elkerülése is - sorrend!)
+ - Az image widget (bútor) mozgatása, ütköztetése közben néha egyszer-egyszer felugat az invalidus helyzetet jelző kutya! Miért?
+ - Dönteni abban, hogy az `ImageWidget` trtalmazzon-e business level összetevőt, vagy sem? Egyelőre úgy van megírva, hogy nem tartalmaz, de egyébként van egy `Furniture` nevű modul, ami épp az ImageWidget business level részel lehetne, de nincs bekötve, valósan kiaknázva.
 
 # Fontend
  - Freeze lenne jó, mint ahogy az excelben táblasorokat lehet rögzíteni. itt persze a statussort lenne jó így. (Úgy tűnik, az overflow scroll erre elfogadható eszköz lesz)

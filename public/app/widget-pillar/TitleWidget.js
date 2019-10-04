@@ -13,6 +13,7 @@ TitleWidget.prototype.updateDownward = function ()
 	//var svgVertices = this.high.vertices.map((p) => this.coordSysTransformer.highToLow(p));
 	//updatePolygonChild(this.low, svgVertices);
 	const svgPosition = this.coordSysTransformer.highToLow(this.high.position);
+	console.log('EEEEEEEEEE', this.low);
 	updateTextPosition(this.low, svgPosition);
 };
 TitleWidget.prototype.isHostless   = () => false; //function () {console.log(this.high.host.figure); return Boolean(this.bijectionSvgToGeom.getInverse(this.high.host./*@TODO*/figure));};

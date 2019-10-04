@@ -1,4 +1,4 @@
-function NormalModeController(state, widgetFactories, statusBarDriver) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function NormalModeController(state, widgetFactories, statusBarDriver, audioDriver) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
@@ -7,6 +7,8 @@ function NormalModeController(state, widgetFactories, statusBarDriver) // @TODO 
 
 	this.statusBarDriver = statusBarDriver;
 	this.statusBarDriver.greet();
+
+	this.audioDriver = audioDriver;
 
 	this.epsilonDistance = widgetFactories[0].coordSysTransformer.epsilonDistance(); // @TODO Demeter priciple // @TODO: this arbitrary choice hides a conceptual smell
 	this.epsilonAngle    = widgetFactories[0].coordSysTransformer.epsilonAngle();    // @TODO Demeter priciple // @TODO: this arbitrary choice hides a conceptual smell
@@ -39,12 +41,16 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 			const targetCanvas = canvasOfEitherTarget(eitherTarget);
 			const {bijectionSvgToGeom: targetBoard, partialFunctionGeomToBusiness: targetBusinessBoard} = this.widgetFactoryForCanvas(targetCanvas);
 			const maybeAllowJump = this.jumpWidgetToIfNeeded(targetCanvas, targetBoard, targetBusinessBoard); // @TODO: rossz helyen van, szervesen részt kell vennie az ütközésvizgálatban
-			const allowable = this.state.prevWidget.allowable(infinitezimalDisplacement);
-			/*const mbAllowable = this.state.prevWidget.high.mbVectorTransfomationForAllowance(targetBoard)(infinitezimalDisplacement);
+			const mbAllowable = this.state.prevWidget.allowable(infinitezimalDisplacement);
+			//const mbAllowable = this.state.prevWidget.high.mbVectorTransfomationForAllowance(targetBoard)(infinitezimalDisplacement);
 			const allowable = fromMaybe_exec(
-				() => {this.statusBarDriver.report('Tiltott zóna!'); return [0, 0];}, // @TODO: an axception should be thrown rather
+				() => { // @TODO: an axception should be thrown rather
+					this.statusBarDriver.report('<span class="error">Tiltott zóna!</span>');
+					this.audioDriver.ouch();
+					return infinitezimalDisplacement;
+				},
 				mbAllowable
-			);*/
+			);
 			console.log('IIIIIII', maybeAllowJump);
 			if (!vecEq(maybeAllowJump, ['just', false]))
 				this.translatePrevWidgetAndRememberItsNewPosition(allowable);
@@ -77,8 +83,8 @@ NormalModeController.prototype.mouseUp = function (currentWEPos, eitherTarget)
 			if (this.state.prevWidgetHasNotCollidedYet() && !this.state.dragHasAlreadyBegun) {
 				if (this.state.focus && currentWidget.high != this.state.focus.high) this.state.focus.unshowFocus();
 				this.state.focus = currentWidget; this.state.spaceFocus = null;
-				this.state.focus.showFocus();
-				currentWidget.unshowGlittering();
+				currentWidget.unshowGlittering(); // order 1
+				this.state.focus.showFocus();     // order 2: unshowglittering must not undo SVG-<image> styling @TODO alternative solution
 				this.statusBarDriver.report('Alakzatfókusz megjegyezve, üreshelyfókusz levéve.');
 			}
 		},

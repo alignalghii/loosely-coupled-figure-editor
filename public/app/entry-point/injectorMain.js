@@ -28,9 +28,6 @@ onload = function (event)
 		new WidgetFactory(new Map, coordSysTransformer_workCanvas  , new Bijection, svgLowLevel_workCanvas  )
 	];
 
-	var audio               = new MyAudio(new Audio('assets-proper/sonar.ogg'));
-	var widgetCollision = new WidgetCollision(audio);
-
 	const numberHelperAndValidator = new NumberHelperAndValidator(3);
 	const quoteHelper              = new QuoteHelper;
 	const domHelper                = new DomHelper;
@@ -49,11 +46,14 @@ onload = function (event)
 	const figurePropertyEditorIODriver = new FigurePropertyEditorDriver(document, numberHelperAndValidator, quoteHelper);
 	const configIODriver             = new ConfigDriver(document);
 	const tabSelectorIODriver        = new TabSelectorDriver(document, domHelper);
+	const audioODriver               = new AudioDriver('sonar.ogg', 'bark.ogg');
+
+	var widgetCollision = new WidgetCollision(audioODriver);
 
 	var state               = new State(domainStamp);
 
 	var compactModeController            = new CompactModeController(state, widgetFactories, widgetCollision, statusBarODriver); // widgetCollision = new WidgetCollision(board, audio) // board: Bijection low->fig as fig set
-	var normalModeController             = new NormalModeController (state, widgetFactories, statusBarODriver);
+	var normalModeController             = new NormalModeController (state, widgetFactories, statusBarODriver, audioODriver);
 	var roomController                   = new RoomController       (state, roomFactory, statusBarODriver);
 	var figureEditorController           = new FigureEditorController(state, widgetFactories, statusBarODriver);  // @TODO: should not use the same `State` as `NormalModeController`
 	var geomTransformationController     = new GeomTransformationController(state, widgetFactories, statusBarODriver);  // @TODO: should not use the same `State` as `NormalModeController`

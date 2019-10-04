@@ -36,6 +36,8 @@ App.prototype.populate = function ()
 		}
 	);
 
+	this.widgetEventPillar.widgetFactories[1].createImageWidget('https://upload.wikimedia.org/wikipedia/commons/0/04/Toilet-pictogram.png', [10, 10], [4, -8]);
+
 	// @TODO: title-less domain objects make the app fail!
 	/*var massPoint1Factory = new MassPoint1Factory;
 	var massPoint2Factory = new MassPoint2Factory;

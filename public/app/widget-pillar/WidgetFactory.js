@@ -55,6 +55,7 @@ WidgetFactory.prototype.createWidgetFromLow = function (svgPolygon)
 	switch (svgPolygon.tagName) {
 		case 'polygon': return new FigureWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, maybeDomainObject, geomFigure, svgPolygon);
 		case 'text'   : return new TitleWidget (this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, maybeDomainObject, geomFigure, svgPolygon);
+		case 'image'  : return new ImageWidget (this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, maybeDomainObject, geomFigure, svgPolygon);
 		default       : throw 'Invalid low-level SVG-subelement, unable to convert upwards to higher-level objects';
 	}
 };
@@ -70,6 +71,21 @@ WidgetFactory.prototype.createTitleWidgetFromMedium = function (geomFigure)
 {
 	const [maybeDomainObject, svgPolygon] = this.prepareWidgetFromMedium(geomFigure);
 	return new TitleWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, maybeDomainObject, geomFigure, svgPolygon);
+};
+
+WidgetFactory.prototype.createImageWidget = function (fileName, [width, height], [x, y])
+{
+	const q                          = this.coordSysTransformer.scalingFactor_hl,
+	      [x_low      , y_low      ] = this.coordSysTransformer.highToLow([x, y]),
+	      [x_corner   , y_corner   ] = [x-width/2, y+height/2],
+	      [x_lowcorner, y_lowcorner] = this.coordSysTransformer.highToLow([x_corner, y_corner]);
+	const imageWidget = new ImageWidget(
+		this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom,
+		['nothing'],
+		new Figure([[x-width/2, y-height/2], [x+width/2, y-height/2], [x+width/2, y+height/2], [x-width/2, y+height/2]]),
+		this.svgLowLevel.createImage(fileName, [q*width, q*height], [x_lowcorner, y_lowcorner])
+	);
+	this.bijectionSvgToGeom.set(imageWidget.low, imageWidget.high);
 };
 
 
