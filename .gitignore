@@ -12,3 +12,6 @@ sonar.ogg
 bark.ogg
 logo.jpeg
 #favicon?
+
+public/img-vendor/*
+!public/img-vendor/README.md

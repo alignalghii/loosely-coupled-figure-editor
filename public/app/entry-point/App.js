@@ -29,12 +29,112 @@ App.prototype.run = function ()
 
 App.prototype.populate = function ()
 {
-	this.roomStampDriver.roomBank.namedRooms.map(
+	/*this.roomStampDriver.roomBank.namedRooms.map(
 		namedRoom => {
 			const i = this.tabOrder(namedRoom.tab);
 			return this.widgetEventPillar.canvasPseudoWidgets[i].figureWidgetFactory.createFromBusiness1(namedRoom.room); // @TODO Law of Demeter @TODO arbitrariness
 		}
+	);*/
+
+	/** @TODO A rejtélyes ,,ugrálás'' tanulmányozásához: közvetlen munkavászonra kitett alak
+	const cellarFig = (new Figure(poly1_concave_ccw,                        {fill: 'green', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
+	const cellarBsn = new Room (
+		'Pince', cellarFig, [], [],
+		[]
 	);
+	cellarBsn.title.doTranslation([-1.5, 1.5]);
+	const cellarWdg = this.widgetEventPillar.canvasPseudoWidgets[0].figureWidgetFactory.createFromBusiness0(cellarBsn);
+
+	const bed0Wdg = this.widgetEventPillar.canvasPseudoWidgets[0].imageWidgetFactory.create('Ágy', '/img-vendor/agy.png', [2, 2], [6.4, -5.2]);
+	const bed1Wdg = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Ágy', '/img-vendor/agy.png', [2, 2], [4, -8]);
+
+	cellarBsn.escorts.push(bed0Wdg.businessObject);
+	bed0Wdg.businessObject.maybeHost = ['just', cellarBsn]; // @TODO
+	cellarWdg.jumpTo(this.widgetEventPillar.canvasPseudoWidgets[3]);
+	cellarWdg.scale(0.6);
+	cellarWdg.translate([0, 10]);
+	cellarWdg.updateDownwardAll();**/
+
+	const fotelWdg        = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Fotel'        , '/img-vendor/fotel.png'                , [3, 3], [-9  ,  5  ]);
+	const bed1Wdg         = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Ágy'          , '/img-vendor/agy.png'                  , [3, 3], [-9  ,  1.5  ]);
+	const carpet11Wdg     = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Szőnyeg'      , '/img-vendor/szonyeg1_normal_small.png', [3, 3], [-9  , -3  ]);
+	const carpet12Wdg     = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Szőnyeg'      , '/img-vendor/szonyeg1_dark.png'        , [3, 3], [-5  , -3  ]);
+	const tableChairs1Wdg = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Asztal+székek', '/img-vendor/asztalszekek.png'         , [4, 3], [-9, 9]);
+	const green1Wdg       = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Zöldség'      , '/img-vendor/zoldseg.png'              , [2, 2], [-5, 9]);
+
+	//const bed1Wdg   = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Ágy', '/img-vendor/agy.png', [3, 3], [4, -8]);
+	//const bed1Wdg   = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Ágy', '/img-vendor/agy.png', [3, 3], [4, -8]);
+
+	////
+
+	const cellarFig = (new Figure(poly1_concave_ccw,                        {fill: 'green', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
+	const cellarBsn = new Room (
+		'Pince', cellarFig, [], [],
+		[]
+	);
+	cellarBsn.title.doTranslation([-1, 4.5]);
+	const cellarWdg = this.widgetEventPillar.canvasPseudoWidgets[0].figureWidgetFactory.createFromBusiness0(cellarBsn);
+
+	const lamp0Wdg = this.widgetEventPillar.canvasPseudoWidgets[0].imageWidgetFactory.create('Állólámpa', '/img-vendor/allolampa.png', [2, 2], [7.3, -5.7]);
+	const bed0Wdg = this.widgetEventPillar.canvasPseudoWidgets[0].imageWidgetFactory.create('Ágy', '/img-vendor/agy.png', [2, 2], [5.5, -6.1]);
+
+	cellarBsn.escorts.push(bed0Wdg.businessObject, lamp0Wdg.businessObject);
+	bed0Wdg.businessObject.maybeHost = ['just', cellarBsn]; // @TODO
+	lamp0Wdg.businessObject.maybeHost = ['just', cellarBsn]; // @TODO
+
+	cellarWdg.translate([0, 15]);
+	cellarWdg.updateDownwardAll();
+
+
+	////////
+
+	const transitFig = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'yellow', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  -3  , 3  ]);
+	const transitBsn = new Room (
+		'Közlekedő', transitFig, [], [],
+		[]
+	);
+	transitBsn.title.doTranslation([0, -1.5]);
+	const transitWdg = this.widgetEventPillar.canvasPseudoWidgets[0].figureWidgetFactory.createFromBusiness0(transitBsn);
+	transitWdg.scale(2);
+
+	////
+
+	const diningFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'cyan', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
+	const diningBsn = new Room (
+		'Ebédlő', diningFig, [], [],
+		[]
+	);
+	diningBsn.title.doTranslation([0, -2.3]);
+	const diningWdg = this.widgetEventPillar.canvasPseudoWidgets[0].figureWidgetFactory.createFromBusiness0(diningBsn);
+	diningWdg.scale(2);
+
+	const tableChairs0Wdg = this.widgetEventPillar.canvasPseudoWidgets[0].imageWidgetFactory.create('Asztal+székek', '/img-vendor/asztalszekek.png', [4, 3], [-1, -5.1]);
+	const green0Wdg = this.widgetEventPillar.canvasPseudoWidgets[0].imageWidgetFactory.create('Zöldség', '/img-vendor/zoldseg.png', [2, 2], [3, -5.2]);
+
+	diningBsn.escorts.push(tableChairs0Wdg.businessObject, green0Wdg.businessObject);
+	tableChairs0Wdg.businessObject.maybeHost = ['just', diningBsn];
+	green0Wdg.businessObject.maybeHost = ['just', diningBsn];
+
+	/////
+
+	const bathFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'blue', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -15  ]);
+	const bathBsn = new Room (
+		'Fürdő', bathFig, [], [],
+		[]
+	);
+	bathBsn.title.doTranslation([0, -4.1]);
+	const bathWdg = this.widgetEventPillar.canvasPseudoWidgets[0].figureWidgetFactory.createFromBusiness0(bathBsn);
+	bathWdg.scale(2);
+
+	const tap0Wdg = this.widgetEventPillar.canvasPseudoWidgets[0].imageWidgetFactory.create('Csap', '/img-vendor/csap_small.png', [2, 2], [3.4, -13.3]);
+	const tube0Wdg = this.widgetEventPillar.canvasPseudoWidgets[0].imageWidgetFactory.create('Kád', '/img-vendor/kad.png', [5, 4], [-2, -12.5]);
+	//const green0Wdg = this.widgetEventPillar.canvasPseudoWidgets[0].imageWidgetFactory.create('Zöldség', '/img-vendor/zoldseg.png', [2, 2], [3, -5.2]);
+
+	bathBsn.escorts.push(tap0Wdg.businessObject, tube0Wdg.businessObject);
+	tap0Wdg.businessObject.maybeHost = ['just', bathBsn];
+	tube0Wdg.businessObject.maybeHost = ['just', bathBsn];
+
+
 
 	//this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Vécé', 'https://upload.wikimedia.org/wikipedia/commons/0/04/Toilet-pictogram.png', [10, 10], [4, -8]);
 
