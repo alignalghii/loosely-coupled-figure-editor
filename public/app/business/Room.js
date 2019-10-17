@@ -4,16 +4,16 @@
 
 function Room(name, figure, openings, generalSizes, escorts = [])
 {
-	DomainObject.call(this, figure, escorts);
+	BusinessObject.call(this, figure, escorts);
 
 	console.log('New room created!');
 	this.title        = new Title(this, name, figure.titlePosition());
-	//this.figure       = figure; // @TODO lehet hogy jó lenne helyreállítani, és az absztrakt DomainObject osztályból meg kivenni. Nem feltétlen minden üzletiolbektum kötődik alakzathoz. Pl. van cím is, igaz, az nem köthető üzleti objektumhoz. Lehet, hogy a Furniture sem fog alakzathoz kötődni (ez még bizonytalan, hisz a bútornak azért bennfoglaló téglalapdoboza azért biztos van, aszerint ütközik is. Mindenesetre a Furniture képhez is kötődik.
+	//this.figure       = figure; // @TODO lehet hogy jó lenne helyreállítani, és az absztrakt BusinessObject osztályból meg kivenni. Nem feltétlen minden üzletiolbektum kötődik alakzathoz. Pl. van cím is, igaz, az nem köthető üzleti objektumhoz. Lehet, hogy a Furniture sem fog alakzathoz kötődni (ez még bizonytalan, hisz a bútornak azért bennfoglaló téglalapdoboza azért biztos van, aszerint ütközik is. Mindenesetre a Furniture képhez is kötődik.
 	this.openings     = openings;
 	this.generalSizes = generalSizes;
 }
 
-Room.prototype = Object.create(DomainObject.prototype);
+Room.prototype = Object.create(BusinessObject.prototype);
 
 Room.prototype.constructor = Room;
 

@@ -38,7 +38,7 @@ App.prototype.populate = function ()
 
 	//this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Vécé', 'https://upload.wikimedia.org/wikipedia/commons/0/04/Toilet-pictogram.png', [10, 10], [4, -8]);
 
-	// @TODO: title-less domain objects make the app fail!
+	// @TODO: title-less business objects make the app fail!
 	/*var massPoint1Factory = new MassPoint1Factory;
 	var massPoint2Factory = new MassPoint2Factory;
 	this.widgetEventPillar.canvasPseudoWidgets[i].createFigureWidgetFromDomain1(massPoint1Factory.testMassPoint1('red' , [ 8,  4]));

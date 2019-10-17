@@ -55,7 +55,7 @@ FigureBehavior.prototype.shouldFigureCollidesTowards = function()
 FigureBehavior.prototype.shouldDoTranslation = function()
 {
 	var figure      = new Figure([[2, 1], [6, 2], [7, 5], [5, 7], [1, 6]], {fill: 'red'});
-	// var expectedFig = new Figure( ... @TODO methods should be compared too. See test/domain/FigureBehavior::translation TODO
+	// var expectedFig = new Figure( ... @TODO methods should be compared too. See test/business/FigureBehavior::translation TODO
 	figure.doTranslation([3, 2]);
 	return vecEq(figure, {grasp: [3, 2], vertices: [[5, 3], [9, 4], [10, 7], [8, 9], [4, 8]], svgAttributes: {fill: 'red'}});
 }

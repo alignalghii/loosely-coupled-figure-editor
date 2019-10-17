@@ -4,12 +4,12 @@
 
 function Furniture(name, figure, imageFileName, escorts = [])
 {
-	DomainObject.call(this, figure, escorts);
+	BusinessObject.call(this, figure, escorts);
 	this.name = name;
 	this.imageFileName = imageFileName;
 }
 
-Furniture.prototype = Object.create(DomainObject.prototype);
+Furniture.prototype = Object.create(BusinessObject.prototype);
 
 Furniture.prototype.constructor = Furniture;
 

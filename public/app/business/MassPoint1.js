@@ -1,6 +1,6 @@
-function MassPoint1(figure) {DomainObject.call(this, figure);}
+function MassPoint1(figure) {BusinessObject.call(this, figure);}
 
-MassPoint1.prototype = Object.create(DomainObject.prototype);
+MassPoint1.prototype = Object.create(BusinessObject.prototype);
 
 MassPoint1.prototype.constructor = MassPoint1;
 MassPoint1.prototype.copy        = function () {return new MassPoint1(this.figure.translation([0,0]));};

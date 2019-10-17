@@ -1,6 +1,6 @@
-A rétegzett architektúrában a ,,domain'' réteg az, amely képviseli a ,,életvilágot'', tehát a feladat élőszóban megfogalmazható, felhasználó szemmel érthető fogalmait . Nem sok van megírva benne, de ez már maradéktalanul integrálva van az alkalmazás összes alacsonyabb rétegével, és az integráció automatikusan fennmarad (tehát nem kell külön kóddarabokkal újra és újra hozzákötni, ahogy bővül a domain mappa).
+A rétegzett architektúrában a ,,business'' réteg az, amely képviseli a ,,életvilágot'', tehát a feladat élőszóban megfogalmazható, felhasználó szemmel érthető fogalmait . Nem sok van megírva benne, de ez már maradéktalanul integrálva van az alkalmazás összes alacsonyabb rétegével, és az integráció automatikusan fennmarad (tehát nem kell külön kóddarabokkal újra és újra hozzákötni, ahogy bővül a business mappa).
 
-Ide - tehát a domain almappába - kerül minden, ami már nem geometria, hanem olyan, amit természetes nyelven mondunk el:
+Ide - tehát a business almappába - kerül minden, ami már nem geometria, hanem olyan, amit természetes nyelven mondunk el:
 A lakás szobákból áll.
 A szobáknak alakjuk van, emellett a szoba falánaksaját külön szerkezete van: nyílászárók vagy puszta falnyílások tagolják a falat.
 A falnyílások tetszés szerint elmozgathatóak a falak mentén, törölhetőek, hozzáadhatóak (természetesen opcionális nyílásgátlókkal együtt).
