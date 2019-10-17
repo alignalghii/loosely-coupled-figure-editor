@@ -1,76 +1,55 @@
-function FigureNestingController(state, widgetFactories, statusBarDriver)
+function FigureNestingController(state, canvasPseudoWidgets, statusBarDriver)
 {
 	this.state = state;
 
-	this.widgetFactories = widgetFactories; // @TODO widgetFactories has also a drive-like nature
-	this.statusBarDriver = statusBarDriver;
+	this.canvasPseudoWidgets = canvasPseudoWidgets; // @TODO canvasPseudoWidgets has also a drive-like nature
+	this.statusBarDriver     = statusBarDriver;
 }
 
 FigureNestingController.prototype = Object.create(Controller.prototype);
 
 FigureNestingController.prototype.constructor = FigureNestingController;
 
-FigureNestingController.prototype.onInsteadOfOff = function (currentWEPos, eitherTarget, isOn)
+FigureNestingController.prototype.onOrOff = function (currentWEPos, eitherTarget)
 {
-	const widgetFactory = this.widgetFactoryForEitherTarget(eitherTarget);
+	const canvasPseudoWidget = this.canvasPseudoWidgetForEitherTarget(eitherTarget);
 	const errors = [];
 	const notes = [];
-	if (!this.state.focus) errors.push('Nincs fókuszalakzat kijelölve, így a &bdquo;mit mibe&rdquo; alakzat-argumentumok közül hiányzik a &bdquo;mibe&rdquo;.');
+	const motherWidget = this.state.focus; // @TODO A `this.state.focus` ne `Widget | null` típusú legyen legyen, hanem `Maybe<Widget>`
 	either(
 		canvas => {errors.push('Vászonra nem elég kattintani, itt nincs közelségi heurisztika');},
-		widget => {
-			const widget_ = this.widgetDirectlyOrViaTitle(widget);
-			notes.push('&bdquo;mit mibe&rdquo; alakzat-argumentumok közül a &bdquo;mibe&rdquo; észlelve.');
-			if (this.state.focus) {
-				if (this.state.focus.high != widget_.high) {
-					maybe_exec(
-						() => {throw('Inkonzisztens üzleti objektum');},
-						room => {
-							const chair = fromJust(widget_.maybeDomainObject);
-							const i = room.furniture.indexOf(chair);
-							if (isOn) {
-								if (i < 0) {
-									room.furniture.push(chair);
-									chair.maybeHost = ['just', room]; // @TODO
-									notes.push(`&bdquo;${chair.title.name}&rdquo; gazdája immár &bdquo;${room.title.name}&rdquo;`);
-								} else {
-									notes.push(`&bdquo;${chair.title.name}&rdquo; ismerős már &bdquo;${room.title.name}&rdquo; számára, többszörösen ne adjuk hozzá.`);
-								}
-							} else {
-								if (i >= 0) {
-									const [chairCheck] = room.furniture.splice(i, 1); //@TODO make it a ListX method @TODO do more throw assertions
-									chair.maybeHost = ['nothing'];
-									notes.push(`&bdquo;${chairCheck.title.name}&rdquo; gazdája immár nem &bdquo;${room.title.name}&rdquo;`);
-								} else {
-									notes.push(`&bdquo;${chair.title.name}&rdquo; ismeretlen &bdquo;${room.title.name}&rdquo; számára, nincs mit törölni.`);
-								}
-							}
-						},
-						this.state.focus.maybeDomainObject
-					);
-				} else {
-					console.log('>>>', this.state.focus.figure, widget_.figure);
-					errors.push(`&bdquo;${fromJust(widget_.maybeDomainObject).title.name}&rdquo; nem lehet és nem is lehetett saját maga része!`)
-				}
+		clickedWidget => {
+			const escortCandidateWidget = this.widgetDirectlyOrViaTitle(clickedWidget);
+			if (!escortCandidateWidget.businessObject) throw 'Inconsistence';
+			const escortCandidate = escortCandidateWidget.businessObject;
+			escortCandidate.assertContainmentValidity();
+			if (motherWidget) { // @TODO A `this.state.focus` ne `Widget | null` típusú legyen legyen, hanem `Maybe<Widget>`
+				if (!motherWidget.businessObject) throw 'Inconsistence';
+				const mother = motherWidget.businessObject;
+				mother.assertContainmentValidity();
+				notes.push('Követéscsatlakoztatás hozzáadása:');
+				maybe_exec(
+					() => errors.push(`&bdquo;${mother.queryName()}&rdquo; bennevan &bdquo;${escortCandidate.queryName()}&rdquo; kíséretében, így &bdquo;${escortCandidate.queryName()}&rdquo; nem kísérheti &bdquo;${mother.queryName()}&rdquo; objektumot (körkörösség tilalma).`),
+					maybeOldHost => notes.push(
+						maybe(
+							`A korábban szabad, semmiféle kíséretbe nem tartozó &bdquo;${escortCandidate.queryName()}&rdquo; immár &bdquo;${mother.queryName()}&rdquo; objektumot kíséri.`,
+							oldHost => oldHost != mother ? `Az előzőleg &bdquo;${oldHost.queryName()}&rdquo; objektum kíséretébe tartozott &bdquo;${escortCandidate.queryName()}&rdquo; immár &bdquo;${mother.queryName()}&rdquo; objektumot kíséri.` : `Az előzőleg is &bdquo;${oldHost.queryName()}&rdquo; objektum kíséretébe tartozott &bdquo;${escortCandidate.queryName()}&rdquo; most is ugyanazt az objektumot kíséri.`,
+							maybeOldHost
+						)
+					),
+					escortCandidate.setOrChangeHost(mother)
+				);
+			} else {
+				notes.push('Követéscsatlakoztatás törlése:');
+				notes.push(
+					maybe(
+						`&bdquo;${escortCandidate.queryName()}&rdquo; objektumot nem kell és nem is lehet felszabadítani: eddig sem tartozott semmiféle kíséretbe.`,
+						oldHost => `&bdquo;${escortCandidate.queryName()}&rdquo; kísérettagot fölszabadítja régi gazdája: &bdquo;${oldHost.queryName()}&rdquo; kíséretéből.`,
+						escortCandidate.liberate()
+					)
+				);
 			}
 		},
-		/*maybe_exec(
-			() => {
-				notes.push('Címre kattinthattál, vagy valami hasonló &bdquo; tárgyiasulatlan&rdquo; dologra');
-				widgetFactory.createFigureWidgetFromMedium(widget.high.host.figure);
-			},
-			chair => {
-				notes.push('&bdquo;mit mibe&rdquo; alakzat-argumentumok közül a &bdquo;mibe&rdquo; észlelve.');
-				if (this.state.focus) {console.log('++++++++++++++', this.state.focus.maybeDomainObject)
-					maybe_exec(
-						() => {throw('Inkonzisztens üzleti objektum');},
-						room => notes.push(`${chair.title.name} -> ${room.title.name}`),
-						this.state.focus.maybeDomainObject
-					);
-				}
-			},
-			widget.maybeDomainObject
-		)*/
 		eitherTarget
 	);
 	this.statusBarDriver.report(errors.concat(notes).join('</br> &bullet; '));

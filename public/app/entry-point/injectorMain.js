@@ -7,7 +7,7 @@ onload = function (event)
 	const svgLowLevel_menuCanvas   = new SvgLowLevel(document, 'svgRoot_menuCanvas'  ), // [250, 374]
 	      svgLowLevel_menuCanvas_2 = new SvgLowLevel(document, 'svgRoot_menuCanvas_2'), // [250, 374]
 	      svgLowLevel_menuCanvas_3 = new SvgLowLevel(document, 'svgRoot_menuCanvas_3'); // [250, 374]
-	const svgLowLevel_workCanvas   = new SvgLowLevel(document, 'svgRoot_workCanvas'); // [600, 400]
+	const svgLowLevel_workCanvas   = new SvgLowLevel(document, 'svgRoot_workCanvas'  ); // [600, 400]
 	const svgLowLevels = [
 		svgLowLevel_menuCanvas, svgLowLevel_menuCanvas_2, svgLowLevel_menuCanvas_3,
 		svgLowLevel_workCanvas
@@ -18,15 +18,16 @@ onload = function (event)
 	      coordSysTransformer_menuCanvas_3 = new CoordSysTransformer([125, 187], 10, [true, false]); // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
 	const coordSysTransformer_workCanvas   = new CoordSysTransformer([300, 200], 20, [true, false]); // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
 
+	const canvasPseudoWidgetFactory = new CanvasPseudoWidgetFactory;
+	const canvasPseudoWidget_menu   = canvasPseudoWidgetFactory.create(svgLowLevel_menuCanvas  , coordSysTransformer_menuCanvas  , new Bijection, new Map),
+	      canvasPseudoWidget_menu_2 = canvasPseudoWidgetFactory.create(svgLowLevel_menuCanvas_2, coordSysTransformer_menuCanvas_2, new Bijection, new Map),
+	      canvasPseudoWidget_menu_3 = canvasPseudoWidgetFactory.create(svgLowLevel_menuCanvas_3, coordSysTransformer_menuCanvas_3, new Bijection, new Map),
+	      canvasPseudoWidget_work   = canvasPseudoWidgetFactory.create(svgLowLevel_workCanvas  , coordSysTransformer_workCanvas  , new Bijection, new Map);
+
 	var roomFactory           = new RoomFactory();
 	// var widgetFactories       = svgLowLevels.map(svgLowLevel => new WidgetFactory(new Map, coordSysTransformer, new Bijection, svgLowLevel)); // Use a PartialMap class, that should yield Nothing's
 	// @TODO restore the more generic solutions soon, but now I want micromanage for experimental purpose.
-	const widgetFactories = [
-		new WidgetFactory(new Map, coordSysTransformer_menuCanvas  , new Bijection, svgLowLevel_menuCanvas  ),
-		new WidgetFactory(new Map, coordSysTransformer_menuCanvas_2, new Bijection, svgLowLevel_menuCanvas_2),
-		new WidgetFactory(new Map, coordSysTransformer_menuCanvas_3, new Bijection, svgLowLevel_menuCanvas_3),
-		new WidgetFactory(new Map, coordSysTransformer_workCanvas  , new Bijection, svgLowLevel_workCanvas  )
-	];
+	const canvasPseudoWidgets = [canvasPseudoWidget_menu, canvasPseudoWidget_menu_2, canvasPseudoWidget_menu_3, canvasPseudoWidget_work];
 
 	const numberHelperAndValidator = new NumberHelperAndValidator(3);
 	const quoteHelper              = new QuoteHelper;
@@ -52,18 +53,18 @@ onload = function (event)
 
 	var state               = new State(domainStamp);
 
-	var compactModeController            = new CompactModeController(state, widgetFactories, widgetCollision, statusBarODriver); // widgetCollision = new WidgetCollision(board, audio) // board: Bijection low->fig as fig set
-	var normalModeController             = new NormalModeController (state, widgetFactories, statusBarODriver, audioODriver);
+	var compactModeController            = new CompactModeController(state, canvasPseudoWidgets, widgetCollision, statusBarODriver); // widgetCollision = new WidgetCollision(board, audio) // board: Bijection low->fig as fig set
+	var normalModeController             = new NormalModeController (state, canvasPseudoWidgets, statusBarODriver, audioODriver);
 	var roomController                   = new RoomController       (state, roomFactory, statusBarODriver);
-	var figureEditorController           = new FigureEditorController(state, widgetFactories, statusBarODriver);  // @TODO: should not use the same `State` as `NormalModeController`
-	var geomTransformationController     = new GeomTransformationController(state, widgetFactories, statusBarODriver);  // @TODO: should not use the same `State` as `NormalModeController`
-	const figurePropertyEditorController = new FigurePropertyEditorController(state, widgetFactories, figurePropertyEditorIODriver, statusBarODriver);
+	var figureEditorController           = new FigureEditorController(state, canvasPseudoWidgets, statusBarODriver);  // @TODO: should not use the same `State` as `NormalModeController`
+	var geomTransformationController     = new GeomTransformationController(state, canvasPseudoWidgets, statusBarODriver);  // @TODO: should not use the same `State` as `NormalModeController`
+	const figurePropertyEditorController = new FigurePropertyEditorController(state, canvasPseudoWidgets, figurePropertyEditorIODriver, statusBarODriver);
 	const configController               = new ConfigController(state, configIODriver, statusBarODriver);
-	const figureNestingController        = new FigureNestingController(state, widgetFactories, statusBarODriver);
+	const figureNestingController        = new FigureNestingController(state, canvasPseudoWidgets, statusBarODriver);
 	const tabSelectorController          = new TabSelectorController(tabSelectorIODriver, quoteHelper, statusBarODriver);
 
 	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController); // @TODO make globalOriginFigure obsolete
-	var widgetEventPillar   = new WidgetEventPillar(widgetFactories, router); // @TODO: could it be regarded as a kind of device driver, and renamed + moved appropriately?
+	var widgetEventPillar   = new WidgetEventPillar(canvasPseudoWidgets, router); // @TODO: could it be regarded as a kind of device driver, and renamed + moved appropriately?
 
 	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorIODriver, configIODriver, tabSelectorIODriver); // @TODO Law of Demeter, see inside
 

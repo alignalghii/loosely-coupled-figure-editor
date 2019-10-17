@@ -1,24 +1,23 @@
 function Controller () {} // abstract // @TODO should initialize state, statusBarDriver
 
-Controller.prototype.widgetFactoryForEitherTarget = function (eitherTarget) {return this.widgetFactoryForCanvas(canvasOfEitherTarget(eitherTarget));};
-Controller.prototype.widgetFactoryForCanvas       = function (canvas      ) {return selectWidgetFactoryForCanvas(canvas, this.widgetFactories     );};
+Controller.prototype.canvasPseudoWidgetForEitherTarget = function (eitherTarget) {return this.canvasPseudoWidgetForCanvas(canvasOfEitherTarget(eitherTarget));};
+Controller.prototype.canvasPseudoWidgetForCanvas       = function (canvas      ) {return selectCanvasPseudoWidgetForCanvas(canvas, this.canvasPseudoWidgets );};
 
-Controller.prototype.jumpWidgetToIfNeeded = function (targetCanvas, targetBoard, targetBusinessBoard)
+Controller.prototype.jumpWidgetToIfNeeded = function (targetCanvasPseudoWidget)
 {
-	const targetWidgetFactory = this.widgetFactoryForCanvas(targetCanvas);
-	const targetCoordSysTransfomer = targetWidgetFactory.coordSysTransformer; // @TODO: in the `Widget` class, use widgetfactory as a component/collaborator instead of coordSysTransformer!
+	const targetCoordSysTransfomer = targetCanvasPseudoWidget.coordSysTransformer; // @TODO: in the `Widget` class, use widgetfactory as a component/collaborator instead of coordSysTransformer!
 	return maybeMap(
 		jumpingWidget => {
 			const isHostless = jumpingWidget.isHostless();
 			if (isHostless) {
-				jumpingWidget.jumpTo(targetCanvas, targetBoard, targetBusinessBoard, targetCoordSysTransfomer);
+				jumpingWidget.jumpTo(targetCanvasPseudoWidget);
 				this.statusBarDriver.report('Alakzat átugrasztása vásznak között!');
 			} else {
 				this.statusBarDriver.report('Gazdaobjektuma nélkül nem ugrasztható át!');
 			}
 			return isHostless;
 		},
-		this.maybeJumpingWidget(targetCanvas)
+		this.maybeJumpingWidget(targetCanvasPseudoWidget.low())
 	);
 };
 
@@ -32,18 +31,7 @@ Controller.prototype.maybeJumpingWidget = function (targetCanvas)
 
 Controller.prototype.widgetDirectlyOrViaTitle = function (widget)
 {
-	return maybe_exec(
-		()  => {
-			const widgetFactory = this.widgetFactoryForEitherTarget(['right', widget]); // @TODO code smell. Should exist both widgetFactoryForCanvas and widgetFactoryForWidget
-			const room = widget.high.host; // @TODO what if host is not a room
-			this.statusBarDriver.report(`Szoba címére kattintottál (&bdquo;${room.title.name}&rdquo;), a hozzátartozó szobát veszem. Magát a címet sajnos egyelőre csak a tulajdonság szerkesztáben szerkesztheted át, itt helyben közvetlenül még nem 😞💣🗲🌧💧`);
-			return widgetFactory.createFigureWidgetFromMedium(room.figure);
-		},
-		domainObject => {
-			if (!widget.high.vertices || !domainObject.title.name) throw 'Tervezési hiba!'; // @TODO: hogy a legjobb? Lekezelni? Kivételt dobni? Loggolni? Áttervezni? Milyen mély a tervezési probléma?
-			this.statusBarDriver.report('Közvetlenül magára a szobára kattintottál, minden világos.');
-			return widget;
-		},
-		widget.maybeDomainObject
-	);
+	const {widget: widget_, message: message} = widget.directlyOrViaTitle();
+	this.statusBarDriver.report(message);
+	return widget_;
 };

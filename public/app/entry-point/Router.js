@@ -198,14 +198,14 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 	if (this.state.mode == 'figurepropertyeditor') {
 		switch (eventType) {
 			case 'mouseup':
-				this.figurePropertyEditorController.modeOn(ird.currentWEPos, ird.eitherTarget)
+				this.figurePropertyEditorController.modeOn(ird.currentWEPos, ird.eitherTarget);
 				break;
 		}
 	}
-	if (this.state.mode == 'figurenestingon' || this.state.mode == 'figurenestingoff') {
+	if (this.state.mode == 'figurenesting') {
 		switch (eventType) {
 			case 'mouseup':
-				this.figureNestingController.onInsteadOfOff(ird.currentWEPos, ird.eitherTarget, this.state.mode == 'figurenestingon')
+				this.figureNestingController.onOrOff(ird.currentWEPos, ird.eitherTarget);
 				break;
 		}
 	}

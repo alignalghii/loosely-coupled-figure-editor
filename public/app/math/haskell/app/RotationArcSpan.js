@@ -1,13 +1,13 @@
 /** Used by GeomTransformationController */
 
-function RotationArcSpan(currentWEPos, nearestFigure, widgetFactory)
+function RotationArcSpan(currentWEPos, nearestFigure, canvasPseudoWidget)
 {
 	this.start  = currentWEPos;
 	this.last   = currentWEPos; // @TODO: `last` is not used by the user-observable functioning, really it is only used in logging (console message). Move it into `RotationArcSpanLog`!
 	this.figure = nearestFigure;
 	this.startReferenceAngle = nearestFigure.referenceAngle,
-	this.widget = widgetFactory.createFigureWidgetFromMedium(nearestFigure);
-	this.board  = widgetFactory.bijectionSvgToGeom;
+	this.widget = canvasPseudoWidget.arbitrary.detectTypeAndComposeFromHigh(nearestFigure);
+	this.board  = canvasPseudoWidget.board();
 }
 
 RotationArcSpan.prototype.query = function (currentWEPos) // a pure function without side effects

@@ -1,41 +1,85 @@
 /*********************** @TODO: Concrete Widget-subclasses? **************************************/
 
-function FigureWidget(partialFunctionGeomToBusiness, coordSysTransformer, bijectionSvgToGeom,    maybeDomainObject, high, low)
+function FigureWidget(canvasPseudoWidget,    low, high, businessObject)
 {
-	Widget.call(this, partialFunctionGeomToBusiness, coordSysTransformer, bijectionSvgToGeom,    maybeDomainObject, high, low);
+	Widget.call(this, canvasPseudoWidget,    low, high);
+	this.businessObject = businessObject;
 }
 
 FigureWidget.prototype = Object.create(Widget.prototype);
 
 FigureWidget.prototype.constructor = FigureWidget;
 
+FigureWidget.prototype.factory = function () {return this.canvasPseudoWidget.figureWidgetFactory;};
+
+FigureWidget.prototype.titleWidget = function () {return this.canvasPseudoWidget.titleWidgetFactory.composeFromHigh(this.businessObject.title);};
+FigureWidget.prototype.withEscortWidgets = function (doWith)
+{
+	return this.businessObject.escorts.map(
+		escort => doWith(this.factory().detectTypeAndComposeFromBusiness(escort)) // @TODO factory() select well, but it is rather arbitrary, works but is smelly architecture
+	);
+};
+FigureWidget.prototype.withTitleAndEscortWidgets = function (doWith)
+{
+	doWith(this.titleWidget());
+	this.withEscortWidgets(doWith);
+}
+
+FigureWidget.prototype.delete = function ()
+{
+	this.withTitleAndEscortWidgets(widget => widget.delete());
+	Widget.prototype.delete.call(this); // low+high detached from bijection + low removed from SVG-DOM. Also high+business detached from partialFunction (OOP-smelly solution! @TODO debate)
+};
+
 // Abstract methods of super concretized here:
 // @TODO: consider - this function alone justifies inheriting
 FigureWidget.prototype.updateDownward = function ()
 {
-	var svgVertices = this.high.vertices.map((p) => this.coordSysTransformer.highToLow(p));
+	const svgVertices = this.high.vertices.map(
+		p => this.factory().coordSysTransformer.highToLow(p)
+	);
 	updatePolygonChild(this.low, svgVertices);
 };
-FigureWidget.prototype.isHostless = function ()
+
+
+FigureWidget.prototype.updateDownwardAll = function ()
 {
-	return maybe_exec(
-		()           => {throw 'TODO';}, // @TODO
-		domainObject => isNothing(domainObject.maybeHost),
-		this.maybeDomainObject
-	);
+	this.withTitleAndEscortWidgets(subwidget => subwidget.updateDownwardAll());
+	this.updateDownward();
 };
+
+FigureWidget.prototype.isHostless = function () {return isNothing(this.businessObject.maybeHost);};
+
+FigureWidget.prototype.jumpTo = function (targetCanvasPseudoWidget) // targetCanvas, targetBoard, targetBusinessBoard, targetCoordSysTransfomer
+{
+	const targetCanvasElem = targetCanvasPseudoWidget.low();
+	targetCanvasElem.appendChild(this.low);
+
+	this.withTitleAndEscortWidgets(widget => widget.jumpTo(targetCanvasPseudoWidget)); // targetCanvas, targetBoard, targetBusinessBoard, targetCoordSysTransfomer);
+	//targetCanvasElem.appendChild(titleWidget().low);
+	//titleWidget().changeBoardsFor(targetBoard, targetBusinessBoard, targetCoordSysTransfomer);
+
+
+	/*this.businessObject.escorts.map(
+		escort => { // @TODO
+			const chFig  = chair.figure;
+			const chPoly = this.bijectionSvgToGeom.getInverse(chFig);
+			const chWidg = new FigureWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, ['just', chair], chFig, chPoly);
+			chWidg.jumpTo(targetCanvas, targetBoard, targetBusinessBoard, targetCoordSysTransfomer);
+		}
+	)*/
+
+
+	this.changeBoardsFor(targetCanvasPseudoWidget);
+};
+
 
 
 // @TODO: can be raised to abstract Widget class?
 FigureWidget.prototype.updateUpAndDownward = function ()
 {
-	maybeMap(
-		domainObject => {
-			domainObject.goUpdatedByOwnFigure();
-			this.updateMyTitleSuchAs(domainObject.title); // @TODO: DRY: try to reuse widgetfactory.createTitleWidgetFromMedium
-		},
-		this.maybeDomainObject
-	)
+	this.businessObject.goUpdatedByOwnFigure(); // figure updates title
+	this.titleWidget().updateDownward(); // @TODO: DRY: try to reuse widgetfactory.createTitleWidgetFromMedium
 	this.updateDownward();
 };
 
@@ -52,13 +96,6 @@ FigureWidget.prototype.updateSvgAttribute = function (svgAttributeName)
 	}
 };
 
-// @TODO: DRY: try to reuse widgetfactory.createTitleWidgetFromMedium. This function does not really belong to FigureWidget, it belongs to WidgetFactory, but unfortunately figureWidget does not contain yet WidgetFactory as itscollaborator
-FigureWidget.prototype.updateMyTitleSuchAs = function (title)
-{
-	const textElem = this.bijectionSvgToGeom.getInverse(title);
-	const titleWidget = new TitleWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, ['nothing'], title, textElem);
-	titleWidget.updateDownward();
-};
 
 FigureWidget.prototype.showGlittering = function ()
 {
@@ -74,36 +111,26 @@ FigureWidget.prototype.unshowGlittering = function ()
 
 FigureWidget.prototype.showFocus = function ()
 {
-	var widget = this;
-	function add (attr) // @TODO make reuseable
-	{
-		widget.high.svgAttributes[attr.name] = attr.value; // widget.updateDownward();
-		widget.low.setAttribute(attr.name, attr.value);
-	}
-	function del (attr) // @TODO make reuseable
-	{
-		delete widget.high.svgAttributes[attr.name];
-		widget.low.removeAttribute(attr.name);
-	}
-	FOCUS[1].map(del);
-	FOCUS[0].map(add);
+	FOCUS[1].map(attr => this.delAttr(attr));
+	FOCUS[0].map(attr => this.addAttr(attr));
 };
 
 FigureWidget.prototype.unshowFocus = function ()
 {
-	var widget = this;
-	function add (attr) // @TODO make reuseable
-	{
-		widget.high.svgAttributes[attr.name] = attr.value; // widget.updateDownward();
-		widget.low.setAttribute(attr.name, attr.value);
-	}
-	function del (attr) // @TODO make reuseable
-	{
-		delete widget.high.svgAttributes[attr.name];
-		widget.low.removeAttribute(attr.name);
-	}
-	UNFOCUS[1].map(del);
-	UNFOCUS[0].map(add);
+	UNFOCUS[1].map(attr => this.delAttr(attr));
+	UNFOCUS[0].map(attr => this.addAttr(attr));
+};
+
+FigureWidget.prototype.addAttr = function (attr)
+{
+	this.high.svgAttributes[attr.name] = attr.value; // widget.updateDownward();
+	this.low.setAttribute(attr.name, attr.value);
+};
+
+FigureWidget.prototype.delAttr = function (attr)
+{
+	delete this.high.svgAttributes[attr.name];
+	this.low.removeAttribute(attr.name);
 };
 
 
@@ -111,40 +138,14 @@ FigureWidget.prototype.unshowFocus = function ()
 
 FigureWidget.prototype.translate = function (displacement) // @TODO: DRY
 {
-	maybeMap(
-		domainObject => {
-			domainObject.doTranslation(displacement); // domainobject will update `figure` and `title` mathobjects silently
-			// @TODO: use `WidgetFactory.prototype.create*WidgetFrom*` instead (of course, for that, refactor `Widget` class to contain a widgetFactory collaborator):
-			this.updateMyTitleSuchAs(domainObject.title);
-
-			domainObject.furniture.map( // @TODO
-				chair => {
-					// @TODO: use `WidgetFactory.prototype.createFigureWidgetFromMedium` instead (of course, for that, refactor `Widget` class to contain a widgetFactory collaborator):
-					const polyElem = this.bijectionSvgToGeom.getInverse(chair.figure);
-					const figWidget = new FigureWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom,  ['just', chair], chair.figure, polyElem);
-					figWidget.updateDownward();
-					figWidget.updateMyTitleSuchAs(chair.title);
-				}
-			);
-		},
-		this.maybeDomainObject
-	);
-	this.updateDownward(); // it relates to figure only
+	this.businessObject.doTranslation(displacement); // businessObject will update `figure` and `title` mathobjects silently
+	this.updateDownwardAll();
 };
 
 FigureWidget.prototype.rotate = function (phi) // @TODO: DRY
 {
-	maybeMap(
-		domainObject => {
-			domainObject.doRotation(phi); // domainobject will update `figure` and `title` mathobjects silently
-			const title = domainObject.title; // @TODO: not every domainobject has a title
-			const textElem = this.bijectionSvgToGeom.getInverse(title); // @TODO: bug: textelem is undefined!
-			const titleWidget = new TitleWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom,   ['nothing'], title, textElem); // @TODO bug
-			titleWidget.updateDownward();
-		},
-		this.maybeDomainObject
-	);
-	this.updateDownward(); // it relates to figure only
+	this.businessObject.doRotation(phi); // businessObject will update `figure` and `title` mathobjects silently
+	this.updateDownwardAll(); // updates it for the the changed title
 };
 
 FigureWidget.prototype.reflectHorizontally = function () {this.high.doReflectHorizontally(); this.updateDownward();};
@@ -172,3 +173,27 @@ FigureWidget.prototype.unscaleXYArealInvariantRef = function (q) {this.high.doUn
 
 FigureWidget.prototype.editEdge               = function (i, a) {this.high.editEdge              (i, a); this.updateDownward();};
 FigureWidget.prototype.editEdge_areaInvariant = function (i, a) {this.high.editEdge_areaInvariant(i, a); this.updateDownward();};
+
+FigureWidget.prototype.directlyOrViaTitle = function ()
+{
+	return {
+		widget : this,
+		message: 'Közvetlenül magára a szobára kattintottál, minden világos.'
+	};
+};
+
+FigureWidget.prototype.beDescribedOnOpeningForm = function (figPropEdController)
+{
+	const room = this.businessObject;
+	const [name, subnames] = [room.queryName(), room.escorts.map(escort => escort.queryName())];
+	const [vertices, svgAttributes] = [this.high.vertices, this.high.svgAttributes]; // @TODO nasty design. In case of furniture, it probably becomes `undefined`
+	figPropEdController.openDriverWithCalculations(name, vertices, subnames, svgAttributes); // @TODO furniture shouldbe partly editable from the form directly
+	figPropEdController.state.maybeWidgetActualOnFigurePropertyEditor = ['just', this];
+};
+
+FigureWidget.prototype.updateAndReport = function (currentWEPos, nearestFigure, template1, template2)
+{
+	const oldVertices = JSON.stringify(nearestFigure.vertices);
+	this.updateUpAndDownward();
+	return 'Alakzatszerkesztő. ' + template1 + ' a ' + JSON.stringify(currentWEPos) + ' pontot a legközelebbi ' + template2 + '. Ennek változása: ' + oldVertices + ' --> ' + JSON.stringify(nearestFigure.vertices) + '.';
+};

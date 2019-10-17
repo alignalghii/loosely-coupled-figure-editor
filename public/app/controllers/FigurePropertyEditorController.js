@@ -1,8 +1,8 @@
-function FigurePropertyEditorController(state, widgetFactories, figurePropertyEditorDriver, statusBarDriver)
+function FigurePropertyEditorController(state, canvasPseudoWidgets, figurePropertyEditorDriver, statusBarDriver)
 {
 	this.state = state;
 
-	this.widgetFactories = widgetFactories; // @TODO widgetFactories has also a drive-like nature
+	this.canvasPseudoWidgets = canvasPseudoWidgets; // @TODO canvasPseudoWidgets has also a drive-like nature
 	this.figurePropertyEditorDriver = figurePropertyEditorDriver
 	this.statusBarDriver            = statusBarDriver;
 }
@@ -15,7 +15,7 @@ FigurePropertyEditorController.prototype.editEdge = function (edgeIndex, value)
 {
 	maybeMap(
 		widget => {
-			const board = this.widgetFactoryForEitherTarget(['right', widget]).bijectionSvgToGeom;
+			const board = this.canvasPseudoWidgetForEitherTarget(['right', widget]).board(); // @TODO make a `canvasPseudoWidgetForWidget` method in ancestor `Controller`
 			const oldValue = getEdgeMeasures(widget.high.vertices)[edgeIndex];
 			const areaInvariance = this.state.areaInvariance;
 			const [indirect, validValue] = confirm_or_interpolate_realParamOfCommand(
@@ -33,7 +33,7 @@ FigurePropertyEditorController.prototype.editEdge = function (edgeIndex, value)
 				widget.editEdge              (edgeIndex, validValue);
 			}
 			this.open(widget);
-			this.statusBarDriver.report(indirect ? `Alakzattulajdonság szöveges szerkesztése közvetlenül sikeres: ${fromJust(widget.maybeDomainObject).title.name} alakzat ${this.figurePropertyEditorDriver.edgeNames[edgeIndex]} éle ${oldValue} -> ${validValue}` : `Alakzattulajdonság szöveges szerkesztése a kért ${value} értékkel ütközéshez vezetne, ezért interpolációval közelítünk: ${fromJust(widget.maybeDomainObject).title.name} alakzat ${this.figurePropertyEditorDriver.edgeNames[edgeIndex]} éle ${oldValue} -> ${validValue}`);
+			this.statusBarDriver.report(indirect ? `Alakzattulajdonság szöveges szerkesztése közvetlenül sikeres: ${widget.businessObject.queryName()} alakzat ${this.figurePropertyEditorDriver.edgeNames[edgeIndex]} éle ${oldValue} -> ${validValue}` : `Alakzattulajdonság szöveges szerkesztése a kért ${value} értékkel ütközéshez vezetne, ezért interpolációval közelítünk: ${widget.businessObject.queryName()} alakzat ${this.figurePropertyEditorDriver.edgeNames[edgeIndex]} éle ${oldValue} -> ${validValue}`);
 		},
 		this.state.maybeWidgetActualOnFigurePropertyEditor
 	);
@@ -53,16 +53,7 @@ FigurePropertyEditorController.prototype.modeOn = function (currentWEPos, either
 FigurePropertyEditorController.prototype.open = function (widget)
 {
 	const widget_ =	this.widgetDirectlyOrViaTitle(widget);
-
-	const vertices = widget_.high.vertices;
-	const [name, furnitureNames] = maybe(
-		'<<<Bútor>>>',  // @TODO a bútor esetét le kell kezelni
-		domainObject => [domainObject.title.name, domainObject.furniture.map(chair => chair.title.name)], // @TODO bútornak a végső változatban nincs címe (kivétel: galéria)
-		widget_.maybeDomainObject
-	);
-	this.openDriverWithCalculations(name, vertices, furnitureNames, widget.high.svgAttributes); // @TODO furniture shouldbe partly editable from the form directly
-
-	this.state.maybeWidgetActualOnFigurePropertyEditor = ['just', widget_];
+	widget_.beDescribedOnOpeningForm(this);
 };
 
 FigurePropertyEditorController.prototype.openDriverWithCalculations = function (name, vertices, furnitureNames, svgAttributes) // @TODO most of its body belong to math or model, not to controller @TODO editable furniture
@@ -85,7 +76,7 @@ FigurePropertyEditorController.prototype.close = function ()
 {
 	return maybe_exec(
 		()  => {
-			const widgetFactory = this.widgetFactoryForEitherTarget(['right', widget]); // @TODO code smell. Should exist both widgetFactoryForCanvas and widgetFactoryForWidget
+			const widgetFactory = this.canvasPseudoWidgetForEitherTarget(['right', widget]); // @TODO code smell. Should exist both widgetFactoryForCanvas and widgetFactoryForWidget
 			const room = widget.high.host; // @TODO what if host is not a room
 			this.statusBarDriver.report(`Szoba címére kattintottál (&bdquo;${room.title.name}&rdquo;), a hozzátartozó szobát veszem. Magát a címet sajnos egyelőre csak a tulajdonság szerkesztáben szerkesztheted át, itt helyben közvetlenül még nem 😞💣🗲🌧💧`);
 			return widgetFactory.createFigureWidgetFromMedium(room.figure);

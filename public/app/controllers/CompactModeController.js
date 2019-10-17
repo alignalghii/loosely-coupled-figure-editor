@@ -1,8 +1,8 @@
-function CompactModeController(state, widgetFactories, widgetCollision, statusBarDriver) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function CompactModeController(state, canvasPseudoWidgets, widgetCollision, statusBarDriver) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
-	this.widgetFactories = widgetFactories;
+	this.canvasPseudoWidgets = canvasPseudoWidgets;
 	this.widgetCollision = widgetCollision;
 
 	this.statusBarDriver = statusBarDriver;
@@ -31,7 +31,7 @@ CompactModeController.prototype.mouseMove = function (currentWEPos, eitherTarget
 {
 	if (this.state.prevWidgetHasNotCollidedYet()) {
 		const targetCanvas = canvasOfEitherTarget(eitherTarget);
-		const {bijectionSvgToGeom: targetBoard, partialFunctionGeomToBusiness: targetBusinessBoard} = this.widgetFactoryForEitherTarget(eitherTarget);
+		const {bijectionSvgToGeom: targetBoard, partialFunctionGeomToBusiness: targetBusinessBoard} = this.canvasPseudoWidgetForEitherTarget(eitherTarget);
 		this.jumpWidgetToIfNeeded(targetCanvas, targetBoard, targetBusinessBoard);
 
 		if (this.followWhileCheckCollision(currentWEPos, targetBoard)) this.state.prevWidget.unshowGlittering(); // @TODO
@@ -50,7 +50,7 @@ CompactModeController.prototype.mouseUp = function (currentWEPos, eitherTarget)
 		eitherTarget
 	);
 	if (!this.state.prevWidget)
-		this.widgetFactoryForEitherTarget(eitherTarget).stampAt(this.state.domainStamp, currentWEPos);
+		this.canvasPseudoWidgetForEitherTarget(eitherTarget).stampAt(this.state.domainStamp, currentWEPos);
 	if (this.state.prevWidgetHasNotCollidedYet() && this.state.dragHasAlreadyBegun) {
 		this.state.prevWidget.update(this.state.prevWEPos, currentWEPos);
 		this.state.prevWidget.unshowGlittering();

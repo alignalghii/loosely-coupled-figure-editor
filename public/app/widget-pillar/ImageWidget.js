@@ -1,15 +1,73 @@
 const   IMFOCUS = [[{name: 'opacity', value: '0.8'  }], [                 ]], // @TODO [[{stroke: 'red'  }], []]
       IMUNFOCUS = [[                                 ], [{name: 'opacity'}]]; // @TODO [[{stroke: 'black'}], []]
 
-function ImageWidget(partialFunctionGeomToBusiness, coordSysTransformer, bijectionSvgToGeom,    maybeDomainObject, high, low)
+function ImageWidget(canvasPseudoWidget,    low, high, businessObject)
 {
-	Widget.call(this, partialFunctionGeomToBusiness, coordSysTransformer, bijectionSvgToGeom,    maybeDomainObject, high, low);
+	Widget.call(this, canvasPseudoWidget,    low, high);
+	this.businessObject = businessObject;
 	this.maybeHost = ['nothing'];
 }
 
 ImageWidget.prototype = Object.create(Widget.prototype);
 
 ImageWidget.prototype.constructor = ImageWidget;
+
+ImageWidget.prototype.factory = function () {return this.canvasPseudoWidget.imageWidgetFactory;};
+
+ImageWidget.prototype.withEscortWidgets = function (doWith)
+{
+	return this.businessObject.escorts.map(
+		escort => doWith(this.factory().detectTypeAndComposeFromBusiness(escort)) // @TODO factory() select well, but it is rather arbitrary, works but is smelly architecture
+	);
+};
+
+ImageWidget.prototype.updateDownward = function ()
+{
+	const vertices = this.high.vertices;
+	const [x, y] = centroid(vertices);
+	const [width, height] = [
+		distancePointHence(vertices[0], vertices[1]),
+		distancePointHence(vertices[1], vertices[2])
+	];
+	const info = this.factory().calculate([width, height], [x, y]);
+	this.low.setAttribute('x', info.point_lowcorner[0]);
+	this.low.setAttribute('y', info.point_lowcorner[1]);
+	this.low.setAttribute('width' , info.sizes_low [0]);
+	this.low.setAttribute('height', info.sizes_low [1]);
+};
+
+ImageWidget.prototype.updateDownwardAll = function ()
+{
+	this.withEscortWidgets(widget => widget.updateDownwardAll());
+	this.updateDownward();
+};
+
+ImageWidget.prototype.isHostless = function () {return isNothing(this.maybeHost);};
+
+ImageWidget.prototype.jumpTo = function (targetCanvasPseudoWidget)
+{
+	const targetCanvasElem = targetCanvasPseudoWidget.low();
+	targetCanvasElem.appendChild(this.low);
+	this.withEscortWidgets(widget => widget.jumpTo(targetCanvasPseudoWidget));
+	this.changeBoardsFor(targetCanvasPseudoWidget);
+};
+
+/*ImageWidget.prototype.changeBoardsFor = function (targetBoard, targetBusinessBoard, targetCoordSysTransfomer) // @TODO: use widgetfactory as a component/collaborator instead of coordSysTransformer!
+{
+	// Subscribe for new boards:
+	targetBoard.set(this.low, this.high);
+
+	// Unsubscribe from own (collaborator) boards:
+	this.bijectionSvgToGeom.delete(this.low); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
+	if (this.partialFunctionGeomToBusiness.get(this.high)) this.partialFunctionGeomToBusiness.delete(this.high); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
+
+	// Update collaborators:
+	this.coordSysTransformer           = targetCoordSysTransfomer; // @TODO: use widgetfactory as a component/collaborator instead of coordSysTransformer!
+	this.bijectionSvgToGeom            = targetBoard;              // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
+	this.partialFunctionGeomToBusiness = targetBusinessBoard;      // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
+};*/
+
+
 
 ImageWidget.prototype.showGlittering = function ()
 {
@@ -64,42 +122,12 @@ ImageWidget.prototype.translate = function (displacement)
 	this.updateDownward();
 };
 
-ImageWidget.prototype.updateDownward = function ()
+ImageWidget.prototype.directlyOrViaTitle = function ()
 {
-	const [x, y] = centroid(this.high.vertices);
-	const [width, height] = [
-		distancePointHence(this.high.vertices[0], this.high.vertices[1]),
-		distancePointHence(this.high.vertices[1], this.high.vertices[2])
-	];
-	// @TODO: reuse, the same algorith has already been written in WidgetFactory::createImageWidget
-	const q                          = this.coordSysTransformer.scalingFactor_hl,
-	      [x_low      , y_low      ] = this.coordSysTransformer.highToLow([x, y]),
-	      [x_corner   , y_corner   ] = [x-width/2, y+height/2],
-	      [x_lowcorner, y_lowcorner] = this.coordSysTransformer.highToLow([x_corner, y_corner]);
-	this.low.setAttribute('x', x_lowcorner);
-	this.low.setAttribute('y', y_lowcorner);
-	this.low.setAttribute('width' , q*width );
-	this.low.setAttribute('height', q*height);
-};
-ImageWidget.prototype.isHostless = function () {return isNothing(this.maybeHost);};
-
-ImageWidget.prototype.jumpTo = function (targetCanvas, targetBoard, targetBusinessBoard, targetCoordSysTransfomer)
-{
-	targetCanvas.appendChild(this.low);
-	this.changeBoardsFor(targetBoard, targetBusinessBoard, targetCoordSysTransfomer);
+	return {
+		widget : this,
+		message: 'Közvetlenül magára a bútorra kattintottál, minden világos.'
+	};
 };
 
-ImageWidget.prototype.changeBoardsFor = function (targetBoard, targetBusinessBoard, targetCoordSysTransfomer) // @TODO: use widgetfactory as a component/collaborator instead of coordSysTransformer!
-{
-	// Subscribe for new boards:
-	targetBoard.set(this.low, this.high);
-
-	// Unsubscribe from own (collaborator) boards:
-	this.bijectionSvgToGeom.delete(this.low); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
-	if (this.partialFunctionGeomToBusiness.get(this.high)) this.partialFunctionGeomToBusiness.delete(this.high); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
-
-	// Update collaborators:
-	this.coordSysTransformer           = targetCoordSysTransfomer; // @TODO: use widgetfactory as a component/collaborator instead of coordSysTransformer!
-	this.bijectionSvgToGeom            = targetBoard;              // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
-	this.partialFunctionGeomToBusiness = targetBusinessBoard;      // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
-};
+ImageWidget.prototype.beDescribedOnOpeningForm = figPropEdController => figPropEdController.statusBarDriver.report('Bútor szöveges szerkeszthetőségét még nem valósítottam meg'); // Image's boxing figure should not be allowed to be edited!

@@ -2,9 +2,9 @@
  * Should be renamed and moved to `devices/Canvas(ses)Device`?
  */
 
-function WidgetEventPillar (widgetFactories, routerInterface)
+function WidgetEventPillar (canvasPseudoWidgets, routerInterface)
 {
-	this.widgetFactories = widgetFactories;
+	this.canvasPseudoWidgets = canvasPseudoWidgets;
 	this.router = routerInterface;
 }
 
@@ -25,7 +25,7 @@ WidgetEventPillar.prototype.mergeAndPipeSubsribe = function (eventType)
 
 WidgetEventPillar.prototype.mergelessSubscribe = function (eventTypeName, emptyCase, widgetCase)
 {
-	for (let widgetFactory of this.widgetFactories) {
-		widgetFactory.mergelessSubscribe(eventTypeName, emptyCase, widgetCase);
+	for (let canvasPseudoWidget of this.canvasPseudoWidgets) {
+		canvasPseudoWidget.arbitrary.mergelessSubscribe(eventTypeName, emptyCase, widgetCase); // @TODO very rude arbitrarinesss. The abstract ancestor's method is called!
 	}
 };

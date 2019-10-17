@@ -197,6 +197,42 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - Az image widget (bútor) mozgatása, ütköztetése közben néha egyszer-egyszer felugat az invalidus helyzetet jelző kutya! Miért?
  - Dönteni abban, hogy az `ImageWidget` trtalmazzon-e business level összetevőt, vagy sem? Egyelőre úgy van megírva, hogy nem tartalmaz, de egyébként van egy `Furniture` nevű modul, ami épp az ImageWidget business level részel lehetne, de nincs bekötve, valósan kiaknázva.
 
+ - A `Widget` ősosztálynak `maybeDomainObject` tuljdonsága legyen, hanem alapból ne legyen `domainObject` legyen ilyen tulajdonsága. Csak `high` és `low` tulajdonsága legyen. A Widgetnek meg van három gyereke, a Title, a Room és a Furniture (majd lesz nyilászáró is, de azt most hagyjuk). A Title-nek nem lesz domainObject-je (híjuk inkább BusinessObjecktnek), a roomnak és a Furniture-nek (és az Openingnak is) meg lesz. íEgszóval: a hight és a lowt öröklk, a businessObjekt doglában meg egyénileg rendelkeznek. Így el lehet kerülni a nehézkes
+
+         maybe_exec(
+                () => {throw ...}
+                businessObject => ....
+                room.maybeBusinessObject
+        )
+
+   és
+
+         maybe_exec(
+                () => {}
+                businessObject => {throw}
+                title.maybeBusinessObject
+        )
+
+   féle *futásidejű* típusozást (a kivételdobás a szegény ember típusozása).
+ - Az ImageWidgetnek *legyen* business szintű összetevője (Furniture). (Amúgy nevezzük át a widget gyeerkosztályokat eetleg a business objektjeikről, bár a Title esetében ez elgondolkodtató, lehet hogy mégse). Mindenesetre a bútor valóban üzleti logikai szintű dolog (a bútort a kereskedő egveszi a tulajdonos szállítja, berendezi. A címet nem vesszük meg, az felhasználói szemszögből nem ,,dolog''.
+ - Mivel a title-nek nincs business szintje, de gazdája van (sőt neki kötelezően is tartozna kell valakihez), de azt az ő esetében nem a business szint tartja nyilván, mint a többinél, ezért kell egy `maybeHost()` nevű absztrakt metódus. Tuljdonképp akár nem is kell absztraktnak lennie: `for (prop in this) if ('host' in this[prop]) return ['just', this[prop].host]; return ['nothing']`. Persze lehet mégis absztraktnak hagyni (vagyis Widget szintjén csak kivételdobó törzset definiálunk neki), a gyerekeknél meg egyénileg: `['just', this.high.host`] jó `Title` esetén, és `this.businessObject.maybeHost` pedig `Room` meg `Furniture` esetén.
+ - Szobát úgy lehetne másolni, hogy visszatoljuk a menüvászonra, majd onnan visszatoljuk a munkavászonra. Utóbbi tolás esetén ugye másolás van.
+
+ - A WidgetFactory-k, és maguk  Widgetek is, sok szempontból hasonlítanak a device driverekre (eseményekre iratkoznak, alacsonyszintű DOM-elérést indukálnak). Érdemes a widget-pillar mappa tartalmának egy részét, vagy akár az egész mappát berakni a device-drivers mappába. Valószínűleg nem ily egyszerű, némi kódközelítés, refactory is kellhet. Egyébként a jelenleg ancestor WidgetFactory-nak valóban van subsribe()-ja, pipelineToSM()-je viszont niincs. Érdemes lenne megnézni, mi tölti be a pipelineToSM() szerepét, és ennek alapján teljessé tenni az analógiát.
+    - fenti pont vitatható: a widgetfogalom lényege a függőleges architektúraszervezés, a device driver lényege pedig az, hogy egy V (vagy U) alakú architektúrában a V betű alsó részén (de a csúcsa fülött egy kicsivel) helyzkedik el (a V balszára az input - eseményfigyelés, a V jobbszára az output - SVG-DOM maipuláció). A device driver lényege, hogy minkkét kiszelt rész alacsonyszintű (event subscribe és element setAttribute szintűek). A widgeteknek viszont függőleges srvhitektúraszervezésük miatt magasszintű viselkedésük is van, sőt, alapvetően az a szembetűnő. Épp ezért majd nem amaguk a widgetek lesznek device driver, és valószinűleg nem is a widgetfactory-k (amikben szintén inkább függőlegesség van). Valószínűbb, hogy az ancestor WidgetFactory subsribe metódusa ki lesz vágva, egyesítve lesz az SvgLowLevel tartalmának jelentős részével, és kap egy pipeToSM metódust is. Ebből az ilyeen módon felálló új modulból viszont már valóan egy új device driver lesz.
+ - Aggályos, hogy az ancestor WidgetFactory, amely sok szempontból absztrakt osztályként viselkedik, egyúttal vagy konrét osztályként kell használni, vagy pedig az egy CanvasPseudoWidget-en belüli 3-fajta gyerek *WidgetFactory közül önkényesen kell kijelölni egyet ,,gyereksemleges'' műveletek meghívásakor. Több esetben is felmerült ez az önkényesség, de a legélesebb a subsribe meghívása. Melyik gyerek *WidgetFactory subsribe-jét hívja meg az App, illetve végső soron az injectorMain_ Vagy példányosítson külön e célból az elvileg absztraktnak is tekinthető ancestor WidgetFactory-t? Vagy - harmadik megoldás - a CanvasPseudoWidget ne csak a 3 gyereket tartalmazza, hanem önállóóan sajátjgon is tartalmazzon svgLowLevel, ccordSysTransformer, bjiection, partialFunction mezőt, és ő vegye át a subsribe metódust is?
+    - Amúgy a CanvasPseudoWidget nevén érdemes elgondolkodni. Tényleg ,,függőleges'' jellegű, hogy nevét a widgetfogalommal hozzuk analógiába? A CanvasMultiplicityComponent nevén és helyén is érdemes elgonsolkodni, de az valószínűleg tényleg component (a CakePHP értelemben), és így tényleg a controllers mappába való.
+ - A nagyrefactory után még mindig:
+    - Láncolt tartalmazásnál az unokaelem nem követi a nagypapát (sőt asszem az apát sem)
+    - Néha ,,akadozik'' a berendezett szobák vonszolása. **Nem** szellemütközés. Az akadás csak egyirányban van (vagy balra, vagy jobbra, mindenesetre ilyenkor a másik irány jó, sima). Az akadást a felhasználó is megjavíthatja: kicsit megmozgat egy bútort a szobában. **Lehet**, hogy az előző állítások tévedések. Van kétirányú akadás is, és kutyaugatás is a semmin. Javaslat: az App.js-ben kikommentezve ott áll egy kódrész, ami biztosan előhozza a hibát. Az alapján el lehet indulni.
+       - Megvan a jelenség oka. Akkor jelentkezik, ha a szobához csatolt bútorok belül vannak és egyben nagyon közel vannak a falhoz. Az akadás pont az ezzel ellentétes irányba való vonszoláskor jelentkezik. Valószínűleg a bútorok ideiglenes lemaradozása, a kísérés nem megfeleő szinkronizálása okozza (hisz tudjuk, a folyamatos vonszolás valójában kicsi de nemnulla ugrásokból áll).
+ - Jelenleg azért nem romlik el vászonugrás közben a nyilászárók lehelyezkedése, mert a jumpTo automatikusan konvertál. Ez nem jó megoldás, mert így egy megtervezett falnyilásozatú szoba gép kirakása nem vászonfüggetlen. Kénytelen vagyok arra a vásznra kitenni, ahova tervezve van, és ha nem oda szeretném, akkor ráhívok egy jumpTo-t. Mindez azonban code smell. A nyilászárókaz magas szinten, business object szintjén kell modellezni.
+ - xlink:href is dperecated: https://developer.mozilla.org/pt-BR/docs/Web/SVG/Attribute/xlink:href
+ - mv public/app/domain public/app/business
+ - A `this.state.focus` ne `Widget | null` típusú legyen legyen, hanem `Maybe<Widget>`.
+ - A `public/app/widget-pillar/CanvasMultiverse.js` modul szerepének tisztázása. Jelenleg teljes üres osztály.
+
+
 # Fontend
  - Freeze lenne jó, mint ahogy az excelben táblasorokat lehet rögzíteni. itt persze a statussort lenne jó így. (Úgy tűnik, az overflow scroll erre elfogadható eszköz lesz)
  - Az Attila által mutatott balfölső ,,globális beállítások'' féle panelbe bekerülhetne az Attila által kért zoom, + - ikonnal (esetleg a böngészök mintájára 0 defaulthelyreállító ikonnal). Könnyű a működési tartalmat mögévarázsolni most immár: a munkavászon coordSysTransformer-ét állítaná.

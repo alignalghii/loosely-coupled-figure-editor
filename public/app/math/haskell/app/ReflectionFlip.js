@@ -1,13 +1,13 @@
 /** Used by GeomTransformationController */
 
-function ReflectionFlip([figCommandName, wdgCommandName], nearestFigure, widgetFactory)
+function ReflectionFlip([figCommandName, wdgCommandName], nearestFigure, canvasPseudoWidget)
 {
 	this.figCommandName = figCommandName;
 	this.wdgCommandName = wdgCommandName;
 
 	this.figure = nearestFigure;
-	this.widget = widgetFactory.createFigureWidgetFromMedium(nearestFigure);
-	this.board  = widgetFactory.bijectionSvgToGeom;
+	this.widget = canvasPseudoWidget.arbitrary.detectTypeAndComposeFromHigh(nearestFigure);
+	this.board  = canvasPseudoWidget.board();
 }
 
 ReflectionFlip.prototype.query = function () // a pure function without side effects

@@ -70,3 +70,20 @@ const mapMaybe = (mf, xs) =>
 		),
 		[]
 	);
+
+const possiblyFalsyToMaybe = x => x ? just(x) : nothing;
+
+const maybeEq_shallow = (mbX, mbY) =>
+	maybe(
+		maybe(
+			true,
+			x => false,
+			mbX
+		),
+		y => maybe(
+			false,
+			x => x == y,
+			mbX
+		),
+		mbY
+	);

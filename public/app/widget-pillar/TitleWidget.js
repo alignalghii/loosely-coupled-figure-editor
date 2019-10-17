@@ -1,21 +1,32 @@
-function TitleWidget(partialFunctionGeomToBusiness, coordSysTransformer, bijectionSvgToGeom,    maybeDomainObject, high, low)
+function TitleWidget(canvasPseudoWidget,    low, high)
 {
-	Widget.call(this, partialFunctionGeomToBusiness, coordSysTransformer, bijectionSvgToGeom,    maybeDomainObject, high, low);
+	Widget.call(this, canvasPseudoWidget,    low, high);
 }
 
 TitleWidget.prototype = Object.create(Widget.prototype);
 
 TitleWidget.prototype.constructor = TitleWidget;
 
+TitleWidget.prototype.factory = function () {return this.canvasPseudoWidget.titleWidgetFactory;};
+
 // @TODO: consider - this function alone justifies inheriting
 TitleWidget.prototype.updateDownward = function ()
 {
 	//var svgVertices = this.high.vertices.map((p) => this.coordSysTransformer.highToLow(p));
 	//updatePolygonChild(this.low, svgVertices);
-	const svgPosition = this.coordSysTransformer.highToLow(this.high.position);
-	console.log('EEEEEEEEEE', this.low);
+	const svgPosition = this.factory().coordSysTransformer.highToLow(this.high.position);
 	updateTextPosition(this.low, svgPosition);
 };
+TitleWidget.prototype.updateDownwardAll = function () {this.updateDownward();}
+
+TitleWidget.prototype.jumpTo = function (targetCanvasPseudoWidget)
+{
+	const targetCanvasElem = targetCanvasPseudoWidget.low();
+	targetCanvasElem.appendChild(this.low);
+	this.changeBoardsFor(targetCanvasPseudoWidget);
+};
+
+
 TitleWidget.prototype.isHostless   = () => false; //function () {console.log(this.high.host.figure); return Boolean(this.bijectionSvgToGeom.getInverse(this.high.host./*@TODO*/figure));};
 
 // Focus handling:
@@ -58,3 +69,14 @@ TitleWidget.prototype.unscaleXYArealInvariantRef = function (q) {};
 
 TitleWidget.prototype.editEdge               = function (i, a) {};
 TitleWidget.prototype.editEdge_areaInvariant = function (i, a) {};
+
+TitleWidget.prototype.directlyOrViaTitle = function ()
+{
+	const room = this.high.host; // @TODO what if host is not a room
+	return {
+		widget : this.canvasPseudoWidget.figureWidgetFactory.composeFromBusiness(room),
+		message: `Szoba címére kattintottál (&bdquo;${room.title.name}&rdquo;), a hozzátartozó szobát veszem. Magát a címet sajnos egyelőre csak a tulajdonság szerkesztáben szerkesztheted át, itt helyben közvetlenül még nem 😞💣🗲🌧💧`
+	};
+};
+
+TitleWidget.prototype.beDescribedOnOpeningForm = function (FigPropEdcontroller) {throw 'Inconsistence';};

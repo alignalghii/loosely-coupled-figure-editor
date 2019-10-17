@@ -126,3 +126,35 @@ const homogenityByEq = (paramEq, list) =>
 	);
 
 const rotListRight1 = list => list.length == 0 ? [] : [list[list.length-1]].concat(list.filter((el, i) => i < list.length-1));
+
+// @TODO move to ListX
+function addNonRepItem(item, list)
+{
+	const allow = !isMember(item, list);
+	if (allow) list.push(item);
+	return allow;
+}
+
+// @TODO move to ListX
+function deleteItem(item, list)
+{
+	const i = list.indexOf(item);
+	const exists = i >= 0;
+	if (exists) list.splice(i, 1);
+	return exists;
+}
+
+const isMember = (item, list) => list.indexOf(item) >= 0;
+
+function nonRepeating(list)
+{
+	const seen = [];
+	for (let item of list) {
+		if (isMember(item, list)) {
+			return false;
+		} else {
+			seen.push(item);
+		}
+	}
+	return true;
+}

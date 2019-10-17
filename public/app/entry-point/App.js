@@ -32,17 +32,17 @@ App.prototype.populate = function ()
 	this.roomStampDriver.roomBank.namedRooms.map(
 		namedRoom => {
 			const i = this.tabOrder(namedRoom.tab);
-			return this.widgetEventPillar.widgetFactories[i].createFigureWidgetFromDomain1(namedRoom.room); // @TODO Law of Demeter
+			return this.widgetEventPillar.canvasPseudoWidgets[i].figureWidgetFactory.createFromBusiness1(namedRoom.room); // @TODO Law of Demeter @TODO arbitrariness
 		}
 	);
 
-	this.widgetEventPillar.widgetFactories[1].createImageWidget('https://upload.wikimedia.org/wikipedia/commons/0/04/Toilet-pictogram.png', [10, 10], [4, -8]);
+	//this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Vécé', 'https://upload.wikimedia.org/wikipedia/commons/0/04/Toilet-pictogram.png', [10, 10], [4, -8]);
 
 	// @TODO: title-less domain objects make the app fail!
 	/*var massPoint1Factory = new MassPoint1Factory;
 	var massPoint2Factory = new MassPoint2Factory;
-	this.widgetEventPillar.widgetFactories[i].createFigureWidgetFromDomain1(massPoint1Factory.testMassPoint1('red' , [ 8,  4]));
-	this.widgetEventPillar.widgetFactories[i].createFigureWidgetFromDomain1(massPoint2Factory.testMassPoint2('blue', [10, -6]));*/
+	this.widgetEventPillar.canvasPseudoWidgets[i].createFigureWidgetFromDomain1(massPoint1Factory.testMassPoint1('red' , [ 8,  4]));
+	this.widgetEventPillar.canvasPseudoWidgets[i].createFigureWidgetFromDomain1(massPoint2Factory.testMassPoint2('blue', [10, -6]));*/
 };
 
 App.prototype.tabOrder = function (tabName)

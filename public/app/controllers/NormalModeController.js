@@ -1,8 +1,8 @@
-function NormalModeController(state, widgetFactories, statusBarDriver, audioDriver) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function NormalModeController(state, canvasPseudoWidgets, statusBarDriver, audioDriver) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
-	this.widgetFactories   = widgetFactories;
+	this.canvasPseudoWidgets = canvasPseudoWidgets;
 	//this.widgetCollision = widgetCollision;
 
 	this.statusBarDriver = statusBarDriver;
@@ -10,8 +10,8 @@ function NormalModeController(state, widgetFactories, statusBarDriver, audioDriv
 
 	this.audioDriver = audioDriver;
 
-	this.epsilonDistance = widgetFactories[0].coordSysTransformer.epsilonDistance(); // @TODO Demeter priciple // @TODO: this arbitrary choice hides a conceptual smell
-	this.epsilonAngle    = widgetFactories[0].coordSysTransformer.epsilonAngle();    // @TODO Demeter priciple // @TODO: this arbitrary choice hides a conceptual smell
+	this.epsilonDistance = canvasPseudoWidgets[0].arbitrary.coordSysTransformer.epsilonDistance(); // @TODO Demeter priciple // @TODO: this arbitrary choice hides a conceptual smell
+	this.epsilonAngle    = canvasPseudoWidgets[0].arbitrary.coordSysTransformer.epsilonAngle();    // @TODO Demeter priciple // @TODO: this arbitrary choice hides a conceptual smell
 }
 
 NormalModeController.prototype = Object.create(Controller.prototype);
@@ -39,8 +39,8 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 		var infinitezimalDisplacement  = fromTo(this.state.prevWEPos, currentWEPos);
 		if (vectorLength(infinitezimalDisplacement) > 0) { // drag event provides sometimes also 0-displacements, we filter them out for better clarity's sake
 			const targetCanvas = canvasOfEitherTarget(eitherTarget);
-			const {bijectionSvgToGeom: targetBoard, partialFunctionGeomToBusiness: targetBusinessBoard} = this.widgetFactoryForCanvas(targetCanvas);
-			const maybeAllowJump = this.jumpWidgetToIfNeeded(targetCanvas, targetBoard, targetBusinessBoard); // @TODO: rossz helyen van, szervesen részt kell vennie az ütközésvizgálatban
+			const canvasPseudoWidget = this.canvasPseudoWidgetForCanvas(targetCanvas);
+			const maybeAllowJump = this.jumpWidgetToIfNeeded(canvasPseudoWidget); // @TODO: rossz helyen van, szervesen részt kell vennie az ütközésvizgálatban
 			const mbAllowable = this.state.prevWidget.allowable(infinitezimalDisplacement);
 			//const mbAllowable = this.state.prevWidget.high.mbVectorTransfomationForAllowance(targetBoard)(infinitezimalDisplacement);
 			const allowable = fromMaybe_exec(
@@ -71,7 +71,7 @@ NormalModeController.prototype.mouseUp = function (currentWEPos, eitherTarget)
 {
 	either(
 		canvas => {
-			this.state.spaceFocus = {position: currentWEPos, widgetFactory: this.widgetFactoryForEitherTarget(eitherTarget)};
+			this.state.spaceFocus = {position: currentWEPos, canvasPseudoWidget: this.canvasPseudoWidgetForEitherTarget(eitherTarget)};
 			if (this.state.focus) {
 				this.state.focus.unshowFocus();
 				this.state.focus = null;
@@ -113,7 +113,7 @@ NormalModeController.prototype.changeStamp = function (selectedDomainObject)
 NormalModeController.prototype.createAtPosFocus = function ()
 {
 	if (this.state.spaceFocus) {
-		this.state.spaceFocus.widgetFactory.stampAt(this.state.domainStamp, this.state.spaceFocus.position);  // @TODO: refactor to standalone method?
+		this.state.spaceFocus.canvasPseudoWidget.figureWidgetFactory.stampAt(this.state.domainStamp, this.state.spaceFocus.position);  // @TODO: refactor to standalone method? @TODO arbitrariness
 		this.state.spaceFocus = null;
 		this.statusBarDriver.report('Új alakzat beszúrása az üreshelyfókusz által mutatott helyre. Üreshelyfókusz levétele.');
 	} else this.statusBarDriver.report('Nincs kijelölve üreshelyfókusz, nincs hova beszúrni új alakzatot.');

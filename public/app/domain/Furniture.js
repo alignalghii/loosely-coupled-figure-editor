@@ -2,10 +2,11 @@
 // Thus here, the Furniture constructor is simply setting possible properties from arguments
 
 
-function Furniture(figure, imageFilePath)
+function Furniture(name, figure, imageFileName, escorts = [])
 {
-	DomainObject.call(this, figure);
-	this.imageFilepath = imageFilePath;
+	DomainObject.call(this, figure, escorts);
+	this.name = name;
+	this.imageFileName = imageFileName;
 }
 
 Furniture.prototype = Object.create(DomainObject.prototype);
@@ -15,7 +16,10 @@ Furniture.prototype.constructor = Furniture;
 Furniture.prototype.copy = function ()
 {
 	return new Furniture(
-		this.figure.translation([0,0]), this.imageFilePath
+		this.name,
+		this.figure.translation([0,0]),
+		this.imageFileName,
+		this.escorts.map(escort => escort.copy()) // @TODO deep copy? Or shallow? or 1-deep?
 	);
 };
 
@@ -34,3 +38,5 @@ Furniture.prototype.goUpdatedByOwnFigure = function ()
 {
 	//this.title.readaptTo(this.figure);
 };
+
+Furniture.prototype.queryName = function () {return this.name;};

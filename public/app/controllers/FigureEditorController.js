@@ -1,7 +1,7 @@
-function FigureEditorController(state, widgetFactories, statusBarDriver)
+function FigureEditorController(state, canvasPseudoWidgets, statusBarDriver)
 {
 	this.state           = state;
-	this.widgetFactories = widgetFactories;
+	this.canvasPseudoWidgets = canvasPseudoWidgets;
 	this.statusBarDriver = statusBarDriver;
 }
 
@@ -15,17 +15,15 @@ FigureEditorController.prototype.moveVertex   = function (point, eitherTarget) {
 
 FigureEditorController.prototype.work = function (command, currentWEPos, eitherTarget, template1, template2) // @TODO: reuse: almost the same algorithm exists in `GeomTransforamtionController` (or in its section in `Router`).
 {
-	const widgetFactory = this.widgetFactoryForEitherTarget(eitherTarget),
-	      board         = widgetFactory.bijectionSvgToGeom;
+	const canvasPseudoWidget = this.canvasPseudoWidgetForEitherTarget(eitherTarget),
+	      board              = canvasPseudoWidget.board();
 	const editorMessage = maybe(
 		'Nem határozható meg egyértelműen legközelebbi alakzat.',
 		nearestFigure => {
-			const oldVertices = JSON.stringify(nearestFigure.vertices);
 			const figureEditor  = new FigureEditorByProximityHeuristic(nearestFigure);
 			figureEditor[command](currentWEPos);
-			const widget = widgetFactory.createFigureWidgetFromMedium(nearestFigure);
-			widget.updateUpAndDownward();
-			return 'Alakzatszerkesztő. ' + template1 + ' a ' + JSON.stringify(currentWEPos) + ' pontot a legközelebbi ' + template2 + '. Ennek változása: ' + oldVertices + ' --> ' + JSON.stringify(nearestFigure.vertices) + '.';
+			const widget = canvasPseudoWidget.arbitrary.detectTypeAndComposeFromHigh(nearestFigure); // @TODO arbitrary
+			return widget.updateAndReport(currentWEPos, nearestFigure, template1, template2); // Image's boxing figure should not be allowed to be edited!
 		},
 		maybeNearestFigureHence(board, currentWEPos)
 	);

@@ -1,114 +1,81 @@
 // A widget is an architectually columnal, pillar-like thing holding a high-level (geometrical) and a low-level (SVG) part
 // A widget is a cache of a record (assignment item/element, ordered pair) of a bijection, possibly a ternary or multiple-attribute bijection
 
-function WidgetFactory(partialFunctionGeomToBusiness, coordSysTransformer, bijectionSvgToGeom, svgLowLevel)
+/** The ancestor WidgetFactory (unlike Widget) is **not** an abstract class! An instantiated ancestor WidgetFactory object is named as canvasPseudoWidget. It represents a canvas in all its sthree vertical layers.*/
+
+/** Lifetimes methods: */
+
+function WidgetFactory(canvasPseudoWidget, svgLowLevel, coordSysTransformer, bijectionSvgToGeom)
 {
-	this.partialFunctionGeomToBusiness = partialFunctionGeomToBusiness;
-	this.coordSysTransformer   = coordSysTransformer;
-	this.bijectionSvgToGeom    = bijectionSvgToGeom;
-	this.svgLowLevel           = svgLowLevel;
+	this.canvasPseudoWidget  = canvasPseudoWidget;
+
+	this.svgLowLevel         = svgLowLevel;
+	this.coordSysTransformer = coordSysTransformer;
+	this.bijectionSvgToGeom  = bijectionSvgToGeom;
 }
 
-WidgetFactory.prototype.createFigureWidgetFromDomain0 = function (domainObject) {return this.createFigureWidgetFromReplacedGeom(domainObject.figure, domainObject);};
-
-
-WidgetFactory.prototype.createFigureWidgetFromReplacedGeom = function (geomFigure, domainObject) // @TODO: there will be also other businessobjects than rooms with titles
+WidgetFactory.prototype.delete = function (widget)
 {
-	domainObject.figure = geomFigure;
-	var svgVertices       = geomFigure.vertices.map((p) => this.coordSysTransformer.highToLow(p));//console.log('Origin figure: low-level (SVG) coordinates: {'+svgVertices.join(' | ')+'}');
-	var svgNewPolygonCild = this.svgLowLevel.createPolygonChild(svgVertices, geomFigure.svgAttributes); // @TODO consider `this.originFigure.svgAttributes`
-	this.bijectionSvgToGeom.set(svgNewPolygonCild, geomFigure);
-	this.partialFunctionGeomToBusiness.set(geomFigure, domainObject);
-
-	// @TODO: not necessarily all figures have a title
-	//const titleName     = domainObject.name;
-	//const titlePosition = titlePositionFor(geomFigure.vertices);
-	const title = domainObject.title;  // @TODO: there will be also other businessobjects than rooms with titles
-	const textElem = this.svgLowLevel.createText(title.name, this.coordSysTransformer.highToLow(title.position));
-	//const title    = new Title(titleName, titlePosition);
-	this.bijectionSvgToGeom.set(textElem, title);
-	console.log(textElem, title);
-	const tw = new TitleWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom,    ['nothing'], title, textElem);
-	console.log('tw',);
-
-	return new FigureWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, ['just', domainObject], geomFigure, svgNewPolygonCild);
+	if (this.partialFunctionGeomToBusiness) this.partialFunctionGeomToBusiness.get(this.high) ? this.partialFunctionGeomToBusiness.delete(this.high) : (() => {throw 'Inconsistence';})(); // @TODO Also high+business detached from partialFunction - a debatable OOP-smelly solution here! Should be done at the level of the subclasses?
+	this.bijectionSvgToGeom.delete(widget.low); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
+	deletePolygonChild(widget.low);             // @TODO: why do we not delete the high-level connection as well (the business object)?
 };
 
-WidgetFactory.prototype.createFigureWidgetFromDomain1 = function (domainObjectOriginal)
-{
-	console.log('Original: ', domainObjectOriginal);
-	var domainObject = domainObjectOriginal.copy();
-	console.log('Copy: ', domainObject);
-	this.createFigureWidgetFromDomain0(domainObject);
-};
+/** Type-autodetecting compositors: */
 
-WidgetFactory.prototype.stampAt = function (domainStamp, geomCoords) // @TODO swap object receiver and argument around method
+WidgetFactory.prototype.detectTypeAndComposeFromLow = function (low)
 {
-	var domainObject      = domainStamp.copy();
-	domainObject.doTranslation(geomCoords);
-	return this.createFigureWidgetFromDomain0(domainObject);
-};
-
-WidgetFactory.prototype.createWidgetFromLow = function (svgPolygon)
-{
-	const [maybeDomainObject, geomFigure] = this.prepareWidgetFromLow(svgPolygon);
-	switch (svgPolygon.tagName) {
-		case 'polygon': return new FigureWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, maybeDomainObject, geomFigure, svgPolygon);
-		case 'text'   : return new TitleWidget (this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, maybeDomainObject, geomFigure, svgPolygon);
-		case 'image'  : return new ImageWidget (this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, maybeDomainObject, geomFigure, svgPolygon);
+	const [high, businessObject/*OrNull*/] = this.queryFromLow(low);
+	switch (low.tagName) { // @TODO pure polymorphism, or reflection metaprogramming
+		case 'polygon': if (!businessObject) throw 'Inconsistence'; return new FigureWidget(this.canvasPseudoWidget,   low, high, businessObject);
+		case 'text'   : if ( businessObject) throw 'Inconsistence'; return new TitleWidget (this.canvasPseudoWidget,   low, high                );
+		case 'image'  : if (!businessObject) throw 'Inconsistence'; return new ImageWidget (this.canvasPseudoWidget,   low, high, businessObject);
 		default       : throw 'Invalid low-level SVG-subelement, unable to convert upwards to higher-level objects';
 	}
 };
-//WidgetFactory.prototype.createTitleWidgetFromLow = function (svgPolygon) {};
 
-WidgetFactory.prototype.createFigureWidgetFromMedium = function (geomFigure)
+
+WidgetFactory.prototype.detectTypeAndComposeFromHigh = function (high)
 {
-	const [maybeDomainObject, svgPolygon] = this.prepareWidgetFromMedium(geomFigure);
-	return new FigureWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, maybeDomainObject, geomFigure, svgPolygon);
+	const [low] = this.queryFromHigh(high);
+	if (!low) throw 'Event on orphan (unregistered) high (geom) level object triggers widget composition, but the lower-level component is lacking';
+	return this.detectTypeAndComposeFromLow(low);
 };
 
-WidgetFactory.prototype.createTitleWidgetFromMedium = function (geomFigure)
+WidgetFactory.prototype.detectTypeAndComposeFromBusiness = function (businessObject)
 {
-	const [maybeDomainObject, svgPolygon] = this.prepareWidgetFromMedium(geomFigure);
-	return new TitleWidget(this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom, maybeDomainObject, geomFigure, svgPolygon);
+	if (!businessObject.figure) throw 'Titles do not have a business object'; // @TODO, good solution, but nasty. What if we have more object types, there business does not hold a fig backref?
+	return this.detectTypeAndComposeFromHigh(businessObject.figure);
 };
 
-WidgetFactory.prototype.createImageWidget = function (fileName, [width, height], [x, y])
+/** Queries: */
+
+WidgetFactory.prototype.queryFromLow = function (low)
 {
-	const q                          = this.coordSysTransformer.scalingFactor_hl,
-	      [x_low      , y_low      ] = this.coordSysTransformer.highToLow([x, y]),
-	      [x_corner   , y_corner   ] = [x-width/2, y+height/2],
-	      [x_lowcorner, y_lowcorner] = this.coordSysTransformer.highToLow([x_corner, y_corner]);
-	const imageWidget = new ImageWidget(
-		this.partialFunctionGeomToBusiness, this.coordSysTransformer, this.bijectionSvgToGeom,
-		['nothing'],
-		new Figure([[x-width/2, y-height/2], [x+width/2, y-height/2], [x+width/2, y+height/2], [x-width/2, y+height/2]]),
-		this.svgLowLevel.createImage(fileName, [q*width, q*height], [x_lowcorner, y_lowcorner])
-	);
-	this.bijectionSvgToGeom.set(imageWidget.low, imageWidget.high);
+	const high           = this.bijectionSvgToGeom.get(low);
+	if (!high) {console.log('LOW', low, 'WOL'); throw 'Event on orphan (unregistered) SVG-subelement triggers widget composition, but the higher-level component is lacking.';}
+	const businessObject/*OrNull*/ = this.partialFunctionGeomToBusiness.get(high);
+	return businessObject ? [high, businessObject] : [high];
 };
 
 
-WidgetFactory.prototype.prepareWidgetFromLow = function (svgPolygon)
+WidgetFactory.prototype.queryFromHigh = function (high)
 {
-	console.log(svgPolygon);
-	var geomFigure = this.bijectionSvgToGeom.get(svgPolygon);
-	console.log(geomFigure);
-	const domNull = this.partialFunctionGeomToBusiness.get(geomFigure);
-	var maybeDomainObject = domNull ? ['just', domNull] : ['nothing'];
-	if (!geomFigure) throw 'Event on orphan (unregistered) SVG-subelement triggers widget creation, but the higher-level component is lacking'
-	return [maybeDomainObject, geomFigure];
+	const low    = this.bijectionSvgToGeom.getInverse(high);
+	if (!low) throw 'Event on orphan (unregistered) MathematicalObject triggers widget creation, but the low-level component is lacking'
+	const business/*OrNull*/ = this.partialFunctionGeomToBusiness ? (this.partialFunctionGeomToBusiness.get(high) || (() => {throw 'Inconsistence';})()) : null;
+	return business ? [low, business] : [low]; // @TODO Not nice OOP
 };
 
-
-WidgetFactory.prototype.prepareWidgetFromMedium = function (geomFigure)
+WidgetFactory.prototype.queryFromBusiness = function (businessObject)
 {
-	var svgPolygon    = this.bijectionSvgToGeom.getInverse(geomFigure);
-	if (!svgPolygon) throw 'Event on orphan (unregistered) MathematicalObject triggers widget creation, but the low-level component is lacking'
-	const domNull = this.partialFunctionGeomToBusiness.get(geomFigure);
-	var maybeDomainObject = domNull ? ['just', domNull] : ['nothing'];
-	return [maybeDomainObject, svgPolygon];
-};
+	if (!businessObject) throw 'Inconsistence';
+	if (!businessObject.figure) throw 'Inconsistence';
+	const low = this.bijectionSvgToGeom.getInverse(businessObject.figure);
+	return [low, businessObject.figure, businessObject];
+}
+
+/** This is somewhat similar to device driver modules @TODO: reconsider */
 
 WidgetFactory.prototype.mergelessSubscribe = function (eventTypeName, emptyCase, widgetCase) // @TODO a `return` valószínűleg fölösleges itt is, és a hivatkozott svgLowLevel.subscribe-on is
 {
@@ -117,9 +84,9 @@ WidgetFactory.prototype.mergelessSubscribe = function (eventTypeName, emptyCase,
 		var widgetEventPosition  = this.coordSysTransformer.lowToHigh(svgPosition);
 		return emptyCase(canvas, widgetEventPosition);
 	}
-	const svgPolygonCase = (svgPolygon, svgPosition) =>
+	const svgPolygonCase = (svgSubelem, svgPosition) =>
 	{
-		var widget               = this.createWidgetFromLow    (svgPolygon );
+		var widget               = this.detectTypeAndComposeFromLow(svgSubelem);
 		var widgetEventPosition  = this.coordSysTransformer.lowToHigh(svgPosition);  // @TODO Demeter principle
 		return widgetCase(widget, widgetEventPosition);
 	}

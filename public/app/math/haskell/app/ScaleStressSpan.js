@@ -1,6 +1,5 @@
 /** Used by GeomTransformationController */
-
-function ScaleStressSpan([figCommandName, wdgCommandName], currentWEPos, nearestFigure, widgetFactory)
+function ScaleStressSpan([figCommandName, wdgCommandName], currentWEPos, nearestFigure, canvasPseudoWidget)
 {
 	this.figCommandName = figCommandName;
 	this.wdgCommandName = wdgCommandName;
@@ -8,8 +7,8 @@ function ScaleStressSpan([figCommandName, wdgCommandName], currentWEPos, nearest
 	this.start  = currentWEPos;
 	this.last   = currentWEPos; // @TODO: `last` is not used by the user-observable functioning, really it is only used in logging (console message). Move it into `ScaleStressSpanLog`!
 	this.figure = nearestFigure;
-	this.widget = widgetFactory.createFigureWidgetFromMedium(nearestFigure);
-	this.board  = widgetFactory.bijectionSvgToGeom;
+	this.widget = canvasPseudoWidget.arbitrary.detectTypeAndComposeFromHigh(nearestFigure);
+	this.board  = canvasPseudoWidget.board();
 }
 
 ScaleStressSpan.prototype.query = function (currentWEPos) // a pure function without side effects
