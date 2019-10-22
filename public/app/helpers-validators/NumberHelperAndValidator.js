@@ -21,3 +21,15 @@ NumberHelperAndValidator.prototype.eitherERead = function (errMsg, inputStr)
 		this.maybeRead(inputStr)
 	);
 };
+
+NumberHelperAndValidator.prototype.eitherRawNat = raw => /^\d+$/.test(raw) ? right(Number(raw)) : left(raw);
+
+NumberHelperAndValidator.prototype.readToMaybeEitherRawNat = function (raw)
+{
+	const word = raw.replace(/\s+/g, '');
+	return word.length > 0 ? just(
+	                               /^\d+$/.test(word) ? right(Number(word))
+	                                                  : left (raw         )
+	                         )
+	                       : nothing;
+};

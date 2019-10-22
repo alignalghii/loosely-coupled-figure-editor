@@ -10,6 +10,8 @@ vendor/buy/*
 !vendor/buy/README.md
 sonar.ogg
 bark.ogg
+drip.ogg
+dialog-error.ogg
 logo.jpeg
 #favicon?
 

@@ -40,7 +40,21 @@ function updatePolygonChild(polygonChild, svgVertices)
 	polygonChild.setAttribute('points', points);
 };
 
-const deletePolygonChild = polygonChild => polygonChild.parentNode.removeChild(polygonChild);  // childNode.remove() is easier, nicer, but not so portable
+const deletePolygonChild = polygonChild => polygonChild.parentNode.removeChild(polygonChild);  // childNode.remove() is easier, nicer, but not so portable @TODO better function name
+
+SvgLowLevel.prototype.deleteAllPolygonChildren = function () // @TODO better function name
+{
+	if (this.svgRootElement.children.length) {
+		//(new Audio('assets-proper/drip.ogg')).play();
+		//document.getElementById('assets-proper/glass.ogg').play();
+		alert('A művelet törli a munkavásznat, azon meg már van munkád. Biztos akarod?');
+		//setTimeout(() => alert("A művelet törli a munkavásznat, azon meg már van munkád. Biztosan akarod?"), 200);
+	}
+	// @TODO Vajon, amikor végigmegyünk az <svg> elem gyerekein, a <defs> miért nem számít annak? persze ez pont jól jön, mert kivételt dobna, ha `<image>`  `<polygon>` `<text>` -től különböző gyerekre futna rá (sőt tulajdonképp ezt szűrni is kellene!). Íme ld. alább:
+	while (this.svgRootElement.lastChild) { //@TODO for .. of and for .. i++ not working (probably deletion in an active running iteration loop is prone to error)
+		this.svgRootElement.removeChild(this.svgRootElement.lastChild);
+	}
+};
 
 function pointsArgValue(svgVertices) {return svgVertices.map(stringifyPositionWithComma).join(' ');}
 /**

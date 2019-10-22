@@ -13,3 +13,5 @@ Bijection.prototype.delete        = function (a) {var b = this.mapStraight.get(a
 Bijection.prototype.deleteInverse = function (b) {var a = this.mapInverse .get(b); this.mapStraight.delete(a); this.mapInverse.delete(b);}
 
 Bijection.prototype.doInvertIt = function () {[this.mapStraight, this.mapInverse] = [this.mapInverse, this.mapStraight];};
+
+Bijection.prototype.deleteAll = function () {this.mapStraight.clear(); this.mapInverse.clear();};

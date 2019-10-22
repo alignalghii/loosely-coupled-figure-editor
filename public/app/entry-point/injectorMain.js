@@ -47,7 +47,8 @@ onload = function (event)
 	const figurePropertyEditorIODriver = new FigurePropertyEditorDriver(document, numberHelperAndValidator, quoteHelper);
 	const configIODriver             = new ConfigDriver(document);
 	const tabSelectorIODriver        = new TabSelectorDriver(document, domHelper);
-	const audioODriver               = new AudioDriver('sonar.ogg', 'bark.ogg');
+	const loaderIODriver             = new LoaderDriver(document);
+	const audioODriver               = new AudioDriver('sonar.ogg', 'bark.ogg', 'dialog-error.ogg');
 
 	var widgetCollision = new WidgetCollision(audioODriver);
 
@@ -61,12 +62,13 @@ onload = function (event)
 	const figurePropertyEditorController = new FigurePropertyEditorController(state, canvasPseudoWidgets, figurePropertyEditorIODriver, statusBarODriver);
 	const configController               = new ConfigController(state, configIODriver, statusBarODriver);
 	const figureNestingController        = new FigureNestingController(state, canvasPseudoWidgets, statusBarODriver);
-	const tabSelectorController          = new TabSelectorController(tabSelectorIODriver, quoteHelper, statusBarODriver);
+	const tabSelectorController          = new TabSelectorController(tabSelectorIODriver, quoteHelper, statusBarODriver); // @TODO argument order
+	const loaderController               = new LoaderController(canvasPseudoWidgets, numberHelperAndValidator, loaderIODriver, statusBarODriver, audioODriver);
 
-	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController); // @TODO make globalOriginFigure obsolete
+	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(canvasPseudoWidgets, router); // @TODO: could it be regarded as a kind of device driver, and renamed + moved appropriately?
 
-	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorIODriver, configIODriver, tabSelectorIODriver); // @TODO Law of Demeter, see inside
+	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorIODriver, configIODriver, tabSelectorIODriver, loaderIODriver); // @TODO Law of Demeter, see inside
 
 	//console.log('App: live run');
 	app.run();

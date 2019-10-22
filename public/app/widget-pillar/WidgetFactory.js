@@ -92,3 +92,15 @@ WidgetFactory.prototype.mergelessSubscribe = function (eventTypeName, emptyCase,
 	}
 	this.svgLowLevel.subscribe(eventTypeName, svgEmptyCase, svgPolygonCase); // @TODO Demeter principle
 };
+
+
+WidgetFactory.prototype.clearAll = function ()
+{
+	const rootElem = this.svgLowLevel.svgRootElement;
+	for (let childElem of rootElem.children) {
+		if (childElem.tagName == 'polygon' || childElem.tagName == 'text' || childElem.tagName == 'image') { // @TODO
+			const widget = this.detectTypeAndComposeFromLow(childElem);
+			widget.delete();
+		}
+	}
+};

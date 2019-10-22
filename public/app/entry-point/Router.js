@@ -1,4 +1,4 @@
-function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
@@ -11,10 +11,12 @@ function Router(state, normalModeController, compactModeController, roomControll
 	this.configController = configController;
 	this.figureNestingController = figureNestingController;
 	this.tabSelectorController = tabSelectorController;
+	this.loaderController = loaderController;
 }
 
 Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: inputRoledData
 {
+	console.log(`| ${eventType} |`);
 	if (eventType == 'change') {
 		if (Eq.eq(inputSignature, ['string', 'string']) && 'mode' in ird) this.normalModeController.changeMode(ird.mode); // @TODO common
 		if (Eq.eq(inputSignature, ['edge'  , 'number'])) this.figurePropertyEditorController.editEdge  (ird.edge, ird.value);
@@ -28,9 +30,11 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 		if (Eq.eq(inputSignature, ['Room'            ])) this.normalModeController.changeStamp(ird.selectedRoom); // @TODO common
 	}
 	if ((eventType == 'change' || eventType == 'input') && Eq.eq(inputSignature, ['string', 'string']) && 'dasharrayAttribute' in ird) this.figurePropertyEditorController.changeDasharray(ird.dasharrayAttribute, ird.value);
-	if (eventType == 'click' && Eq.eq(inputSignature, ['void']) && 'tabName' in ird) {
-		this.tabSelectorController.select(ird.tabName);
-	}
+
+	if (eventType == 'click' && Eq.eq(inputSignature, ['void'    ]) && 'tabName'      in ird) this.tabSelectorController.select(ird.tabName);
+	if (eventType == 'click' && Eq.eq(inputSignature, ['IdString']) && 'loaderIdStr'  in ird) this.loaderController.run(ird.loaderIdStr); // @TODO better name, loaderid is rather eitherEId
+	if (eventType == 'click' && Eq.eq(inputSignature, ['void'    ]) && 'loaderAction' in ird && ird.loaderAction == 'cancel') this.loaderController.cancel();
+
 	if (this.state.mode == 'compact') {
 		switch (eventType) {
 			case 'mousedown': this.compactModeController.mouseDown(ird.currentWEPos, ird.eitherTarget); break;
@@ -60,7 +64,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 				}
 			break;
 			case 'keydown':
-				if (Eq.eq(inputSignature, ['string'])) {
+				if (Eq.eq(inputSignature, ['string']) && 'key' in ird) {
 					switch (ird.key) {
 						case '+':                this.normalModeController.createAtPosFocus(); break;
 						case 'Delete': case '-': this.normalModeController.deleteFigFocus  (); break;
@@ -99,10 +103,11 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 						case "÷": case 'W': case 'w': this.normalModeController.focusScaleXYArealInvariantFastRef  (); break;
 						case '§': case 'S': case 's': this.normalModeController.focusUnscaleXYArealInvariantFastRef(); break;
 
-						case '1':case '2':case '3':case '4':case '5':case '6':case '7':case '8':case '9': this.roomController.createSquareByArea(parseFloat(ird.key)); break;
+						//case '1':case '2':case '3':case '4':case '5':case '6':case '7':case '8':case '9': this.roomController.createSquareByArea(parseFloat(ird.key)); break; // @TODO kerveredik azzal az eseménnyel, amikor a loader ID-mezőbe írok 1..9 ig terjeső számjegyet
 
 						case 'o': case 'O': this.roomController.focusOpenHole() ; break;
 						case 'c': case 'C': this.roomController.focusCloseHole(); break;
+						default: console.log(`Ismeretlen billentyűparancs: ${ird.key}`); // @TODO statussorba
 					}
 				}
 			break;

@@ -1,4 +1,4 @@
-function App(router, widgetEventPillar, roomStampDriver, modeDriver, operationDriver, keyboardDriver, figurePropertyEditorDriver, configDriver, tabSelectorDriver)
+function App(router, widgetEventPillar, roomStampDriver, modeDriver, operationDriver, keyboardDriver, figurePropertyEditorDriver, configDriver, tabSelectorDriver, loaderDriver)
 {
 	this.router = router;
 
@@ -10,6 +10,7 @@ function App(router, widgetEventPillar, roomStampDriver, modeDriver, operationDr
 	this.figurePropertyEditorDriver = figurePropertyEditorDriver;
 	this.configDriver               = configDriver;
 	this.tabSelectorDriver          = tabSelectorDriver;
+	this.loaderDriver               = loaderDriver;
 }
 
 App.prototype.run = function ()
@@ -25,6 +26,7 @@ App.prototype.run = function ()
 	this.figurePropertyEditorDriver.pipeToSM(dispatch);
 	this.configDriver              .pipeToSM(dispatch);
 	this.tabSelectorDriver         .pipeToSM(dispatch);
+	this.loaderDriver              .pipeToSM(dispatch);
 };
 
 App.prototype.populate = function ()
@@ -67,7 +69,7 @@ App.prototype.populate = function ()
 
 	////
 
-	const cellarFig = (new Figure(poly1_concave_ccw,                        {fill: 'green', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
+	const cellarFig = (new Figure(poly1_concave_ccw,                        {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
 	const cellarBsn = new Room (
 		'Pince', cellarFig, [], [],
 		[]
@@ -88,7 +90,7 @@ App.prototype.populate = function ()
 
 	////////
 
-	const transitFig = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'yellow', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  -3  , 3  ]);
+	const transitFig = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  -3  , 3  ]);
 	const transitBsn = new Room (
 		'Közlekedő', transitFig, [], [],
 		[]
@@ -99,7 +101,7 @@ App.prototype.populate = function ()
 
 	////
 
-	const diningFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'cyan', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
+	const diningFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
 	const diningBsn = new Room (
 		'Ebédlő', diningFig, [], [],
 		[]
@@ -117,7 +119,7 @@ App.prototype.populate = function ()
 
 	/////
 
-	const bathFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'blue', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -15  ]);
+	const bathFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -15  ]);
 	const bathBsn = new Room (
 		'Fürdő', bathFig, [], [],
 		[]

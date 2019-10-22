@@ -1,4 +1,5 @@
 // @TODO: Merge with `low-level/DOM-manipulation` module
+// @TODO is it a helper at all? A helper produces only strings. It is not a DOM API.
 
 function DomHelper() {}
 

@@ -226,11 +226,15 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
     - Láncolt tartalmazásnál az unokaelem nem követi a nagypapát (sőt asszem az apát sem)
     - Néha ,,akadozik'' a berendezett szobák vonszolása. **Nem** szellemütközés. Az akadás csak egyirányban van (vagy balra, vagy jobbra, mindenesetre ilyenkor a másik irány jó, sima). Az akadást a felhasználó is megjavíthatja: kicsit megmozgat egy bútort a szobában. **Lehet**, hogy az előző állítások tévedések. Van kétirányú akadás is, és kutyaugatás is a semmin. Javaslat: az App.js-ben kikommentezve ott áll egy kódrész, ami biztosan előhozza a hibát. Az alapján el lehet indulni.
        - Megvan a jelenség oka. Akkor jelentkezik, ha a szobához csatolt bútorok belül vannak és egyben nagyon közel vannak a falhoz. Az akadás pont az ezzel ellentétes irányba való vonszoláskor jelentkezik. Valószínűleg a bútorok ideiglenes lemaradozása, a kísérés nem megfeleő szinkronizálása okozza (hisz tudjuk, a folyamatos vonszolás valójában kicsi de nemnulla ugrásokból áll).
- - Jelenleg azért nem romlik el vászonugrás közben a nyilászárók lehelyezkedése, mert a jumpTo automatikusan konvertál. Ez nem jó megoldás, mert így egy megtervezett falnyilásozatú szoba gép kirakása nem vászonfüggetlen. Kénytelen vagyok arra a vásznra kitenni, ahova tervezve van, és ha nem oda szeretném, akkor ráhívok egy jumpTo-t. Mindez azonban code smell. A nyilászárókaz magas szinten, business object szintjén kell modellezni.
+ - Jelenleg azért nem romlik el vászonugrás közben a nyílászárók lehelyezkedése, mert a jumpTo automatikusan konvertál. Ez nem jó megoldás, mert így egy megtervezett falnyilásozatú szoba gép kirakása nem vászonfüggetlen. Például a jelenlegi loader, amely a menüvászon egyes alakzatait teszi ki, láthatóan elcsúsznak a nyilászárók azokhoz képes. Kénytelen vagyok arra a vásznra kitenni, ahova tervezve van, és ha nem oda szeretném, akkor ráhívok egy jumpTo-t. Mindez azonban code smell. A nyilászárókaz magas szinten, business object szintjén kell modellezni.
  - xlink:href is dperecated: https://developer.mozilla.org/pt-BR/docs/Web/SVG/Attribute/xlink:href
  - mv public/app/domain public/app/business
  - A `this.state.focus` ne `Widget | null` típusú legyen legyen, hanem `Maybe<Widget>`.
  - A `public/app/widget-pillar/CanvasMultiverse.js` modul szerepének tisztázása. Jelenleg teljes üres osztály.
+ - Legyen csengő hang ütközéskor! (pl. `glass.ogg`)
+ - Vajon, amikor végigmegyünk az <svg> elem gyerekein, a <defs> miért nem számít annak? persze ez pont jól jön, mert kivételt dobna, ha `<image>`  `<polygon>` `<text>` -től különböző gyerekre futna rá (sőt tulajdonképp ezt szűrni is kellene!).
+ - A loader ID-jét ne csak a pipa gombbal, hanem enter megynomsával is aktiválni lehessen
+ - A nem létező rekor ID üzenetet ne a státussorba, hanem a validációs helyre írja.
 
 
 # Fontend
