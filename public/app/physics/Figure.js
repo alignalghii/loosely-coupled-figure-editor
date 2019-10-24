@@ -1,7 +1,7 @@
 const GLITTERING_ATTR_NAME = 'opacity', GLITTERING_VALUE = 0.5;
 //const FOCUS = [{name: 'filter', value: 'url(#shadow)'}]; //[{name: 'filter', value: 'url(#shadow)'}];
 const   FOCUS = [[{name: 'stroke', value: 'red'  }], []]  // @TODO [[{stroke: 'red'  }], []]
-      UNFOCUS = [[{name: 'stroke', value: 'black'}], []]; // @TODO [[{stroke: 'black'}], []]
+      UNFOCUS = [[{name: 'stroke', value: 'gray'}], []]; // @TODO [[{stroke: 'black'}], []]
 
 
 // @TODO make a `clone` function in `Figure` and resuse it the more occasions as possible
@@ -15,8 +15,8 @@ function Figure(vertices, svgAttributes = {}, grasp, referenceAngle)  // @TODO: 
 	this.grasp         = grasp || (vertices.length > 0 ? centroid(vertices) : [0,0]); // referencePoint
 	this.referenceAngle = referenceAngle || 0;
 	this.vertices      = vertices;
-	if (!('stroke' in svgAttributes)) svgAttributes['stroke'] = 'black';
-	if (!('stroke-width' in svgAttributes)) svgAttributes['stroke-width'] = 5;
+	if (!('stroke' in svgAttributes)) svgAttributes['stroke'] = 'gray';
+	if (!('stroke-width' in svgAttributes)) svgAttributes['stroke-width'] = 7;
 	this.svgAttributes = svgAttributes;
 }
 

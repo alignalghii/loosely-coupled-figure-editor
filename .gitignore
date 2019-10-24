@@ -15,5 +15,7 @@ dialog-error.ogg
 logo.jpeg
 #favicon?
 
+doc/look-of-the-old-planner.png
+
 public/img-vendor/*
 !public/img-vendor/README.md
