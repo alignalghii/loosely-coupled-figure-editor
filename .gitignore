@@ -12,7 +12,7 @@ sonar.ogg
 bark.ogg
 drip.ogg
 dialog-error.ogg
-logo.jpeg
+public/assets-proper/logo*.*
 #favicon?
 
 doc/look-of-the-old-planner.png
