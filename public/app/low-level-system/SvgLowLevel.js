@@ -47,7 +47,7 @@ SvgLowLevel.prototype.deleteAllPolygonChildren = function () // @TODO better fun
 	if (this.svgRootElement.children.length) {
 		//(new Audio('assets-proper/drip.ogg')).play();
 		//document.getElementById('assets-proper/glass.ogg').play();
-		alert('A művelet törli a munkavásznat, azon meg már van munkád. Biztos akarod?');
+		alert('A művelet törli az adatbázisból-betöltődős menüvásznat, azon meg már van kirakott munkád. Biztosan ezt akarod?'); // @TODO Ez a controller szintjére való!
 		//setTimeout(() => alert("A művelet törli a munkavásznat, azon meg már van munkád. Biztosan akarod?"), 200);
 	}
 	// @TODO Vajon, amikor végigmegyünk az <svg> elem gyerekein, a <defs> miért nem számít annak? persze ez pont jól jön, mert kivételt dobna, ha `<image>`  `<polygon>` `<text>` -től különböző gyerekre futna rá (sőt tulajdonképp ezt szűrni is kellene!). Íme ld. alább:

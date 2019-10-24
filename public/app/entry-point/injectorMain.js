@@ -6,28 +6,31 @@ onload = function (event)
 
 	const svgLowLevel_menuCanvas   = new SvgLowLevel(document, 'svgRoot_menuCanvas'  ), // [250, 374]
 	      svgLowLevel_menuCanvas_2 = new SvgLowLevel(document, 'svgRoot_menuCanvas_2'), // [250, 374]
-	      svgLowLevel_menuCanvas_3 = new SvgLowLevel(document, 'svgRoot_menuCanvas_3'); // [250, 374]
+	      svgLowLevel_menuCanvas_3 = new SvgLowLevel(document, 'svgRoot_menuCanvas_3'), // [250, 374]
+	      svgLowLevel_menuCanvas_4 = new SvgLowLevel(document, 'svgRoot_menuCanvas_4'); // [250, 374]
 	const svgLowLevel_workCanvas   = new SvgLowLevel(document, 'svgRoot_workCanvas'  ); // [600, 400]
 	const svgLowLevels = [
-		svgLowLevel_menuCanvas, svgLowLevel_menuCanvas_2, svgLowLevel_menuCanvas_3,
+		svgLowLevel_menuCanvas, svgLowLevel_menuCanvas_2, svgLowLevel_menuCanvas_3, svgLowLevel_menuCanvas_4,
 		svgLowLevel_workCanvas
 	];
 
 	const coordSysTransformer_menuCanvas   = new CoordSysTransformer([125, 187], 10, [true, false]), // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
 	      coordSysTransformer_menuCanvas_2 = new CoordSysTransformer([125, 187], 10, [true, false]), // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
 	      coordSysTransformer_menuCanvas_3 = new CoordSysTransformer([125, 187], 10, [true, false]); // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
+	      coordSysTransformer_menuCanvas_4 = new CoordSysTransformer([125, 187], 10, [true, false]); // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
 	const coordSysTransformer_workCanvas   = new CoordSysTransformer([300, 200], 20, [true, false]); // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
 
 	const canvasPseudoWidgetFactory = new CanvasPseudoWidgetFactory;
 	const canvasPseudoWidget_menu   = canvasPseudoWidgetFactory.create(svgLowLevel_menuCanvas  , coordSysTransformer_menuCanvas  , new Bijection, new Map),
 	      canvasPseudoWidget_menu_2 = canvasPseudoWidgetFactory.create(svgLowLevel_menuCanvas_2, coordSysTransformer_menuCanvas_2, new Bijection, new Map),
 	      canvasPseudoWidget_menu_3 = canvasPseudoWidgetFactory.create(svgLowLevel_menuCanvas_3, coordSysTransformer_menuCanvas_3, new Bijection, new Map),
+	      canvasPseudoWidget_menu_4 = canvasPseudoWidgetFactory.create(svgLowLevel_menuCanvas_4, coordSysTransformer_menuCanvas_4, new Bijection, new Map),
 	      canvasPseudoWidget_work   = canvasPseudoWidgetFactory.create(svgLowLevel_workCanvas  , coordSysTransformer_workCanvas  , new Bijection, new Map);
 
 	var roomFactory           = new RoomFactory();
 	// var widgetFactories       = svgLowLevels.map(svgLowLevel => new WidgetFactory(new Map, coordSysTransformer, new Bijection, svgLowLevel)); // Use a PartialMap class, that should yield Nothing's
 	// @TODO restore the more generic solutions soon, but now I want micromanage for experimental purpose.
-	const canvasPseudoWidgets = [canvasPseudoWidget_menu, canvasPseudoWidget_menu_2, canvasPseudoWidget_menu_3, canvasPseudoWidget_work];
+	const canvasPseudoWidgets = [canvasPseudoWidget_menu, canvasPseudoWidget_menu_2, canvasPseudoWidget_menu_3, canvasPseudoWidget_menu_4, canvasPseudoWidget_work];
 
 	const numberHelperAndValidator = new NumberHelperAndValidator(3);
 	const quoteHelper              = new QuoteHelper;
@@ -63,7 +66,7 @@ onload = function (event)
 	const configController               = new ConfigController(state, configIODriver, statusBarODriver);
 	const figureNestingController        = new FigureNestingController(state, canvasPseudoWidgets, statusBarODriver);
 	const tabSelectorController          = new TabSelectorController(tabSelectorIODriver, quoteHelper, statusBarODriver); // @TODO argument order
-	const loaderController               = new LoaderController(canvasPseudoWidgets, numberHelperAndValidator, loaderIODriver, statusBarODriver, audioODriver);
+	const loaderController               = new LoaderController(canvasPseudoWidgets, numberHelperAndValidator, loaderIODriver, tabSelectorIODriver, statusBarODriver, audioODriver);
 
 	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(canvasPseudoWidgets, router); // @TODO: could it be regarded as a kind of device driver, and renamed + moved appropriately?

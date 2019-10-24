@@ -7,12 +7,14 @@ function TabSelectorDriver(aDocument, domHelper)
 	this.tab_schema    = aDocument.getElementById('tab_schema'   );
 	this.tab_furniture = aDocument.getElementById('tab_furniture');
 	this.tab_slit      = aDocument.getElementById('tab_slit'     );
+	this.tab_DB        = aDocument.getElementById('tab_DB'       );
 
 	this.canvas_schema    = aDocument.getElementById('svgRoot_menuCanvas'  );
 	this.canvas_furniture = aDocument.getElementById('svgRoot_menuCanvas_2');
 	this.canvas_slit      = aDocument.getElementById('svgRoot_menuCanvas_3');
+	this.canvas_DB        = aDocument.getElementById('svgRoot_menuCanvas_4');
 
-	this.names       = ['schema', 'furniture', 'slit'];
+	this.names       = ['schema', 'furniture', 'slit', 'DB'];
 
 	this.switchTo('schema');
 }

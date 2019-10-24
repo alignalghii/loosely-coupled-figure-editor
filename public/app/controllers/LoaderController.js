@@ -1,8 +1,9 @@
-function LoaderController (canvasPseudoWidgets, numberHelperAndValidator, loaderDriver, statusBarDriver, audioODriver)
+function LoaderController (canvasPseudoWidgets, numberHelperAndValidator, loaderDriver, tabSelectorDriver, statusBarDriver, audioODriver)
 {
 	this.canvasPseudoWidgets      = canvasPseudoWidgets;
 	this.numberHelperAndValidator = numberHelperAndValidator;
 	this.loaderDriver             = loaderDriver;
+	this.tabSelectorDriver        = tabSelectorDriver;
 	this.statusBarDriver          = statusBarDriver;
 	this.audioODriver             = audioODriver;
 }
@@ -31,7 +32,7 @@ LoaderController.prototype.load = function (i)
 	this.clearError();
 	switch (i) {
 		case 1:
-			this.clear();
+			this.clearAndTab();
 			this.statusBarDriver.report(`${i}. rekord betöltése`);
 
 			const cellarFig = (new Figure(poly1_concave_ccw,                        {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -15  ]);
@@ -54,7 +55,7 @@ LoaderController.prototype.load = function (i)
 
 			break;
 		case 2:
-			this.clear();
+			this.clearAndTab();
 			this.statusBarDriver.report(`${i}. rekord betöltése`);
 
 
@@ -69,7 +70,7 @@ LoaderController.prototype.load = function (i)
 
 			break;
 		case 3:
-			this.clear();
+			this.clearAndTab();
 			this.statusBarDriver.report(`${i}. rekord betöltése`);
 
 
@@ -97,6 +98,12 @@ LoaderController.prototype.load = function (i)
 			this.audioODriver.error();
 			break;
 	}
+};
+
+LoaderController.prototype.clearAndTab = function ()
+{
+	this.clear();
+	this.tabSelectorDriver.switchTo('DB');
 };
 
 LoaderController.prototype.clear = function ()
