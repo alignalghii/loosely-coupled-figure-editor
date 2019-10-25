@@ -59,3 +59,5 @@ TabSelectorDriver.prototype.hide = function (name)
 	this['tab_' + name].className = '';
 	this.domHelper.hide(this['canvas_' + name]);
 };
+
+TabSelectorDriver.prototype.relabelTab = function (name, label) {this['tab_' + name].innerHTML = label;};
