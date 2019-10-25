@@ -1,5 +1,6 @@
 function LoaderDriver (aDocument)
 {
+	this.loaderForm     = aDocument.getElementById('loader-form'); // @TODO better namings
 	this.loaderIdField  = aDocument.getElementById('loader-id');
 	this.idvalid        = aDocument.getElementById('loader-error');
 	this.loaderIdEntry  = aDocument.getElementById('loader-id-enter');
@@ -9,11 +10,12 @@ function LoaderDriver (aDocument)
 
 LoaderDriver.prototype.pipeToSM = function (dispatch)
 {
-	const clickEntry = event => {
+	const idFormSubmit = event => {
+		event.preventDefault();
 		const idStr = this.loaderIdField.value.trim(); // @TODO should validation, and Str -> Maybe<Either<Str, Nat>> come here into the driver, instead of the controller?
-		dispatch('click', ['IdString'], {loaderIdStr: idStr});
+		dispatch('submit', ['IdString'], {loaderIdStr: idStr});
 	};
-	this.loaderIdEntry.addEventListener('click', clickEntry);
+	this.loaderForm.addEventListener('submit', idFormSubmit);
 
 	const clickCancel = event => dispatch('click', ['void'], {loaderAction: 'cancel'});
 	this.loaderIdCancel.addEventListener('click', clickCancel);

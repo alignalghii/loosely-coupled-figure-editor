@@ -31,9 +31,9 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 	}
 	if ((eventType == 'change' || eventType == 'input') && Eq.eq(inputSignature, ['string', 'string']) && 'dasharrayAttribute' in ird) this.figurePropertyEditorController.changeDasharray(ird.dasharrayAttribute, ird.value);
 
-	if (eventType == 'click' && Eq.eq(inputSignature, ['void'    ]) && 'tabName'      in ird) this.tabSelectorController.select(ird.tabName);
-	if (eventType == 'click' && Eq.eq(inputSignature, ['IdString']) && 'loaderIdStr'  in ird) this.loaderController.run(ird.loaderIdStr); // @TODO better name, loaderid is rather eitherEId
-	if (eventType == 'click' && Eq.eq(inputSignature, ['void'    ]) && 'loaderAction' in ird && ird.loaderAction == 'cancel') this.loaderController.cancel();
+	if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'tabName'      in ird) this.tabSelectorController.select(ird.tabName);
+	if (eventType == 'submit' && Eq.eq(inputSignature, ['IdString']) && 'loaderIdStr'  in ird) this.loaderController.run(ird.loaderIdStr); // @TODO better name, loaderid is rather eitherEId
+	if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'loaderAction' in ird && ird.loaderAction == 'cancel') this.loaderController.cancel();
 
 	if (this.state.mode == 'compact') {
 		switch (eventType) {
