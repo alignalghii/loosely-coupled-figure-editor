@@ -32,66 +32,6 @@ LoaderController.prototype.load = function (i)
 	this.clearError();
 	switch (i) {
 		case 1:
-			this.clearAndTab();
-			this.statusBarDriver.report(`${i}. rekord betöltése`);
-
-			const cellarFig = (new Figure(poly1_concave_ccw,                        {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -15  ]);
-			const cellarBsn = new Room (
-				'Pince', cellarFig, [], [],
-				[]
-			);
-			cellarBsn.title.doTranslation([-1, 4.5]);
-			const cellarWdg = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(cellarBsn);
-
-			const lamp0Wdg = this.canvasPseudoWidgets[3].imageWidgetFactory.create('Állólámpa', '/img-vendor/allolampa.png', [2, 2], [7.3, -13.7]);
-			const bed0Wdg = this.canvasPseudoWidgets[3].imageWidgetFactory.create('Ágy', '/img-vendor/agy.png', [2, 2], [5.5, -14.1]);
-
-			cellarBsn.escorts.push(bed0Wdg.businessObject, lamp0Wdg.businessObject);
-			bed0Wdg.businessObject.maybeHost = ['just', cellarBsn]; // @TODO
-			lamp0Wdg.businessObject.maybeHost = ['just', cellarBsn]; // @TODO
-
-			cellarWdg.translate([0, 15]);
-			cellarWdg.updateDownwardAll();
-
-			break;
-		case 2:
-			this.clearAndTab();
-			this.statusBarDriver.report(`${i}. rekord betöltése`);
-
-
-			const transitFig = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  -3  , -2  ]);
-			const transitBsn = new Room (
-				'Közlekedő', transitFig, [], [],
-				[]
-			);
-			transitBsn.title.doTranslation([0, -1.5]);
-			const transitWdg = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(transitBsn);
-			transitWdg.scale(2);
-
-			break;
-		case 3:
-			this.clearAndTab();
-			this.statusBarDriver.report(`${i}. rekord betöltése`);
-
-
-			const diningFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
-			const diningBsn = new Room (
-				'Ebédlő', diningFig, [], [],
-				[]
-			);
-			diningBsn.title.doTranslation([0, -2.3]);
-			const diningWdg = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(diningBsn);
-			diningWdg.scale(2);
-
-			const tableChairs0Wdg = this.canvasPseudoWidgets[3].imageWidgetFactory.create('Asztal+székek', '/img-vendor/asztalszekek.png', [4, 3], [-1, -5.1]);
-			const green0Wdg = this.canvasPseudoWidgets[3].imageWidgetFactory.create('Zöldség', '/img-vendor/zoldseg.png', [2, 2], [3, -5.2]);
-
-			diningBsn.escorts.push(tableChairs0Wdg.businessObject, green0Wdg.businessObject);
-			tableChairs0Wdg.businessObject.maybeHost = ['just', diningBsn];
-			green0Wdg.businessObject.maybeHost = ['just', diningBsn];
-			break;
-
-		case 10:
 			this.tabSelectorDriver.relabelTab('DB', `#${i}`); // @TODO DRY
 			this.clearAndTab();
 			this.statusBarDriver.report(`${i}. rekord betöltése`);
@@ -166,7 +106,7 @@ LoaderController.prototype.load = function (i)
 			tube0Wdg__.businessObject.maybeHost = ['just', bathBsn__];*/
 
 			break;
-		case 20:
+		case 2:
 			this.tabSelectorDriver.relabelTab('DB', `#${i}`); // @TODO DRY
 			this.clearAndTab();
 			this.statusBarDriver.report(`${i}. rekord betöltése`);
@@ -241,7 +181,7 @@ LoaderController.prototype.load = function (i)
 			tube0Wdg__2.businessObject.maybeHost = ['just', bathBsn__2];
 
 			break;
-		case 30:
+		case 3:
 			this.tabSelectorDriver.relabelTab('DB', `#${i}`); // @TODO DRY
 			this.clearAndTab();
 			this.statusBarDriver.report(`${i}. rekord betöltése`);
