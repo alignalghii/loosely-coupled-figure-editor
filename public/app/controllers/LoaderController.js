@@ -39,7 +39,7 @@ LoaderController.prototype.load = function (i)
 			const cellarFig__ = (new Figure(poly1_concave_ccw,                        {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
 			const cellarBsn__ = new Room (
 				'Pince', cellarFig__, [], [],
-				[]
+				[], ['nothing']
 			);
 			cellarBsn__.title.doTranslation([-1, 4.5]);
 			const cellarWdg__ = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(cellarBsn__);
@@ -60,7 +60,7 @@ LoaderController.prototype.load = function (i)
 			const transitFig__ = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  -3  , 3  ]);
 			const transitBsn__ = new Room (
 				'Közlekedő', transitFig__, [], [],
-				[]
+				[], ['nothing']
 			);
 			transitBsn__.title.doTranslation([0, -1.5]);
 			const transitWdg__ = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(transitBsn__);
@@ -73,7 +73,7 @@ LoaderController.prototype.load = function (i)
 			diningFig__.doScale(2);
 			const diningBsn__ = new Room (
 				'Ebédlő', diningFig__, [], [],
-				[]
+				[], ['nothing']
 			);
 			diningBsn__.title.doTranslation([-2, -6.3]);
 			const diningWdg__ = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(diningBsn__);
@@ -137,7 +137,7 @@ LoaderController.prototype.load = function (i)
 			transitFig__2.doScale(1.7);
 			const transitBsn__2 = new Room (
 				'Közlekedő', transitFig__2, [], [],
-				[]
+				[], ['nothing']
 			);
 			transitBsn__2.title.doTranslation([0, -1.5]);
 			const transitWdg__2 = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(transitBsn__2);
@@ -148,7 +148,7 @@ LoaderController.prototype.load = function (i)
 			const diningFig__2 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
 			const diningBsn__2 = new Room (
 				'Ebédlő', diningFig__2, [], [],
-				[]
+				[], ['nothing']
 			);
 			diningBsn__2.title.doTranslation([0, -2.3]);
 			const diningWdg__2 = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(diningBsn__2);
@@ -166,7 +166,7 @@ LoaderController.prototype.load = function (i)
 			const bathFig__2 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -15  ]);
 			const bathBsn__2 = new Room (
 				'Fürdő', bathFig__2, [], [],
-				[]
+				[], ['nothing']
 			);
 			bathBsn__2.title.doTranslation([0, -4.1]);
 			const bathWdg__2 = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(bathBsn__2);
@@ -189,7 +189,7 @@ LoaderController.prototype.load = function (i)
 			const cellarFig__3 = (new Figure(poly1_concave_ccw,                        {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
 			const cellarBsn__3 = new Room (
 				'Pince', cellarFig__3, [], [],
-				[]
+				[], ['nothing']
 			);
 			cellarBsn__3.title.doTranslation([-1, 4.5]);
 			const cellarWdg__3 = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(cellarBsn__3);
@@ -222,7 +222,7 @@ LoaderController.prototype.load = function (i)
 			diningFig__3.doTranslation([0, 6]);
 			const diningBsn__3 = new Room (
 				'Ebédlő', diningFig__3, [], [],
-				[]
+				[], ['nothing']
 			);
 			diningBsn__3.title.doTranslation([0, -2.3]);
 			const diningWdg__3 = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(diningBsn__3);
@@ -242,7 +242,7 @@ LoaderController.prototype.load = function (i)
 			bathFig__3.doScale(2);
 			const bathBsn__3 = new Room (
 				'Fürdő', bathFig__3, [], [],
-				[]
+				[], ['nothing']
 			);
 			bathBsn__3.title.doTranslation([-2, -6.8]);
 			const bathWdg__3 = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(bathBsn__3);

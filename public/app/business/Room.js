@@ -2,9 +2,9 @@
 // Thus here, the Room constructor is simply setting possible properties from arguments
 
 
-function Room(name, figure, openings, generalSizes, escorts = [])
+function Room(name, figure, openings, generalSizes, escorts, maybeHost) // @TODO consider: escorts = [], maybeHost = ['nothing']
 {
-	BusinessObject.call(this, figure, escorts);
+	BusinessObject.call(this, figure, escorts, maybeHost);
 
 	console.log('New room created!');
 	this.title        = new Title(this, name, figure.titlePosition());
@@ -24,7 +24,8 @@ Room.prototype.copy = function ()
 		this.figure.translation([0,0]),
 		Eq.obListCopy(this.openings),
 		Eq.flatObjectCopy(this.generalSizes),
-		this.escorts.map(escort => escort.copy())
+		this.escorts.map(escort => escort.copy()),
+		this.maybeHost
 	);
 };
 

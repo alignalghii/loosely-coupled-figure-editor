@@ -28,17 +28,18 @@ RoomFactory.prototype.createGeneral = function (roomType, figure) // @TODO shoul
 
 	var generalSizes = {window:0.1, door:0.1, hole:0.1};
 
-	var furniture = [];
+	const escorts   = [],
+	      maybeHost = ['nothing'];
 
-	return new Room(roomType, figure, openings, generalSizes, furniture);
+	return new Room(roomType, figure, openings, generalSizes, escorts, maybeHost);
 	//console.log(r);
 	//return r;
 };
 
-RoomFactory.prototype.createSquareByArea = function (area, [x, y])
+RoomFactory.prototype.createSquareByArea = function (area, [x, y]) // @TODO probably obsolete
 {
 	var a = Math.sqrt(area);
 	var square = [[x-a/2, y-a/2], [x+a/2, y-a/2], [x+a/2, y+a/2], [x-a/2, y+a/2]];
 	var squareFigure = new Figure(square, {fill:'white'});
-	return this.createGeneral(squareFigure);
+	return this.createGeneral('<<<Típusnév>>>', squareFigure);
 };

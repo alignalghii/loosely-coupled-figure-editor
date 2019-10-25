@@ -2,9 +2,9 @@
 // Thus here, the Furniture constructor is simply setting possible properties from arguments
 
 
-function Furniture(name, figure, imageFileName, escorts = [])
+function Furniture(name, figure, imageFileName, escorts, maybeHost) // @TODO consider: escorts = [], maybeHost = ['nothing']
 {
-	BusinessObject.call(this, figure, escorts);
+	BusinessObject.call(this, figure, escorts, maybeHost);
 	this.name = name;
 	this.imageFileName = imageFileName;
 }
@@ -19,7 +19,8 @@ Furniture.prototype.copy = function ()
 		this.name,
 		this.figure.translation([0,0]),
 		this.imageFileName,
-		this.escorts.map(escort => escort.copy()) // @TODO deep copy? Or shallow? or 1-deep?
+		this.escorts.map(escort => escort.copy()), // @TODO deep copy? Or shallow? or 1-deep?
+		this.maybeHost
 	);
 };
 

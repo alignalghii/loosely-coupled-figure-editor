@@ -1,13 +1,14 @@
-function BusinessObject(figure, escorts = [])
+function BusinessObject(figure, escorts, maybeHost) // @TODO consider: escorts = [], maybeHost = ['nothing']
 {
+	if (!maybeHost) throw 'Inconsistence';
 	this.figure = figure; // @TODO considere whether every future business object has a figure. // @TODO lehet hogy jó csak a Room-ban (és talán a Furniture-ban?) deklarálni, és az absztrakt BusinessObject osztályból meg kivenni. Nem feltétlen minden üzletiolbektum kötődik alakzathoz. Pl. van cím is, igaz, az nem köthető üzleti objektumhoz. Lehet, hogy a Furniture sem fog alakzathoz kötődni (ez még bizonytalan, hisz a bútornak azért bennfoglaló téglalapdoboza azért biztos van, aszerint ütközik is. Mindenesetre a Furniture képhez is kötődik.
 	this.escorts = escorts;
-	this.maybeHost = ['nothing']; // @TODO: Explicit, ,,külső'', önálló fa adatstruktúrát használjunk a business objektumok tartalmazási hierarchiájának nyivántartására: Tree<BusinessObject>
+	this.maybeHost = maybeHost; // @TODO: Explicit, ,,külső'', önálló fa adatstruktúrát használjunk a business objektumok tartalmazási hierarchiájának nyivántartására: Tree<BusinessObject>
 }
 
 
 BusinessObject.prototype.perimeter = function () {return this.figure.perimeter();};
-BusinessObject.prototype.copy      = function () {return new BusinessObject(this.figure.translation([0,0]));}; // @TODO make a `clone` function in `Figure` and resuse it the more occasions as possible
+BusinessObject.prototype.copy      = function () {return new BusinessObject(this.figure.translation([0,0]), this.escorts.map(e => e.copy()), this.maybeHost);}; // @TODO make a `clone` function in `Figure` and resuse it the more occasions as possible // @TODO escorts and maybeHost are copied shallow or deep? Here, escorts deep and host shallow
 BusinessObject.prototype.centering = function () {var copy = this.copy(); copy.figure.doCentering(); return copy;};
 
 // BusinessObject.prototype.goUpdatedByOwnFigure = function () {}; // @TODO: decide: abstract or dummy method?

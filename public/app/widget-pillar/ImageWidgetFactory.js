@@ -13,7 +13,7 @@ ImageWidgetFactory.prototype.create = function (name, fileName, [width, height],
 {
 	const info = this.calculate([width, height], [x, y]);
 	const figure    = new Figure(info.vertices)
-              furniture = new Furniture(name, figure, fileName), // @TODO
+              furniture = new Furniture(name, figure, fileName, [], ['nothing']), // @TODO
 	      imageElem = this.svgLowLevel.createImage(fileName, info.sizes_low, info.point_lowcorner);
 	const imageWidget = new ImageWidget(this.canvasPesudoWidget, imageElem, figure, furniture);
 	this.bijectionSvgToGeom.set(imageElem, figure);

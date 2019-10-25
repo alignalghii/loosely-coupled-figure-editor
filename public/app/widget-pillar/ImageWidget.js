@@ -5,7 +5,6 @@ function ImageWidget(canvasPseudoWidget,    low, high, businessObject)
 {
 	Widget.call(this, canvasPseudoWidget,    low, high);
 	this.businessObject = businessObject;
-	this.maybeHost = ['nothing'];
 }
 
 ImageWidget.prototype = Object.create(Widget.prototype);
@@ -42,7 +41,7 @@ ImageWidget.prototype.updateDownwardAll = function ()
 	this.updateDownward();
 };
 
-ImageWidget.prototype.isHostless = function () {return isNothing(this.maybeHost);};
+ImageWidget.prototype.isHostless = function () {return isNothing(this.businessObject.maybeHost);};
 
 ImageWidget.prototype.jumpTo = function (targetCanvasPseudoWidget)
 {
