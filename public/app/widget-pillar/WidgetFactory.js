@@ -103,4 +103,17 @@ WidgetFactory.prototype.clearAll = function ()
 			widget.delete();
 		}
 	}
+}; // @TODO reuse, factoring out with  `withAll`?
+
+WidgetFactory.prototype.updateAll = function () {this.withAll(widget => widget.updateDownwardAll());};
+
+WidgetFactory.prototype.withAll = function (command)
+{
+	const rootElem = this.svgLowLevel.svgRootElement;
+	for (let childElem of rootElem.children) {
+		if (childElem.tagName == 'polygon' || childElem.tagName == 'text' || childElem.tagName == 'image') { // @TODO
+			const widget = this.detectTypeAndComposeFromLow(childElem);
+			command(widget);
+		}
+	}
 };

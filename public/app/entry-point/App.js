@@ -1,4 +1,4 @@
-function App(router, widgetEventPillar, roomStampDriver, modeDriver, operationDriver, keyboardDriver, figurePropertyEditorDriver, configDriver, tabSelectorDriver, loaderDriver)
+function App(router, widgetEventPillar, roomStampDriver, modeDriver, operationDriver, keyboardDriver, figurePropertyEditorDriver, configDriver, tabSelectorDriver, loaderDriver, zoomDriver)
 {
 	this.router = router;
 
@@ -11,6 +11,7 @@ function App(router, widgetEventPillar, roomStampDriver, modeDriver, operationDr
 	this.configDriver               = configDriver;
 	this.tabSelectorDriver          = tabSelectorDriver;
 	this.loaderDriver               = loaderDriver;
+	this.zoomDriver                 = zoomDriver;
 }
 
 App.prototype.run = function ()
@@ -27,6 +28,7 @@ App.prototype.run = function ()
 	this.configDriver              .pipeToSM(dispatch);
 	this.tabSelectorDriver         .pipeToSM(dispatch);
 	this.loaderDriver              .pipeToSM(dispatch);
+	this.zoomDriver                .pipeToSM(dispatch);
 };
 
 App.prototype.populate = function ()

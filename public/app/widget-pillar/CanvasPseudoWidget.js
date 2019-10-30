@@ -36,4 +36,5 @@ CanvasPseudoWidget.prototype.coordSysTransformer = function () {return this.arbi
 CanvasPseudoWidget.prototype.board               = function () {return this.arbitrary.bijectionSvgToGeom           ;}; // @TODO: rude arbitrariness
 CanvasPseudoWidget.prototype.businessBoard       = function () {return this.arbitrary.partialFunctionGeomToBusiness;}; // @TODO: rude arbitrariness
 
-CanvasPseudoWidget.prototype.clear = function () {this.arbitrary.clearAll();}; // @TODO: rude arbitrariness
+CanvasPseudoWidget.prototype.clear  = function () {this.arbitrary.clearAll(); }; // @TODO: rude arbitrariness
+CanvasPseudoWidget.prototype.update = function () {this.arbitrary.updateAll();}; // @TODO: rude arbitrariness

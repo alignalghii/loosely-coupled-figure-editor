@@ -1,4 +1,4 @@
-function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, zoomController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
@@ -12,6 +12,7 @@ function Router(state, normalModeController, compactModeController, roomControll
 	this.figureNestingController = figureNestingController;
 	this.tabSelectorController = tabSelectorController;
 	this.loaderController = loaderController;
+	this.zoomController = zoomController;
 }
 
 Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: inputRoledData
@@ -34,6 +35,14 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 	if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'tabName'      in ird) this.tabSelectorController.select(ird.tabName);
 	if (eventType == 'submit' && Eq.eq(inputSignature, ['IdString']) && 'loaderIdStr'  in ird) this.loaderController.run(ird.loaderIdStr); // @TODO better name, loaderid is rather eitherEId
 	if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'loaderAction' in ird && ird.loaderAction == 'cancel') this.loaderController.cancel();
+	if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'zoomAction' in ird) {
+		switch (ird.zoomAction) {
+			case 'up'     : this.zoomController.up     (); break;
+			case 'down'   : this.zoomController.down   (); break;
+			case 'default': this.zoomController.default(); break;
+			default       : throw 'Invalid zoom action'  ; break;
+		}
+	}
 
 	if (this.state.mode == 'compact') {
 		switch (eventType) {
