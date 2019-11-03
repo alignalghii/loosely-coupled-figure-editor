@@ -14,9 +14,10 @@ function WidgetFactory(canvasPseudoWidget, svgLowLevel, coordSysTransformer, bij
 	this.bijectionSvgToGeom  = bijectionSvgToGeom;
 }
 
-WidgetFactory.prototype.delete = function (widget)
+WidgetFactory.prototype.rawDelete = function (widget)
 {
-	if (this.partialFunctionGeomToBusiness) this.partialFunctionGeomToBusiness.get(this.high) ? this.partialFunctionGeomToBusiness.delete(this.high) : (() => {throw 'Inconsistence';})(); // @TODO Also high+business detached from partialFunction - a debatable OOP-smelly solution here! Should be done at the level of the subclasses?
+	//if (this.partialFunctionGeomToBusiness) this.partialFunctionGeomToBusiness.get(this.high) ? this.partialFunctionGeomToBusiness.delete(this.high) : (() => {throw 'Inconsistence';})(); // @TODO Also high+business detached from partialFunction - a debatable OOP-smelly solution here! Should be done at the level of the subclasses?
+	if (this.partialFunctionGeomToBusiness) this.partialFunctionGeomToBusiness.get(widget.high) ? this.partialFunctionGeomToBusiness.delete(widget.high) : (() => {throw 'Inconsistence';})(); // @TODO Also high+business detached from partialFunction - a debatable OOP-smelly solution here! Should be done at the level of the subclasses?
 	this.bijectionSvgToGeom.delete(widget.low); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
 	deletePolygonChild(widget.low);             // @TODO: why do we not delete the high-level connection as well (the business object)?
 };
@@ -62,8 +63,9 @@ WidgetFactory.prototype.queryFromLow = function (low)
 WidgetFactory.prototype.queryFromHigh = function (high)
 {
 	const low    = this.bijectionSvgToGeom.getInverse(high);
-	if (!low) throw 'Event on orphan (unregistered) MathematicalObject triggers widget creation, but the low-level component is lacking'
-	const business/*OrNull*/ = this.partialFunctionGeomToBusiness ? (this.partialFunctionGeomToBusiness.get(high) || (() => {throw 'Inconsistence';})()) : null;
+	if (!low) throw 'Event on orphan (unregistered) MathematicalObject triggers widget creation, but the low-level component is lacking';
+	//const business/*OrNull*/ = this.partialFunctionGeomToBusiness ? (this.partialFunctionGeomToBusiness.get(high) || (() => {console.log(high, low); throw 'Inconsistence';})()) : null;
+	const business/*OrNull*/ = this.partialFunctionGeomToBusiness ? (this.partialFunctionGeomToBusiness.get(high) || null) : null;
 	return business ? [low, business] : [low]; // @TODO Not nice OOP
 };
 

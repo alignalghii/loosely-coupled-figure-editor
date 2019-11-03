@@ -1,6 +1,6 @@
 const boardMinimalEcholocationHence = (board, point) => reshapeEchosForMinimalDistanceIfAny(boardEcholocationHence(board, point));
 
-const boardEcholocationHence = (board, point) => boardMap_opt(figure => figureEchoHence(figure, point), board);
+const boardEcholocationHence = (board, point) => boardMapColliding_opt(figure => figureEchoHence(figure, point), board);
 
 const figureEchoHence = (figure, point) => ({
 	figure        : figure,

@@ -1,4 +1,4 @@
-function boardReduce(reducer, initialValue, board)
+function boardReduceColliding(reducer, initialValue, board)
 {
 	var accumulator = initialValue;
 	for (let currentValue of board.range()) {
@@ -8,7 +8,7 @@ function boardReduce(reducer, initialValue, board)
 	return accumulator;
 }
 
-const boardMap_unopt = (mapper, board) => boardReduce(
+const boardMapColliding_unopt = (mapper, board) => boardReduceColliding(
 	(acc, curr) => acc.concat([mapper(curr)]),
 	[],
 	board
@@ -16,30 +16,60 @@ const boardMap_unopt = (mapper, board) => boardReduce(
 
 // Optimizated special implementations for reduction (partial, lazy evaluation):
 
-function boardMap_opt(mapper, board)
+const boardMap_opt = (mapper, board) =>
 {
 	const results = [];
 	for (let currentValue of board.range()) {
-		if (isJust(currentValue.isCollidable())) // @TODO raise level in module hierarchy
-			results.push(mapper(currentValue));
+		results.push(mapper(currentValue));
 	}
 	return results;
 }
 
-function boardAll(predicate, board)
+function boardMapFilter_opt(maybeMapper, board)
+{
+	const results = [];
+	for (let currentValue of board.range()) {
+		maybeMap(
+			result => results.push(result),
+			maybeMapper(currentValue)
+		);
+	}
+	return results;
+}
+
+const boardMapColliding_opt = (mapper, board) =>
+	boardMapFilter_opt(
+		currentValue => maybeMap(
+			_ => currentValue,
+			currentValue.isCollidable()
+		),
+		board
+	);
+
+function boardAll(predicate, board)  // @TODO this function os used nowhere @TODO define and reuse `boardAny`
 {
 	for (let currentValue of board.range()) {
-		if (isJust(currentValue.isCollidable())) // @TODO OOP polymorphism @TODO raise level in module hierarchy
-			if (!predicate(currentValue)) return false;
+		if (!predicate(currentValue)) return false;
 	}
 	return true;
 }
 
+const boardAllColliding = (predicate, board) =>
+	boardAll(
+		currentValue => isNothing(currentValue.isCollidable()) || predicate(currentValue), // @TODO isJust(currentValue.isCollidable()) -> predicate(currentValue) 
+		board
+	);
+
 function boardAny(predicate, board)
 {
 	for (let currentValue of board.range()) {
-		if (isJust(currentValue.isCollidable())) // @TODO OOP polymorphism @TODO raise level in module hierarchy
-			if (predicate(currentValue)) return true;
+		if (predicate(currentValue)) return true;
 	}
 	return false;
 }
+
+const boardAnyColliding = (predicate, board) =>
+	boardAny(
+		currentValue => isJust(currentValue.isCollidable()) && predicate(currentValue),
+		board
+	);

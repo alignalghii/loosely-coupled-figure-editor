@@ -60,7 +60,7 @@
         Uncaught TypeError: pMInf1 is not iterable
             at pMInfCompare (Infinity.js:64)
             at reducer (Infinity.js:164)
-            at boardReduce (Board.js:5)
+            at boardReduceColliding (Board.js:5)
             at boardMinSelectSet (Infinity.js:175)
             at fallFigureOnBoard_allMins (FiguresBoard.js:5)
             at mbVectorTransformer (collision-as-vector-transformation.js:5)

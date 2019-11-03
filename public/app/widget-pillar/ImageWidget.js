@@ -13,6 +13,13 @@ ImageWidget.prototype.constructor = ImageWidget;
 
 ImageWidget.prototype.factory = function () {return this.canvasPseudoWidget.imageWidgetFactory;};
 
+ImageWidget.prototype.delete = function ()
+{
+	this.businessObject.liberate();
+	this.withEscortWidgets(widget => widget.delete());
+	this.rawDelete(); // low+high detached from bijection + low removed from SVG-DOM. Also high+business detached from partialFunction (OOP-smelly solution! @TODO debate)
+};
+
 ImageWidget.prototype.withEscortWidgets = function (doWith)
 {
 	return this.businessObject.escorts.map(

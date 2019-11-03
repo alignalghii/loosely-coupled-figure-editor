@@ -19,16 +19,21 @@ FigureWidget.prototype.withEscortWidgets = function (doWith)
 		escort => doWith(this.factory().detectTypeAndComposeFromBusiness(escort)) // @TODO factory() select well, but it is rather arbitrary, works but is smelly architecture
 	);
 };
-FigureWidget.prototype.withTitleAndEscortWidgets = function (doWith)
+FigureWidget.prototype.withDependentWidgets = function (doWith) {this.withDependentWidgets_unsafe(doWith, doWith);}; // @TODO raise to parent
+FigureWidget.prototype.withDependentWidgets_unsafe = function (doWith, doWith_unsafe) // @TODO redefines abstract method of parent class
 {
-	doWith(this.titleWidget());
 	this.withEscortWidgets(doWith);
-}
+	doWith_unsafe(this.titleWidget());
+};
 
 FigureWidget.prototype.delete = function ()
 {
-	this.withTitleAndEscortWidgets(widget => widget.delete());
-	Widget.prototype.delete.call(this); // low+high detached from bijection + low removed from SVG-DOM. Also high+business detached from partialFunction (OOP-smelly solution! @TODO debate)
+	this.businessObject.liberate();
+	this.withDependentWidgets_unsafe(
+		escortWidget => escortWidget.delete(),
+		titleWidget  => titleWidget.delete_unsafe()
+	); // @TODO a címwidget törlése érdekes kérdés, hisz a címwidget saját delete metódusa hibaüzenetet kell adjon egy elkézelés szerint
+	this.rawDelete(); // low+high detached from bijection + low removed from SVG-DOM. Also high+business detached from partialFunction (OOP-smelly solution! @TODO debate)
 };
 
 // Abstract methods of super concretized here:
@@ -44,7 +49,7 @@ FigureWidget.prototype.updateDownward = function ()
 
 FigureWidget.prototype.updateDownwardAll = function ()
 {
-	this.withTitleAndEscortWidgets(subwidget => subwidget.updateDownwardAll());
+	this.withDependentWidgets(subwidget => subwidget.updateDownwardAll());
 	this.updateDownward();
 };
 
@@ -55,7 +60,7 @@ FigureWidget.prototype.jumpTo = function (targetCanvasPseudoWidget) // targetCan
 	const targetCanvasElem = targetCanvasPseudoWidget.low();
 	targetCanvasElem.appendChild(this.low);
 
-	this.withTitleAndEscortWidgets(widget => widget.jumpTo(targetCanvasPseudoWidget)); // targetCanvas, targetBoard, targetBusinessBoard, targetCoordSysTransfomer);
+	this.withDependentWidgets(widget => widget.jumpTo(targetCanvasPseudoWidget)); // targetCanvas, targetBoard, targetBusinessBoard, targetCoordSysTransfomer);
 	//targetCanvasElem.appendChild(titleWidget().low);
 	//titleWidget().changeBoardsFor(targetBoard, targetBusinessBoard, targetCoordSysTransfomer);
 

@@ -152,7 +152,7 @@ function boardMin(filterPred, mapFun, parametricLt, posInf, board)
 			return accumulator;
 		}
 	}
-	return boardReduce(reducer, posInf, board);
+	return boardReduceColliding(reducer, posInf, board);
 }
 
 function boardMinSelectSet(filterPred, mapFun, parametricCompare, posInf, board)
@@ -172,7 +172,7 @@ function boardMinSelectSet(filterPred, mapFun, parametricCompare, posInf, board)
 			return accumulator;
 		}
 	}
-	return boardReduce(reducer, [posInf, []], board);
+	return boardReduceColliding(reducer, [posInf, []], board);
 }
 
 function boardMinSelectSet_logged(filterPred, mapFun, parametricCompare, posInf, board)
@@ -193,5 +193,5 @@ function boardMinSelectSet_logged(filterPred, mapFun, parametricCompare, posInf,
 			return accumulator;
 		}
 	}
-	return boardReduce(reducer, [posInf, [], []], board);
+	return boardReduceColliding(reducer, [posInf, [], []], board);
 }

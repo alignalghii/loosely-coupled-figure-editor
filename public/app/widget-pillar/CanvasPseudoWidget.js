@@ -38,3 +38,12 @@ CanvasPseudoWidget.prototype.businessBoard       = function () {return this.arbi
 
 CanvasPseudoWidget.prototype.clear  = function () {this.arbitrary.clearAll(); }; // @TODO: rude arbitrariness
 CanvasPseudoWidget.prototype.update = function () {this.arbitrary.updateAll();}; // @TODO: rude arbitrariness
+
+CanvasPseudoWidget.prototype.widgets = function (predicate)
+{
+	const board = this.arbitrary.bijectionSvgToGeom;
+	const fromHigh = high => this.arbitrary.detectTypeAndComposeFromHigh(high);
+	return boardMap_opt(fromHigh, board);
+};
+
+CanvasPseudoWidget.prototype.hostlessWidgets = function () {return this.widgets().filter(widget => widget.isHostless());};

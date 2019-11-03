@@ -21,11 +21,6 @@ ImageWidgetFactory.prototype.create = function (name, fileName, [width, height],
 	return imageWidget;
 };
 
-ImageWidgetFactory.prototype.delete = function ()
-{
-	WidgetFactory.prototype.delete.call(this);
-};
-
 ImageWidgetFactory.prototype.calculate = function ([width, height], [x, y])
 {
 	const quotient                   = this.coordSysTransformer.scalingFactor_hl,

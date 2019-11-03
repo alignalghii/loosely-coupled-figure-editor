@@ -16,7 +16,9 @@ function Widget(canvasPseudoWidget,   low, high)
 
 Widget.prototype.factory = function () {throw 'Abstract method';};
 
-Widget.prototype.delete = function () {this.factory().delete(this);};
+Widget.prototype.rawDelete = function () {this.factory().rawDelete(this);};
+
+Widget.prototype.delete = function () {throw 'Abstract method';};
 
 Widget.prototype.updateDisplacement = function (prevWEPos, currentWEPos)
 {
@@ -49,7 +51,7 @@ Widget.prototype.removeSvgAttribute = function (name)
 
 Widget.prototype.jumpTo = function (canvasPseudoWidget) {throw 'Abstract method';};
 
-Widget.prototype.isHostless     = function () {throw 'This is an abstract method';}; // íbstract method
+Widget.prototype.isHostless     = function () {throw 'This is an abstract method';}; // abstract method
 
 Widget.prototype.allowable = function (infinitezimalDisplacement)
 {

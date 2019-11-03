@@ -7,6 +7,9 @@ TitleWidget.prototype = Object.create(Widget.prototype);
 
 TitleWidget.prototype.constructor = TitleWidget;
 
+TitleWidget.prototype.delete = function () {throw 'Debated thing due to reciprocal obligate dependency with its host';};
+TitleWidget.prototype.delete_unsafe = function () {this.rawDelete();};
+
 TitleWidget.prototype.factory = function () {return this.canvasPseudoWidget.titleWidgetFactory;};
 
 // @TODO: consider - this function alone justifies inheriting

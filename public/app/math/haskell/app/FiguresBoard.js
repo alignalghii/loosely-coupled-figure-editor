@@ -9,13 +9,13 @@ function fallFigureOnBoard_allMins(fallingFigure, board, fallDirectionVector)
 function invalidSituationOnBoard(fallingFigure, board)
 {
 	const affects = (targetFigure) => targetFigure != fallingFigure && invalidSituation(fallingFigure.vertices, targetFigure.vertices);
-	return boardAny(affects, board);
+	return boardAnyColliding(affects, board);
 }
 
 function invalidSituationOnBoardBut(probeFigure, fallingFigure, board)
 {
 	const affects = (targetFigure) => targetFigure != fallingFigure  && invalidSituation(probeFigure.vertices, targetFigure.vertices);
-	return boardAny(affects, board);
+	return boardAnyColliding(affects, board);
 }
 
 /** @TODO: it is very ineffective to use a separate function call to check nesting status. Try to rewrite the functions such that it can be done simultaneously with falling or collision check! */
