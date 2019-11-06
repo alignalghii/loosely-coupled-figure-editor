@@ -8,7 +8,7 @@ onload = function (event)
 	      svgLowLevel_menuCanvas_2 = new SvgLowLevel(document, 'svgRoot_menuCanvas_2'), // [250, 374]
 	      svgLowLevel_menuCanvas_3 = new SvgLowLevel(document, 'svgRoot_menuCanvas_3'), // [250, 374]
 	      svgLowLevel_menuCanvas_4 = new SvgLowLevel(document, 'svgRoot_menuCanvas_4'); // [250, 374]
-	const svgLowLevel_workCanvas   = new SvgLowLevel(document, 'svgRoot_workCanvas'  ); // [600, 400]
+	const svgLowLevel_workCanvas   = new SvgLowLevel(document, 'svgRoot_workCanvas'  ); // [600, 400] // [750, 500]
 	const svgLowLevels = [
 		svgLowLevel_menuCanvas, svgLowLevel_menuCanvas_2, svgLowLevel_menuCanvas_3, svgLowLevel_menuCanvas_4,
 		svgLowLevel_workCanvas
@@ -18,7 +18,7 @@ onload = function (event)
 	      coordSysTransformer_menuCanvas_2 = new CoordSysTransformer([125, 187], 10, [true, false]), // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
 	      coordSysTransformer_menuCanvas_3 = new CoordSysTransformer([125, 187], 10, [true, false]); // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
 	      coordSysTransformer_menuCanvas_4 = new CoordSysTransformer([125, 187], 10, [true, false]); // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
-	const coordSysTransformer_workCanvas   = new CoordSysTransformer([300, 200], 20, [true, false]); // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
+	const coordSysTransformer_workCanvas   = new CoordSysTransformer([375, 250], 20, [true, false]); // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
 
 	const canvasPseudoWidgetFactory = new CanvasPseudoWidgetFactory;
 	const canvasPseudoWidget_menu   = canvasPseudoWidgetFactory.create(svgLowLevel_menuCanvas  , coordSysTransformer_menuCanvas  , new Bijection, new Map),
