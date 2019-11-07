@@ -13,6 +13,8 @@ bark.ogg
 drip.ogg
 dialog-error.ogg
 public/assets-proper/logo*.*
+public/assets-proper/info*.png
+public/assets-proper/info*.svg
 #favicon?
 
 doc/look-of-the-old-planner.png
