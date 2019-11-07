@@ -2,6 +2,7 @@ onload = function (event)
 {
 	//var SUPERGLOBAL = {}; // @TODO !!!!
 
+	document.addEventListener('selectstart', e => {if (e.target.tagName == 'svg' || e.target.parentNode && e.target.parentNode.tagName == 'svg' || e.target.parentNode.parentNode && e.target.parentNode.parentNode.tagName == 'svg') {e.preventDefault(); console.log(`Selection prevented!`);}}); // @TODO: do it in a nicer way
 
 
 	const svgLowLevel_menuCanvas   = new SvgLowLevel(document, 'svgRoot_menuCanvas'  ), // [250, 374]
