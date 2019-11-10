@@ -69,6 +69,25 @@ Widget.prototype.changeBoardsFor = function (targetCanvasPseudoWidget) // @TODO:
 	const [targetBoard, targetBusinessBoard, targetCoordSysTransformer] = [targetCanvasPseudoWidget.board(), targetCanvasPseudoWidget.businessBoard(), targetCanvasPseudoWidget.coordSysTransformer()];
 	// Dasharray must be taken special care of:
 	const q = targetCoordSysTransformer.scalingFactor_hl / this.factory().coordSysTransformer.scalingFactor_hl;
+	this.reproportionateDashAttributes(q);
+
+	// Subscribe for new boards:
+	targetBoard        .set(this.low , this.high        );
+	if (this.businessObject) targetBusinessBoard.set(this.high, this.businessObject);
+
+	// Unsubscribe from own (collaborator) boards:
+	this.factory().bijectionSvgToGeom   .delete(this.low ); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
+	if (this.factory().partialFunctionGeomToBusiness) this.factory().partialFunctionGeomToBusiness.get(this.high) ? this.factory().partialFunctionGeomToBusiness.delete(this.high) : (() => {throw 'Inconsistence-2';})(); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
+
+	// Update collaborators:
+	this.canvasPseudoWidget = targetCanvasPseudoWidget;
+	//this.canvasPseudoWidget.set_coordSysTransformer          (targetCoordSysTransformer); // @TODO: use widgetfactory as a component/collaborator instead of coordSysTransformer!
+	//this.canvasPseudoWidget.set_bijectionSvgToGeom           (targetBoard              ); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
+	//this.canvasPseudoWidget.set_partialFunctionGeomToBusiness(targetBusinessBoard      ); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
+};
+
+Widget.prototype.reproportionateDashAttributes = function (q)
+{
 	if (this.high && this.high.svgAttributes) { // @TODO modularize out
 		if (this.high.svgAttributes['stroke-dasharray']) {
 			this.addSvgAttribute(
@@ -89,20 +108,6 @@ Widget.prototype.changeBoardsFor = function (targetCanvasPseudoWidget) // @TODO:
 			);
 		}
 	}
-
-	// Subscribe for new boards:
-	targetBoard        .set(this.low , this.high        );
-	if (this.businessObject) targetBusinessBoard.set(this.high, this.businessObject);
-
-	// Unsubscribe from own (collaborator) boards:
-	this.factory().bijectionSvgToGeom   .delete(this.low ); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
-	if (this.factory().partialFunctionGeomToBusiness) this.factory().partialFunctionGeomToBusiness.get(this.high) ? this.factory().partialFunctionGeomToBusiness.delete(this.high) : (() => {throw 'Inconsistence-2';})(); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
-
-	// Update collaborators:
-	this.canvasPseudoWidget = targetCanvasPseudoWidget;
-	//this.canvasPseudoWidget.set_coordSysTransformer          (targetCoordSysTransformer); // @TODO: use widgetfactory as a component/collaborator instead of coordSysTransformer!
-	//this.canvasPseudoWidget.set_bijectionSvgToGeom           (targetBoard              ); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
-	//this.canvasPseudoWidget.set_partialFunctionGeomToBusiness(targetBusinessBoard      ); // @TODO: debated whether the bijection collaborators should be contained at all. A widget should see only vertically.
 };
 
 
