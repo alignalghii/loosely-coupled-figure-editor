@@ -236,6 +236,8 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - A loader ID-jét ne csak a pipa gombbal, hanem enter megynomsával is aktiválni lehessen
  - A nem létező rekor ID üzenetet ne a státussorba, hanem a validációs helyre írja.
 
+ - Skálázásokra és tükrözésekre még nincsbekötve az inntelligens címelhelyezőkéje a szobáknak. Forgatásoknál nagyon okosan ugrál a cím oda, ahol épp a legjobban néz ki, de tükrözésénél, skálázásoknál nem.
+
 
 # Fontend
  - Freeze lenne jó, mint ahogy az excelben táblasorokat lehet rögzíteni. itt persze a statussort lenne jó így. (Úgy tűnik, az overflow scroll erre elfogadható eszköz lesz)
