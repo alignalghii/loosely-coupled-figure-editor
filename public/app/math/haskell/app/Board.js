@@ -40,7 +40,7 @@ function boardMapFilter_opt(maybeMapper, board)
 const boardMapColliding_opt = (mapper, board) =>
 	boardMapFilter_opt(
 		currentValue => maybeMap(
-			_ => currentValue,
+			_ => mapper(currentValue),
 			currentValue.isCollidable()
 		),
 		board
