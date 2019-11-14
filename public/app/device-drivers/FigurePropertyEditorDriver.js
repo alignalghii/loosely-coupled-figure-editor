@@ -1,7 +1,8 @@
 function FigurePropertyEditorDriver(aDocument, numberHelperAndValidator, quoteHelper) // @TODO `numberHelperAndValidator` collaborator should come rather to the controller
 {
 	this.document = aDocument;
-	this.figurePropertyEditor = aDocument.getElementById('figurepropertyeditor');
+	this.figurePropertyEditor      = aDocument.getElementById('figurepropertyeditor');
+	this.figurePropertyEditorPanel = aDocument.getElementById('figure-property-editor-panel');
 
 	// @TODO: Handle boundary ( > 26)
 	this.vertexNames =      'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -136,10 +137,17 @@ FigurePropertyEditorDriver.prototype.open = function (name, n, perimeter, area, 
 		furnitureList.appendChild(li);
 		li.innerHTML = furnitureName;
 	}
+
+	this.display();
 };
 
 FigurePropertyEditorDriver.prototype.close = function ()
 {
 	const content = this.document.getElementById('figurepropertyeditor_content');
 	if (content) content.remove();
+
+	this.undisplay();
 };
+
+FigurePropertyEditorDriver.prototype.  display = function () {this.figurePropertyEditorPanel.style.display = 'initial';};
+FigurePropertyEditorDriver.prototype.undisplay = function () {this.figurePropertyEditorPanel.style.display = 'none'   ;};
