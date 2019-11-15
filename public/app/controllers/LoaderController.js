@@ -36,7 +36,8 @@ LoaderController.prototype.load = function (i)
 				this.tabSelectorDriver.relabelTab('DB', `#${i}`); // @TODO DRY
 				this.statusBarDriver.report(`${i}. rekord betöltése`);
 
-				const cellarFig__ = (new Figure(poly1_concave_ccw,                        {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
+				//nst cellarFig__ = (new Figure(poly1_concave_ccw, {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
+				const cellarFig__ = (new Figure(poly1_concave_ccw, {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '62 5 42 18 55 15'})).translation([  4  , -7  ]);
 				const cellarBsn__ = new Room (
 					'Pince', cellarFig__, [], [],
 					[], ['nothing']
@@ -57,7 +58,8 @@ LoaderController.prototype.load = function (i)
 
 				////////
 
-				const transitFig__ = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  -3  , 3  ]);
+				//nst transitFig__ = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  -3  , 3  ]);
+				const transitFig__ = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '62 5 42 18 55 15'})).translation([  -3  , 3  ]);
 				const transitBsn__ = new Room (
 					'Közlekedő', transitFig__, [], [],
 					[], ['nothing']
@@ -68,7 +70,8 @@ LoaderController.prototype.load = function (i)
 
 				////
 
-				const diningFig__ = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
+				//nst diningFig__ = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
+				const diningFig__ = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([  -3  , -7  ]);
 				diningFig__.doTranslation([0, -2.5]);
 				diningFig__.doScale(2);
 				const diningBsn__ = new Room (
@@ -133,7 +136,8 @@ LoaderController.prototype.load = function (i)
 
 				////////
 
-				const transitFig__2 = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  -3  , 3  ]);
+				//nst transitFig__2 = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  -3  , 3  ]);
+				const transitFig__2 = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '62 5 42 18 55 15'})).translation([  -3  , 3  ]);
 				transitFig__2.doTranslation([0, 2]);
 				transitFig__2.doScale(1.7);
 				const transitBsn__2 = new Room (
@@ -146,7 +150,8 @@ LoaderController.prototype.load = function (i)
 
 				////
 
-				const diningFig__2 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
+				//nst diningFig__2 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
+				const diningFig__2 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([  -3  , -7  ]);
 				const diningBsn__2 = new Room (
 					'Ebédlő', diningFig__2, [], [],
 					[], ['nothing']
@@ -164,7 +169,8 @@ LoaderController.prototype.load = function (i)
 
 				/////
 
-				const bathFig__2 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -15  ]);
+				//nst bathFig__2 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -15  ]);
+				const bathFig__2 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([  -3  , -15  ]);
 				const bathBsn__2 = new Room (
 					'Fürdő', bathFig__2, [], [],
 					[], ['nothing']
@@ -188,7 +194,8 @@ LoaderController.prototype.load = function (i)
 				this.tabSelectorDriver.relabelTab('DB', `#${i}`); // @TODO DRY
 				this.statusBarDriver.report(`${i}. rekord betöltése`);
 
-				const cellarFig__3 = (new Figure(poly1_concave_ccw,                        {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
+				//nst cellarFig__3 = (new Figure(poly1_concave_ccw, {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
+				const cellarFig__3 = (new Figure(poly1_concave_ccw, {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '62 5 42 18 55 15'})).translation([  4  , -7  ]);
 				const cellarBsn__3 = new Room (
 					'Pince', cellarFig__3, [], [],
 					[], ['nothing']
@@ -220,7 +227,8 @@ LoaderController.prototype.load = function (i)
 
 				////
 
-				const diningFig__3 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
+				//nst diningFig__3 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
+				const diningFig__3 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([  -3  , -7  ]);
 				diningFig__3.doTranslation([0, 6]);
 				const diningBsn__3 = new Room (
 					'Ebédlő', diningFig__3, [], [],
@@ -239,7 +247,8 @@ LoaderController.prototype.load = function (i)
 
 				/////
 
-				const bathFig__3 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -15  ]);
+				//nst bathFig__3 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([-3, -15]);
+				const bathFig__3 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([-3, -15]);
 				bathFig__3.doTranslation([0, 2.8]);
 				bathFig__3.doScale(2);
 				const bathBsn__3 = new Room (

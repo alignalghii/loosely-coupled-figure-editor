@@ -59,19 +59,20 @@ App.prototype.populate = function ()
 	cellarWdg.translate([0, 10]);
 	cellarWdg.updateDownwardAll();**/
 
-	const fotelWdg        = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Fotel'        , '/img-vendor/fotel.png'                , [3, 3], [-9  ,  5  ]);
-	const bed1Wdg         = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Ágy'          , '/img-vendor/agy.png'                  , [3, 3], [-9  ,  1.5  ]);
-	const carpet11Wdg     = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Szőnyeg'      , '/img-vendor/szonyeg1_normal_small.png', [3, 3], [-9  , -3  ]);
-	const carpet12Wdg     = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Szőnyeg'      , '/img-vendor/szonyeg1_dark.png'        , [3, 3], [-5  , -3  ]);
-	const tableChairs1Wdg = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Asztal+székek', '/img-vendor/asztalszekek.png'         , [4, 3], [-9, 9]);
-	const green1Wdg       = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Zöldség'      , '/img-vendor/zoldseg.png'              , [2, 2], [-5, 9]);
+	const fotelWdg        = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Fotel'        , '/img-vendor/fotel.png'                , [3, 3], [-3,  5  ]);
+	const bed1Wdg         = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Ágy'          , '/img-vendor/agy.png'                  , [3, 3], [-3,  1.5]);
+	const carpet11Wdg     = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Szőnyeg'      , '/img-vendor/szonyeg1_normal_small.png', [3, 3], [-3, -3  ]);
+	const carpet12Wdg     = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Szőnyeg'      , '/img-vendor/szonyeg1_dark.png'        , [3, 3], [-3, -3  ]);
+	const tableChairs1Wdg = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Asztal+székek', '/img-vendor/asztalszekek.png'         , [4, 3], [-3,  9  ]);
+	const green1Wdg       = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Zöldség'      , '/img-vendor/zoldseg.png'              , [2, 2], [ 1,  9  ]);
 
 	//const bed1Wdg   = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Ágy', '/img-vendor/agy.png', [3, 3], [4, -8]);
 	//const bed1Wdg   = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Ágy', '/img-vendor/agy.png', [3, 3], [4, -8]);
 
 	////
 
-	const cellarFig = (new Figure(poly1_concave_ccw,                        {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
+	//nst cellarFig = (new Figure(poly1_concave_ccw,                        {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
+	const cellarFig = (new Figure(poly1_concave_ccw,                        {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '62 5 42 18 55 15'})).translation([  4  , -7  ]);
 	const cellarBsn = new Room (
 		'Pince', cellarFig, [], [],
 		[], ['nothing']
@@ -92,7 +93,8 @@ App.prototype.populate = function ()
 
 	////////
 
-	const transitFig = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  -3  , 3  ]);
+	//nst transitFig = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  -3  , 3  ]);
+	const transitFig = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '62 5 42 18 55 15'})).translation([  -3  , 3  ]);
 	const transitBsn = new Room (
 		'Közlekedő', transitFig, [], [],
 		[], ['nothing']
@@ -103,7 +105,8 @@ App.prototype.populate = function ()
 
 	////
 
-	const diningFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
+	//nst diningFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
+	const diningFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([  -3  , -7  ]);
 	const diningBsn = new Room (
 		'Ebédlő', diningFig, [], [],
 		[], ['nothing']
@@ -121,7 +124,8 @@ App.prototype.populate = function ()
 
 	/////
 
-	const bathFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -15  ]);
+	//nst bathFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -15  ]);
+	const bathFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([  -3  , -15  ]);
 	const bathBsn = new Room (
 		'Fürdő', bathFig, [], [],
 		[], ['nothing']
