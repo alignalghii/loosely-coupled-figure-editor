@@ -31,3 +31,5 @@ LoaderDriver.prototype.message = function (str) {this.idvalid.innerHTML = str;};
 		console.log(child);
 	}
 };*/
+
+LoaderDriver.prototype.focus = function (loaderName) {this[loaderName].focus();};

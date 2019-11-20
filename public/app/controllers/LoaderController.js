@@ -6,6 +6,8 @@ function LoaderController (canvasPseudoWidgets, numberHelperAndValidator, loader
 	this.tabSelectorDriver        = tabSelectorDriver;
 	this.statusBarDriver          = statusBarDriver;
 	this.audioODriver             = audioODriver;
+
+	this.focusID();
 }
 
 LoaderController.prototype = Object.create(Controller.prototype);
@@ -318,4 +320,7 @@ LoaderController.prototype.cancel     = function ()
 	this.rewrite('');
 	this.clearError();
 	this.statusBarDriver.report('ID visszavonása');
+	this.focusID();
 };
+
+LoaderController.prototype.focusID = function () {this.loaderDriver.focus('loaderIdField');};
