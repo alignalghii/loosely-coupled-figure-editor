@@ -16,6 +16,8 @@ function State(toBeDomainStamp)
 
 	this.areaInvariance = true;
 	this.isRelative     = true;
+
+	this.isAdmin        = false;
 }
 
 State.prototype.setDomainStampFrom = function (domainObject) /** MenuUI */

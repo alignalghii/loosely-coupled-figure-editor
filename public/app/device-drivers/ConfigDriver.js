@@ -3,6 +3,7 @@ function ConfigDriver(aDocument)
 	this.config         = aDocument.getElementById('config');
 	this.areaInvariance = aDocument.getElementById('config_areainvariance');
 	this.isRelative     = aDocument.getElementById('config_relativeinsteadofabsolute');
+	this.isAdmin        = aDocument.getElementById('config_admin');
 }
 
 ConfigDriver.prototype.pipeToSM = function (dispatch)
@@ -21,3 +22,5 @@ ConfigDriver.prototype.pipeToSM = function (dispatch)
 
 ConfigDriver.prototype.checkOrUncheckAreaInvarianceCheckbox = function (flag) {this.areaInvariance.checked = flag;};
 ConfigDriver.prototype.checkOrUncheckIsRelativeCheckbox     = function (flag) {this.isRelative    .checked = flag;};
+
+ConfigDriver.prototype.checkOrUncheckIsAdmin                = function (flag) {this.isAdmin       .checked = flag;};

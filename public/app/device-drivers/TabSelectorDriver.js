@@ -16,7 +16,7 @@ function TabSelectorDriver(aDocument, domHelper)
 
 	this.names       = ['schema', 'furniture', 'slit', 'DB'];
 
-	this.switchTo('schema');
+	this.switchTo('DB');
 }
 
 TabSelectorDriver.prototype.initTabElemsList = function ()
@@ -61,3 +61,17 @@ TabSelectorDriver.prototype.hide = function (name)
 };
 
 TabSelectorDriver.prototype.relabelTab = function (name, label) {this['tab_' + name].innerHTML = label;};
+
+TabSelectorDriver.prototype.enDisAbleTab = function (name, flag)
+{
+	const tab = this['tab_' + name];
+	tab.disabled = !flag;
+	if (flag) {
+		tab.style['background-color'] = '';
+		tab.style['color'           ] = '';
+		tab.style['font-weight'     ] = '';
+	} else {
+		tab.style['background-color'] = 'darkgray';
+		tab.style['color'           ] = 'darkgray';
+	}
+};
