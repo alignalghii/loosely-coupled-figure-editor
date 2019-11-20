@@ -237,6 +237,7 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - A nem létező rekor ID üzenetet ne a státussorba, hanem a validációs helyre írja.
 
  - Skálázásokra és tükrözésekre még nincsbekötve az inntelligens címelhelyezőkéje a szobáknak. Forgatásoknál nagyon okosan ugrál a cím oda, ahol épp a legjobban néz ki, de tükrözésénél, skálázásoknál nem.
+ - A loader (az ID-re betöltő loader) nem törli ki az előző felállás összes bútorát. Otthagyja a napplai szobanövényét és a fürdőszaba kádját.
 
 
 # Fontend

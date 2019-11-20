@@ -13,10 +13,20 @@ ImageWidget.prototype.constructor = ImageWidget;
 
 ImageWidget.prototype.factory = function () {return this.canvasPseudoWidget.imageWidgetFactory;};
 
+ImageWidget.prototype.whileExistEscortWidgets = function (doWith) // @TODO factor out to Set/Array module
+{
+	while (this.businessObject.escorts.length > 0) {
+		console.log(this.businessObject.escorts);
+		const widget = this.factory().detectTypeAndComposeFromBusiness(this.businessObject.escorts.pop());
+		console.log(widget);
+		doWith(widget);
+	}
+};
+
 ImageWidget.prototype.delete = function ()
 {
 	this.businessObject.liberate();
-	this.withEscortWidgets(widget => widget.delete());
+	this.whileExistEscortWidgets(widget => widget.delete());
 	this.rawDelete(); // low+high detached from bijection + low removed from SVG-DOM. Also high+business detached from partialFunction (OOP-smelly solution! @TODO debate)
 };
 
@@ -124,8 +134,8 @@ ImageWidget.prototype.unshowFocus = function ()
 
 ImageWidget.prototype.translate = function (displacement)
 {
-	this.high.doTranslation(displacement);
-	this.updateDownward();
+	this.businessObject.doTranslation(displacement);
+	this.updateDownwardAll();
 };
 
 ImageWidget.prototype.directlyOrViaTitle = function ()

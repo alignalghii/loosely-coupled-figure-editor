@@ -17,7 +17,8 @@ BusinessObject.prototype.liberate = function ()
 {
 	return maybeMap(
 		host => {
-			if (!deleteItem(this, host.escorts)) throw 'Inconsistence';
+			// if (!deleteItem(this, host.escorts)) throw 'Inconsistence'; // @TODO why this raises an unjustufued error and why it is not necessary
+			!deleteItem(this, host.escorts);
 			this.maybeHost = ['nothing'];
 			return host;
 		},
@@ -63,3 +64,5 @@ BusinessObject.prototype.assertContainmentValidity = function ()
 	};
 	if (anyFlagFalse(flags)) throw `Containment-validity inconsistence! Error subkinds: ${messageFalseFlags(flags)}.`;
 };
+
+BusinessObject.prototype.doTranslation = function (displacement) {throw 'Abstract method';};

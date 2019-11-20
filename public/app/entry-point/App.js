@@ -61,8 +61,8 @@ App.prototype.populate = function ()
 
 	const fotelWdg        = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Fotel'        , '/img-vendor/fotel.png'                , [3, 3], [-3,  5  ]);
 	const bed1Wdg         = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Ágy'          , '/img-vendor/agy.png'                  , [3, 3], [-3,  1.5]);
-	const carpet11Wdg     = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Szőnyeg'      , '/img-vendor/szonyeg1_normal_small.png', [3, 3], [-3, -3  ]);
-	const carpet12Wdg     = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Szőnyeg'      , '/img-vendor/szonyeg1_dark.png'        , [3, 3], [-3, -3  ]);
+	const carpet11Wdg     = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Szőnyeg 1'    , '/img-vendor/szonyeg1_normal_small.png', [3, 3], [-3, -3  ]);
+	const carpet12Wdg     = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Szőnyeg 2'    , '/img-vendor/szonyeg1_dark.png'        , [3, 3], [ 1, -3  ]);
 	const tableChairs1Wdg = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Asztal+székek', '/img-vendor/asztalszekek.png'         , [4, 3], [-3,  9  ]);
 	const green1Wdg       = this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Zöldség'      , '/img-vendor/zoldseg.png'              , [2, 2], [ 1,  9  ]);
 

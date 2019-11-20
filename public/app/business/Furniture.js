@@ -27,6 +27,9 @@ Furniture.prototype.copy = function ()
 Furniture.prototype.doTranslation = function (displacement)
 {
 	this.figure.doTranslation(displacement);
+	this.escorts.map(
+		escort => escort.doTranslation(displacement)
+	);
 };
 
 Furniture.prototype.doRotation = function (phi)

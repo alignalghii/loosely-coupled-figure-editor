@@ -26,10 +26,23 @@ FigureWidget.prototype.withDependentWidgets_unsafe = function (doWith, doWith_un
 	doWith_unsafe(this.titleWidget());
 };
 
+FigureWidget.prototype.whileExistDependentWidgets_unsafe = function (doWith, doWith_unsafe) // @TODO redefines abstract method of parent class
+{
+	this.whileExistEscortWidgets(doWith);
+	doWith_unsafe(this.titleWidget());
+};
+FigureWidget.prototype.whileExistEscortWidgets = function (doWith) // @TODO factor out to Set/Array module
+{
+	while (this.businessObject.escorts.length > 0) {
+		const widget = this.factory().detectTypeAndComposeFromBusiness(this.businessObject.escorts.pop());
+		doWith(widget);
+	}
+};
+
 FigureWidget.prototype.delete = function ()
 {
 	this.businessObject.liberate();
-	this.withDependentWidgets_unsafe(
+	this.whileExistDependentWidgets_unsafe(
 		escortWidget => escortWidget.delete(),
 		titleWidget  => titleWidget.delete_unsafe()
 	); // @TODO a címwidget törlése érdekes kérdés, hisz a címwidget saját delete metódusa hibaüzenetet kell adjon egy elkézelés szerint
