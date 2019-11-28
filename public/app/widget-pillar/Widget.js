@@ -53,16 +53,18 @@ Widget.prototype.jumpTo = function (targetCanvasPseudoWidget) {throw 'Abstract m
 
 Widget.prototype.isHostless     = function () {throw 'This is an abstract method';}; // abstract method
 
-Widget.prototype.allowable = function (infinitezimalDisplacement)
+
+Widget.prototype.allowable_ = function (infinitezimalDisplacement)
 {
 	return maybe(
-		['just', infinitezimalDisplacement],
-		mbVectorTransformationForAllowance => { // @TODO: !!!!
-			return mbVectorTransformationForAllowance.call(this.high, this.factory().bijectionSvgToGeom)(infinitezimalDisplacement); // @TODO
+		[just(infinitezimalDisplacement), []],
+		mbVectorTransformationForAllowance_ => { // @TODO: !!!!
+			return mbVectorTransformationForAllowance_.call(this.high, this.factory().bijectionSvgToGeom)(infinitezimalDisplacement); // @TODO
 		},
-		this.high.isCollidable()
+		this.high.isCollidable_()
 	);
 };
+
 
 Widget.prototype.changeBoardsFor = function (targetCanvasPseudoWidget) // @TODO: use widgetfactory as a component/collaborator instead of coordSysTransformer!
 {
@@ -118,6 +120,8 @@ Widget.prototype.beDescribedOnOpeningForm = function () {throw 'This is an abstr
 Widget.prototype.updateAndReport = (currentWEPos, nearestFigure, template1, template2) => 'Csak szoba falazata szerkeszthető csúcsokra-élekre lebontva!';
 
 
-Widget.prototype.collisionActionSpecialty = function (controller, canvasPseudoWidget, currentWEPos) {console.log('General collision');};
-Widget.prototype.looseWall                = function () {};
+Widget.prototype.collisionActionSpecialty = function (controller, canvasPseudoWidget, minFallTargetFigure, currentWEPos) {console.log('General collision');};
+Widget.prototype.loseWall_                = function () {};
+Widget.prototype.regainWall_              = function () {};
+Widget.prototype.loseWall                 = function () {};
 Widget.prototype.regainWall               = function () {};

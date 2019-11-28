@@ -1,13 +1,17 @@
-const mbVectorTransformationForAllowance = (fallingFigure, board) => infinitezimalDisplacement => mbVectorTransformer(fallingFigure, board, infinitezimalDisplacement);
+const mbVectorTransformationForAllowance_ = (fallingFigure, board) => infinitezimalDisplacement => mbVectorTransformer_(fallingFigure, board, infinitezimalDisplacement);
 
-function mbVectorTransformer(fallingFigure, board, infinitezimalDisplacement)
+function mbVectorTransformer_(fallingFigure, board, infinitezimalDisplacement)
 {
 	const [maybePIScale, minFallTargetFigures] = fallFigureOnBoard_allMins(fallingFigure, board, infinitezimalDisplacement);
-	return maybeMap(
-		pIScaleGovernedVectorTransformation(fallingFigure, board, infinitezimalDisplacement, minFallTargetFigures),
-		maybePIScale
-	);
+	return [
+		maybeMap(
+			pIScaleGovernedVectorTransformation(fallingFigure, board, infinitezimalDisplacement, minFallTargetFigures),
+			maybePIScale
+		),
+		minFallTargetFigures
+	];
 }
+
 
 const pIScaleGovernedVectorTransformation = (fallingFigure, board, infinitezimalDisplacement, minFallTargetFigures) => pIScale =>
 {

@@ -41,8 +41,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 			const targetCanvas = canvasOfEitherTarget(eitherTarget);
 			const canvasPseudoWidget = this.canvasPseudoWidgetForCanvas(targetCanvas);
 			const maybeAllowJump = this.jumpWidgetToIfNeeded(canvasPseudoWidget); // @TODO: rossz helyen van, szervesen részt kell vennie az ütközésvizgálatban
-			const mbAllowable = this.state.prevWidget.allowable(infinitezimalDisplacement);
-			//const mbAllowable = this.state.prevWidget.high.mbVectorTransfomationForAllowance(targetBoard)(infinitezimalDisplacement);
+			const [mbAllowable, minFallTargetFigures] = this.state.prevWidget.allowable_(infinitezimalDisplacement);
 			const allowable = fromMaybe_exec(
 				() => { // @TODO: an axception should be thrown rather
 					this.statusBarDriver.report('<span class="error">Tiltott zóna!</span>');
@@ -66,7 +65,8 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 			// @TODO refactory, huge code smell
 			if (!ccVecEq(allowable, infinitezimalDisplacement)) {
 				console.log('allowable = infinitezimalDisplacement');
-				this.state.prevWidget.collisionActionSpecialty(this, canvasPseudoWidget, currentWEPos);
+				if (minFallTargetFigures.length == 1)
+					this.state.prevWidget.collisionActionSpecialty(this, canvasPseudoWidget, minFallTargetFigures[0], currentWEPos);
 			}
 
 			this.state.dragHasAlreadyBegun = true;

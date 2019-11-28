@@ -27,6 +27,5 @@ Brick.prototype.doTranslation = function (displacement)
 
 // @TODO consider Title.prototype.readaptTo = function (figure) {this.position = figure.titlePosition();};
 
-//Brick.prototype.isCollidable = function () {return ['just', function (board) {return mbVectorTransformationForAllowance({}, board);}];}; // @TODO should be raised to business object level?
-//Brick.prototype.isCollidable = function () {return ['just', function (board) {console.log(board);}];}; // @TODO should be raised to business object level?
-Brick.prototype.isCollidable = function () {return ['just', function (board) {return mbVectorTransformationForAllowance(this, board);}];}; // @TODO should be raised to business object level?
+
+// `Brick.prototype.isCollidable_` inherited from `Figure` // @TODO reconsider

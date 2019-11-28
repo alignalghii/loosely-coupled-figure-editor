@@ -1,3 +1,3 @@
 function MathematicalObject () {}
 
-MathematicalObject.prototype.isCollidable = () => ['nothing'];
+MathematicalObject.prototype.isCollidable_ = () => ['nothing'];

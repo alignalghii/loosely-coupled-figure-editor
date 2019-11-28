@@ -2,7 +2,7 @@ function boardReduceColliding(reducer, initialValue, board)
 {
 	var accumulator = initialValue;
 	for (let currentValue of board.range()) {
-		if (isJust(currentValue.isCollidable())) // @TODO OOP polymorphism @TODO raise level in module hierarchy
+		if (isJust(currentValue.isCollidable_())) // @TODO OOP polymorphism @TODO raise level in module hierarchy
 			accumulator = reducer(accumulator, currentValue);
 	}
 	return accumulator;
@@ -41,7 +41,7 @@ const boardMapColliding_opt = (mapper, board) =>
 	boardMapFilter_opt(
 		currentValue => maybeMap(
 			_ => mapper(currentValue),
-			currentValue.isCollidable()
+			currentValue.isCollidable_()
 		),
 		board
 	);
@@ -56,7 +56,7 @@ function boardAll(predicate, board)  // @TODO this function os used nowhere @TOD
 
 const boardAllColliding = (predicate, board) =>
 	boardAll(
-		currentValue => isNothing(currentValue.isCollidable()) || predicate(currentValue), // @TODO isJust(currentValue.isCollidable()) -> predicate(currentValue) 
+		currentValue => isNothing(currentValue.isCollidable_()) || predicate(currentValue), // @TODO isJust(currentValue.isCollidable_()) -> predicate(currentValue) 
 		board
 	);
 
@@ -70,6 +70,6 @@ function boardAny(predicate, board)
 
 const boardAnyColliding = (predicate, board) =>
 	boardAny(
-		currentValue => isJust(currentValue.isCollidable()) && predicate(currentValue),
+		currentValue => isJust(currentValue.isCollidable_()) && predicate(currentValue),
 		board
 	);

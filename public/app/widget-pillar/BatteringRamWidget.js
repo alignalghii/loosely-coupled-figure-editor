@@ -45,23 +45,10 @@ BatteringRamWidget.prototype.jumpTo = function (targetCanvasPseudoWidget)
 };
 
 
-BatteringRamWidget.prototype.collisionActionSpecialty = function (controller, canvasPseudoWidget, currentWEPos)
+BatteringRamWidget.prototype.collisionActionSpecialty = function (controller, canvasPseudoWidget, minFallTargetFigure, currentWEPos)
 {
-	console.log('Special collision: battering ram in action');
-	this.delete();
-
-	const board = canvasPseudoWidget.board();
-	maybeMap(
-		figure => {
-			const nearestWidget = canvasPseudoWidget.arbitrary.detectTypeAndComposeFromHigh(figure);
-			nearestWidget.looseWall(this.high.size, this.high.position);
-		},
-		maybeNearestFigureHence(board, currentWEPos)
-	);
-
-	controller.state.forgetDrag(); // `this.state.prevWidget = null` is not enough, the drag (mouseMove) state must be quitted in the state machine. An alternative solution: `this.state.prevWidget = eitherTarget = null`.
-	controller.statusBarDriver.report(`Falbontás: faltörő kos munkában!`);
-	controller.audioDriver.breakWall();
+	const minFallTargetWidget = canvasPseudoWidget.arbitrary.detectTypeAndComposeFromHigh(minFallTargetFigure);
+	minFallTargetWidget.loseWall_(controller, this);
 };
 
 

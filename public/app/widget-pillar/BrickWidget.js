@@ -45,23 +45,10 @@ BrickWidget.prototype.jumpTo = function (targetCanvasPseudoWidget)
 };
 
 
-BrickWidget.prototype.collisionActionSpecialty = function (controller, canvasPseudoWidget, currentWEPos)
+BrickWidget.prototype.collisionActionSpecialty = function (controller, canvasPseudoWidget, minFallTargetFigure, currentWEPos)
 {
-	console.log('Special collision: bricks and mortar in action');
-	this.delete(); // `this.state.prevWidget = null` is not enough, the drag (mouseMove) state must be quitted in the state machine.  An alternative solution: `this.state.prevWidget = eitherTarget = null`.
-
-	const board = canvasPseudoWidget.board();
-	maybeMap(
-		figure => {
-			const nearestWidget = canvasPseudoWidget.arbitrary.detectTypeAndComposeFromHigh(figure);
-			nearestWidget.regainWall(this.high.size, this.high.position);
-		},
-		maybeNearestFigureHence(board, currentWEPos)
-	);
-
-	controller.state.forgetDrag();
-	controller.statusBarDriver.report(`Falvisszaépítés: Téglák és habarcs munkában!`);
-	controller.audioDriver.rebuildWall();
+	const minFallTargetWidget = canvasPseudoWidget.arbitrary.detectTypeAndComposeFromHigh(minFallTargetFigure);
+	minFallTargetWidget.regainWall_(controller, this);
 };
 
 

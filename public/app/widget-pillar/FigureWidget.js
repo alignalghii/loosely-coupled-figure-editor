@@ -115,7 +115,28 @@ FigureWidget.prototype.updateSvgAttribute = function (svgAttributeName)
 };
 
 
-FigureWidget.prototype.looseWall  = function (size, position)
+FigureWidget.prototype.loseWall_ = function (controller, actorWidget)
+{
+	console.log('Special collision: battering ram in action');
+	this.loseWall(actorWidget.high.size, actorWidget.high.position);
+	actorWidget.delete();
+
+	controller.state.forgetDrag(); // `this.state.prevWidget = null` is not enough, the drag (mouseMove) state must be quitted in the state machine. An alternative solution: `this.state.prevWidget = eitherTarget = null`.
+	controller.statusBarDriver.report(`Falbontás: faltörő kos munkában!`);
+	controller.audioDriver.breakWall();
+};
+FigureWidget.prototype.regainWall_ = function (controller, actorWidget)
+{
+	console.log('Special collision: bricks and mortar in action');
+	this.regainWall(actorWidget.high.size, actorWidget.high.position);
+	actorWidget.delete(); // `this.state.prevWidget = null` is not enough, the drag (mouseMove) state must be quitted in the state machine.  An alternative solution: `this.state.prevWidget = eitherTarget = null`.
+
+	controller.state.forgetDrag();
+	controller.statusBarDriver.report(`Falvisszaépítés: Téglák és habarcs munkában!`);
+	controller.audioDriver.rebuildWall();
+};
+
+FigureWidget.prototype.loseWall  = function (size, position)
 {
 	delete this.high.svgAttributes['stroke'];
 	this.updateSvgAttribute('stroke');
