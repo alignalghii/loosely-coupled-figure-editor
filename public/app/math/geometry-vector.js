@@ -12,6 +12,9 @@ function addVec(a, b)
 	return [a1+b1, a2+b2];
 }
 
+const doAddVec = (pos, [dx, dy]) => (pos[0] += dx, pos[1] += dy);
+const doSubVec = (pos, [dx, dy]) => (pos[0] -= dx, pos[1] -= dy);
+
 
 function scalarProduct ([a, b], [c, d]) {return a*c + b*d;}
 function detCols([a11, a21], [a12, a22]) {return a11*a22-a21*a12;}

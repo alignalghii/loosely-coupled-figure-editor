@@ -53,12 +53,11 @@ Figure.prototype.translation = function ([dx, dy])
 	// @TODO make `testTranslation` stricter, it should fail if this implementation returned a naked literal object instead of a Figure instance with methods
 }
 
-Figure.prototype.doTranslation = function ([dx, dy])
+Figure.prototype.doTranslation = function (displacement)
 {
-	function displace(point) {point[0] = point[0]+dx; point[1] = point[1] + dy;}
+	function displace(vertex) {doAddVec(vertex, displacement);}
 	this.vertices.forEach(displace);
-	this.grasp[0] += dx;
-	this.grasp[1] += dy;
+	displace(this.grasp);
 }
 
 Figure.prototype.collidesTowards = function (figure) {return collidesTowards(this.vertices, figure.vertices);};
@@ -68,10 +67,7 @@ Figure.prototype.getSvgProperties = function () {return this.svgProperties;}
 
 Figure.prototype.doCentering = function ()
 {
-	for (let i = 0; i < this.vertices.length; i++) {
-		this.vertices[i][0] -= this.grasp[0];
-		this.vertices[i][1] -= this.grasp[1];
-	}
+	this.vertices.map(vertex => doSubVec(vertex, this.grasp));
 	this.grasp[0] = 0; this.grasp[1] = 0;
 };
 

@@ -8,13 +8,20 @@ holy-grail.css
 
 vendor/buy/*
 !vendor/buy/README.md
+
 sonar.ogg
 bark.ogg
 drip.ogg
 dialog-error.ogg
+glass.ogg
+
 public/assets-proper/logo*.*
 public/assets-proper/info*.png
 public/assets-proper/info*.svg
+
+public/assets-proper/battering-ram*.png
+public/assets-proper/brick*.png
+
 #favicon?
 
 doc/look-of-the-old-planner.png

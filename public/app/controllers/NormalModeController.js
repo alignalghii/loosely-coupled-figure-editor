@@ -51,10 +51,24 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 				},
 				mbAllowable
 			);
-			console.log('IIIIIII', maybeAllowJump);
-			if (!vecEq(maybeAllowJump, ['just', false]))
+			console.log('maybeAllowJump: ', maybeAllowJump);
+			if (!vecEq(maybeAllowJump, ['just', false])) {
 				this.translatePrevWidgetAndRememberItsNewPosition(allowable);
-			if (vectorLength(infinitezimalDisplacement) > 0 && vectorLength(allowable) == 0) this.statusBarDriver.report(`Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ${JSON.stringify(infinitezimalDisplacement)} irányban.`);
+			}
+
+			console.log('Allowable: ', allowable);
+			if (vectorLength(infinitezimalDisplacement) > 0 && vectorLength(allowable) == 0) {
+				console.log('allowable = 0');
+				this.statusBarDriver.report(`Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ${JSON.stringify(infinitezimalDisplacement)} irányban.`);
+			}
+
+
+			// @TODO refactory, huge code smell
+			if (!ccVecEq(allowable, infinitezimalDisplacement)) {
+				console.log('allowable = infinitezimalDisplacement');
+				this.state.prevWidget.collisionActionSpecialty(this, canvasPseudoWidget, currentWEPos);
+			}
+
 			this.state.dragHasAlreadyBegun = true;
 		}
 	}
@@ -62,7 +76,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 
 NormalModeController.prototype.translatePrevWidgetAndRememberItsNewPosition = function (allowableDisplacement)
 {
-	console.log('dddd', this.state.prevWidget);
+	console.log('normalModeController.state.prevWidget: ', this.state.prevWidget);
 	this.state.prevWidget.translate(allowableDisplacement);
 	this.addToRememberedPosition(allowableDisplacement);
 };

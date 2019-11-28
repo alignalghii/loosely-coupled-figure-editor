@@ -105,13 +105,25 @@ FigureWidget.prototype.updateDasharray = function () {['stroke-dasharray', 'stro
 
 FigureWidget.prototype.updateSvgAttribute = function (svgAttributeName)
 {
-	if (this.high && this.high.svgAttributes) {
+	if (this.high && this.high.svgAttributes) { // @TODO this.high should always exist, this condition is superfluous
 		if (svgAttributeName in this.high.svgAttributes) {
 			this.low.setAttribute(svgAttributeName, this.high.svgAttributes[svgAttributeName]);
 		} else {
 			this.low.removeAttribute(svgAttributeName);
 		}
 	}
+};
+
+
+FigureWidget.prototype.looseWall  = function (size, position)
+{
+	delete this.high.svgAttributes['stroke'];
+	this.updateSvgAttribute('stroke');
+};
+FigureWidget.prototype.regainWall = function (size, position)
+{
+	this.high.svgAttributes['stroke'] = 'gray';
+	this.updateSvgAttribute('stroke');
 };
 
 

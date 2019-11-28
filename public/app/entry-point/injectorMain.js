@@ -52,7 +52,7 @@ onload = function (event)
 	const configIODriver             = new ConfigDriver(document);
 	const tabSelectorIODriver        = new TabSelectorDriver(document, domHelper);
 	const loaderIODriver             = new LoaderDriver(document);
-	const audioODriver               = new AudioDriver('sonar.ogg', 'bark.ogg', 'dialog-error.ogg');
+	const audioODriver               = new AudioDriver('sonar.ogg', 'bark.ogg', 'dialog-error.ogg', 'glass.ogg', 'drip.ogg');
 	const zoomDriver                 = new ZoomDriver(document);
 
 	var widgetCollision = new WidgetCollision(audioODriver);

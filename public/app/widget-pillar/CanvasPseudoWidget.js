@@ -15,11 +15,14 @@
 }*/
 
 
-function CanvasPseudoWidget (figureWidgetFactory, titleWidgetFactory, imageWidgetFactory)
+function CanvasPseudoWidget (figureWidgetFactory, titleWidgetFactory, imageWidgetFactory, batteringRamWidgetFactory, brickWidgetFactory)
 {
 	this.figureWidgetFactory = figureWidgetFactory;
 	this.titleWidgetFactory  = titleWidgetFactory;
 	this.imageWidgetFactory  = imageWidgetFactory;
+
+	this.batteringRamWidgetFactory = batteringRamWidgetFactory;
+	this.brickWidgetFactory        = brickWidgetFactory;
 
 	this.arbitrary = figureWidgetFactory; // @TODO rude arbitrariness
 }

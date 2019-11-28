@@ -30,7 +30,11 @@ WidgetFactory.prototype.detectTypeAndComposeFromLow = function (low)
 	switch (low.tagName) { // @TODO pure polymorphism, or reflection metaprogramming
 		case 'polygon': if (!businessObject) throw 'Inconsistence'; return new FigureWidget(this.canvasPseudoWidget,   low, high, businessObject);
 		case 'text'   : if ( businessObject) throw 'Inconsistence'; return new TitleWidget (this.canvasPseudoWidget,   low, high                );
-		case 'image'  : if (!businessObject) throw 'Inconsistence'; return new ImageWidget (this.canvasPseudoWidget,   low, high, businessObject);
+		case 'image'  :
+			if (/battering-ram/.test(low.getAttribute('href'))) return new BatteringRamWidget(this.canvasPseudoWidget, low, high);
+			if (/brick/        .test(low.getAttribute('href'))) return new BrickWidget       (this.canvasPseudoWidget, low, high);
+			if (!businessObject) throw 'Inconsistence';
+			return new ImageWidget (this.canvasPseudoWidget,   low, high, businessObject);
 		default       : throw 'Invalid low-level SVG-subelement, unable to convert upwards to higher-level objects';
 	}
 };

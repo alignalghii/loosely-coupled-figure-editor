@@ -49,7 +49,7 @@ Widget.prototype.removeSvgAttribute = function (name)
 
 // @TODO: use widgetfactory as a component/collaborator instead of coordSysTransformer!
 
-Widget.prototype.jumpTo = function (canvasPseudoWidget) {throw 'Abstract method';};
+Widget.prototype.jumpTo = function (targetCanvasPseudoWidget) {throw 'Abstract method';};
 
 Widget.prototype.isHostless     = function () {throw 'This is an abstract method';}; // abstract method
 
@@ -116,3 +116,8 @@ Widget.prototype.directlyOrViaTitle = function () {throw 'This is an abstract me
 Widget.prototype.beDescribedOnOpeningForm = function () {throw 'This is an abstract method';};
 
 Widget.prototype.updateAndReport = (currentWEPos, nearestFigure, template1, template2) => 'Csak szoba falazata szerkeszthető csúcsokra-élekre lebontva!';
+
+
+Widget.prototype.collisionActionSpecialty = function (controller, canvasPseudoWidget, currentWEPos) {console.log('General collision');};
+Widget.prototype.looseWall                = function () {};
+Widget.prototype.regainWall               = function () {};

@@ -238,6 +238,12 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
 
  - Skálázásokra és tükrözésekre még nincsbekötve az inntelligens címelhelyezőkéje a szobáknak. Forgatásoknál nagyon okosan ugrál a cím oda, ahol épp a legjobban néz ki, de tükrözésénél, skálázásoknál nem.
  - A loader (az ID-re betöltő loader) nem törli ki az előző felállás összes bútorát. Otthagyja a napplai szobanövényét és a fürdőszaba kádját.
+ - A `Widget.prototype.allowable` és a `MathematicalObject.prototype.isCollidable` újraátgondolása. Egy olyan általánosítás lenne jó, ahol az ütközési akciót lehetne OO módon modulrisan megadn:
+    - címnél semmi akició
+    - bútornál, szobánál ,,normál'' ütközés: megáll (feszül), csúszik vagy teleportál,
+    - faltörőkos és téglafal esetében eltűnik (a vonszolható alakja), és hatását a fal folytonosságára kifejti
+    - ajtó és ablak esetében is, de ott ajtót, ablakot illeszt be, a vonszolható alak itt is eltűnik.
+    - Ha a munkavásznom van már odavoszolt szoba, akkor a faltörő kost a nyilászűáró menűvászonról nem tudom a nélkül átugrasztani a munkavszinra, hogy ne ugatna föl a kutya (hiába nincs ütközés). Ennek ellenére a dolognak mégis köze van elvi ütközéshez: az y koordinátának elvileg ütközöképes pozícióban kell lennie (és csak az x koordinátán múlhat, hogy ténylegesen nincs ütközés).
 
 
 # Fontend
