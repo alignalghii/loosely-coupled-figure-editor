@@ -142,8 +142,8 @@ App.prototype.populate = function ()
 	tap0Wdg.businessObject.maybeHost = ['just', bathBsn];
 	tube0Wdg.businessObject.maybeHost = ['just', bathBsn];
 
-	const batteringRamWidget1 = this.widgetEventPillar.canvasPseudoWidgets[2].batteringRamWidgetFactory.create(8, [0,  8]);
-	const brickWidget1        = this.widgetEventPillar.canvasPseudoWidgets[2].brickWidgetFactory       .create(8, [0, -8]);
+	const batteringRamWidget1 = this.widgetEventPillar.canvasPseudoWidgets[2].batteringRamWidgetFactory.create(4, [0,  4]);
+	const brickWidget1        = this.widgetEventPillar.canvasPseudoWidgets[2].brickWidgetFactory       .create(4, [0, -4]);
 
 
 	//this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Vécé', 'https://upload.wikimedia.org/wikipedia/commons/0/04/Toilet-pictogram.png', [10, 10], [4, -8]);

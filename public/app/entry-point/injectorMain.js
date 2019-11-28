@@ -17,7 +17,7 @@ onload = function (event)
 
 	const coordSysTransformer_menuCanvas   = new CoordSysTransformer([ 62, 187],  5, [true, false]), // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
 	      coordSysTransformer_menuCanvas_2 = new CoordSysTransformer([ 62, 187], 10, [true, false]), // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
-	      coordSysTransformer_menuCanvas_3 = new CoordSysTransformer([ 62, 187], 10, [true, false]); // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
+	      coordSysTransformer_menuCanvas_3 = new CoordSysTransformer([ 62, 187], 20, [true, false]); // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
 	      coordSysTransformer_menuCanvas_4 = new CoordSysTransformer([ 62, 187],  5, [true, false]); // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
 	const coordSysTransformer_workCanvas   = new CoordSysTransformer([587, 346], 20, [true, false]); // eredeti adat: new CoordSysTransformer([300, 200], 10, [true, false])
 
