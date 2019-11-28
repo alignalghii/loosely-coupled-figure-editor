@@ -11,7 +11,7 @@ BrickWidgetFactory.prototype.create = function (size, position) // @TODO DRY: sa
 {
 	const info = this.calculate([size, size], position);console.log(info);
 	const brick = new Brick(size, position), // @TODO
-	      imageElem = this.svgLowLevel.createImage('/assets-proper/brick.png', info.sizes_low, info.point_lowcorner);
+	      imageElem = this.svgLowLevel.createImage('/assets-proper/brick-boxed.png', info.sizes_low, info.point_lowcorner);
 	const brickWidget = new BrickWidget(this.canvasPseudoWidget, imageElem, brick);
 	this.bijectionSvgToGeom.set(imageElem, brick);
 	console.log('brickWidget object: ', brickWidget);
