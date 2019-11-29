@@ -11,7 +11,7 @@ BatteringRamWidgetFactory.prototype.create = function (size, position) // @TODO 
 {
 	const info = this.calculate([size, size], position);console.log(info);
 	const batteringRam = new BatteringRam(size, position), // @TODO
-	      imageElem = this.svgLowLevel.createImage('/assets-proper/battering-ram-boxed.png', info.sizes_low, info.point_lowcorner);
+	      imageElem = this.svgLowLevel.createImage('/assets-proper/battering-ram.png', info.sizes_low, info.point_lowcorner);
 	const batteringRamWidget = new BatteringRamWidget(this.canvasPseudoWidget, imageElem, batteringRam);
 	this.bijectionSvgToGeom.set(imageElem, batteringRam);
 	console.log(batteringRamWidget);
