@@ -3,6 +3,7 @@ onload = function (event)
 	//var SUPERGLOBAL = {}; // @TODO !!!!
 
 	document.addEventListener('selectstart', e => {if (e.target.tagName == 'svg' || e.target.parentNode && e.target.parentNode.tagName == 'svg' || e.target.parentNode.parentNode && e.target.parentNode.parentNode.tagName == 'svg') {e.preventDefault(); console.log(`Selection prevented!`);}}); // @TODO: do it in a nicer way
+	document.addEventListener('dragstart', e => {if (e.target.tagName == 'image') e.preventDefault(); return false;}); // @LINK https://stackoverflow.com/questions/6259622/dragging-selecting-inside-svg-in-firefox @LINK https://www.redips.net/firefox/disable-image-dragging/
 
 
 	const svgLowLevel_menuCanvas   = new SvgLowLevel(document, 'svgRoot_menuCanvas'  ), // [250, 374] // [125, 374]
