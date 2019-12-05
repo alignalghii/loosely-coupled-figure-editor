@@ -2,13 +2,13 @@
 // Thus here, the Room constructor is simply setting possible properties from arguments
 
 
-function Room(name, figure, openings, generalSizes, escorts, maybeHost) // @TODO consider: escorts = [], maybeHost = ['nothing']
+function Room(name, figure, escorts, maybeHost, circularSlits = [], openings, generalSizes) // @TODO consider: escorts = [], maybeHost = ['nothing']
 {
 	BusinessObject.call(this, figure, escorts, maybeHost);
 
-	console.log('New room created!');
 	this.title        = new Title(this, name, figure.titlePosition());
 	//this.figure       = figure; // @TODO lehet hogy jó lenne helyreállítani, és az absztrakt BusinessObject osztályból meg kivenni. Nem feltétlen minden üzletiolbektum kötődik alakzathoz. Pl. van cím is, igaz, az nem köthető üzleti objektumhoz. Lehet, hogy a Furniture sem fog alakzathoz kötődni (ez még bizonytalan, hisz a bútornak azért bennfoglaló téglalapdoboza azért biztos van, aszerint ütközik is. Mindenesetre a Furniture képhez is kötődik.
+	this.slitsRepresentationCircular = new SlitsRepresentationCircular(figure.perimeter(), circularSlits);
 	this.openings     = openings;
 	this.generalSizes = generalSizes;
 }
@@ -22,10 +22,11 @@ Room.prototype.copy = function ()
 	return new Room(
 		this.title.name, // @TODO by value or by reference? Now, no sharing (copy is not fully shallow)! Consider!
 		this.figure.translation([0,0]),
-		Eq.obListCopy(this.openings),
-		Eq.flatObjectCopy(this.generalSizes),
 		this.escorts.map(escort => escort.copy()),
-		this.maybeHost
+		this.maybeHost,
+		this.slitsRepresentationCircular.circularSlits.map(circularSlit => circularSlit.copy()),
+		Eq.obListCopy(this.openings),
+		Eq.flatObjectCopy(this.generalSizes)
 	);
 };
 

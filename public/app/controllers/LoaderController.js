@@ -39,10 +39,12 @@ LoaderController.prototype.load = function (i)
 				this.statusBarDriver.report(`${i}. rekord betöltése`);
 
 				//nst cellarFig__ = (new Figure(poly1_concave_ccw, {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
-				const cellarFig__ = (new Figure(poly1_concave_ccw, {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '62 5 42 18 55 15'})).translation([  4  , -7  ]);
+				//nst cellarFig__ = (new Figure(poly1_concave_ccw, {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '62 5 42 18 55 15'})).translation([  4  , -7  ]);
+				const cellarFig__ = (new Figure(poly1_concave_ccw, {fill: 'url(#padlo1_dark)'})).translation([  4  , -7  ]);
 				const cellarBsn__ = new Room (
-					'Pince', cellarFig__, [], [],
-					[], ['nothing']
+					'Pince', cellarFig__,
+					[], ['nothing'],
+					[new CircularSlit(10, 0.5), new CircularSlit(17, 0.8), new CircularSlit(24.6, 0.7), new CircularSlit(38.5, 1)]
 				);
 				cellarBsn__.title.doTranslation([-1, 4.5]);
 				const cellarWdg__ = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(cellarBsn__);
@@ -55,16 +57,22 @@ LoaderController.prototype.load = function (i)
 				lamp0Wdg__.businessObject.maybeHost = ['just', cellarBsn__]; // @TODO
 
 				cellarWdg__.translate([0, 15]);
+
+				cellarWdg__.updateSlitStructure();
+				cellarWdg__.updateDasharray();
+
 				cellarWdg__.updateDownwardAll();
 
 
 				////////
 
 				//nst transitFig__ = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  -3  , 3  ]);
-				const transitFig__ = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '62 5 42 18 55 15'})).translation([  -3  , 3  ]);
+				//nst transitFig__ = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '62 5 42 18 55 15'})).translation([  -3  , 3  ]);
+				const transitFig__ = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)'})).translation([  -3  , 3  ]);
 				const transitBsn__ = new Room (
-					'Közlekedő', transitFig__, [], [],
-					[], ['nothing']
+					'Közlekedő', transitFig__,
+					[], ['nothing'],
+					[new CircularSlit(5.5, 0.5), new CircularSlit(12, 0.4), new CircularSlit(14.5, 0.5), new CircularSlit(17, 0.4)]
 				);
 				transitBsn__.title.doTranslation([0, -1.5]);
 				const transitWdg__ = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(transitBsn__);
@@ -73,12 +81,14 @@ LoaderController.prototype.load = function (i)
 				////
 
 				//nst diningFig__ = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
-				const diningFig__ = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([  -3  , -7  ]);
+				//nst diningFig__ = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([  -3  , -7  ]);
+				const diningFig__ = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)'})).translation([  -3  , -7  ]);
 				diningFig__.doTranslation([0, -2.5]);
 				diningFig__.doScale(2);
 				const diningBsn__ = new Room (
-					'Ebédlő', diningFig__, [], [],
-					[], ['nothing']
+					'Ebédlő', diningFig__,
+					[], ['nothing'],
+					[new CircularSlit(2, 0.7), new CircularSlit(7, 1.4), new CircularSlit(21, 2)]
 				);
 				diningBsn__.title.doTranslation([-2, -6.3]);
 				const diningWdg__ = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(diningBsn__);
@@ -139,12 +149,14 @@ LoaderController.prototype.load = function (i)
 				////////
 
 				//nst transitFig__2 = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  -3  , 3  ]);
-				const transitFig__2 = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '62 5 42 18 55 15'})).translation([  -3  , 3  ]);
+				//nst transitFig__2 = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)', 'stroke-dasharray': '62 5 42 18 55 15'})).translation([  -3  , 3  ]);
+				const transitFig__2 = (new Figure([[0, 0], [5, 0], [5, 1], [1, 1], [1, 5], [0, 5]], {fill: 'url(#padlo1_light)'})).translation([  -3  , 3  ]);
 				transitFig__2.doTranslation([0, 2]);
 				transitFig__2.doScale(1.7);
 				const transitBsn__2 = new Room (
-					'Közlekedő', transitFig__2, [], [],
-					[], ['nothing']
+					'Közlekedő', transitFig__2,
+					[], ['nothing'],
+					[new CircularSlit(9.35, 0.85), new CircularSlit(20.4, 0.68), new CircularSlit(24.65, 0.85), new CircularSlit(28.9, 0.68)]
 				);
 				transitBsn__2.title.doTranslation([0, -1.5]);
 				const transitWdg__2 = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(transitBsn__2);
@@ -153,10 +165,12 @@ LoaderController.prototype.load = function (i)
 				////
 
 				//nst diningFig__2 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
-				const diningFig__2 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([  -3  , -7  ]);
+				//nst diningFig__2 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([  -3  , -7  ]);
+				const diningFig__2 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)'})).translation([  -3  , -7  ]);
 				const diningBsn__2 = new Room (
-					'Ebédlő', diningFig__2, [], [],
-					[], ['nothing']
+					'Ebédlő', diningFig__2,
+					[], ['nothing'],
+					[new CircularSlit(1, 0.35), new CircularSlit(3.5, 0.7), new CircularSlit(10.5, 1)]
 				);
 				diningBsn__2.title.doTranslation([0, -2.3]);
 				const diningWdg__2 = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(diningBsn__2);
@@ -172,10 +186,12 @@ LoaderController.prototype.load = function (i)
 				/////
 
 				//nst bathFig__2 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -15  ]);
-				const bathFig__2 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([  -3  , -15  ]);
+				//nst bathFig__2 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([  -3  , -15  ]);
+				const bathFig__2 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)'})).translation([  -3  , -15  ]);
 				const bathBsn__2 = new Room (
-					'Fürdő', bathFig__2, [], [],
-					[], ['nothing']
+					'Fürdő', bathFig__2,
+					[], ['nothing'],
+					[new CircularSlit(1, 0.35), new CircularSlit(3.5, 0.7), new CircularSlit(10.5, 1)]
 				);
 				bathBsn__2.title.doTranslation([0, -4.1]);
 				const bathWdg__2 = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(bathBsn__2);
@@ -197,10 +213,12 @@ LoaderController.prototype.load = function (i)
 				this.statusBarDriver.report(`${i}. rekord betöltése`);
 
 				//nst cellarFig__3 = (new Figure(poly1_concave_ccw, {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
-				const cellarFig__3 = (new Figure(poly1_concave_ccw, {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '62 5 42 18 55 15'})).translation([  4  , -7  ]);
+				//const cellarFig__3 = (new Figure(poly1_concave_ccw, {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '62 5 42 18 55 15'})).translation([  4  , -7  ]);
+				const cellarFig__3 = (new Figure(poly1_concave_ccw, {fill: 'url(#padlo1_dark)'})).translation([  4  , -7  ]);
 				const cellarBsn__3 = new Room (
-					'Pince', cellarFig__3, [], [],
-					[], ['nothing']
+					'Pince', cellarFig__3,
+					[], ['nothing'],
+					[new CircularSlit(10, 0.5), new CircularSlit(17, 0.8), new CircularSlit(24.6, 0.7), new CircularSlit(38.5, 1)]
 				);
 				cellarBsn__3.title.doTranslation([-1, 4.5]);
 				const cellarWdg__3 = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(cellarBsn__3);
@@ -213,6 +231,10 @@ LoaderController.prototype.load = function (i)
 				lamp0Wdg__3.businessObject.maybeHost = ['just', cellarBsn__3]; // @TODO
 
 				cellarWdg__3.translate([0, 15]);
+
+				cellarWdg__3.updateSlitStructure();
+				cellarWdg__3.updateDasharray();
+
 				cellarWdg__3.updateDownwardAll();
 
 
@@ -230,11 +252,13 @@ LoaderController.prototype.load = function (i)
 				////
 
 				//nst diningFig__3 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
-				const diningFig__3 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([  -3  , -7  ]);
+				//const diningFig__3 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([  -3  , -7  ]);
+				const diningFig__3 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)'})).translation([  -3  , -7  ]);
 				diningFig__3.doTranslation([0, 6]);
 				const diningBsn__3 = new Room (
-					'Ebédlő', diningFig__3, [], [],
-					[], ['nothing']
+					'Ebédlő', diningFig__3,
+					[], ['nothing'],
+					[new CircularSlit(1, 0.35), new CircularSlit(3.5, 0.7), new CircularSlit(10.5, 1)]
 				);
 				diningBsn__3.title.doTranslation([0, -2.3]);
 				const diningWdg__3 = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(diningBsn__3);
@@ -250,12 +274,14 @@ LoaderController.prototype.load = function (i)
 				/////
 
 				//nst bathFig__3 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([-3, -15]);
-				const bathFig__3 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([-3, -15]);
+				//const bathFig__3 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([-3, -15]);
+				const bathFig__3 = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#csempe1_dark_small)'})).translation([-3, -15]);
 				bathFig__3.doTranslation([0, 2.8]);
 				bathFig__3.doScale(2);
 				const bathBsn__3 = new Room (
-					'Fürdő', bathFig__3, [], [],
-					[], ['nothing']
+					'Fürdő', bathFig__3,
+					[], ['nothing'],
+					[new CircularSlit(2, 0.7), new CircularSlit(7, 1.4), new CircularSlit(21, 2)]
 				);
 				bathBsn__3.title.doTranslation([-2, -6.8]);
 				const bathWdg__3 = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(bathBsn__3);

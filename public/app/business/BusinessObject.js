@@ -6,6 +6,8 @@ function BusinessObject(figure, escorts, maybeHost) // @TODO consider: escorts =
 	this.maybeHost = maybeHost; // @TODO: Explicit, ,,külső'', önálló fa adatstruktúrát használjunk a business objektumok tartalmazási hierarchiájának nyivántartására: Tree<BusinessObject>
 }
 
+BusinessObject.prototype.copy = function () {throw 'Abstract method';};
+
 
 BusinessObject.prototype.perimeter = function () {return this.figure.perimeter();};
 BusinessObject.prototype.copy      = function () {return new BusinessObject(this.figure.translation([0,0]), this.escorts.map(e => e.copy()), this.maybeHost);}; // @TODO make a `clone` function in `Figure` and resuse it the more occasions as possible // @TODO escorts and maybeHost are copied shallow or deep? Here, escorts deep and host shallow

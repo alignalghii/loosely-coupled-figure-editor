@@ -31,7 +31,7 @@ RoomFactory.prototype.createGeneral = function (roomType, figure) // @TODO shoul
 	const escorts   = [],
 	      maybeHost = ['nothing'];
 
-	return new Room(roomType, figure, openings, generalSizes, escorts, maybeHost);
+	return new Room(roomType, figure, escorts, maybeHost, [], openings, generalSizes);
 	//console.log(r);
 	//return r;
 };

@@ -5,6 +5,8 @@ function CircularSlit(center, radius)
 	if (!this.isValid()) throw 'Error';
 }
 
+CircularSlit.prototype.copy = function () {return new CircularSlit(this.center, this.radius);};
+
 CircularSlit.prototype.distance = function (cs) {return Math.abs(cs.center - this.center) - (cs.radius + this.radius);};
 CircularSlit.prototype.isValid = function () {return this.radius > 0;};
 CircularSlit.prototype.isValidWith = function (perimeter) {return 0 <= this.center && this.center <= perimeter;};
