@@ -48,3 +48,6 @@ Room.prototype.doRotation = function (phi)
 Room.prototype.goUpdatedByOwnFigure = function () {this.title.readaptTo(this.figure);};
 
 Room.prototype.queryName = function () {return this.title.name;};
+
+
+Room.prototype.doScale = function (q) {if (this.slitsRepresentationCircular) this.slitsRepresentationCircular.doScale(q);};

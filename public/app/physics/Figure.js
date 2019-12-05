@@ -105,27 +105,7 @@ Figure.prototype.doScale = function (q)
 {
 	var scale = makeScale(q, this.grasp);
 	this.vertices = this.vertices.map(scale);
-	if ('stroke-dasharray'  in this.svgAttributes) this.svgAttributes['stroke-dasharray' ] = attributeListMap(n => n * q, this.svgAttributes['stroke-dasharray' ]);
-	if ('stroke-dashoffset' in this.svgAttributes) this.svgAttributes['stroke-dashoffset'] = String(Number(this.svgAttributes['stroke-dashoffset']) * q);
 };
-Figure.prototype.reproportionateDashAttributes = function (q) // @TODO unused now, and will be even theoretiyally superfluous when room wall openings will be handled properly high-level
-{
-	if (this.svgAttributes) { // @TODO modularize out
-		if (this.svgAttributes['stroke-dasharray']) {
-			this.svgAttributes['stroke-dasharray'] = attributeListMap(
-				n => n * q,
-				this.svgAttributes['stroke-dasharray']
-			);
-		}
-		if (this.svgAttributes['stroke-dashoffset']) {
-			this.svgAttributes['stroke-dashoffset'] = calcWithAttr(
-				n => n * q,
-				this.high.svgAttributes['stroke-dashoffset']
-			);
-		}
-	}
-};
-
 
 
 Figure.prototype.doScaleX = function (q)

@@ -53,4 +53,3 @@ CanvasPseudoWidget.prototype.hostlessWidgets = function () {return this.widgets(
 
 // @TODO make them obsolete:
 CanvasPseudoWidget.prototype.figureWidgets   = function () {return this.widgets().filter(widget => widget.constructor.name == 'FigureWidget');}; // @TODO
-CanvasPseudoWidget.prototype.reproportionateDashAttributes = function (q) {this.figureWidgets().map(widget => widget.reproportionateDashAttributes(q));};

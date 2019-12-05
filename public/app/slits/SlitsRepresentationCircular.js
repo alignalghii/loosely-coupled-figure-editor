@@ -66,6 +66,8 @@ SlitsRepresentationCircular.prototype.dasharrayHigh = function ()
 };
 SlitsRepresentationCircular.prototype.dasharrayWith = function (q) {return this.dasharrayHigh().map(r => r * q);};
 
+SlitsRepresentationCircular.prototype.doScale = function (q) {this.perimeter *= q; this.circularSlits.map(cs => cs.doScale(q));};
+
 
 SlitsRepresentationCircular.prototype.errorMsg = () => 'Invalid slits arrangement!';
 

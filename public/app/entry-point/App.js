@@ -106,7 +106,8 @@ App.prototype.populate = function ()
 	////
 
 	//nst diningFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '10 20 57 10 15 10 1000'})).translation([  -3  , -7  ]);
-	const diningFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([  -3  , -7  ]);
+	//const diningFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)', 'stroke-dasharray': '5 10 28 5 8 5 500'})).translation([  -3  , -7  ]);
+	const diningFig = (new Figure([[0, 0], [5, 0], [5, 3], [0, 3]], {fill: 'url(#keramia_light)'})).translation([  -3  , -7  ]);
 	const diningBsn = new Room (
 		'Ebédlő', diningFig, [], [],
 		[], ['nothing']
@@ -114,6 +115,9 @@ App.prototype.populate = function ()
 	diningBsn.title.doTranslation([0, -2.3]);
 	const diningWdg = this.widgetEventPillar.canvasPseudoWidgets[0].figureWidgetFactory.createFromBusiness0(diningBsn);
 	diningWdg.scale(2);
+	diningBsn.slitsRepresentationCircular = new SlitsRepresentationCircular(diningFig.perimeter(), [new CircularSlit(2, 1), new CircularSlit(7, 2), new CircularSlit(13, 1.5)]);
+	diningWdg.updateSlitStructure();
+	diningWdg.updateDasharray();
 
 	const tableChairs0Wdg = this.widgetEventPillar.canvasPseudoWidgets[0].imageWidgetFactory.create('Asztal+székek', '/img-vendor/asztalszekek.png', [4, 3], [-1, -5.1]);
 	const green0Wdg = this.widgetEventPillar.canvasPseudoWidgets[0].imageWidgetFactory.create('Zöldség', '/img-vendor/zoldseg.png', [2, 2], [3, -5.2]);

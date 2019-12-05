@@ -66,6 +66,20 @@ FigureWidget.prototype.updateDownwardAll = function ()
 	this.updateDownward();
 };
 
+FigureWidget.prototype.dasharray = function ()
+{
+	if (this.businessObject.slitsRepresentationCircular) {
+		return this.businessObject.slitsRepresentationCircular.dasharrayWith(this.q());
+	} else {
+		return [];//throw 'Room without slit structure representation';
+	}
+};
+
+FigureWidget.prototype.updateSlitStructure = function ()
+{
+	this.high.svgAttributes['stroke-dasharray'] = this.dasharray().join(' ');
+}
+
 FigureWidget.prototype.isHostless = function () {return isNothing(this.businessObject.maybeHost);};
 
 FigureWidget.prototype.jumpTo = function (targetCanvasPseudoWidget) // targetCanvas, targetBoard, targetBusinessBoard, targetCoordSysTransfomer
@@ -87,8 +101,10 @@ FigureWidget.prototype.jumpTo = function (targetCanvasPseudoWidget) // targetCan
 		}
 	)*/
 
-
 	this.changeBoardsFor(targetCanvasPseudoWidget);
+
+	this.updateSlitStructure();
+	this.updateDasharray();
 };
 
 
@@ -204,8 +220,10 @@ FigureWidget.prototype.reflectVertically   = function () {this.high.doReflectVer
 FigureWidget.prototype.scale  = function (q)
 {
 	this.high.doScale (q);
-	this.updateDownward();
+	this.businessObject.doScale(q);
+	this.updateSlitStructure();
 	this.updateDasharray();
+	this.updateDownward();
 };
 FigureWidget.prototype.scaleX = function (q) {this.high.doScaleX(q); this.updateDownward();};
 FigureWidget.prototype.scaleY = function (q) {this.high.doScaleY(q); this.updateDownward();};

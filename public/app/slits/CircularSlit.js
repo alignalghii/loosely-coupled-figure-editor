@@ -21,3 +21,5 @@ CircularSlit.prototype.normalizeWith = function (perimeter)
 };
 
 CircularSlit.prototype.interval = function () {return new Interval(this.center - this.radius, this.center + this.radius);};
+
+CircularSlit.prototype.doScale = function (q) {this.center *= q; this.radius *= q;};

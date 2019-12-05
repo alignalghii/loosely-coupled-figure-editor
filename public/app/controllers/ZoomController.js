@@ -10,6 +10,6 @@ ZoomController.prototype.modifyScalingFactorAndUpdate = function (scaleFun)
 	const coordSysTransformer = this.workCanvasPseudoWidget.coordSysTransformer();
 	const q = scaleFun(coordSysTransformer.scalingFactor_hl) / coordSysTransformer.scalingFactor_hl;
 	coordSysTransformer.scalingFactor_hl = scaleFun(coordSysTransformer.scalingFactor_hl);
-	this.workCanvasPseudoWidget.reproportionateDashAttributes(q);
+	this.workCanvasPseudoWidget.figureWidgets().map(figureWidget => {figureWidget.updateSlitStructure(); figureWidget.updateDasharray();}); // @TODO rather redefine `FigureWidget.prototype.updateDownward`: augment it with `updateDasharray`
 	this.workCanvasPseudoWidget.update();
 };
