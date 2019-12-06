@@ -26,8 +26,7 @@ BatteringRamWidget.prototype.translate = function (displacement)
 
 BatteringRamWidget.prototype.updateDownward = function ()
 {
-	const svgPosition = this.factory().coordSysTransformer.highToLow(this.high.position);
-	console.log(svgPosition);
+	this.high.size = segmentLength([this.high.vertices[0], this.high.vertices[1]]);
 	const info = this.factory().calculate([this.high.size, this.high.size], this.high.position);
 	this.low.setAttribute('x', info.point_lowcorner[0]);
 	this.low.setAttribute('y', info.point_lowcorner[1]);
@@ -51,6 +50,12 @@ BatteringRamWidget.prototype.collisionActionSpecialty = function (controller, ca
 	minFallTargetWidget.loseWall_(controller, this);
 };
 
+
+BatteringRamWidget.prototype.scale = function (q)
+{
+	this.high.doScale (q);
+	this.updateDownward();
+};
 
 
 
