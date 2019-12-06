@@ -52,3 +52,5 @@ Room.prototype.queryName = function () {return this.title.name;};
 
 
 Room.prototype.doScale = function (q) {if (this.slitsRepresentationCircular) this.slitsRepresentationCircular.doScale(q);};
+
+Room.prototype.addCircularSlit = function (cs) {this.slitsRepresentationCircular.addCircularSlit(cs);};

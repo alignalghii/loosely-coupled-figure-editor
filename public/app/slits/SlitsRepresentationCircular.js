@@ -71,4 +71,6 @@ SlitsRepresentationCircular.prototype.doScale = function (q) {this.perimeter *= 
 
 SlitsRepresentationCircular.prototype.errorMsg = () => 'Invalid slits arrangement!';
 
+SlitsRepresentationCircular.prototype.addCircularSlit = function (cs) {this.circularSlits.push(cs); this.sort();};
+
 SlitsRepresentationCircular.prototype.next = function (i) {return (Number(i) + 1) % this.circularSlits.length;};

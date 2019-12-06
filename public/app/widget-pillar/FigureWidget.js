@@ -131,15 +131,28 @@ FigureWidget.prototype.updateSvgAttribute = function (svgAttributeName)
 };
 
 
-FigureWidget.prototype.loseWall_ = function (controller, actorWidget)
+FigureWidget.prototype.loseWall_ = function (controller, batteringRamWidget)
 {
-	console.log('Special collision: battering ram in action');
-	this.loseWall(actorWidget.high.size, actorWidget.high.position);
-	actorWidget.delete();
+	const maybeTill = this.maybeTill(batteringRamWidget.high.position);
+	return maybe_exec(
+		() => controller.statusBarDriver.report(`Falbontás kudarc: sikertelen ütéspont-detektálás!`),
+		till => {
+			const radius = batteringRamWidget.high.size/2;
+			if (ccLeq(till - radius, 0) || ccGeq(till + radius, this.high.perimeter())) {
+				controller.statusBarDriver.report(`Programhiányosság miatt az ún.vonalhúzásindulópont nem eshetik falrésre!`);
+			} else {
+				this.addCircularSlit(new CircularSlit(till, radius));
 
-	controller.state.forgetDrag(); // `this.state.prevWidget = null` is not enough, the drag (mouseMove) state must be quitted in the state machine. An alternative solution: `this.state.prevWidget = eitherTarget = null`.
-	controller.statusBarDriver.report(`Falbontás: faltörő kos munkában!`);
-	controller.audioDriver.breakWall();
+				batteringRamWidget.delete();
+				controller.canvasPseudoWidgets[2].batteringRamWidgetFactory.create(4, [0,  4]);
+
+				controller.state.forgetDrag(); // `this.state.prevWidget = null` is not enough, the drag (mouseMove) state must be quitted in the state machine. An alternative solution: `this.state.prevWidget = eitherTarget = null`.
+				controller.statusBarDriver.report(`Falbontás: faltörő kos munkában!`);
+				controller.audioDriver.breakWall();
+			}
+		},
+		maybeTill
+	);
 };
 FigureWidget.prototype.regainWall_ = function (controller, actorWidget)
 {
@@ -152,16 +165,51 @@ FigureWidget.prototype.regainWall_ = function (controller, actorWidget)
 	controller.audioDriver.rebuildWall();
 };
 
-FigureWidget.prototype.loseWall  = function (size, position)
+FigureWidget.prototype.maybeTill  = function (actorPosition)
 {
-	delete this.high.svgAttributes['stroke'];
-	this.updateSvgAttribute('stroke');
+	const edges = tour(this.high.vertices);
+	const records = edges.map( // @TODO consider: make the `record` type into a standalone class?
+		edge => {
+			const hit = nearestPointOnSegment(edge, actorPosition);
+			return {
+				edge: edge,
+				hit: hit,
+				distance: distancePointHence(hit, actorPosition)
+			}
+		}
+	);
+	const maybeMinRecord = records.reduce(
+		(maybeMinRecord_, currentRecord) => maybe(
+			just(currentRecord),
+			minRecord_ => currentRecord.distance < minRecord_.distance ? just(currentRecord) : maybeMinRecord_,
+			maybeMinRecord_
+		),
+		nothing
+	);
+	return maybe(
+		nothing,
+		minRecord => {
+			let till = 0;
+			for (let edge of edges) {
+				if (edge == minRecord.edge) {
+					till += segmentLength([edge[0], minRecord.hit]);
+					break;
+				} else {
+					till += segmentLength(edge);
+				}
+			}
+			return just(till);
+		},
+		maybeMinRecord
+	);
 };
 FigureWidget.prototype.regainWall = function (size, position)
 {
 	this.high.svgAttributes['stroke'] = 'gray';
 	this.updateSvgAttribute('stroke');
 };
+
+FigureWidget.prototype.addCircularSlit = function (cs) {this.businessObject.addCircularSlit(cs); this.updateSlitStructure(); this.updateDasharray(); this.updateDownward();};
 
 
 FigureWidget.prototype.showGlittering = function ()
