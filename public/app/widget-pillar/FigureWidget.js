@@ -131,7 +131,7 @@ FigureWidget.prototype.updateSvgAttribute = function (svgAttributeName)
 };
 
 
-FigureWidget.prototype.loseWall_ = function (controller, batteringRamWidget)
+FigureWidget.prototype.loseWall_ = function (controller, batteringRamWidget) // @TODO actorWidget is a better, more general arg name: also door and window will break wall
 {
 	const maybeTill = this.maybeTill(batteringRamWidget.high.position);
 	return maybe_exec(
@@ -154,17 +154,6 @@ FigureWidget.prototype.loseWall_ = function (controller, batteringRamWidget)
 		maybeTill
 	);
 };
-FigureWidget.prototype.regainWall_ = function (controller, actorWidget)
-{
-	console.log('Special collision: bricks and mortar in action');
-	this.regainWall(actorWidget.high.size, actorWidget.high.position);
-	actorWidget.delete(); // `this.state.prevWidget = null` is not enough, the drag (mouseMove) state must be quitted in the state machine.  An alternative solution: `this.state.prevWidget = eitherTarget = null`.
-
-	controller.state.forgetDrag();
-	controller.statusBarDriver.report(`Falvisszaépítés: Téglák és habarcs munkában!`);
-	controller.audioDriver.rebuildWall();
-};
-
 FigureWidget.prototype.maybeTill  = function (actorPosition)
 {
 	const edges = tour(this.high.vertices);
@@ -203,10 +192,49 @@ FigureWidget.prototype.maybeTill  = function (actorPosition)
 		maybeMinRecord
 	);
 };
-FigureWidget.prototype.regainWall = function (size, position)
+
+FigureWidget.prototype.regainWall_ = function (controller, actorWidget)
 {
-	this.high.svgAttributes['stroke'] = 'gray';
-	this.updateSvgAttribute('stroke');
+	console.log('Special collision: bricks and mortar in action');
+	maybe_exec(
+		() => controller.statusBarDriver.report(`Falvisszaépítés hiba: nem detektálható egértelműen, mely falrést kellene visszaépíthető`),
+		({minSlit: nearestSlit}) => {
+			deleteItem(nearestSlit, this.businessObject.slitsRepresentationCircular.circularSlits);
+			this.updateSlitStructure();
+			this.updateDasharray();
+			this.updateDownward();
+
+			actorWidget.delete(); // `this.state.prevWidget = null` is not enough, the drag (mouseMove) state must be quitted in the state machine.  An alternative solution: `this.state.prevWidget = eitherTarget = null`.
+			controller.canvasPseudoWidgets[2].brickWidgetFactory.create(4, [0, -4]);
+
+			controller.state.forgetDrag();
+			controller.statusBarDriver.report(`Falvisszaépítés: Téglák és habarcs munkában!`);
+			controller.audioDriver.rebuildWall();
+		},
+		this.maybeNearestSlitInfo(actorWidget.high.position)
+	);
+};
+FigureWidget.prototype.maybeNearestSlitInfo = function (position)
+{
+	if (this.high.vertices.length < 1) throw 'Polygon without vertices';
+	const startVertex = this.high.vertices[0],
+	      edgeVectors = tour(this.high.vertices).map(edgeVector);
+	const positionInfos = this.businessObject.slitsRepresentationCircular.slitCalculationsAbbrev(startVertex, edgeVectors);
+	return positionInfos.reduce(
+		(maybeMinimumInfo, {slit: currentSlit, position: currentPosition}) => {
+			const currentDist = distance(currentPosition, position);
+			const candidateMinimumInfo = {minDist: currentDist, minSlit: currentSlit};
+			return maybe(
+				just(candidateMinimumInfo),
+				minimumInfo => {
+					const {minDist: minDist, minCenter: minCenter} = minimumInfo;
+					return just(currentDist < minDist ? candidateMinimumInfo : minimumInfo);
+				},
+				maybeMinimumInfo
+			);
+		},
+		nothing
+	);
 };
 
 FigureWidget.prototype.addCircularSlit = function (cs) {this.businessObject.addCircularSlit(cs); this.updateSlitStructure(); this.updateDasharray(); this.updateDownward();};

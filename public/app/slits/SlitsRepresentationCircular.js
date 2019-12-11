@@ -74,3 +74,27 @@ SlitsRepresentationCircular.prototype.errorMsg = () => 'Invalid slits arrangemen
 SlitsRepresentationCircular.prototype.addCircularSlit = function (cs) {this.circularSlits.push(cs); this.sort();};
 
 SlitsRepresentationCircular.prototype.next = function (i) {return (Number(i) + 1) % this.circularSlits.length;};
+
+SlitsRepresentationCircular.prototype.slitCalculations = function (origin, vectors)
+{
+	return this.circularSlits.map(
+		circularSlit => ({
+			slit : circularSlit,
+			maybePosition: maybeReachEndPoint(origin, vectors, circularSlit.center)
+		})
+	);
+};
+
+SlitsRepresentationCircular.prototype.slitCalculationsAbbrev = function (origin, vectors)
+{
+	return mapMaybe(
+		circularSlit => maybeMap(
+			position => ({
+				slit    : circularSlit,
+				position: position
+			}),
+			maybeReachEndPoint(origin, vectors, circularSlit.center)
+		),
+		this.circularSlits
+	);
+};
