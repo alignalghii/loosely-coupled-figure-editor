@@ -131,20 +131,20 @@ FigureWidget.prototype.updateSvgAttribute = function (svgAttributeName)
 };
 
 
-FigureWidget.prototype.loseWall_ = function (controller, batteringRamWidget) // @TODO actorWidget is a better, more general arg name: also door and window will break wall
+FigureWidget.prototype.loseWall_ = function (controller, actorWidget) // @TODO actorWidget is a better, more general arg name: also door and window will break wall
 {
-	const maybeTill = this.maybeTill(batteringRamWidget.high.position);
+	const maybeTill = this.maybeTill(actorWidget.high.position);
 	return maybe_exec(
 		() => controller.statusBarDriver.report(`Falbontás kudarc: sikertelen ütéspont-detektálás!`),
 		till => {
-			const radius = batteringRamWidget.high.size/2;
+			const radius = actorWidget.high.size/2;
 			if (ccLeq(till - radius, 0) || ccGeq(till + radius, this.high.perimeter())) {
 				controller.statusBarDriver.report(`Programhiányosság miatt az ún.vonalhúzásindulópont nem eshetik falrésre!`);
 			} else {
 				this.addCircularSlit(new CircularSlit(till, radius));
 
-				batteringRamWidget.delete();
-				controller.canvasPseudoWidgets[2].batteringRamWidgetFactory.create(4, [0,  4]);
+				actorWidget.delete();
+				actorWidget.restoreOn(controller.canvasPseudoWidgets[2]);
 
 				controller.state.forgetDrag(); // `this.state.prevWidget = null` is not enough, the drag (mouseMove) state must be quitted in the state machine. An alternative solution: `this.state.prevWidget = eitherTarget = null`.
 				controller.statusBarDriver.report(`Falbontás: faltörő kos munkában!`);
@@ -205,7 +205,7 @@ FigureWidget.prototype.regainWall_ = function (controller, actorWidget)
 			this.updateDownward();
 
 			actorWidget.delete(); // `this.state.prevWidget = null` is not enough, the drag (mouseMove) state must be quitted in the state machine.  An alternative solution: `this.state.prevWidget = eitherTarget = null`.
-			controller.canvasPseudoWidgets[2].brickWidgetFactory.create(4, [0, -4]);
+			actorWidget.restoreOn(controller.canvasPseudoWidgets[2]);
 
 			controller.state.forgetDrag();
 			controller.statusBarDriver.report(`Falvisszaépítés: Téglák és habarcs munkában!`);

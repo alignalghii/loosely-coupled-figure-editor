@@ -51,11 +51,16 @@ BatteringRamWidget.prototype.collisionActionSpecialty = function (controller, ca
 };
 
 
+
 BatteringRamWidget.prototype.scale = function (q)
 {
 	this.high.doScale (q);
 	this.updateDownward();
 };
+
+
+
+BatteringRamWidget.prototype.restoreOn = canvasPseudoWidget => canvasPseudoWidget.batteringRamWidgetFactory.create(2.3, [-1.7,  4]); // @TODO note that this is a class method
 
 
 

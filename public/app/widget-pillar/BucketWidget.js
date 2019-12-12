@@ -7,24 +7,24 @@
  */
 
 
-function BrickWidget (canvasPseudoWidget, low, high) {Widget.call(this, canvasPseudoWidget, low, high);}
+function BucketWidget (canvasPseudoWidget, low, high) {Widget.call(this, canvasPseudoWidget, low, high);}
 
-BrickWidget.prototype = Object.create(Widget.prototype);
+BucketWidget.prototype = Object.create(Widget.prototype);
 
-BrickWidget.prototype.constructor = BrickWidget;
+BucketWidget.prototype.constructor = BucketWidget;
 
-BrickWidget.prototype.delete = function () {this.rawDelete();};
+BucketWidget.prototype.delete = function () {this.rawDelete();};
 
 
-BrickWidget.prototype.factory = function () {return this.canvasPseudoWidget.brickWidgetFactory;};
+BucketWidget.prototype.factory = function () {return this.canvasPseudoWidget.bucketWidgetFactory;};
 
-BrickWidget.prototype.translate = function (displacement)
+BucketWidget.prototype.translate = function (displacement)
 {
 	this.high.doTranslation(displacement);
 	this.updateDownward();
 };
 
-BrickWidget.prototype.updateDownward = function ()
+BucketWidget.prototype.updateDownward = function ()
 {
 	this.high.size = segmentLength([this.high.vertices[0], this.high.vertices[1]]);
 	const info = this.factory().calculate([this.high.size, this.high.size], this.high.position);
@@ -34,9 +34,9 @@ BrickWidget.prototype.updateDownward = function ()
 	this.low.setAttribute('height', info.sizes_low [1]);
 };
 
-BrickWidget.prototype.isHostless = function () {return true;};
+BucketWidget.prototype.isHostless = function () {return true;};
 
-BrickWidget.prototype.jumpTo = function (targetCanvasPseudoWidget)
+BucketWidget.prototype.jumpTo = function (targetCanvasPseudoWidget)
 {
 	const targetCanvasElem = targetCanvasPseudoWidget.low();
 	targetCanvasElem.appendChild(this.low);
@@ -44,39 +44,38 @@ BrickWidget.prototype.jumpTo = function (targetCanvasPseudoWidget)
 };
 
 
-BrickWidget.prototype.collisionActionSpecialty = function (controller, canvasPseudoWidget, minFallTargetFigure, currentWEPos)
+BucketWidget.prototype.collisionActionSpecialty = function (controller, canvasPseudoWidget, minFallTargetFigure, currentWEPos)
 {
 	const minFallTargetWidget = canvasPseudoWidget.arbitrary.detectTypeAndComposeFromHigh(minFallTargetFigure);
 	minFallTargetWidget.regainWall_(controller, this);
 };
 
 
-BrickWidget.prototype.scale = function (q)
+BucketWidget.prototype.scale = function (q)
 {
 	this.high.doScale (q);
 	this.updateDownward();
 };
 
 
-
-BrickWidget.prototype.restoreOn = canvasPseudoWidget => canvasPseudoWidget.brickWidgetFactory.create(2.3, [-1.7, -4]); // @TODO note that this is a class method
-
+BucketWidget.prototype.restoreOn = canvasPseudoWidget => canvasPseudoWidget.bucketWidgetFactory.create(2.3, [ 1.7, -4]); // @TODO note that this is a class method
 
 
-BrickWidget.prototype.showGlittering = function ()
+
+BucketWidget.prototype.showGlittering = function ()
 {
 	//this.high.svgAttributes[GLITTERING_ATTR_NAME] = GLITTERING_VALUE; // @TODO fainting should appear on an abstracter level on Figure (e.g. a boolean flag for a special kind of focus)
 	//this.low.setAttribute(GLITTERING_ATTR_NAME, GLITTERING_VALUE);
 };
 
-BrickWidget.prototype.unshowGlittering = function ()
+BucketWidget.prototype.unshowGlittering = function ()
 {
 	//delete this.high.svgAttributes[GLITTERING_ATTR_NAME]; // @TODO fainting should appear on an abstracter level on Figure (e.g. a boolean flag for a special kind of focus)
 	//this.low.removeAttribute(GLITTERING_ATTR_NAME);
 };
 
 
-BrickWidget.prototype.showFocus = function ()
+BucketWidget.prototype.showFocus = function ()
 {
 	var widget = this;
 	function add (attr) // @TODO make reuseable
@@ -93,7 +92,7 @@ BrickWidget.prototype.showFocus = function ()
 	//IMFOCUS[0].map(add);
 };
 
-BrickWidget.prototype.unshowFocus = function ()
+BucketWidget.prototype.unshowFocus = function ()
 {
 	var widget = this;
 	function add (attr) // @TODO make reuseable

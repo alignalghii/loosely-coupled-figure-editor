@@ -8,8 +8,10 @@ CanvasPseudoWidgetFactory.prototype.create = function (svgLowLevel, coordSysTran
 
 	      batteringRamWidgetFactory = new BatteringRamWidgetFactory(null, svgLowLevel, coordSysTransformer, bijectionSvgToGeom), // some analogy to title and titleWidget @TODO
 	      brickWidgetFactory        = new BrickWidgetFactory       (null, svgLowLevel, coordSysTransformer, bijectionSvgToGeom); // some analogy to title and titleWidget @TODO
+	      pickaxeWidgetFactory      = new PickaxeWidgetFactory     (null, svgLowLevel, coordSysTransformer, bijectionSvgToGeom), // some analogy to title and titleWidget @TODO
+	      bucketWidgetFactory       = new BucketWidgetFactory      (null, svgLowLevel, coordSysTransformer, bijectionSvgToGeom); // some analogy to title and titleWidget @TODO
 
-	const canvasPseudoWidget  = new CanvasPseudoWidget(figureWidgetFactory, titleWidgetFactory, imageWidgetFactory, batteringRamWidgetFactory, brickWidgetFactory);
+	const canvasPseudoWidget  = new CanvasPseudoWidget(figureWidgetFactory, titleWidgetFactory, imageWidgetFactory, batteringRamWidgetFactory, brickWidgetFactory, pickaxeWidgetFactory, bucketWidgetFactory);
 
 	figureWidgetFactory.canvasPseudoWidget = canvasPseudoWidget;
 	titleWidgetFactory .canvasPseudoWidget = canvasPseudoWidget;
@@ -17,6 +19,8 @@ CanvasPseudoWidgetFactory.prototype.create = function (svgLowLevel, coordSysTran
 
 	batteringRamWidgetFactory.canvasPseudoWidget = canvasPseudoWidget;
 	brickWidgetFactory       .canvasPseudoWidget = canvasPseudoWidget;
+	pickaxeWidgetFactory     .canvasPseudoWidget = canvasPseudoWidget;
+	bucketWidgetFactory      .canvasPseudoWidget = canvasPseudoWidget;
 
 	return canvasPseudoWidget;
 };

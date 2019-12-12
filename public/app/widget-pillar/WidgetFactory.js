@@ -33,6 +33,8 @@ WidgetFactory.prototype.detectTypeAndComposeFromLow = function (low)
 		case 'image'  :
 			if (/battering-ram/.test(low.getAttribute('href'))) return new BatteringRamWidget(this.canvasPseudoWidget, low, high);
 			if (/brick/        .test(low.getAttribute('href'))) return new BrickWidget       (this.canvasPseudoWidget, low, high);
+			if (/pickaxe/      .test(low.getAttribute('href'))) return new PickaxeWidget     (this.canvasPseudoWidget, low, high);
+			if (/bucket/       .test(low.getAttribute('href'))) return new BucketWidget      (this.canvasPseudoWidget, low, high);
 			if (!businessObject) throw 'Inconsistence';
 			return new ImageWidget (this.canvasPseudoWidget,   low, high, businessObject);
 		default       : throw 'Invalid low-level SVG-subelement, unable to convert upwards to higher-level objects';

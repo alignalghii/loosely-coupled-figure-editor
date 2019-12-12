@@ -15,7 +15,7 @@
 }*/
 
 
-function CanvasPseudoWidget (figureWidgetFactory, titleWidgetFactory, imageWidgetFactory, batteringRamWidgetFactory, brickWidgetFactory)
+function CanvasPseudoWidget (figureWidgetFactory, titleWidgetFactory, imageWidgetFactory, batteringRamWidgetFactory, brickWidgetFactory, pickaxeWidgetFactory, bucketWidgetFactory)
 {
 	this.figureWidgetFactory = figureWidgetFactory;
 	this.titleWidgetFactory  = titleWidgetFactory;
@@ -23,6 +23,8 @@ function CanvasPseudoWidget (figureWidgetFactory, titleWidgetFactory, imageWidge
 
 	this.batteringRamWidgetFactory = batteringRamWidgetFactory;
 	this.brickWidgetFactory        = brickWidgetFactory;
+	this.pickaxeWidgetFactory      = pickaxeWidgetFactory;
+	this.bucketWidgetFactory       = bucketWidgetFactory;
 
 	this.arbitrary = figureWidgetFactory; // @TODO rude arbitrariness
 }

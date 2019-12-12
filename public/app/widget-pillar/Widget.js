@@ -97,4 +97,5 @@ Widget.prototype.updateAndReport = (currentWEPos, nearestFigure, template1, temp
 Widget.prototype.collisionActionSpecialty = function (controller, canvasPseudoWidget, minFallTargetFigure, currentWEPos) {console.log('General collision');};
 Widget.prototype.loseWall_                = function (controller, batteringRamWidget) {};
 Widget.prototype.regainWall_              = function () {};
-Widget.prototype.regainWall               = function () {};
+
+Widget.prototype.restoreOn = canvasPseudoWidget => {throw '@TODO: make immediate inheritance chain (Widget > ActorWidget), and let it be an abstract class there';}; // @TODO: make immediate inheritance chain (Widget > ActorWidget), and let it be an abstract class there
