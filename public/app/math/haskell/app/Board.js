@@ -46,6 +46,15 @@ const boardMapColliding_opt = (mapper, board) =>
 		board
 	);
 
+const boardMapFigural_opt = (mapper, board) =>
+	boardMapFilter_opt(
+		currentValue => maybeMap(
+			_ => mapper(currentValue),
+			possiblyFalsyToMaybe(currentValue.constructor.name != 'Title') // @TODO OOP polymorphism, or duck typing: `currentCalue.vertices` (exists)
+		),
+		board
+	);
+
 function boardAll(predicate, board)  // @TODO this function os used nowhere @TODO define and reuse `boardAny`
 {
 	for (let currentValue of board.range()) {

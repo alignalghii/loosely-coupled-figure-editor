@@ -77,6 +77,7 @@ BucketWidget.prototype.unshowGlittering = function ()
 
 BucketWidget.prototype.showFocus = function ()
 {
+	this.low.style.outline = '2px dashed red';
 	var widget = this;
 	function add (attr) // @TODO make reuseable
 	{
@@ -94,6 +95,7 @@ BucketWidget.prototype.showFocus = function ()
 
 BucketWidget.prototype.unshowFocus = function ()
 {
+	this.low.style.outline = '1px dotted black'; // @TODO DRY
 	var widget = this;
 	function add (attr) // @TODO make reuseable
 	{

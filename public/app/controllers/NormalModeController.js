@@ -23,7 +23,7 @@ NormalModeController.prototype.mouseDown = function (position, eitherTarget)
 	this.state.forgetDrag();
 	either(
 		canvas => this.statusBarDriver.report('Üres helyhez vagy helypozícióhoz kötődő művelet várható...'),
-		currentWidget => {console.log('cccc', currentWidget);
+		currentWidget => {
 			this.rememberWidget(currentWidget);
 			this.rememberPosition(position);
 			currentWidget.showGlittering();
@@ -67,6 +67,64 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 				console.log('allowable = infinitezimalDisplacement');
 				if (minFallTargetFigures.length == 1)
 					this.state.prevWidget.collisionActionSpecialty(this, canvasPseudoWidget, minFallTargetFigures[0], currentWEPos);
+			}
+
+			if (this.state.prevWidget && (this.state.prevWidget.constructor.name == 'PickaxeWidget' || this.state.prevWidget.constructor.name == 'BucketWidget')) { // @TODO OOP
+				const hitsMap = new Bijection;
+				for (let figureWidget of canvasPseudoWidget.figureWidgets()) {
+					for (let edge of tour(figureWidget.high.vertices)) {
+						if (distanceSegmentHence(edge, currentWEPos) < 20 / figureWidget.q()) {
+							hitsMap.set(figureWidget.businessObject, {});
+						}
+					}
+				}
+				const hits = []; for (let room of hitsMap.domain()) hits.push(room);
+				const naming = room => room.title.name;
+
+				if (!this.state.prevWidget.high.memHitsMap) this.state.prevWidget.high.memHitsMap = new Bijection;
+				for (let plusRoom of hitsMap.domain()) {
+					if (!this.state.prevWidget.high.memHitsMap.has(plusRoom)) {
+						const plusFigureWidget = canvasPseudoWidget.arbitrary.composeFromBusiness(plusRoom);
+						const maybeCircularSlit = plusFigureWidget.loseWall_(this, this.state.prevWidget, true);
+						maybeMap(
+							circularSlit => {
+								this.state.prevWidget.high.memHitsMap.set(plusRoom, circularSlit);
+
+								/* @TODO DRY, copypasted from `mouseDown` method */
+								const currentWidget = this.state.prevWidget;
+								if (this.state.focus && currentWidget.high != this.state.focus.high) this.state.focus.unshowFocus();
+								this.state.focus = currentWidget; this.state.spaceFocus = null;
+								currentWidget.unshowGlittering(); // order 1
+								this.state.focus.showFocus();     // order 2: unshowglittering must not undo SVG-<image> styling @TODO alternative solution
+								this.statusBarDriver.report('Alakzatfókusz automatikusan megjegyezve, üreshelyfókusz levéve.');
+							},
+							maybeCircularSlit
+						);
+					}
+				}
+				for (let memMinusRoom of this.state.prevWidget.high.memHitsMap.domain()) {
+					if (!hitsMap.has(memMinusRoom)) {
+						const minusFigureWidget = canvasPseudoWidget.arbitrary.composeFromBusiness(memMinusRoom);
+						const slit = this.state.prevWidget.high.memHitsMap.get(memMinusRoom);
+
+						deleteItem(slit, minusFigureWidget.businessObject.slitsRepresentationCircular.circularSlits);
+						minusFigureWidget.updateSlitStructure();
+						minusFigureWidget.updateDasharray();
+						minusFigureWidget.updateDownward();
+
+						/* @TODO DRY, copypasted from `mouseDown` method */
+						if (this.state.focus) {
+							this.state.focus.unshowFocus();
+							this.state.focus = null;
+							this.statusBarDriver.report('Automatikus alakzatfókusz levéve.');
+
+							/* @TODO DRY, copypasted from `FigureWidget.prototype.regainWall_` method */
+							this.audioDriver.rebuildWall();
+						}
+
+						this.state.prevWidget.high.memHitsMap.delete(memMinusRoom);
+					}
+				}
 			}
 
 			this.state.dragHasAlreadyBegun = true;
@@ -135,8 +193,16 @@ NormalModeController.prototype.createAtPosFocus = function ()
 
 NormalModeController.prototype.deleteFigFocus = function ()
 {
-	if (this.state.focus) {this.state.focus.delete(); this.state.focus = null; this.statusBarDriver.report('A fókuszált alakat törlése.');} // @TODO code reuse, DRY
-	else this.statusBarDriver.report('Nincs kijelölve alakzatfókusz, nincs mit törölni.');
+	if (this.state.focus) {  // @TODO code reuse, DRY
+		this.state.focus.delete();
+		if (this.state.focus.constructor.name == 'BucketWidget' || this.state.focus.constructor.name == 'PickaxeWidget' ) { // @TODO: OOP
+			this.state.focus.restoreOn(this.canvasPseudoWidgets[2]);
+		}
+		this.state.focus = null;
+		this.statusBarDriver.report('A fókuszált alakat törlése.');
+	} else{
+		this.statusBarDriver.report('Nincs kijelölve alakzatfókusz, nincs mit törölni.');
+	}
 };
 
 NormalModeController.prototype.leaveFigFocus = function ()

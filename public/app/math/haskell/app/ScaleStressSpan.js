@@ -19,7 +19,7 @@ ScaleStressSpan.prototype.query = function (currentWEPos) // a pure function wit
 	      O     = nearestFigure.grasp,
 	      q     = ratioAOA_(A   , O, A_),
 	      dq    = ratioAOA_(last, O, A_);
-	if (couldTeleportByFigTransformCommand_(nearestFigure, board, this.figCommandName, [dq])) { // or: ...mand(..,.., fig => fig.doRotation(dRad))
+	if (!widget.high.isCollidable() || couldTeleportByFigTransformCommand_(nearestFigure, board, this.figCommandName, [dq])) { // or: ...mand(..,.., fig => fig.doRotation(dRad))
 		return {
 			log     : {},//new ScaleStressSpanLog(ratioAOA_, [A, O, A_], nearestFigure.referenceAngle + dRad, ['nothing']),
 			mbAction: ['just', {dq: dq, last: currentWEPos.map(i=>i)}]

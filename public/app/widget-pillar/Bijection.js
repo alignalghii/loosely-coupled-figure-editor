@@ -5,6 +5,9 @@ Bijection.prototype.set        = function (a, b) {this.mapStraight.set(a, b); th
 Bijection.prototype.get        = function (a) {return this.mapStraight.get(a);};
 Bijection.prototype.getInverse = function (b) {return this.mapInverse .get(b);};
 
+Bijection.prototype.has        = function (a) {return this.mapStraight.has(a);};
+Bijection.prototype.hasInverse = function (b) {return this.mapInverse .has(b);};
+
 Bijection.prototype.domain = function () {return this.mapStraight.keys();}
 Bijection.prototype.range  = function () {return this.mapInverse .keys();}
 Bijection.prototype.size   = function () {return this.mapStraight.size;}

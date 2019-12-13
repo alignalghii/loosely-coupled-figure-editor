@@ -77,6 +77,7 @@ PickaxeWidget.prototype.unshowGlittering = function ()
 
 PickaxeWidget.prototype.showFocus = function ()
 {
+	this.low.style.outline = '2px dashed red'; // @TODO
 	var widget = this;
 	function add (attr) // @TODO make reuseable
 	{
@@ -94,6 +95,7 @@ PickaxeWidget.prototype.showFocus = function ()
 
 PickaxeWidget.prototype.unshowFocus = function ()
 {
+	this.low.style.outline = '1px dotted black'; // @TODO DRY
 	var widget = this;
 	function add (attr) // @TODO make reuseable
 	{

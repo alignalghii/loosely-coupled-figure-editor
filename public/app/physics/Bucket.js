@@ -28,4 +28,4 @@ Bucket.prototype.doTranslation = function (displacement)
 // @TODO consider Title.prototype.readaptTo = function (figure) {this.position = figure.titlePosition();};
 
 
-// `Bucket.prototype.isCollidable_` inherited from `Figure` // @TODO reconsider
+Bucket.prototype.isCollidable_ = function () {return nothing};

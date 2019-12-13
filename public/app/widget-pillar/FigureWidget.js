@@ -131,24 +131,32 @@ FigureWidget.prototype.updateSvgAttribute = function (svgAttributeName)
 };
 
 
-FigureWidget.prototype.loseWall_ = function (controller, actorWidget) // @TODO actorWidget is a better, more general arg name: also door and window will break wall
+FigureWidget.prototype.loseWall_ = function (controller, actorWidget, isModern = false) // @TODO actorWidget is a better, more general arg name: also door and window will break wall
 {
 	const maybeTill = this.maybeTill(actorWidget.high.position);
 	return maybe_exec(
-		() => controller.statusBarDriver.report(`Falbontás kudarc: sikertelen ütéspont-detektálás!`),
+		() => {
+			controller.statusBarDriver.report(`Falbontás kudarc: sikertelen ütéspont-detektálás!`);
+			return nothing;
+		},
 		till => {
 			const radius = actorWidget.high.size/2;
 			if (ccLeq(till - radius, 0) || ccGeq(till + radius, this.high.perimeter())) {
 				controller.statusBarDriver.report(`Programhiányosság miatt az ún.vonalhúzásindulópont nem eshetik falrésre!`);
+				return nothing;
 			} else {
-				this.addCircularSlit(new CircularSlit(till, radius));
+				const circularSlit = new CircularSlit(till, radius);
+				this.addCircularSlit(circularSlit);
 
-				actorWidget.delete();
-				actorWidget.restoreOn(controller.canvasPseudoWidgets[2]);
+				if (!isModern) {
+					actorWidget.delete();
+					actorWidget.restoreOn(controller.canvasPseudoWidgets[2]);
+					controller.state.forgetDrag(); // `this.state.prevWidget = null` is not enough, the drag (mouseMove) state must be quitted in the state machine. An alternative solution: `this.state.prevWidget = eitherTarget = null`.
+				}
 
-				controller.state.forgetDrag(); // `this.state.prevWidget = null` is not enough, the drag (mouseMove) state must be quitted in the state machine. An alternative solution: `this.state.prevWidget = eitherTarget = null`.
 				controller.statusBarDriver.report(`Falbontás: faltörő kos munkában!`);
 				controller.audioDriver.breakWall();
+				return just(circularSlit);
 			}
 		},
 		maybeTill

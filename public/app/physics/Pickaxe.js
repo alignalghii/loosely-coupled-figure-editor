@@ -27,4 +27,5 @@ Pickaxe.prototype.doTranslation = function (displacement)
 
 // @TODO consider Title.prototype.readaptTo = function (figure) {this.position = figure.titlePosition();};
 
-// `Pickaxe.prototype.isCollidable_` inherited from `Figure` // @TODO reconsider
+
+Pickaxe.prototype.isCollidable_ = function () {return nothing;};
