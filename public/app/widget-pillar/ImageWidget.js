@@ -147,3 +147,9 @@ ImageWidget.prototype.directlyOrViaTitle = function ()
 };
 
 ImageWidget.prototype.beDescribedOnOpeningForm = figPropEdController => figPropEdController.statusBarDriver.report('Bútor szöveges szerkeszthetőségét még nem valósítottam meg'); // Image's boxing figure should not be allowed to be edited!
+
+ImageWidget.prototype.scale = function (q)
+{
+	this.high.doScale (q);
+	this.updateDownward();
+};

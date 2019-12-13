@@ -99,3 +99,5 @@ Widget.prototype.loseWall_                = function (controller, batteringRamWi
 Widget.prototype.regainWall_              = function () {};
 
 Widget.prototype.restoreOn = canvasPseudoWidget => {throw '@TODO: make immediate inheritance chain (Widget > ActorWidget), and let it be an abstract class there';}; // @TODO: make immediate inheritance chain (Widget > ActorWidget), and let it be an abstract class there
+
+Widget.prototype.scale = function (q) {throw 'Abstract method!';};
