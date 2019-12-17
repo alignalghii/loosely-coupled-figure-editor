@@ -78,8 +78,6 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 						}
 					}
 				}
-				const hits = []; for (let room of hitsMap.domain()) hits.push(room);
-				const naming = room => room.title.name;
 
 				if (!this.state.prevWidget.high.memHitsMap) this.state.prevWidget.high.memHitsMap = new Bijection;
 				for (let plusRoom of hitsMap.domain()) {
@@ -124,6 +122,20 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 
 						this.state.prevWidget.high.memHitsMap.delete(memMinusRoom);
 					}
+				}
+				for (let [room, slit] of this.state.prevWidget.high.memHitsMap.mapStraight) {
+					/* @TODO DRY: also copypasted to: `GeomTransformationController.prototype.sustainScaleStressSpan` */
+					const figureWidget = canvasPseudoWidget.arbitrary.composeFromBusiness(room),
+					      actorWidget  = this.state.prevWidget;
+					maybeMap(
+						till => {
+							slit.center = till;
+							figureWidget.updateSlitStructure();
+							figureWidget.updateDasharray();
+							figureWidget.updateDownward();
+						},
+						figureWidget.maybeTill(actorWidget.high.position)
+					);
 				}
 			}
 
