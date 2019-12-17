@@ -158,6 +158,8 @@ App.prototype.populate = function ()
 	const brickWidget1        = BrickWidget       .prototype.restoreOn(this.widgetEventPillar.canvasPseudoWidgets[2]);
 	const pickaxeWidget1      = PickaxeWidget     .prototype.restoreOn(this.widgetEventPillar.canvasPseudoWidgets[2]);
 	const bucketWidget1       = BucketWidget      .prototype.restoreOn(this.widgetEventPillar.canvasPseudoWidgets[2]);
+	const windowWidget1       = WindowWidget      .prototype.restoreOn(this.widgetEventPillar.canvasPseudoWidgets[2]);
+	const doorWidget1         = DoorWidget        .prototype.restoreOn(this.widgetEventPillar.canvasPseudoWidgets[2]);
 
 
 	//this.widgetEventPillar.canvasPseudoWidgets[1].imageWidgetFactory.create('Vécé', 'https://upload.wikimedia.org/wikipedia/commons/0/04/Toilet-pictogram.png', [10, 10], [4, -8]);

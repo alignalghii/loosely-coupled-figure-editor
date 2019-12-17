@@ -59,7 +59,7 @@ BrickWidget.prototype.scale = function (q)
 
 
 
-BrickWidget.prototype.restoreOn = canvasPseudoWidget => canvasPseudoWidget.brickWidgetFactory.create(2.3, [-1.7, -4]); // @TODO note that this is a class method
+BrickWidget.prototype.restoreOn = canvasPseudoWidget => canvasPseudoWidget.brickWidgetFactory.create(2.3, [ 1.7,  4]); // @TODO note that this is a class method
 
 
 

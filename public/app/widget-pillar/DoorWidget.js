@@ -7,24 +7,24 @@
  */
 
 
-function PickaxeWidget (canvasPseudoWidget, low, high) {Widget.call(this, canvasPseudoWidget, low, high);}
+function DoorWidget (canvasPseudoWidget, low, high) {Widget.call(this, canvasPseudoWidget, low, high);}
 
-PickaxeWidget.prototype = Object.create(Widget.prototype);
+DoorWidget.prototype = Object.create(Widget.prototype);
 
-PickaxeWidget.prototype.constructor = PickaxeWidget;
+DoorWidget.prototype.constructor = DoorWidget;
 
-PickaxeWidget.prototype.delete = function () {this.rawDelete();};
+DoorWidget.prototype.delete = function () {this.rawDelete();};
 
 
-PickaxeWidget.prototype.factory = function () {return this.canvasPseudoWidget.pickaxeWidgetFactory;};
+DoorWidget.prototype.factory = function () {return this.canvasPseudoWidget.doorWidgetFactory;};
 
-PickaxeWidget.prototype.translate = function (displacement)
+DoorWidget.prototype.translate = function (displacement)
 {
 	this.high.doTranslation(displacement);
 	this.updateDownward();
 };
 
-PickaxeWidget.prototype.updateDownward = function ()
+DoorWidget.prototype.updateDownward = function ()
 {
 	this.high.size = segmentLength([this.high.vertices[0], this.high.vertices[1]]);
 	const info = this.factory().calculate([this.high.size, this.high.size], this.high.position);
@@ -34,9 +34,9 @@ PickaxeWidget.prototype.updateDownward = function ()
 	this.low.setAttribute('height', info.sizes_low [1]);
 };
 
-PickaxeWidget.prototype.isHostless = function () {return true;};
+DoorWidget.prototype.isHostless = function () {return true;};
 
-PickaxeWidget.prototype.jumpTo = function (targetCanvasPseudoWidget)
+DoorWidget.prototype.jumpTo = function (targetCanvasPseudoWidget)
 {
 	const targetCanvasElem = targetCanvasPseudoWidget.low();
 	targetCanvasElem.appendChild(this.low);
@@ -44,38 +44,38 @@ PickaxeWidget.prototype.jumpTo = function (targetCanvasPseudoWidget)
 };
 
 
-PickaxeWidget.prototype.collisionActionSpecialty = function (controller, canvasPseudoWidget, minFallTargetFigure, currentWEPos)
+DoorWidget.prototype.collisionActionSpecialty = function (controller, canvasPseudoWidget, minFallTargetFigure, currentWEPos)
 {
 	const minFallTargetWidget = canvasPseudoWidget.arbitrary.detectTypeAndComposeFromHigh(minFallTargetFigure);
 	minFallTargetWidget.loseWall_(controller, this);
 };
 
 
-PickaxeWidget.prototype.scale = function (q)
+DoorWidget.prototype.scale = function (q)
 {
 	this.high.doScale (q);
 	this.updateDownward();
 };
 
 
-PickaxeWidget.prototype.restoreOn = canvasPseudoWidget => canvasPseudoWidget.pickaxeWidgetFactory.create(2.3, [-1.7,  0]); // @TODO note that this is a class method
+DoorWidget.prototype.restoreOn = canvasPseudoWidget => canvasPseudoWidget.doorWidgetFactory.create(2.3, [ 1.7, -4]); // @TODO note that this is a class method
 
 
 
-PickaxeWidget.prototype.showGlittering = function ()
+DoorWidget.prototype.showGlittering = function ()
 {
 	//this.high.svgAttributes[GLITTERING_ATTR_NAME] = GLITTERING_VALUE; // @TODO fainting should appear on an abstracter level on Figure (e.g. a boolean flag for a special kind of focus)
 	//this.low.setAttribute(GLITTERING_ATTR_NAME, GLITTERING_VALUE);
 };
 
-PickaxeWidget.prototype.unshowGlittering = function ()
+DoorWidget.prototype.unshowGlittering = function ()
 {
 	//delete this.high.svgAttributes[GLITTERING_ATTR_NAME]; // @TODO fainting should appear on an abstracter level on Figure (e.g. a boolean flag for a special kind of focus)
 	//this.low.removeAttribute(GLITTERING_ATTR_NAME);
 };
 
 
-PickaxeWidget.prototype.showFocus = function ()
+DoorWidget.prototype.showFocus = function ()
 {
 	this.low.style.outline = '2px dashed red'; // @TODO
 	var widget = this;
@@ -93,7 +93,7 @@ PickaxeWidget.prototype.showFocus = function ()
 	//IMFOCUS[0].map(add);
 };
 
-PickaxeWidget.prototype.unshowFocus = function ()
+DoorWidget.prototype.unshowFocus = function ()
 {
 	this.low.style.outline = '1px dotted black'; // @TODO DRY
 	var widget = this;

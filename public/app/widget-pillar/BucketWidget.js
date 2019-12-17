@@ -58,7 +58,7 @@ BucketWidget.prototype.scale = function (q)
 };
 
 
-BucketWidget.prototype.restoreOn = canvasPseudoWidget => canvasPseudoWidget.bucketWidgetFactory.create(2.3, [ 1.7, -4]); // @TODO note that this is a class method
+BucketWidget.prototype.restoreOn = canvasPseudoWidget => canvasPseudoWidget.bucketWidgetFactory.create(2.3, [ 1.7,  0]); // @TODO note that this is a class method
 
 
 

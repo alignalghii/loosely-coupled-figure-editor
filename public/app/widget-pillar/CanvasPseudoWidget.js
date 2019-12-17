@@ -15,7 +15,7 @@
 }*/
 
 
-function CanvasPseudoWidget (figureWidgetFactory, titleWidgetFactory, imageWidgetFactory, batteringRamWidgetFactory, brickWidgetFactory, pickaxeWidgetFactory, bucketWidgetFactory)
+function CanvasPseudoWidget (figureWidgetFactory, titleWidgetFactory, imageWidgetFactory, batteringRamWidgetFactory, brickWidgetFactory, pickaxeWidgetFactory, bucketWidgetFactory, windowWidgetFactory, doorWidgetFactory)
 {
 	this.figureWidgetFactory = figureWidgetFactory;
 	this.titleWidgetFactory  = titleWidgetFactory;
@@ -25,6 +25,8 @@ function CanvasPseudoWidget (figureWidgetFactory, titleWidgetFactory, imageWidge
 	this.brickWidgetFactory        = brickWidgetFactory;
 	this.pickaxeWidgetFactory      = pickaxeWidgetFactory;
 	this.bucketWidgetFactory       = bucketWidgetFactory;
+	this.windowWidgetFactory       = windowWidgetFactory;
+	this.doorWidgetFactory         = doorWidgetFactory;
 
 	this.arbitrary = figureWidgetFactory; // @TODO rude arbitrariness
 }

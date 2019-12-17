@@ -69,7 +69,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 					this.state.prevWidget.collisionActionSpecialty(this, canvasPseudoWidget, minFallTargetFigures[0], currentWEPos);
 			}
 
-			if (this.state.prevWidget && (this.state.prevWidget.constructor.name == 'PickaxeWidget' || this.state.prevWidget.constructor.name == 'BucketWidget')) { // @TODO OOP
+			if (this.state.prevWidget && (this.state.prevWidget.constructor.name == 'PickaxeWidget' || this.state.prevWidget.constructor.name == 'BucketWidget' || this.state.prevWidget.constructor.name == 'WindowWidget' || this.state.prevWidget.constructor.name == 'DoorWidget')) { // @TODO OOP
 				const hitsMap = new Bijection;
 				for (let figureWidget of canvasPseudoWidget.figureWidgets()) {
 					for (let edge of tour(figureWidget.high.vertices)) {
@@ -207,7 +207,7 @@ NormalModeController.prototype.deleteFigFocus = function ()
 {
 	if (this.state.focus) {  // @TODO code reuse, DRY
 		this.state.focus.delete();
-		if (this.state.focus.constructor.name == 'BucketWidget' || this.state.focus.constructor.name == 'PickaxeWidget' ) { // @TODO: OOP
+		if (this.state.focus.constructor.name == 'BucketWidget' || this.state.focus.constructor.name == 'PickaxeWidget'  || this.state.focus.constructor.name == 'WindowWidget'  || this.state.focus.constructor.name == 'DoorWidget') { // @TODO: OOP
 			this.state.focus.restoreOn(this.canvasPseudoWidgets[2]);
 		}
 		this.state.focus = null;
