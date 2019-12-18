@@ -85,17 +85,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 						const plusFigureWidget = canvasPseudoWidget.arbitrary.composeFromBusiness(plusRoom);
 						const maybeCircularSlit = plusFigureWidget.loseWall_(this, this.state.prevWidget, true);
 						maybeMap(
-							circularSlit => {
-								this.state.prevWidget.high.memHitsMap.set(plusRoom, circularSlit);
-
-								/* @TODO DRY, copypasted from `mouseDown` method */
-								const currentWidget = this.state.prevWidget;
-								if (this.state.focus && currentWidget.high != this.state.focus.high) this.state.focus.unshowFocus();
-								this.state.focus = currentWidget; this.state.spaceFocus = null;
-								currentWidget.unshowGlittering(); // order 1
-								this.state.focus.showFocus();     // order 2: unshowglittering must not undo SVG-<image> styling @TODO alternative solution
-								this.statusBarDriver.report('Alakzatfókusz automatikusan megjegyezve, üreshelyfókusz levéve.');
-							},
+							circularSlit => this.state.prevWidget.high.memHitsMap.set(plusRoom, circularSlit),
 							maybeCircularSlit
 						);
 					}
@@ -110,17 +100,10 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 						minusFigureWidget.updateDasharray();
 						minusFigureWidget.updateDownward();
 
-						/* @TODO DRY, copypasted from `mouseDown` method */
-						if (this.state.focus) {
-							this.state.focus.unshowFocus();
-							this.state.focus = null;
-							this.statusBarDriver.report('Automatikus alakzatfókusz levéve.');
-
-							/* @TODO DRY, copypasted from `FigureWidget.prototype.regainWall_` method */
-							this.audioDriver.rebuildWall();
-						}
-
 						this.state.prevWidget.high.memHitsMap.delete(memMinusRoom);
+
+						/* @TODO DRY, copypasted from `FigureWidget.prototype.regainWall_` method */
+						this.audioDriver.rebuildWall();
 					}
 				}
 				for (let [room, slit] of this.state.prevWidget.high.memHitsMap.mapStraight) {
@@ -136,6 +119,22 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 						},
 						figureWidget.maybeTill(actorWidget.high.position)
 					);
+				}
+
+				const currentWidget = this.state.prevWidget;
+				if (currentWidget.high.memHitsMap.size() > 0 && (!this.state.focus || this.state.focus && this.state.focus.high != currentWidget.high)) {
+					/* @TODO DRY, copypasted from `mouseDown` method */
+					if (this.state.focus && currentWidget.high != this.state.focus.high) this.state.focus.unshowFocus();
+					this.state.focus = currentWidget; this.state.spaceFocus = null;
+					currentWidget.unshowGlittering(); // order 1
+					this.state.focus.showFocus();     // order 2: unshowglittering must not undo SVG-<image> styling @TODO alternative solution
+					this.statusBarDriver.report('Alakzatfókusz automatikusan megjegyezve, üreshelyfókusz levéve.');
+				}
+				if (currentWidget.high.memHitsMap.size() == 0 && this.state.focus && this.state.focus.high == currentWidget.high) {
+					/* @TODO DRY, copypasted from `mouseDown` method */
+					this.state.focus.unshowFocus();
+					this.state.focus = null;
+					this.statusBarDriver.report('Automatikus alakzatfókusz levéve.');
 				}
 			}
 
