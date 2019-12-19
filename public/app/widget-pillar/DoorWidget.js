@@ -60,6 +60,18 @@ DoorWidget.prototype.scale = function (q)
 
 DoorWidget.prototype.restoreOn = canvasPseudoWidget => canvasPseudoWidget.doorWidgetFactory.create(2.3, [ 1.7, -4]); // @TODO note that this is a class method
 
+DoorWidget.prototype.attachToWall   = function ()
+{
+	console.log('Attach door to wall');
+	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/door-attached.png'); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
+};
+
+DoorWidget.prototype.detachFromWall = function ()
+{
+	console.log('Detach door from wall');
+	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/door-detached.png'); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
+};
+
 
 
 DoorWidget.prototype.showGlittering = function ()

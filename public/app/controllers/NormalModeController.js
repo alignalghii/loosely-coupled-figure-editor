@@ -129,12 +129,20 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 					currentWidget.unshowGlittering(); // order 1
 					this.state.focus.showFocus();     // order 2: unshowglittering must not undo SVG-<image> styling @TODO alternative solution
 					this.statusBarDriver.report('Alakzatfókusz automatikusan megjegyezve, üreshelyfókusz levéve.');
+
+					if (this.state.prevWidget.constructor.name == 'WindowWidget' || this.state.prevWidget.constructor.name == 'DoorWidget') { // @TODO OOP polymorphism
+						currentWidget.attachToWall();
+					}
 				}
 				if (currentWidget.high.memHitsMap.size() == 0 && this.state.focus && this.state.focus.high == currentWidget.high) {
 					/* @TODO DRY, copypasted from `mouseDown` method */
 					this.state.focus.unshowFocus();
 					this.state.focus = null;
 					this.statusBarDriver.report('Automatikus alakzatfókusz levéve.');
+
+					if (this.state.prevWidget.constructor.name == 'WindowWidget' || this.state.prevWidget.constructor.name == 'DoorWidget') { // @TODO OOP polymorphism
+						currentWidget.detachFromWall();
+					}
 				}
 			}
 

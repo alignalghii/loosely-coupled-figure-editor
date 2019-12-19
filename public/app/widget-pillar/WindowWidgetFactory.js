@@ -11,7 +11,7 @@ WindowWidgetFactory.prototype.create = function (size, position) // @TODO DRY: s
 {
 	const info = this.calculate([size, size], position);console.log(info);
 	const window = new Window(size, position), // @TODO
-	      imageElem = this.svgLowLevel.createImage('/assets-proper/window.png', info.sizes_low, info.point_lowcorner);
+	      imageElem = this.svgLowLevel.createImage('/assets-proper/window-detached.png', info.sizes_low, info.point_lowcorner);
 	const windowWidget = new WindowWidget(this.canvasPseudoWidget, imageElem, window);
 	this.bijectionSvgToGeom.set(imageElem, window);
 	return windowWidget;

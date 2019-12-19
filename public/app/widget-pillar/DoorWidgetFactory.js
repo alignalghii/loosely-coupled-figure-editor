@@ -11,7 +11,7 @@ DoorWidgetFactory.prototype.create = function (size, position) // @TODO DRY: sam
 {
 	const info = this.calculate([size, size], position);console.log(info);
 	const door = new Door(size, position), // @TODO
-	      imageElem = this.svgLowLevel.createImage('/assets-proper/door.png', info.sizes_low, info.point_lowcorner);
+	      imageElem = this.svgLowLevel.createImage('/assets-proper/door-detached.png', info.sizes_low, info.point_lowcorner);
 	const doorWidget = new DoorWidget(this.canvasPseudoWidget, imageElem, door);
 	this.bijectionSvgToGeom.set(imageElem, door);
 	console.log(doorWidget);

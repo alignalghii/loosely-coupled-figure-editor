@@ -60,6 +60,17 @@ WindowWidget.prototype.scale = function (q)
 
 WindowWidget.prototype.restoreOn = canvasPseudoWidget => canvasPseudoWidget.windowWidgetFactory.create(2.3, [-1.7, -4]); // @TODO note that this is a class method
 
+WindowWidget.prototype.attachToWall   = function ()
+{
+	console.log('Attach window to wall');
+	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/window-attached.png'); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
+};
+
+WindowWidget.prototype.detachFromWall = function ()
+{
+	console.log('Detach window from wall');
+	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/window-detached.png'); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30
+};
 
 
 WindowWidget.prototype.showGlittering = function ()
