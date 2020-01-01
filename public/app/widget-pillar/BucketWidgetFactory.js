@@ -9,12 +9,12 @@ BucketWidgetFactory.prototype.createFromBusiness = function (businessObject) {th
 
 BucketWidgetFactory.prototype.create = function (size, position) // @TODO DRY: same as in ImageWidgetFactory
 {
-	const info = this.calculate([size, size], position);console.log(info);
+	const info = this.calculate([size, size], position);//console.log(info);
 	const bucket = new Bucket(size, position), // @TODO
 	      imageElem = this.svgLowLevel.createImage('/assets-proper/bucket.png', info.sizes_low, info.point_lowcorner);
 	const bucketWidget = new BucketWidget(this.canvasPseudoWidget, imageElem, bucket);
 	this.bijectionSvgToGeom.set(imageElem, bucket);
-	console.log('bucketWidget object: ', bucketWidget);
+	//console.log('bucketWidget object: ', bucketWidget);
 	return bucketWidget;
 };
 

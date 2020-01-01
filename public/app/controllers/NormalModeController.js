@@ -50,31 +50,32 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 				},
 				mbAllowable
 			);
-			console.log('maybeAllowJump: ', maybeAllowJump);
-			if (!vecEq(maybeAllowJump, ['just', false])) {
+			//console.log('maybeAllowJump: ', maybeAllowJump);
+			if (!vecEq(maybeAllowJump, ['just', false]) && (this.state.prevWidget.constructor.name != 'WindowWidget' && this.state.prevWidget.constructor.name != 'DoorWidget' || (!this.state.focus || this.state.focus.high != this.state.prevWidget.high))) { // @TODO contract with code hadling window and door actors, and use an OOP polymorphism approach
 				this.translatePrevWidgetAndRememberItsNewPosition(allowable);
 			}
 
-			console.log('Allowable: ', allowable);
+			//console.log('Allowable: ', allowable);
 			if (vectorLength(infinitezimalDisplacement) > 0 && vectorLength(allowable) == 0) {
-				console.log('allowable = 0');
+				//console.log('allowable = 0');
 				this.statusBarDriver.report(`Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ${JSON.stringify(infinitezimalDisplacement)} irányban.`);
 			}
 
 
 			// @TODO refactory, huge code smell
 			if (!ccVecEq(allowable, infinitezimalDisplacement)) {
-				console.log('allowable = infinitezimalDisplacement');
+				//console.log('allowable = infinitezimalDisplacement');
 				if (minFallTargetFigures.length == 1)
 					this.state.prevWidget.collisionActionSpecialty(this, canvasPseudoWidget, minFallTargetFigures[0], currentWEPos);
 			}
 
 			if (this.state.prevWidget && (this.state.prevWidget.constructor.name == 'PickaxeWidget' || this.state.prevWidget.constructor.name == 'BucketWidget' || this.state.prevWidget.constructor.name == 'WindowWidget' || this.state.prevWidget.constructor.name == 'DoorWidget')) { // @TODO OOP
-				const hitsMap = new Bijection;
+				const hitsMap = new Bijection, edgesBij = new Bijection;
 				for (let figureWidget of canvasPseudoWidget.figureWidgets()) {
 					for (let edge of tour(figureWidget.high.vertices)) {
 						if (distanceSegmentHence(edge, currentWEPos) < 20 / figureWidget.q()) {
-							hitsMap.set(figureWidget.businessObject, {});
+							hitsMap .set(figureWidget.businessObject, {});
+							edgesBij.set(edge, {});
 						}
 					}
 				}
@@ -131,7 +132,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 					this.statusBarDriver.report('Alakzatfókusz automatikusan megjegyezve, üreshelyfókusz levéve.');
 
 					if (this.state.prevWidget.constructor.name == 'WindowWidget' || this.state.prevWidget.constructor.name == 'DoorWidget') { // @TODO OOP polymorphism
-						currentWidget.attachToWall();
+						currentWidget.attachToWall(currentWidget.high.memHitsMap, edgesBij, this.canvasPseudoWidgets);
 					}
 				}
 				if (currentWidget.high.memHitsMap.size() == 0 && this.state.focus && this.state.focus.high == currentWidget.high) {
@@ -141,7 +142,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 					this.statusBarDriver.report('Automatikus alakzatfókusz levéve.');
 
 					if (this.state.prevWidget.constructor.name == 'WindowWidget' || this.state.prevWidget.constructor.name == 'DoorWidget') { // @TODO OOP polymorphism
-						currentWidget.detachFromWall();
+						currentWidget.detachFromWall(this.canvasPseudoWidgets);
 					}
 				}
 			}
@@ -153,7 +154,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 
 NormalModeController.prototype.translatePrevWidgetAndRememberItsNewPosition = function (allowableDisplacement)
 {
-	console.log('normalModeController.state.prevWidget: ', this.state.prevWidget);
+	//console.log('normalModeController.state.prevWidget: ', this.state.prevWidget);
 	this.state.prevWidget.translate(allowableDisplacement);
 	this.addToRememberedPosition(allowableDisplacement);
 };

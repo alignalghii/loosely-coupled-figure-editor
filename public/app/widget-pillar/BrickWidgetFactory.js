@@ -9,12 +9,12 @@ BrickWidgetFactory.prototype.createFromBusiness = function (businessObject) {thr
 
 BrickWidgetFactory.prototype.create = function (size, position) // @TODO DRY: same as in ImageWidgetFactory
 {
-	const info = this.calculate([size, size], position);console.log(info);
+	const info = this.calculate([size, size], position);//console.log(info);
 	const brick = new Brick(size, position), // @TODO
 	      imageElem = this.svgLowLevel.createImage('/assets-proper/brick.png', info.sizes_low, info.point_lowcorner);
 	const brickWidget = new BrickWidget(this.canvasPseudoWidget, imageElem, brick);
 	this.bijectionSvgToGeom.set(imageElem, brick);
-	console.log('brickWidget object: ', brickWidget);
+	//console.log('brickWidget object: ', brickWidget);
 	return brickWidget;
 };
 

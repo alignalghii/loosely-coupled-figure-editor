@@ -57,3 +57,5 @@ CanvasPseudoWidget.prototype.hostlessWidgets = function () {return this.widgets(
 
 // @TODO make them obsolete:
 CanvasPseudoWidget.prototype.figureWidgets   = function () {return this.widgets().filter(widget => widget.constructor.name == 'FigureWidget');}; // @TODO
+CanvasPseudoWidget.prototype.windowWidgets   = function () {return this.widgets().filter(widget => widget.constructor.name == 'WindowWidget');}; // @TODO
+CanvasPseudoWidget.prototype.doorWidgets     = function () {return this.widgets().filter(widget => widget.constructor.name == 'DoorWidget'  );}; // @TODO

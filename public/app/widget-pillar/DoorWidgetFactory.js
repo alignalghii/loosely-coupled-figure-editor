@@ -9,12 +9,12 @@ DoorWidgetFactory.prototype.createFromBusiness = function (businessObject) {thro
 
 DoorWidgetFactory.prototype.create = function (size, position) // @TODO DRY: same as in ImageWidgetFactory
 {
-	const info = this.calculate([size, size], position);console.log(info);
+	const info = this.calculate([size, size], position);//console.log(info);
 	const door = new Door(size, position), // @TODO
 	      imageElem = this.svgLowLevel.createImage('/assets-proper/door-detached.png', info.sizes_low, info.point_lowcorner);
 	const doorWidget = new DoorWidget(this.canvasPseudoWidget, imageElem, door);
 	this.bijectionSvgToGeom.set(imageElem, door);
-	console.log(doorWidget);
+	//console.log(doorWidget);
 	return doorWidget;
 };
 

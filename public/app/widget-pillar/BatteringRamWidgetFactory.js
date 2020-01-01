@@ -9,12 +9,12 @@ BatteringRamWidgetFactory.prototype.createFromBusiness = function (businessObjec
 
 BatteringRamWidgetFactory.prototype.create = function (size, position) // @TODO DRY: same as in ImageWidgetFactory
 {
-	const info = this.calculate([size, size], position);console.log(info);
+	const info = this.calculate([size, size], position);//console.log(info);
 	const batteringRam = new BatteringRam(size, position), // @TODO
 	      imageElem = this.svgLowLevel.createImage('/assets-proper/battering-ram.png', info.sizes_low, info.point_lowcorner);
 	const batteringRamWidget = new BatteringRamWidget(this.canvasPseudoWidget, imageElem, batteringRam);
 	this.bijectionSvgToGeom.set(imageElem, batteringRam);
-	console.log(batteringRamWidget);
+	//console.log(batteringRamWidget);
 	return batteringRamWidget;
 };
 

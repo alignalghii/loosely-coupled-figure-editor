@@ -60,16 +60,59 @@ WindowWidget.prototype.scale = function (q)
 
 WindowWidget.prototype.restoreOn = canvasPseudoWidget => canvasPseudoWidget.windowWidgetFactory.create(2.3, [-1.7, -4]); // @TODO note that this is a class method
 
-WindowWidget.prototype.attachToWall   = function ()
+WindowWidget.prototype.attachToWall   = function (memHitsMap, edgesBij, canvasPseudoWidgets)
 {
-	console.log('Attach window to wall');
+	console.log('Attach window to wall', 'memHitsMap', memHitsMap, 'edgesBij', edgesBij);
+	const  rooms = [], slits = [];
+	for (let [room, slit] of memHitsMap.mapStraight) {
+		console.log('Room:', room, 'Slit:', slit);
+		rooms.push(room);
+		slits.push(slit);
+		console.log('!!!!!!!!!!', room.figure.vertices[0], tour(room.figure.vertices).map(edgeVector), slit.center, maybeReachEndPoint(room.figure.vertices[0], tour(room.figure.vertices).map(edgeVector), slit.center));
+
+		/* @TODO DRY */
+		maybeMap(
+			point => {
+				console.log('Old pos', this.position, 'new pos', point);
+				this.high.position = point;
+				this.updateDownward();
+			},
+			maybeReachEndPoint(room.figure.vertices[0], tour(room.figure.vertices).map(edgeVector), slit.center)
+		);
+
+
+	}
+	/*if (rooms.length == 1 && slits.length == 1 || rooms.length == 2 && slits.length == 2 && ccEq(slits[0].center, slits[1].center)) {
+		const slit = slits[0];
+		this.position = slit.center;
+		this.updateDownward();
+
+		let edge = null, _ = null;
+		for ([edge, _] of edgesBij.mapStraight);
+		if (edge) {
+			console.log('Slit0', slit, 'Edge', edge);
+		}
+	}*/
+	/**/
 	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/window-attached.png'); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
+	let edge = null, _ = null;
+	for ([edge, _] of edgesBij.mapStraight);
+	if (edge) {
+		const plumbBob = [[0, 0], [0, 1]];
+		const angle = signedRotAngleOfEdges(plumbBob, edge);
+		const Ox = Number(this.low.getAttribute('x')) + Number(this.low.getAttribute('width' )) / 2,
+		      Oy = Number(this.low.getAttribute('y')) + Number(this.low.getAttribute('height')) / 2;
+		this.low.setAttribute('transform', `rotate(${-angle} ${Ox} ${Oy})`); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
+	}
+	this.restoreOn(canvasPseudoWidgets[2]);
 };
 
-WindowWidget.prototype.detachFromWall = function ()
+WindowWidget.prototype.detachFromWall = function (canvasPseudoWidgets)
 {
 	console.log('Detach window from wall');
 	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/window-detached.png'); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30
+	this.low.removeAttribute('transform');
+	canvasPseudoWidgets[2].windowWidgets().map(windowWidget => windowWidget.delete());
 };
 
 

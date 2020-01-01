@@ -17,7 +17,7 @@ function Router(state, normalModeController, compactModeController, roomControll
 
 Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: inputRoledData
 {
-	console.log(`| ${eventType} |`);
+	//console.log(`| ${eventType} |`);
 	if (eventType == 'change') {
 		if (Eq.eq(inputSignature, ['string', 'string']) && 'mode' in ird) this.normalModeController.changeMode(ird.mode); // @TODO common
 		if (Eq.eq(inputSignature, ['edge'  , 'number'])) this.figurePropertyEditorController.editEdge  (ird.edge, ird.value);

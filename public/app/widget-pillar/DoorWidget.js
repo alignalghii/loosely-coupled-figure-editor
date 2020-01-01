@@ -60,16 +60,54 @@ DoorWidget.prototype.scale = function (q)
 
 DoorWidget.prototype.restoreOn = canvasPseudoWidget => canvasPseudoWidget.doorWidgetFactory.create(2.3, [ 1.7, -4]); // @TODO note that this is a class method
 
-DoorWidget.prototype.attachToWall   = function ()
+DoorWidget.prototype.attachToWall   = function (memHitsMap, edgesBij, canvasPseudoWidgets)
 {
 	console.log('Attach door to wall');
+	const r = this.high.size / 2;
+	const  rooms = [], slits = [];
+	for (let [room, slit] of memHitsMap.mapStraight) {
+		console.log('Room:', room, 'Slit:', slit);
+		rooms.push(room);
+		slits.push(slit);
+		console.log('!!!!!!!!!!', room.figure.vertices[0], tour(room.figure.vertices).map(edgeVector), slit.center, maybeReachEndPoint(room.figure.vertices[0], tour(room.figure.vertices).map(edgeVector), slit.center));
+
+		/* @TODO DRY */
+		maybeMap(
+			point => {
+				console.log('Old pos', this.position, 'new pos', point);
+				this.high.position = point;
+				this.updateDownward();
+			},
+			maybeReachEndPoint(room.figure.vertices[0], tour(room.figure.vertices).map(edgeVector), slit.center)
+		);
+	}
 	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/door-attached.png'); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
+	let edge = null, _ = null;
+	for ([edge, _] of edgesBij.mapStraight);
+	if (edge) {
+		const plumbBob = [0, 1];
+		const [ex, ey] = edgeVector(edge),
+		      [nx, ny] = [-ey, ex], // edge normal
+		      N        = vectorLength([nx, ny]), // normalizing coefficient
+		      [Nx, Ny] = [nx / N, ny / N], /* normalized normal */
+		      [rx, ry] = [Nx * r, Ny * r],
+		      q = this.q(),
+		      [Rx, Ry] = [rx * q, ry * q];
+		console.log('Adjustment vector:', [rx, ry]);
+		const angle = signedRotAngleOfVectors(plumbBob, [ex, ey]);
+		const Ox = Number(this.low.getAttribute('x')) + Number(this.low.getAttribute('width' )) / 2,
+		      Oy = Number(this.low.getAttribute('y')) + Number(this.low.getAttribute('height')) / 2;
+		this.low.setAttribute('transform', `translate(${-Rx} ${Ry}) rotate(${180-angle} ${Ox} ${Oy})`); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
+	}  //  rotate(${-angle} ${Ox} ${Oy})
+	this.restoreOn(canvasPseudoWidgets[2]);
 };
 
-DoorWidget.prototype.detachFromWall = function ()
+DoorWidget.prototype.detachFromWall = function (canvasPseudoWidgets)
 {
 	console.log('Detach door from wall');
 	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/door-detached.png'); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
+	this.low.removeAttribute('transform');
+	canvasPseudoWidgets[2].doorWidgets().map(windowWidget => windowWidget.delete());
 };
 
 

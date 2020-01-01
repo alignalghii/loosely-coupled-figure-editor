@@ -9,12 +9,12 @@ PickaxeWidgetFactory.prototype.createFromBusiness = function (businessObject) {t
 
 PickaxeWidgetFactory.prototype.create = function (size, position) // @TODO DRY: same as in ImageWidgetFactory
 {
-	const info = this.calculate([size, size], position);console.log(info);
+	const info = this.calculate([size, size], position);//console.log(info);
 	const pickaxe = new Pickaxe(size, position), // @TODO
 	      imageElem = this.svgLowLevel.createImage('/assets-proper/pickaxe.png', info.sizes_low, info.point_lowcorner);
 	const pickaxeWidget = new PickaxeWidget(this.canvasPseudoWidget, imageElem, pickaxe);
 	this.bijectionSvgToGeom.set(imageElem, pickaxe);
-	console.log(pickaxeWidget);
+	//console.log(pickaxeWidget);
 	return pickaxeWidget;
 };
 
