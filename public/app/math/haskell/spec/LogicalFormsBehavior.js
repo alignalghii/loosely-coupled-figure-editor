@@ -14,7 +14,7 @@ LogicalFormsBehavior.prototype.shouldCycleToOpsTerminatedListWith = function ()
 	function changeCountsAsConvexValue(referenceRotDir, a1, a2) {return isConvexValue(referenceRotDir == '+' ? a2-a1 : a1-a2);}
 	function showAsDegree (a) {return ''+a+'°';}
 	return true &&
-		vecEq(cycleToOpsTerminatedListWith(changeIsConvexValue, showAsDegree, [0, 90, 180, 270]), [['0°', 'and'], ['90°', 'and'], ['180°', 'and'], ['270°', 'and']])
+		vecEq(cycleToOpsTerminatedListWith(changeIsConvexValue, showAsDegree, [0, 90, 180, 270]), [['0°', 'and'], ['90°', 'and'], ['180°', 'and'], ['270°', 'and']]) &&
 		true;
 };
 

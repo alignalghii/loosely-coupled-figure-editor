@@ -57,6 +57,10 @@ WindowWidget.prototype.scale = function (q)
 	this.updateDownward();
 };
 
+WindowWidget.prototype.reflectVerticallyRef   = function () {console.log('Flip window vertically (rel)'  );};
+WindowWidget.prototype.reflectHorizontallyRef = function () {console.log('Flip window horizontally (rel)');};
+WindowWidget.prototype.reflectVertically      = function () {console.log('Flip window vertically (abs)'  );};
+WindowWidget.prototype.reflectHorizontally    = function () {console.log('Flip window horizontally (abs)');};
 
 WindowWidget.prototype.restoreOn = canvasPseudoWidget => canvasPseudoWidget.windowWidgetFactory.create(2.3, [-1.7, -4]); // @TODO note that this is a class method
 

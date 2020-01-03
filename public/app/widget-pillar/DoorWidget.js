@@ -57,6 +57,76 @@ DoorWidget.prototype.scale = function (q)
 	this.updateDownward();
 };
 
+DoorWidget.prototype.reflectVerticallyRef = function ()
+{
+	console.log('Flip door vertically (ref)');
+	// @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30
+	const x = Number(this.low.getAttribute('x')),
+	      y = Number(this.low.getAttribute('y'));
+	const w = Number(this.low.getAttribute('width')),
+	      h = Number(this.low.getAttribute('height'));
+	let t = this.low.getAttribute('transform');
+	if (t) {
+		const regexp = /(^|.*[^ ])\s*translate\(-?\d+(\.\d+)?[, ]\s*-?\d+(\.\d+)?\)\s*scale\(-1[, ]\s*1\)\s*translate\(-?\d+(\.\d+)?[, ]\s*-?\d+(\.\d+)?\)\s*$/;
+		if (regexp.test(t)) {
+			const submatches = regexp.exec(t);
+			if (submatches.length > 1) {
+				t = submatches[1];
+				console.log('Submatch removal');
+			} else throw 'Regexp bug';
+		} else {
+			t = t + ` translate(${x+w} ${y}) scale(-1, 1) translate(${-x-w} ${-y})`;
+			console.log('Direct addition');
+		}
+		//this.low.setAttribute('transform', t); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30
+	} else {
+		t = `translate(${x+w} ${y}) scale(-1, 1) translate(${-x-w} ${-y})`;
+		console.log('Virgin direct addition');
+	}
+	if (t) {
+		this.low.setAttribute('transform', t); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30
+	} else {
+		this.low.removeAttribute('transform');
+	}
+};
+
+DoorWidget.prototype.reflectHorizontallyRef = function ()
+{
+	console.log('Flip door horizontally (ref)');
+	// @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30
+	const x = Number(this.low.getAttribute('x')),
+	      y = Number(this.low.getAttribute('y'));
+	const w = Number(this.low.getAttribute('width')),
+	      h = Number(this.low.getAttribute('height'));
+	let t = this.low.getAttribute('transform');
+	if (t) {
+		const regexp = /(^|.*[^ ])\s*translate\(-?\d+(\.\d+)?[, ]\s*-?\d+(\.\d+)?\)\s*scale\(1[, ]\s*-1\)\s*translate\(-?\d+(\.\d+)?[, ]\s*-?\d+(\.\d+)?\)\s*$/;
+		if (regexp.test(t)) {
+			const submatches = regexp.exec(t);
+			if (submatches.length > 1) {
+				t = submatches[1];
+				console.log('Submatch removal');
+			} else throw 'Regexp bug';
+		} else {
+			t = t + ` translate(${x} ${y+h/2}) scale(1, -1) translate(${-x} ${-y-h/2})`;
+			console.log('Direct addition');
+		}
+		//this.low.setAttribute('transform', t); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30
+	} else {
+		t = `translate(${x} ${y+h/2}) scale(1, -1) translate(${-x} ${-y-h/2})`;
+		console.log('Virgin direct addition');
+	}
+	if (t) {
+		this.low.setAttribute('transform', t); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30
+	} else {
+		this.low.removeAttribute('transform');
+	}
+};
+
+
+DoorWidget.prototype.reflectVertically   = function () {console.log('Flip door vertically (abs)'  );};
+DoorWidget.prototype.reflectHorizontally = function () {console.log('Flip door horizontally (abs)');};
+
 
 DoorWidget.prototype.restoreOn = canvasPseudoWidget => canvasPseudoWidget.doorWidgetFactory.create(2.3, [ 1.7, -4]); // @TODO note that this is a class method
 

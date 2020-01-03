@@ -99,6 +99,7 @@ GeomTransformationController.prototype.closeScaleStressSpan = function ()
 
 GeomTransformationController.prototype.reflectionFlip = function (commandNamePair, currentWEPos, eitherTarget)
 {
+	console.log('GeomTransformationController entered for flipping');
 	// @TODO: reuse repeating code occurrences
 	const canvasPseudoWidget = this.canvasPseudoWidgetForEitherTarget(eitherTarget),
 	      board              = canvasPseudoWidget.board();
@@ -107,7 +108,7 @@ GeomTransformationController.prototype.reflectionFlip = function (commandNamePai
 		nearestFigure => {
 			const reflectionFlip = new ReflectionFlip(this.state.interpret(commandNamePair), nearestFigure, canvasPseudoWidget);
 			const log = reflectionFlip.stepOrWaitAlsoLog();
-			return '...';//log.message(); // @TODO: Plan log message
+			return `NearestFigure constructor name: ${nearestFigure.constructor.name}.`;//log.message(); // @TODO: Plan log message
 		},
 		maybeNearestFigureHence(board, currentWEPos)
 	);

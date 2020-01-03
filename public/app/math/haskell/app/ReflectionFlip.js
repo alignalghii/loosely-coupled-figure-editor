@@ -21,7 +21,7 @@ ReflectionFlip.prototype.query = function () // a pure function without side eff
 	} else {
 		return {
 			log     : {},//new ReflectionFlipLog(ratioAOA_, [A, O, last], nearestFigure.referenceAngle, ['just', radAOA_(last, O, A_)]),
-			flagAction: false
+			flagAction:  false || widget.constructor.name == 'DoorWidget' || widget.constructor.name == 'WindowWidget' // @TODO refactory @TODO OOP polymorphism
 		};
 	}
 };
