@@ -29,3 +29,5 @@ function selectByMax(scorer, figures)
 	}
 	return keys;
 }
+
+const touchProp = (ob, propName, dflt) => {if (!ob[propName]) ob[propName] = dflt;}; // @TODO put into appropriate module

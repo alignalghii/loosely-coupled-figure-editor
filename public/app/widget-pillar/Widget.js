@@ -16,6 +16,8 @@ function Widget(canvasPseudoWidget,   low, high)
 
 Widget.prototype.factory = function () {throw 'Abstract method';};
 
+Widget.prototype.eq = function (otherWidget) {return this.high == otherWidget.high;};
+
 Widget.prototype.rawDelete = function () {this.factory().rawDelete(this);};
 
 Widget.prototype.delete = function () {throw 'Abstract method';};

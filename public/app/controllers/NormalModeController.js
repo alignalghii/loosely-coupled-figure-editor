@@ -80,13 +80,19 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 					}
 				}
 
+				const widgetEq = (w1, w2) => w1.eq(w2);
 				if (!this.state.prevWidget.high.memHitsMap) this.state.prevWidget.high.memHitsMap = new Bijection;
 				for (let plusRoom of hitsMap.domain()) {
 					if (!this.state.prevWidget.high.memHitsMap.has(plusRoom)) {
 						const plusFigureWidget = canvasPseudoWidget.arbitrary.composeFromBusiness(plusRoom);
 						const maybeCircularSlit = plusFigureWidget.loseWall_(this, this.state.prevWidget, true);
 						maybeMap(
-							circularSlit => this.state.prevWidget.high.memHitsMap.set(plusRoom, circularSlit),
+							circularSlit => {
+								this.state.prevWidget.high.memHitsMap.set(plusRoom, circularSlit);
+								touchProp(plusRoom, 'openings', []);
+								beMemberIfNotYetByEq(this.state.prevWidget, plusRoom.openings, widgetEq); // @TODO very nasty that we store a widget in a business level object
+								this.statusBarDriver.report(`${plusRoom.title.name} gaining ${this.state.prevWidget.constructor.name}: there are now ${plusRoom.openings.filter(w => w.constructor.name == 'WindowWidget').length} windows and ${plusRoom.openings.filter(w => w.constructor.name == 'DoorWidget').length} doors.`);
+							},
 							maybeCircularSlit
 						);
 					}
@@ -97,6 +103,10 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 						const slit = this.state.prevWidget.high.memHitsMap.get(memMinusRoom);
 
 						deleteItem(slit, minusFigureWidget.businessObject.slitsRepresentationCircular.circularSlits);
+						touchProp(memMinusRoom, 'openings', []);
+						deleteItemByEq(this.state.prevWidget, memMinusRoom.openings, widgetEq); // @TODO
+						this.statusBarDriver.report(`${memMinusRoom.title.name} losing ${this.state.prevWidget.constructor.name}: there remain ${memMinusRoom.openings.filter(w => w.constructor.name == 'WindowWidget').length} windows and ${memMinusRoom.openings.filter(w => w.constructor.name == 'DoorWidget').length} doors.`);
+
 						minusFigureWidget.updateSlitStructure();
 						minusFigureWidget.updateDasharray();
 						minusFigureWidget.updateDownward();
@@ -129,7 +139,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 					this.state.focus = currentWidget; this.state.spaceFocus = null;
 					currentWidget.unshowGlittering(); // order 1
 					this.state.focus.showFocus();     // order 2: unshowglittering must not undo SVG-<image> styling @TODO alternative solution
-					this.statusBarDriver.report('Alakzatfókusz automatikusan megjegyezve, üreshelyfókusz levéve.');
+					this.statusBarDriver.addReport('Alakzatfókusz automatikusan megjegyezve, üreshelyfókusz levéve.');
 
 					if (currentWidget.constructor.name == 'WindowWidget' || currentWidget.constructor.name == 'DoorWidget') { // @TODO OOP polymorphism
 						currentWidget.attachToWall(currentWidget.high.memHitsMap, edgesBij, this.canvasPseudoWidgets);
@@ -139,7 +149,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 					/* @TODO DRY, copypasted from `mouseDown` method */
 					this.state.focus.unshowFocus();
 					this.state.focus = null;
-					this.statusBarDriver.report('Automatikus alakzatfókusz levéve.');
+					this.statusBarDriver.addReport('Automatikus alakzatfókusz levéve.');
 
 					if (currentWidget.constructor.name == 'WindowWidget' || currentWidget.constructor.name == 'DoorWidget') { // @TODO OOP polymorphism
 						currentWidget.detachFromWall(this.canvasPseudoWidgets);

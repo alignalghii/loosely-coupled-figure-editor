@@ -144,7 +144,28 @@ function deleteItem(item, list)
 	return exists;
 }
 
-const isMember = (item, list) => list.indexOf(item) >= 0;
+// @TODO move to ListX
+function addNonRepItemByEq(item, list, eq)
+{
+	const allow = !isMemberByEq(item, list, eq);
+	if (allow) list.push(item);
+	return allow;
+}
+
+// @TODO move to ListX
+function deleteItemByEq(item, list, eq)
+{
+	const i = list.findIndex(curr => eq(item, curr));
+	const exists = i >= 0;
+	if (exists) list.splice(i, 1);
+	return exists;
+}
+
+const isMember     = (item, list    ) => list.indexOf(item) >= 0;
+const isMemberByEq = (item, list, eq) => list.some(curr => eq(item, curr));
+
+const beMemberIfNotYet     = (item, list    ) => {if (!isMember    (item, list    )) list.push(item);};
+const beMemberIfNotYetByEq = (item, list, eq) => {if (!isMemberByEq(item, list, eq)) list.push(item);};
 
 function nonRepeating(list)
 {
