@@ -131,7 +131,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 					this.state.focus.showFocus();     // order 2: unshowglittering must not undo SVG-<image> styling @TODO alternative solution
 					this.statusBarDriver.report('Alakzatfókusz automatikusan megjegyezve, üreshelyfókusz levéve.');
 
-					if (this.state.prevWidget.constructor.name == 'WindowWidget' || this.state.prevWidget.constructor.name == 'DoorWidget') { // @TODO OOP polymorphism
+					if (currentWidget.constructor.name == 'WindowWidget' || currentWidget.constructor.name == 'DoorWidget') { // @TODO OOP polymorphism
 						currentWidget.attachToWall(currentWidget.high.memHitsMap, edgesBij, this.canvasPseudoWidgets);
 					}
 				}
@@ -141,7 +141,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 					this.state.focus = null;
 					this.statusBarDriver.report('Automatikus alakzatfókusz levéve.');
 
-					if (this.state.prevWidget.constructor.name == 'WindowWidget' || this.state.prevWidget.constructor.name == 'DoorWidget') { // @TODO OOP polymorphism
+					if (currentWidget.constructor.name == 'WindowWidget' || currentWidget.constructor.name == 'DoorWidget') { // @TODO OOP polymorphism
 						currentWidget.detachFromWall(this.canvasPseudoWidgets);
 					}
 				}
@@ -151,6 +151,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 		}
 	}
 };
+
 
 NormalModeController.prototype.translatePrevWidgetAndRememberItsNewPosition = function (allowableDisplacement)
 {
