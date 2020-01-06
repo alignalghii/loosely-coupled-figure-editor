@@ -37,6 +37,10 @@ Room.prototype.doTranslation = function (displacement)
 	this.escorts.map(
 		escort => escort.doTranslation(displacement)
 	);
+	touchProp(this, 'openings', []);
+	this.openings.map(
+		widget => widget.translate(displacement)
+	);
 };
 
 Room.prototype.doRotation = function (phi)

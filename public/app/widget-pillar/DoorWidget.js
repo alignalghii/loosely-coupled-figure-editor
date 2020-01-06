@@ -22,6 +22,35 @@ DoorWidget.prototype.translate = function (displacement)
 {
 	this.high.doTranslation(displacement);
 	this.updateDownward();
+
+	// @TODO store important data on the high-level instead of hacking directly with low-level
+	const x = Number(this.low.getAttribute('x')),
+	      y = Number(this.low.getAttribute('y'));
+	const w = Number(this.low.getAttribute('width')),
+	      h = Number(this.low.getAttribute('height'));
+	const Ox = x + w / 2,
+	      Oy = y + h / 2;
+	let transformString = this.low.getAttribute('transform');
+	if (transformString) {
+		const rotationMatches = /(.*)rotate\((-?\d+(\.\d+)?) (-?\d+(\.\d+)?) (-?\d+(\.\d+)?)\)(.*)/.exec(transformString);
+		if (rotationMatches && rotationMatches.length > 8) {
+			const [_, before, rotAngle, _a, rotOldX, _x, rotOldY, _y, after] = rotationMatches;
+			transformString = `${before}rotate(${rotAngle} ${Ox} ${Oy})${after}`;
+		}
+
+		const reflectionMatches1 = /(.*)translate\(-?\d+(\.\d+)?[, ]\s*-?\d+(\.\d+)?\)\s*scale\(-1[, ]\s*1\)\s*translate\(-?\d+(\.\d+)?[, ]\s*-?\d+(\.\d+)?\)(.*)/.exec(transformString);
+		if (reflectionMatches1 && reflectionMatches1.length > 6) {
+			const [_, before, _t1x, _t1y, _t2x, _t2y, after] = reflectionMatches1;
+			transformString = `${before}translate(${x+w} ${y}) scale(-1, 1) translate(${-x-w} ${-y})${after}`;
+		}
+
+		const reflectionMatches2 = /(.*)translate\(-?\d+(\.\d+)?[, ]\s*-?\d+(\.\d+)?\)\s*scale\(1[, ]\s*-1\)\s*translate\(-?\d+(\.\d+)?[, ]\s*-?\d+(\.\d+)?\)(.*)/.exec(transformString);
+		if (reflectionMatches2 && reflectionMatches2.length > 6) {
+			const [_, before, _t1x, _t1y, _t2x, _t2y, after] = reflectionMatches2;
+			transformString = `${before}translate(${x} ${Oy}) scale(1, -1) translate(${-x} ${-Oy})${after}`;
+		}
+		this.low.setAttribute('transform', transformString);
+	}
 };
 
 DoorWidget.prototype.updateDownward = function ()

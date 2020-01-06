@@ -22,6 +22,18 @@ WindowWidget.prototype.translate = function (displacement)
 {
 	this.high.doTranslation(displacement);
 	this.updateDownward();
+
+	// @TODO store important data on the high-level instead of hacking directly with low-level
+	const Ox = Number(this.low.getAttribute('x')) + Number(this.low.getAttribute('width' )) / 2,
+	      Oy = Number(this.low.getAttribute('y')) + Number(this.low.getAttribute('height')) / 2;
+	const transformString = this.low.getAttribute('transform');
+	if (transformString) {
+		const matches = /(.*)rotate\((-?\d+(\.\d+)?) (-?\d+(\.\d+)?) (-?\d+(\.\d+)?)\)(.*)/.exec(transformString);
+		if (matches.length >= 9) {
+			const [_, before, rotAngle, _a, rotOldX, _x, rotOldY, _y, after] = matches;
+			this.low.setAttribute('transform', `${before}rotate(${rotAngle} ${Ox} ${Oy})${after}`);
+		}
+	}
 };
 
 WindowWidget.prototype.updateDownward = function ()
