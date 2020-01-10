@@ -245,6 +245,9 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
     - ajtó és ablak esetében is, de ott ajtót, ablakot illeszt be, a vonszolható alak itt is eltűnik.
     - Ha a munkavásznom van már odavoszolt szoba, akkor a faltörő kost a nyilászűáró menűvászonról nem tudom a nélkül átugrasztani a munkavszinra, hogy ne ugatna föl a kutya (hiába nincs ütközés). Ennek ellenére a dolognak mégis köze van elvi ütközéshez: az y koordinátának elvileg ütközöképes pozícióban kell lennie (és csak az x koordinátán múlhat, hogy ténylegesen nincs ütközés).
 
+ - befelé nyíló ajtó esetén is úgy kell rákattintani az ajtóra, mintha az kifelé nyílnék
+ - A másik vászontra átrántott szoba nem viszi magával nyílászáróit, azok ott maradnak, amúgy az együttmozgás akkor is működik, visszarátáskor tök korrektül újraegyütt vannak.
+
 
 # Fontend
  - Freeze lenne jó, mint ahogy az excelben táblasorokat lehet rögzíteni. itt persze a statussort lenne jó így. (Úgy tűnik, az overflow scroll erre elfogadható eszköz lesz)

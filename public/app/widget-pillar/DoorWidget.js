@@ -180,7 +180,7 @@ DoorWidget.prototype.attachToWall   = function (memHitsMap, edgesBij, canvasPseu
 			maybeReachEndPoint(room.figure.vertices[0], tour(room.figure.vertices).map(edgeVector), slit.center)
 		);
 	}
-	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/door-attached.png'); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
+	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/door-attached2.png'); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
 	let edge = null, _ = null;
 	for ([edge, _] of edgesBij.mapStraight);
 	if (edge) {
