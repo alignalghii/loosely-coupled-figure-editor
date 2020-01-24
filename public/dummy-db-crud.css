@@ -6,3 +6,16 @@ table, th, td {
 td[colspan="2"] {
 	text-align: center;
 }
+
+td.error {
+	color: red;
+	font-weight: bold;
+	width: 23em;
+}
+
+caption {
+	color: white;
+	background-color: black;
+	height: 1.5em;
+	font-family: monospace;
+}
