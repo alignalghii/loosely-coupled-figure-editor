@@ -26,12 +26,8 @@ class Router
 			case preg_match('!GET /router.php/show-all!', $request, $matches): $this->allController->showAll(); break;
 
 			case preg_match('!POST /router.php/flat/add!', $request, $matches): $this->allController->addFlat($_POST['address']); break;
-				//$this->flatRelation->add();
-				//$this->allController->showAll();
 			case preg_match('!POST /router.php/flat/update/(\d+)!', $request, $matches): $this->allController->updateFlat($matches[1], $_POST['address']); break;
 			case preg_match('!POST /router.php/flat/del/(\d+)!', $request, $matches): $this->allController->deleteFlat($matches[1]); break;
-				//$this->flatRelation->delete($matches[1]);
-				//$this->allController->showAll();
 
 			// @TODO parametrize out superglobal @TODO use entity instead of arguments listing or record data array
 			case preg_match('!POST /router.php/room-prototype/add!', $request, $matches): $this->allController->addRoomPrototype($_POST['name']); break;
@@ -40,8 +36,6 @@ class Router
 
 			case preg_match('!POST /router.php/room/add!', $request, $matches): $this->allController->addRoom($_POST['flat_id'], $_POST['room_prototype_id']); break;
 			case preg_match('!POST /router.php/room/update/(\d+)!', $request, $matches): $this->allController->updateRoom($matches[1], $_POST['flat_id'], $_POST['room_prototype_id']); break;
-			//case preg_match('!POST /router.php/room/update/name/(\d+)!', $request, $matches): $this->allController->updateRoomName($matches[1], $_POST['name']); break;
-			//case preg_match('!POST /router.php/room/update/flat_id/(\d+)!', $request, $matches): $this->allController->updateRoomFlatId($matches[1], $_POST['flat_id']); break;
 			case preg_match('!POST /router.php/room/del/(\d+)!', $request, $matches): $this->allController->deleteRoom($matches[1]); break;
 
 			default:
@@ -202,7 +196,6 @@ class AllController // @TODO split it via mixins?
 	function deleteFlat(int $id): void
 	{
 		$flag = $this->flatRelation->delete($id);
-		// @TODO validation (when deleting from a parent table having dependencies)
 		$this->render(
 			'dummy-db-crud.php',
 			[
@@ -211,7 +204,7 @@ class AllController // @TODO split it via mixins?
 						function ($record) use ($flag, $id) {
 							return [
 								'data' => $record,
-								'error' => $record['id'] == $id && !$flag ? 'Függőségi hiba!' : ''
+								'error' => $record['id'] == $id && !$flag ? 'Függőségi hiba!' : '' // dependency validation (deleting from a parent table)
 							];
 						},
 						$this->flatRelation->getAll()
@@ -347,7 +340,6 @@ class AllController // @TODO split it via mixins?
 	function deleteRoomPrototype(int $id): void
 	{
 		$flag = $this->roomPrototypeRelation->delete($id);
-		// @TODO validation (when deleting from a parent table having dependencies)
 		$this->render(
 			'dummy-db-crud.php',
 			[
@@ -366,7 +358,7 @@ class AllController // @TODO split it via mixins?
 						function ($record) use ($flag, $id) {
 							return [
 								'data' => $record,
-								'error' => $record['id'] == $id && !$flag ? 'Függőségi hiba!' : ''
+								'error' => $record['id'] == $id && !$flag ? 'Függőségi hiba!' : '' // dependency validation (deleting from a parent table)
 							];
 						},
 						$this->roomPrototypeRelation->getAll()
@@ -488,44 +480,7 @@ class AllController // @TODO split it via mixins?
 		);
 	}
 
-
-	/*function updateRoomName(int $id, string $name): void
-	{
-		$flag = $this->roomRelation->updateName($id, $name);
-		$validate  = function ($room) use ($flag, $id) {
-			if (!$flag && $room['id'] == $id)
-				$room['updateError'] = 'Nem lehet üres';
-			return $room;
-		};
-		$this->render(
-			'dummy-db-crud.php',
-			[
-				'flats' => $this->flatRelation->getAll(),
-				'room_prototypes' => $this->roomPrototypeRelation->getAll(),
-				'rooms' => array_map($validate, $this->roomRelation->getAll())
-			]
-		);
-	}*/
-
-	/*function updateRoomFlatId(int $id, string $flatId): void
-	{
-		$flag = preg_match('/^\d+$/', $flatId) && $this->roomRelation->updateFlatId($id, $flatId);
-		$validate  = function ($room) use ($flag, $id) {
-			if (!$flag && $room['id'] == $id)
-				$room['updateError'] = 'Nem lehet üres';
-			return $room;
-		};
-		$this->render(
-			'dummy-db-crud.php',
-			[
-				'flats' => $this->flatRelation->getAll(),
-				'room_prototypes' => $this->roomPrototypeRelation->getAll(),
-				'rooms' => array_map($validate, $this->roomRelation->getAll())
-			]
-		);
-	}*/
-
-	function deleteRoom(int $id): void // @TODO validation (when deleting from a parent table having dependencies)
+	function deleteRoom(int $id): void
 	{
 		$flag = $this->roomRelation->delete($id);
 		$this->render(
@@ -556,7 +511,7 @@ class AllController // @TODO split it via mixins?
 						function ($record) use ($flag, $id) {
 							return [
 								'data' => $record,
-								'error' => $record['id'] == $id && !$flag ? 'Függőségi hiba!' : ''
+								'error' => $record['id'] == $id && !$flag ? 'Függőségi hiba!' : '' // dependency validation (deleting from a parent table)
 							];
 						},
 						$this->roomRelation->getAll()
@@ -697,28 +652,6 @@ class RoomRelation
 		$st->bindValue('room_prototype_id', $roomPrototypeId, PDO::PARAM_INT);
 		return $st->execute();
 	}
-
-
-	/*function updateName(int $id, string $name): bool
-	{
-		$name = trim($name);
-		if ($name) {
-			$st = $this->dbh->prepare('UPDATE `room` SET `name` = :name WHERE `id` = :id');
-			$st->bindValue('id'  , $id  , PDO::PARAM_INT);
-			$st->bindValue('name', $name, PDO::PARAM_STR);
-			return $st->execute();
-		} else {
-			return false;
-		}
-	}*/
-
-	/*function updateFlatId(int $id, int $flatId): bool
-	{
-		$st = $this->dbh->prepare('UPDATE `room` SET `flat_id` = :flat_id WHERE `id` = :id');
-		$st->bindValue('id'  , $id  , PDO::PARAM_INT);
-		$st->bindValue('flat_id', $flatId, PDO::PARAM_INT);
-		return $st->execute();
-	}*/
 
 	function delete(int $id): bool
 	{
