@@ -45,6 +45,136 @@ class Router
 	}
 }
 
+abstract class ViewModel
+{
+	protected $entities;
+
+	public function __construct(array $entities) {$this->entities = $entities;}
+
+	abstract public function fields();
+
+	public function showAll(): array
+	{
+		return [
+			'records' => $this->packEntities(),
+			'newRecord' => $this->blank()
+		];
+	}
+
+	// Add:
+
+	public function add(bool $flag, array $postedRecord): array
+	{
+		return [
+			'records' => $this->packEntities(),
+			'newRecord' => $flag ? $this->blank() : $this->showBack($postedRecord)
+		];
+	}
+
+	protected function blank(): array {return ['data' => $this->blankRecord(), 'error' => ''];}
+
+	protected function blankRecord()
+	{
+		return array_map(
+			function ($fieldType) {return '';},
+			$this->fields()
+		);
+	}
+
+	protected function showBack(array $postedRecord): array
+	{
+		return [
+			'data' => $postedRecord,
+			'error' => 'Hiba (pl. üres mező, vagy ismétlődő egyedi adat)'
+		];
+	}
+
+	protected function pack(array $entity): array {return ['data' => $entity, 'error' => ''];}
+	protected function packEntities(): array {return array_map([$this, 'pack'], $this->entities);}
+
+	// Update:
+
+	public function update(bool $isOK, array $dbRecords, int $id, array $showBackRecord): array
+	{
+		return [
+			'records' => $this->allPackOrShowBackHere($isOK, $dbRecords, $id, $showBackRecord),
+			'newRecord' => $this->blank()
+		];
+	}
+
+	protected function allPackOrShowBackHere(bool $isOK, array $dbRecords, int $id, array $showBackRecord): array
+	{
+		return array_map(
+			function ($dbRecord) use ($isOK, $id, $showBackRecord) {
+				return $this->packOrShowBackHere($isOK, $dbRecord, $id, $showBackRecord);
+			},
+			$dbRecords
+		);
+	}
+
+	protected function packOrShowBackHere(bool $isOK, array $dbRecord, int $id, array $showBackRecord): array
+	{
+		return $this->showBackOrPack(
+			$dbRecord['id'] == $id && !$isOK,
+			compact('id') + $showBackRecord,
+			$dbRecord
+		);
+	}
+
+	protected function showBackOrPack(bool $isError, array $showBackRecord, array $dbRecord): array {return $isError ? $this->showBack($showBackRecord) : $this->pack($dbRecord);}
+
+
+	// Delete:
+
+	public function delete(bool $isOK, int $id, array $records): array
+	{
+		return [
+			'records' => array_map(
+				function ($record) use ($isOK, $id) {
+					return $this->packPossiblyErrorHere($isOK, $id, $record);
+				},
+				$records
+			),
+			'newRecord' => $this->blank()
+		];
+	}
+
+	protected function allPackPossiblyErrorHere(bool $isOK, int $id, array $records): array
+	{
+		return array_map(
+			function ($record) use ($isOK, $id) {
+				return $this->packPossiblyErrorHere($isOK, $id, $record);
+			},
+			$records
+		);
+	}
+
+	protected function packPossiblyErrorHere(bool $isOK, int $id, array $record): array {return $this->packPossiblyError(!$isOK && $record['id'] == $id, $record);}
+
+	protected function packPossiblyError(bool $isError, array $record): array
+	{
+		return [
+			'data' => $record,
+			'error' => $isError ? 'Függőségi hiba!' : '' // dependency validation (deleting from a parent table)
+		];
+	}
+}
+
+class FlatsViewModel extends ViewModel
+{
+	public function fields(): array {return ['id' => PDO::PARAM_INT, 'address' => PDO::PARAM_STR];}
+}
+
+class RoomPrototypesViewModel extends ViewModel
+{
+	public function fields(): array {return ['id' => PDO::PARAM_INT, 'name' => PDO::PARAM_STR];}
+}
+
+class RoomsViewModel extends ViewModel
+{
+	function fields(): array {return ['id' => PDO::PARAM_INT, 'flat_id' => PDO::PARAM_INT, 'room_prototype_id' => PDO::PARAM_INT];}
+}
+
 /** Controller */
 
 class AllController // @TODO split it via mixins?
@@ -58,39 +188,20 @@ class AllController // @TODO split it via mixins?
 
 	function showAll(): void
 	{
+		$flatEntities          = $this->flatRelation->getAll();
+		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
+		$roomEntities          = $this->roomRelation->getAll();
+
+		$flatsViewModel          = new FlatsViewModel($flatEntities);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
+		$roomsViewModel          = new RoomsViewModel($roomEntities);
+
 		$this->render(
 			'dummy-db-crud.php',
 			[
-				'flatsViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->flatRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['address' => ''],
-						'error' => ''
-					]
-				],
-				'roomPrototypesViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->roomPrototypeRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['name' => ''],
-						'error' => ''
-					]
-				],
-				'roomsViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->roomRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['flat_id' => '', 'room_prototype_id' => ''],
-						'error' => ''
-					]
-				]
+				'flatsViewModel'          => $flatsViewModel->showAll(),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
 	}
@@ -101,45 +212,21 @@ class AllController // @TODO split it via mixins?
 	function addFlat(string $address): void // @TODO FlatEntity
 	{
 		$flag = $this->flatRelation->add($address);
+
+		$flatEntities          = $this->flatRelation->getAll();
+		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
+		$roomEntities          = $this->roomRelation->getAll();
+
+		$flatsViewModel          = new FlatsViewModel($flatEntities);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
+		$roomsViewModel          = new RoomsViewModel($roomEntities);
+
 		$this->render(
 			'dummy-db-crud.php',
 			[
-				'flatsViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->flatRelation->getAll()
-					),
-					'newRecord' =>
-						$flag ?
-						[
-							'data' => ['address' => ''],
-							'error' => ''
-						] :
-						[
-							'data' => ['address' => $address],
-							'error' => 'Hiba (pl. üres mező, vagy ismétlődő egyedi adat)'
-						]
-				],
-				'roomPrototypesViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->roomPrototypeRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['name' => ''],
-						'error' => ''
-					]
-				],
-				'roomsViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->roomRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['flat_id' => '', 'room_prototype_id' => ''],
-						'error' => ''
-					]
-				]
+				'flatsViewModel'          => $flatsViewModel->add($flag, ['address' => $address]),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
 	}
@@ -147,48 +234,21 @@ class AllController // @TODO split it via mixins?
 	function updateFlat(int $id, string $address): void // @TODO FlatEntity
 	{
 		$flag = $this->flatRelation->update($id, $address);
+
+		$flatEntities          = $this->flatRelation->getAll();
+		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
+		$roomEntities          = $this->roomRelation->getAll();
+
+		$flatsViewModel          = new FlatsViewModel($flatEntities);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
+		$roomsViewModel          = new RoomsViewModel($roomEntities);
+
 		$this->render(
 			'dummy-db-crud.php',
 			[
-				'flatsViewModel' => [
-					'records' => array_map(
-						function ($record) use ($flag, $id, $address) {
-							if ($record['id'] == $id && !$flag) {
-								return [
-									'data' => ['id' => $id, 'address' => $address],
-									'error' => 'Hiba (pl. üres mező, vagy ismétlődő egyedi adat)'
-								];
-							} else {
-								return ['data' => $record, 'error' => ''];
-							}
-						},
-						$this->flatRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['address' => ''],
-						'error' => ''
-					]
-				],
-				'roomPrototypesViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->roomPrototypeRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['name' => ''],
-						'error' => ''
-					]
-				],
-				'roomsViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->roomRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['flat_id' => '', 'room_prototype_id' => ''],
-						'error' => ''
-					]
-				],
+				'flatsViewModel'          => $flatsViewModel->update($flag, $flatEntities, $id,  compact('id', 'address')),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
 	}
@@ -196,44 +256,21 @@ class AllController // @TODO split it via mixins?
 	function deleteFlat(int $id): void
 	{
 		$flag = $this->flatRelation->delete($id);
+
+		$flatEntities          = $this->flatRelation->getAll();
+		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
+		$roomEntities          = $this->roomRelation->getAll();
+
+		$flatsViewModel          = new FlatsViewModel($flatEntities);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
+		$roomsViewModel          = new RoomsViewModel($roomEntities);
+
 		$this->render(
 			'dummy-db-crud.php',
 			[
-				'flatsViewModel' => [
-					'records' => array_map(
-						function ($record) use ($flag, $id) {
-							return [
-								'data' => $record,
-								'error' => $record['id'] == $id && !$flag ? 'Függőségi hiba!' : '' // dependency validation (deleting from a parent table)
-							];
-						},
-						$this->flatRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['address' => ''],
-						'error' => ''
-					]
-				],
-				'roomPrototypesViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->roomPrototypeRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['name' => ''],
-						'error' => ''
-					]
-				],
-				'roomsViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->roomRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['flat_id' => '', 'room_prototype_id' => ''],
-						'error' => ''
-					]
-				],
+				'flatsViewModel'          => $flatsViewModel->delete($flag, $id, $flatEntities),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
 	}
@@ -245,45 +282,21 @@ class AllController // @TODO split it via mixins?
 	function addRoomPrototype(string $name): void // @TODO FlatEntity
 	{
 		$flag = $this->roomPrototypeRelation->add($name);
+
+		$flatEntities          = $this->flatRelation->getAll();
+		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
+		$roomEntities          = $this->roomRelation->getAll();
+
+		$flatsViewModel          = new FlatsViewModel($flatEntities);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
+		$roomsViewModel          = new RoomsViewModel($roomEntities);
+
 		$this->render(
 			'dummy-db-crud.php',
 			[
-				'flatsViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->flatRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['address' => ''],
-						'error' => ''
-					]
-				],
-				'roomPrototypesViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->roomPrototypeRelation->getAll()
-					),
-					'newRecord' =>
-						$flag ?
-						[
-							'data' => ['name' => ''],
-							'error' => ''
-						] :
-						[
-							'data' => ['name' => $name],
-							'error' => 'Hiba (pl. üres mező, vagy ismétlődő egyedi adat)'
-						]
-				],
-				'roomsViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->roomRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['flat_id' => '', 'room_prototype_id' => ''],
-						'error' => ''
-					]
-				]
+				'flatsViewModel'          => $flatsViewModel->showAll(),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->add($flag, ['name' => $name]),
+				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
 	}
@@ -291,48 +304,21 @@ class AllController // @TODO split it via mixins?
 	function updateRoomPrototype(int $id, string $name): void // @TODO FlatEntity
 	{
 		$flag = $this->roomPrototypeRelation->update($id, $name);
+
+		$flatEntities          = $this->flatRelation->getAll();
+		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
+		$roomEntities          = $this->roomRelation->getAll();
+
+		$flatsViewModel          = new FlatsViewModel($flatEntities);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
+		$roomsViewModel          = new RoomsViewModel($roomEntities);
+
 		$this->render(
 			'dummy-db-crud.php',
 			[
-				'flatsViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->flatRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['address' => ''],
-						'error' => ''
-					]
-				],
-				'roomPrototypesViewModel' => [
-					'records' => array_map(
-						function ($record) use ($flag, $id, $name) {
-							if ($record['id'] == $id && !$flag) {
-								return [
-									'data' => ['id' => $id, 'name' => $name],
-									'error' => 'Hiba (pl. üres mező, vagy ismétlődő egyedi adat)'
-								];
-							} else {
-								return ['data' => $record, 'error' => ''];
-							}
-						},
-						$this->roomPrototypeRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['name' => ''],
-						'error' => ''
-					]
-				],
-				'roomsViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->roomRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['flat_id' => '', 'room_prototype_id' => ''],
-						'error' => ''
-					]
-				],
+				'flatsViewModel'          => $flatsViewModel->showAll(),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->update($flag, $roomPrototypeEntities, $id, compact('id', 'name')),
+				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
 	}
@@ -340,44 +326,21 @@ class AllController // @TODO split it via mixins?
 	function deleteRoomPrototype(int $id): void
 	{
 		$flag = $this->roomPrototypeRelation->delete($id);
+
+		$flatEntities          = $this->flatRelation->getAll();
+		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
+		$roomEntities          = $this->roomRelation->getAll();
+
+		$flatsViewModel          = new FlatsViewModel($flatEntities);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
+		$roomsViewModel          = new RoomsViewModel($roomEntities);
+
 		$this->render(
 			'dummy-db-crud.php',
 			[
-				'flatsViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->flatRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['address' => ''],
-						'error' => ''
-					]
-				],
-				'roomPrototypesViewModel' => [
-					'records' => array_map(
-						function ($record) use ($flag, $id) {
-							return [
-								'data' => $record,
-								'error' => $record['id'] == $id && !$flag ? 'Függőségi hiba!' : '' // dependency validation (deleting from a parent table)
-							];
-						},
-						$this->roomPrototypeRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['name' => ''],
-						'error' => ''
-					]
-				],
-				'roomsViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->roomRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['flat_id' => '', 'room_prototype_id' => ''],
-						'error' => ''
-					]
-				],
+				'flatsViewModel'          => $flatsViewModel->showAll(),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->delete($flag, $id, $roomPrototypeEntities),
+				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
 	}
@@ -385,142 +348,69 @@ class AllController // @TODO split it via mixins?
 
 	// Room:
 
-	function addRoom(string $flatId, string $roomPrototypeId): void // @TODO RoomEntity
+	function addRoom(string $flat_id, string $room_prototype_id): void // @TODO RoomEntity
 	{
-		$flag = preg_match('/^\d+$/', $flatId) && preg_match('/^\d+$/', $roomPrototypeId) && $this->roomRelation->add($flatId, $roomPrototypeId);
+		$flag = preg_match('/^\d+$/', $flat_id) && preg_match('/^\d+$/', $room_prototype_id) && $this->roomRelation->add($flat_id, $room_prototype_id);
+
+		$flatEntities          = $this->flatRelation->getAll();
+		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
+		$roomEntities          = $this->roomRelation->getAll();
+
+		$flatsViewModel          = new FlatsViewModel($flatEntities);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
+		$roomsViewModel          = new RoomsViewModel($roomEntities);
+
 		$this->render(
 			'dummy-db-crud.php',
 			[
-				'flatsViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->flatRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['address' => ''],
-						'error' => ''
-					]
-				],
-				'roomPrototypesViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->roomPrototypeRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['name' => ''],
-						'error' => ''
-					]
-				],
-				'roomsViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->roomRelation->getAll()
-					),
-					'newRecord' =>
-						$flag ?
-						[
-							'data' => ['flat_id' => '', 'room_prototype_id' => ''],
-							'error' => ''
-						] :
-						[
-							'data' => ['flat_id' => $flatId, 'room_prototype_id' => $roomPrototypeId],
-							'error' => 'Hiba (pl. üres mező, vagy ismétlődő egyedi adat)'
-						]
-				]
+				'flatsViewModel'          => $flatsViewModel->showAll(),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomsViewModel'          => $roomsViewModel->add($flag, compact('flat_id', 'room_prototype_id'))
 			]
 		);
 	}
 
-	function updateRoom(int $id, string $flatId, string $roomPrototypeId): void // @TODO RoomEntity
+	function updateRoom(int $id, string $flat_id, string $room_prototype_id): void // @TODO RoomEntity
 	{
-		$flag = preg_match('/^\d+$/', $flatId) && $this->roomRelation->update($id, $flatId, $roomPrototypeId);
+		$flag = preg_match('/^\d+$/', $flat_id) && preg_match('/^\d+$/', $room_prototype_id) && $this->roomRelation->update($id, $flat_id, $room_prototype_id);
+
+		$flatEntities          = $this->flatRelation->getAll();
+		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
+		$roomEntities          = $this->roomRelation->getAll();
+
+		$flatsViewModel          = new FlatsViewModel($flatEntities);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
+		$roomsViewModel          = new RoomsViewModel($roomEntities);
+
 		$this->render(
 			'dummy-db-crud.php',
 			[
-				'flatsViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->flatRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['address' => ''],
-						'error' => ''
-					]
-				],
-				'roomPrototypesViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->roomPrototypeRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['name' => ''],
-						'error' => ''
-					]
-				],
-				'roomsViewModel' => [
-					'records' => array_map(
-						function ($record) use ($flag, $id, $flatId, $roomPrototypeId) {
-							if ($record['id'] == $id && !$flag) {
-								return [
-									'data' => ['id' => $id, 'flat_id' => $flatId, 'room_prototype_id' => $roomPrototypeId],
-									'error' => 'Hiba (pl. üres mező, vagy ismétlődő egyedi adat)'
-								];
-							} else {
-								return ['data' => $record, 'error' => ''];
-							}
-						},
-						$this->roomRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['flat_id' => '', 'room_prototype_id' => ''],
-						'error' => ''
-					]
-				]
+				'flatsViewModel'          => $flatsViewModel->showAll(),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomsViewModel'          => $roomsViewModel->update($flag, $roomEntities, $id, compact('id', 'flat_id', 'room_prototype_id'))
 			]
 		);
+		var_dump($flag, $roomEntities, $id, compact('id', 'flat_id', 'room_prototype_id'));
 	}
 
 	function deleteRoom(int $id): void
 	{
 		$flag = $this->roomRelation->delete($id);
+
+		$flatEntities          = $this->flatRelation->getAll();
+		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
+		$roomEntities          = $this->roomRelation->getAll();
+
+		$flatsViewModel          = new FlatsViewModel($flatEntities);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
+		$roomsViewModel          = new RoomsViewModel($roomEntities);
+
 		$this->render(
 			'dummy-db-crud.php',
 			[
-				'flatsViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->flatRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['address' => ''],
-						'error' => ''
-					]
-				],
-				'roomPrototypesViewModel' => [
-					'records' => array_map(
-						function ($record) {return ['data' => $record, 'error' => ''];},
-						$this->roomPrototypeRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['name' => ''],
-						'error' => ''
-					]
-				],
-				'roomsViewModel' => [
-					'records' => array_map(
-						function ($record) use ($flag, $id) {
-							return [
-								'data' => $record,
-								'error' => $record['id'] == $id && !$flag ? 'Függőségi hiba!' : '' // dependency validation (deleting from a parent table)
-							];
-						},
-						$this->roomRelation->getAll()
-					),
-					'newRecord' => [
-						'data' => ['flat_id' => '', 'room_prototype_id' => ''],
-						'error' => ''
-					]
-				],
+				'flatsViewModel'          => $flatsViewModel->showAll(),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomsViewModel'          => $roomsViewModel->delete($flag, $id, $roomEntities)
 			]
 		);
 	}
