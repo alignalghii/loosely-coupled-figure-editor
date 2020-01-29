@@ -10,37 +10,40 @@ $roomRelation          = new RoomRelation($dbh);
 
 $allController = new AllController($flatRelation, $roomPrototypeRelation, $roomRelation);
 
-$router = new Router($allController);
+$router = new Router($allController, $_SERVER, $_POST);
 $router->run();
 
 /** Router */
 
 class Router
 {
-	function __construct(AllController $allController) {$this->allController = $allController;}
+	function __construct(AllController $allController, array $server, array $post)
+	{
+		$this->allController = $allController;
+		$this->server        = $server;
+		$this->post          = $post;
+	}
 
 	function run(): void
 	{
-		$request = "{$_SERVER['REQUEST_METHOD']} {$_SERVER['REQUEST_URI']}";
+		$request = "{$this->server['REQUEST_METHOD']} {$this->server['REQUEST_URI']}";
 		switch (true) {
 			case preg_match('!GET /router.php/show-all!', $request, $matches): $this->allController->showAll(); break;
 
-			case preg_match('!POST /router.php/flat/add!', $request, $matches): $this->allController->addFlat($_POST['address']); break;
-			case preg_match('!POST /router.php/flat/update/(\d+)!', $request, $matches): $this->allController->updateFlat($matches[1], $_POST['address']); break;
+			case preg_match('!POST /router.php/flat/add!', $request, $matches): $this->allController->addFlat($this->post); break;
+			case preg_match('!POST /router.php/flat/update/(\d+)!', $request, $matches): $this->allController->updateFlat($matches[1], $this->post); break;
 			case preg_match('!POST /router.php/flat/del/(\d+)!', $request, $matches): $this->allController->deleteFlat($matches[1]); break;
 
-			// @TODO parametrize out superglobal @TODO use entity instead of arguments listing or record data array
-			case preg_match('!POST /router.php/room-prototype/add!', $request, $matches): $this->allController->addRoomPrototype($_POST['name']); break;
-			case preg_match('!POST /router.php/room-prototype/update/(\d+)!', $request, $matches): $this->allController->updateRoomPrototype($matches[1], $_POST['name']); break;
+			// @TODO use entity instead of arguments listing or record data array
+			case preg_match('!POST /router.php/room-prototype/add!', $request, $matches): $this->allController->addRoomPrototype($this->post); break;
+			case preg_match('!POST /router.php/room-prototype/update/(\d+)!', $request, $matches): $this->allController->updateRoomPrototype($matches[1], $this->post); break;
 			case preg_match('!POST /router.php/room-prototype/del/(\d+)!', $request, $matches): $this->allController->deleteRoomPrototype($matches[1]); break;
 
-			case preg_match('!POST /router.php/room/add!', $request, $matches): $this->allController->addRoom($_POST['flat_id'], $_POST['room_prototype_id']); break;
-			case preg_match('!POST /router.php/room/update/(\d+)!', $request, $matches): $this->allController->updateRoom($matches[1], $_POST['flat_id'], $_POST['room_prototype_id']); break;
+			case preg_match('!POST /router.php/room/add!', $request, $matches): $this->allController->addRoom($this->post); break;
+			case preg_match('!POST /router.php/room/update/(\d+)!', $request, $matches): $this->allController->updateRoom($matches[1], $this->post); break;
 			case preg_match('!POST /router.php/room/del/(\d+)!', $request, $matches): $this->allController->deleteRoom($matches[1]); break;
 
-			default:
-				echo 'Router error';
-				break;
+			default: echo 'Router error'; break; // @TODO: `throw 'Router error'`?
 		}
 	}
 }
@@ -209,9 +212,9 @@ class AllController // @TODO split it via mixins?
 
 	// Flat:
 
-	function addFlat(string $address): void // @TODO FlatEntity
+	function addFlat(array $rec): void // @TODO FlatEntity
 	{
-		$flag = $this->flatRelation->add($address);
+		$flag = $this->flatRelation->add($rec);
 
 		$flatEntities          = $this->flatRelation->getAll();
 		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
@@ -224,16 +227,16 @@ class AllController // @TODO split it via mixins?
 		$this->render(
 			'dummy-db-crud.php',
 			[
-				'flatsViewModel'          => $flatsViewModel->add($flag, ['address' => $address]),
+				'flatsViewModel'          => $flatsViewModel->add($flag, $rec),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
 	}
 
-	function updateFlat(int $id, string $address): void // @TODO FlatEntity
+	function updateFlat(int $id, array $rec): void // @TODO FlatEntity
 	{
-		$flag = $this->flatRelation->update($id, $address);
+		$flag = $this->flatRelation->update($id, $rec);
 
 		$flatEntities          = $this->flatRelation->getAll();
 		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
@@ -246,7 +249,7 @@ class AllController // @TODO split it via mixins?
 		$this->render(
 			'dummy-db-crud.php',
 			[
-				'flatsViewModel'          => $flatsViewModel->update($flag, $flatEntities, $id,  compact('id', 'address')),
+				'flatsViewModel'          => $flatsViewModel->update($flag, $flatEntities, $id, $rec),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
@@ -279,9 +282,9 @@ class AllController // @TODO split it via mixins?
 
 	// Room prototype:
 
-	function addRoomPrototype(string $name): void // @TODO FlatEntity
+	function addRoomPrototype(array $rec): void // @TODO FlatEntity
 	{
-		$flag = $this->roomPrototypeRelation->add($name);
+		$flag = $this->roomPrototypeRelation->add($rec);
 
 		$flatEntities          = $this->flatRelation->getAll();
 		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
@@ -295,15 +298,15 @@ class AllController // @TODO split it via mixins?
 			'dummy-db-crud.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
-				'roomPrototypesViewModel' => $roomPrototypesViewModel->add($flag, ['name' => $name]),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->add($flag, $rec),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
 	}
 
-	function updateRoomPrototype(int $id, string $name): void // @TODO FlatEntity
+	function updateRoomPrototype(int $id, array $rec): void // @TODO FlatEntity
 	{
-		$flag = $this->roomPrototypeRelation->update($id, $name);
+		$flag = $this->roomPrototypeRelation->update($id, $rec);
 
 		$flatEntities          = $this->flatRelation->getAll();
 		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
@@ -317,7 +320,7 @@ class AllController // @TODO split it via mixins?
 			'dummy-db-crud.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
-				'roomPrototypesViewModel' => $roomPrototypesViewModel->update($flag, $roomPrototypeEntities, $id, compact('id', 'name')),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->update($flag, $roomPrototypeEntities, $id, $rec),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
@@ -348,9 +351,18 @@ class AllController // @TODO split it via mixins?
 
 	// Room:
 
-	function addRoom(string $flat_id, string $room_prototype_id): void // @TODO RoomEntity
+	function addRoom(array $rec): void // @TODO RoomEntity
 	{
-		$flag = preg_match('/^\d+$/', $flat_id) && preg_match('/^\d+$/', $room_prototype_id) && $this->roomRelation->add($flat_id, $room_prototype_id);
+		// @TODO: `$eitherShowbackOrEntity = RoomEntity::importE($rec)`
+		$flat_id           = $rec['flat_id'];
+		$room_prototype_id = $rec['room_prototype_id'];
+		$flag = preg_match('/^\d+$/', $flat_id) && preg_match('/^\d+$/', $room_prototype_id);
+		if ($flag) {
+			$flat_id           = (int) $flat_id;
+			$room_prototype_id = (int) $room_prototype_id;
+			$entity = compact('flat_id', 'room_prototype_id');
+		} else $entity = $rec;
+		$flag = $flag && $this->roomRelation->add($rec);
 
 		$flatEntities          = $this->flatRelation->getAll();
 		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
@@ -365,14 +377,23 @@ class AllController // @TODO split it via mixins?
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
-				'roomsViewModel'          => $roomsViewModel->add($flag, compact('flat_id', 'room_prototype_id'))
+				'roomsViewModel'          => $roomsViewModel->add($flag, $entity) // @TODO: `$roomsViewModel->add($eitherShowbackOrEntity)`
 			]
 		);
 	}
 
-	function updateRoom(int $id, string $flat_id, string $room_prototype_id): void // @TODO RoomEntity
+	function updateRoom(int $id, array $rec): void // @TODO RoomEntity
 	{
-		$flag = preg_match('/^\d+$/', $flat_id) && preg_match('/^\d+$/', $room_prototype_id) && $this->roomRelation->update($id, $flat_id, $room_prototype_id);
+		// @TODO: `$eitherShowbackOrEntity = RoomEntity::importE($rec)`
+		$flat_id           = $rec['flat_id'];
+		$room_prototype_id = $rec['room_prototype_id'];
+		$flag = preg_match('/^\d+$/', $flat_id) && preg_match('/^\d+$/', $room_prototype_id);
+		if ($flag) {
+			$flat_id           = (int) $flat_id;
+			$room_prototype_id = (int) $room_prototype_id;
+			$entity = compact('flat_id', 'room_prototype_id');
+		} else $entity = $rec;
+		$flag = $flag && $this->roomRelation->update($id, $entity);
 
 		$flatEntities          = $this->flatRelation->getAll();
 		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
@@ -387,10 +408,9 @@ class AllController // @TODO split it via mixins?
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
-				'roomsViewModel'          => $roomsViewModel->update($flag, $roomEntities, $id, compact('id', 'flat_id', 'room_prototype_id'))
+				'roomsViewModel'          => $roomsViewModel->update($flag, $roomEntities, $id, $entity) // @TODO `$roomsViewModel->update($roomEntities, $id, $eitherShowbackOrEntity)`
 			]
 		);
-		var_dump($flag, $roomEntities, $id, compact('id', 'flat_id', 'room_prototype_id'));
 	}
 
 	function deleteRoom(int $id): void
@@ -438,9 +458,9 @@ class FlatRelation
 		return $st->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	function add(string $address): bool
+	function add(array $rec): bool // @TODO `FlatEntity $rec`
 	{
-		$address = trim($address);
+		$address = trim($rec['address']);
 		if ($address) {
 			$st = $this->dbh->prepare('INSERT INTO `flat` (`address`) values (:address)');
 			$st->bindValue('address', $address, PDO::PARAM_STR);
@@ -450,9 +470,9 @@ class FlatRelation
 		}
 	}
 
-	function update(int $id, string $address): bool
+	function update(int $id, array $rec): bool  // @TODO `FlatEntity $rec`
 	{
-		$address = trim($address);
+		$address = trim($rec['address']);
 		if ($address) {
 			$st = $this->dbh->prepare('UPDATE `flat` SET `address` = :address WHERE `id` = :id');
 			$st->bindValue('id'  , $id  , PDO::PARAM_INT);
@@ -482,9 +502,9 @@ class RoomPrototypeRelation
 		return $st->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	function add(string $name): bool
+	function add(array $rec): bool // @TODO `RoomPrototypeEntity $rec`
 	{
-		$name = trim($name);
+		$name = trim($rec['name']);
 		if ($name) {
 			$st = $this->dbh->prepare('INSERT INTO `room_prototype` (`name`) values (:name)');
 			$st->bindValue('name', $name, PDO::PARAM_STR);
@@ -494,9 +514,9 @@ class RoomPrototypeRelation
 		}
 	}
 
-	function update(int $id, string $name): bool
+	function update(int $id, array $rec): bool // @TODO `RoomPrototypeEntity $rec`
 	{
-		$name = trim($name);
+		$name = trim($rec['name']);
 		if ($name) {
 			$st = $this->dbh->prepare('UPDATE `room_prototype` SET `name` = :name WHERE `id` = :id');
 			$st->bindValue('id'  , $id  , PDO::PARAM_INT);
@@ -526,20 +546,20 @@ class RoomRelation
 		return $st->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	function add(int $flatId, int $roomPrototypeId): bool // @TODO RoomEntity
+	function add(array $entity): bool // @TODO `RoomEntity $entity`
 	{
 		$st = $this->dbh->prepare('INSERT INTO `room` (`flat_id`, `room_prototype_id`) values (:flat_id, :room_prototype_id)');
-		$st->bindValue('flat_id', $flatId, PDO::PARAM_INT);
-		$st->bindValue('room_prototype_id', $roomPrototypeId, PDO::PARAM_INT);
+		$st->bindValue('flat_id'          , $entity['flat_id']          , PDO::PARAM_INT);
+		$st->bindValue('room_prototype_id', $entity['room_prototype_id'], PDO::PARAM_INT);
 		return $st->execute();
 	}
 
-	function update(int $id, int $flatId, int $roomPrototypeId): bool
+	function update(int $id, array $entity): bool // @TODO `RoomEntity $rec`
 	{
 		$st = $this->dbh->prepare('UPDATE `room` SET `flat_id` = :flat_id, `room_prototype_id` = :room_prototype_id WHERE `id` = :id');
-		$st->bindValue('id'  , $id  , PDO::PARAM_INT);
-		$st->bindValue('flat_id', $flatId, PDO::PARAM_INT);
-		$st->bindValue('room_prototype_id', $roomPrototypeId, PDO::PARAM_INT);
+		$st->bindValue('id'               , $id                         , PDO::PARAM_INT);
+		$st->bindValue('flat_id'          , $entity['flat_id']          , PDO::PARAM_INT);
+		$st->bindValue('room_prototype_id', $entity['room_prototype_id'], PDO::PARAM_INT);
 		return $st->execute();
 	}
 
