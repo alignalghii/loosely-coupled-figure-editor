@@ -13,6 +13,7 @@
 		<h3>Lakások</h3>
 		<table>
 			<caption>flat</caption>
+			<tr>
 				<th colspan="2">Attribútumok</th>
 				<th colspan="4">Kommunikáció</th>
 			</tr>
@@ -72,6 +73,7 @@
 		<h3>Szoba-prototípusok</h3>
 		<table>
 			<caption>room_prototype</caption>
+			<tr>
 				<th colspan="2">Attribútumok</th>
 				<th colspan="4">Kommunikáció</th>
 			</tr>
@@ -143,6 +145,7 @@
 <?php if ($flatsViewModel['records'] && $roomPrototypesViewModel['records']): ?>
 		<table>
 			<caption>room</caption>
+			<tr>
 				<th colspan="3">Attribútumok</th>
 				<th colspan="4">Kommunikáció</th>
 			</tr>

@@ -50,27 +50,30 @@ class Router
 
 abstract class ViewModel
 {
-	protected $entities;
+	protected $records;
 
-	public function __construct(array $entities) {$this->entities = $entities;}
+	public function __construct(array $records) {$this->records = $records;}
 
 	abstract public function fields();
 
 	public function showAll(): array
 	{
 		return [
-			'records' => $this->packEntities(),
+			'records' => $this->packRecords(),
 			'newRecord' => $this->blank()
 		];
 	}
 
 	// Add:
 
-	public function add(bool $flag, array $postedRecord): array
+	public function add(Maybe $maybeShowback): array
 	{
 		return [
-			'records' => $this->packEntities(),
-			'newRecord' => $flag ? $this->blank() : $this->showBack($postedRecord)
+			'records' => $this->packRecords(),
+			'newRecord' => $maybeShowback->maybe(
+				$this->blank(),
+				[$this, 'showBack'] // @TODO: `showBack` must be public, because called in Maybe context
+			)
 		];
 	}
 
@@ -84,7 +87,7 @@ abstract class ViewModel
 		);
 	}
 
-	protected function showBack(array $postedRecord): array
+	public function showBack(array $postedRecord): array // @TODO: must be public, because called in Maybe context
 	{
 		return [
 			'data' => $postedRecord,
@@ -92,73 +95,56 @@ abstract class ViewModel
 		];
 	}
 
-	protected function pack(array $entity): array {return ['data' => $entity, 'error' => ''];}
-	protected function packEntities(): array {return array_map([$this, 'pack'], $this->entities);}
+	protected function pack(array $record): array {return ['data' => $record, 'error' => ''];}
+	protected function packRecords(): array {return array_map([$this, 'pack'], $this->records);}
 
 	// Update:
 
-	public function update(bool $isOK, array $dbRecords, int $id, array $showBackRecord): array
+	public function update(int $id, Maybe $maybeShowback): array
 	{
 		return [
-			'records' => $this->allPackOrShowBackHere($isOK, $dbRecords, $id, $showBackRecord),
+			'records' => $this->allPackOrShowBackHere($id, $maybeShowback),
 			'newRecord' => $this->blank()
 		];
 	}
 
-	protected function allPackOrShowBackHere(bool $isOK, array $dbRecords, int $id, array $showBackRecord): array
+
+	protected function allPackOrShowBackHere(int $id, Maybe $maybeShowback): array
 	{
-		return array_map(
-			function ($dbRecord) use ($isOK, $id, $showBackRecord) {
-				return $this->packOrShowBackHere($isOK, $dbRecord, $id, $showBackRecord);
-			},
-			$dbRecords
+		return $maybeShowback->maybe(
+			$this->packRecords(),
+			function ($showback) use ($id) {
+				return array_map(
+					function (array $dbRecord) use ($id, $showback): array  {return $this->showBackHere($dbRecord, $id, $showback);},
+					$this->records
+				);
+			}
 		);
 	}
 
-	protected function packOrShowBackHere(bool $isOK, array $dbRecord, int $id, array $showBackRecord): array
-	{
-		return $this->showBackOrPack(
-			$dbRecord['id'] == $id && !$isOK,
-			compact('id') + $showBackRecord,
-			$dbRecord
-		);
-	}
-
-	protected function showBackOrPack(bool $isError, array $showBackRecord, array $dbRecord): array {return $isError ? $this->showBack($showBackRecord) : $this->pack($dbRecord);}
+	protected function showBackHere(array $dbRecord, int $id, array $showback) {return $dbRecord['id'] == $id ? $this->showBack(compact('id') + $showback) : $this->pack($dbRecord);}
 
 
 	// Delete:
 
-	public function delete(bool $isOK, int $id, array $records): array
+	public function delete(Maybe $maybeShowbackId): array
 	{
 		return [
-			'records' => array_map(
-				function ($record) use ($isOK, $id) {
-					return $this->packPossiblyErrorHere($isOK, $id, $record);
-				},
-				$records
+			'records' => $maybeShowbackId->maybe(
+				$this->packRecords(),
+				function ($showbackId) {
+					return array_map(
+						function ($record) use ($showbackId) {
+							return [
+								'data' => $record,
+								'error' => $record['id'] == $showbackId ? 'Függőségi hiba!' : ''
+							];
+						},
+						$this->records
+					);
+				}
 			),
 			'newRecord' => $this->blank()
-		];
-	}
-
-	protected function allPackPossiblyErrorHere(bool $isOK, int $id, array $records): array
-	{
-		return array_map(
-			function ($record) use ($isOK, $id) {
-				return $this->packPossiblyErrorHere($isOK, $id, $record);
-			},
-			$records
-		);
-	}
-
-	protected function packPossiblyErrorHere(bool $isOK, int $id, array $record): array {return $this->packPossiblyError(!$isOK && $record['id'] == $id, $record);}
-
-	protected function packPossiblyError(bool $isError, array $record): array
-	{
-		return [
-			'data' => $record,
-			'error' => $isError ? 'Függőségi hiba!' : '' // dependency validation (deleting from a parent table)
 		];
 	}
 }
@@ -191,13 +177,13 @@ class AllController // @TODO split it via mixins?
 
 	function showAll(): void
 	{
-		$flatEntities          = $this->flatRelation->getAll();
-		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
-		$roomEntities          = $this->roomRelation->getAll();
+		$flatRecords          = $this->flatRelation->getAll();
+		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomRecords          = $this->roomRelation->getAll();
 
-		$flatsViewModel          = new FlatsViewModel($flatEntities);
-		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
-		$roomsViewModel          = new RoomsViewModel($roomEntities);
+		$flatsViewModel          = new FlatsViewModel($flatRecords);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
 			'dummy-db-crud.php',
@@ -212,44 +198,44 @@ class AllController // @TODO split it via mixins?
 
 	// Flat:
 
-	function addFlat(array $rec): void // @TODO FlatEntity
+	function addFlat(array $post): void // @TODO FlatEntity
 	{
-		$flag = $this->flatRelation->add($rec);
+		$maybeShowback = Maybe::no([$this->flatRelation, 'add'], $post);
 
-		$flatEntities          = $this->flatRelation->getAll();
-		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
-		$roomEntities          = $this->roomRelation->getAll();
+		$flatRecords          = $this->flatRelation->getAll();
+		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomRecords          = $this->roomRelation->getAll();
 
-		$flatsViewModel          = new FlatsViewModel($flatEntities);
-		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
-		$roomsViewModel          = new RoomsViewModel($roomEntities);
+		$flatsViewModel          = new FlatsViewModel($flatRecords);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
 			'dummy-db-crud.php',
 			[
-				'flatsViewModel'          => $flatsViewModel->add($flag, $rec),
+				'flatsViewModel'          => $flatsViewModel->add($maybeShowback),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
 	}
 
-	function updateFlat(int $id, array $rec): void // @TODO FlatEntity
+	function updateFlat(int $id, array $post): void // @TODO FlatEntity
 	{
-		$flag = $this->flatRelation->update($id, $rec);
+		$maybeShowback = $this->flatRelation->update($id, $post) ? Maybe::nothing() : Maybe::just($post);
 
-		$flatEntities          = $this->flatRelation->getAll();
-		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
-		$roomEntities          = $this->roomRelation->getAll();
+		$flatRecords          = $this->flatRelation->getAll();
+		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomRecords          = $this->roomRelation->getAll();
 
-		$flatsViewModel          = new FlatsViewModel($flatEntities);
-		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
-		$roomsViewModel          = new RoomsViewModel($roomEntities);
+		$flatsViewModel          = new FlatsViewModel($flatRecords);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
 			'dummy-db-crud.php',
 			[
-				'flatsViewModel'          => $flatsViewModel->update($flag, $flatEntities, $id, $rec),
+				'flatsViewModel'          => $flatsViewModel->update($id, $maybeShowback),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
@@ -258,20 +244,20 @@ class AllController // @TODO split it via mixins?
 
 	function deleteFlat(int $id): void
 	{
-		$flag = $this->flatRelation->delete($id);
+		$maybeShowbackId = Maybe::no([$this->flatRelation, 'delete'], $id);
 
-		$flatEntities          = $this->flatRelation->getAll();
-		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
-		$roomEntities          = $this->roomRelation->getAll();
+		$flatRecords          = $this->flatRelation->getAll();
+		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomRecords          = $this->roomRelation->getAll();
 
-		$flatsViewModel          = new FlatsViewModel($flatEntities);
-		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
-		$roomsViewModel          = new RoomsViewModel($roomEntities);
+		$flatsViewModel          = new FlatsViewModel($flatRecords);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
 			'dummy-db-crud.php',
 			[
-				'flatsViewModel'          => $flatsViewModel->delete($flag, $id, $flatEntities),
+				'flatsViewModel'          => $flatsViewModel->delete($maybeShowbackId),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
@@ -282,45 +268,45 @@ class AllController // @TODO split it via mixins?
 
 	// Room prototype:
 
-	function addRoomPrototype(array $rec): void // @TODO FlatEntity
+	function addRoomPrototype(array $post): void // @TODO FlatEntity
 	{
-		$flag = $this->roomPrototypeRelation->add($rec);
+		$maybeShowback = Maybe::no([$this->roomPrototypeRelation, 'add'], $post);
 
-		$flatEntities          = $this->flatRelation->getAll();
-		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
-		$roomEntities          = $this->roomRelation->getAll();
+		$flatRecords          = $this->flatRelation->getAll();
+		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomRecords          = $this->roomRelation->getAll();
 
-		$flatsViewModel          = new FlatsViewModel($flatEntities);
-		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
-		$roomsViewModel          = new RoomsViewModel($roomEntities);
+		$flatsViewModel          = new FlatsViewModel($flatRecords);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
 			'dummy-db-crud.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
-				'roomPrototypesViewModel' => $roomPrototypesViewModel->add($flag, $rec),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->add($maybeShowback),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
 	}
 
-	function updateRoomPrototype(int $id, array $rec): void // @TODO FlatEntity
+	function updateRoomPrototype(int $id, array $post): void // @TODO FlatEntity
 	{
-		$flag = $this->roomPrototypeRelation->update($id, $rec);
+		$maybeShowback = $this->roomPrototypeRelation->update($id, $post) ? Maybe::nothing() : Maybe::just($post);
 
-		$flatEntities          = $this->flatRelation->getAll();
-		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
-		$roomEntities          = $this->roomRelation->getAll();
+		$flatRecords          = $this->flatRelation->getAll();
+		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomRecords          = $this->roomRelation->getAll();
 
-		$flatsViewModel          = new FlatsViewModel($flatEntities);
-		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
-		$roomsViewModel          = new RoomsViewModel($roomEntities);
+		$flatsViewModel          = new FlatsViewModel($flatRecords);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
 			'dummy-db-crud.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
-				'roomPrototypesViewModel' => $roomPrototypesViewModel->update($flag, $roomPrototypeEntities, $id, $rec),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->update($id, $maybeShowback),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
@@ -328,21 +314,21 @@ class AllController // @TODO split it via mixins?
 
 	function deleteRoomPrototype(int $id): void
 	{
-		$flag = $this->roomPrototypeRelation->delete($id);
+		$maybeShowbackId = Maybe::no([$this->roomPrototypeRelation, 'delete'], $id);
 
-		$flatEntities          = $this->flatRelation->getAll();
-		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
-		$roomEntities          = $this->roomRelation->getAll();
+		$flatRecords          = $this->flatRelation->getAll();
+		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomRecords          = $this->roomRelation->getAll();
 
-		$flatsViewModel          = new FlatsViewModel($flatEntities);
-		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
-		$roomsViewModel          = new RoomsViewModel($roomEntities);
+		$flatsViewModel          = new FlatsViewModel($flatRecords);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
 			'dummy-db-crud.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
-				'roomPrototypesViewModel' => $roomPrototypesViewModel->delete($flag, $id, $roomPrototypeEntities),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->delete($maybeShowbackId),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
@@ -351,86 +337,74 @@ class AllController // @TODO split it via mixins?
 
 	// Room:
 
-	function addRoom(array $rec): void // @TODO RoomEntity
+	function addRoom(array $post): void // @TODO RoomEntity
 	{
-		// @TODO: `$eitherShowbackOrEntity = RoomEntity::importE($rec)`
-		$flat_id           = $rec['flat_id'];
-		$room_prototype_id = $rec['room_prototype_id'];
-		$flag = preg_match('/^\d+$/', $flat_id) && preg_match('/^\d+$/', $room_prototype_id);
-		if ($flag) {
-			$flat_id           = (int) $flat_id;
-			$room_prototype_id = (int) $room_prototype_id;
-			$entity = compact('flat_id', 'room_prototype_id');
-		} else $entity = $rec;
-		$flag = $flag && $this->roomRelation->add($rec);
+		$maybePostback = RoomEntity::maybePostback(
+			$post,
+			[$this->roomRelation, 'add']
+		);
 
-		$flatEntities          = $this->flatRelation->getAll();
-		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
-		$roomEntities          = $this->roomRelation->getAll();
+		$flatRecords          = $this->flatRelation->getAll();
+		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomRecords          = $this->roomRelation->getAll();
 
-		$flatsViewModel          = new FlatsViewModel($flatEntities);
-		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
-		$roomsViewModel          = new RoomsViewModel($roomEntities);
+		$flatsViewModel          = new FlatsViewModel($flatRecords);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
 			'dummy-db-crud.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
-				'roomsViewModel'          => $roomsViewModel->add($flag, $entity) // @TODO: `$roomsViewModel->add($eitherShowbackOrEntity)`
+				'roomsViewModel'          => $roomsViewModel->add($maybePostback)
 			]
 		);
 	}
 
-	function updateRoom(int $id, array $rec): void // @TODO RoomEntity
+	function updateRoom(int $id, array $post): void // @TODO RoomEntity
 	{
-		// @TODO: `$eitherShowbackOrEntity = RoomEntity::importE($rec)`
-		$flat_id           = $rec['flat_id'];
-		$room_prototype_id = $rec['room_prototype_id'];
-		$flag = preg_match('/^\d+$/', $flat_id) && preg_match('/^\d+$/', $room_prototype_id);
-		if ($flag) {
-			$flat_id           = (int) $flat_id;
-			$room_prototype_id = (int) $room_prototype_id;
-			$entity = compact('flat_id', 'room_prototype_id');
-		} else $entity = $rec;
-		$flag = $flag && $this->roomRelation->update($id, $entity);
+		$maybePostback = RoomEntity::maybePostback(
+			$post,
+			function ($entity) use ($id) {return $this->roomRelation->update($id, $entity);}
+		);
 
-		$flatEntities          = $this->flatRelation->getAll();
-		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
-		$roomEntities          = $this->roomRelation->getAll();
+		$flatRecords          = $this->flatRelation->getAll();
+		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomRecords          = $this->roomRelation->getAll();
 
-		$flatsViewModel          = new FlatsViewModel($flatEntities);
-		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
-		$roomsViewModel          = new RoomsViewModel($roomEntities);
+		$flatsViewModel          = new FlatsViewModel($flatRecords);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
 			'dummy-db-crud.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
-				'roomsViewModel'          => $roomsViewModel->update($flag, $roomEntities, $id, $entity) // @TODO `$roomsViewModel->update($roomEntities, $id, $eitherShowbackOrEntity)`
+				'roomsViewModel'          => $roomsViewModel->update($id, $maybePostback)
 			]
 		);
 	}
 
 	function deleteRoom(int $id): void
 	{
-		$flag = $this->roomRelation->delete($id);
+		$maybeShowbackId = Maybe::no([$this->roomRelation, 'delete'], $id);
 
-		$flatEntities          = $this->flatRelation->getAll();
-		$roomPrototypeEntities = $this->roomPrototypeRelation->getAll();
-		$roomEntities          = $this->roomRelation->getAll();
+		$flatRecords          = $this->flatRelation->getAll();
+		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomRecords          = $this->roomRelation->getAll();
 
-		$flatsViewModel          = new FlatsViewModel($flatEntities);
-		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeEntities);
-		$roomsViewModel          = new RoomsViewModel($roomEntities);
+		$flatsViewModel          = new FlatsViewModel($flatRecords);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
 			'dummy-db-crud.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
-				'roomsViewModel'          => $roomsViewModel->delete($flag, $id, $roomEntities)
+				'roomsViewModel'          => $roomsViewModel->delete($maybeShowbackId)
 			]
 		);
 	}
@@ -458,9 +432,9 @@ class FlatRelation
 		return $st->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	function add(array $rec): bool // @TODO `FlatEntity $rec`
+	function add(array $post): bool // @TODO `FlatEntity $rec`
 	{
-		$address = trim($rec['address']);
+		$address = trim($post['address']);
 		if ($address) {
 			$st = $this->dbh->prepare('INSERT INTO `flat` (`address`) values (:address)');
 			$st->bindValue('address', $address, PDO::PARAM_STR);
@@ -470,12 +444,12 @@ class FlatRelation
 		}
 	}
 
-	function update(int $id, array $rec): bool  // @TODO `FlatEntity $rec`
+	function update(int $id, array $post): bool  // @TODO `FlatEntity $rec`
 	{
-		$address = trim($rec['address']);
+		$address = trim($post['address']);
 		if ($address) {
 			$st = $this->dbh->prepare('UPDATE `flat` SET `address` = :address WHERE `id` = :id');
-			$st->bindValue('id'  , $id  , PDO::PARAM_INT);
+			$st->bindValue('id'     , $id     , PDO::PARAM_INT);
 			$st->bindValue('address', $address, PDO::PARAM_STR);
 			return $st->execute();
 		} else {
@@ -502,9 +476,9 @@ class RoomPrototypeRelation
 		return $st->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	function add(array $rec): bool // @TODO `RoomPrototypeEntity $rec`
+	function add(array $post): bool // @TODO `RoomPrototypeEntity $rec`
 	{
-		$name = trim($rec['name']);
+		$name = trim($post['name']);
 		if ($name) {
 			$st = $this->dbh->prepare('INSERT INTO `room_prototype` (`name`) values (:name)');
 			$st->bindValue('name', $name, PDO::PARAM_STR);
@@ -514,9 +488,9 @@ class RoomPrototypeRelation
 		}
 	}
 
-	function update(int $id, array $rec): bool // @TODO `RoomPrototypeEntity $rec`
+	function update(int $id, array $post): bool // @TODO `RoomPrototypeEntity $rec`
 	{
-		$name = trim($rec['name']);
+		$name = trim($post['name']);
 		if ($name) {
 			$st = $this->dbh->prepare('UPDATE `room_prototype` SET `name` = :name WHERE `id` = :id');
 			$st->bindValue('id'  , $id  , PDO::PARAM_INT);
@@ -546,20 +520,20 @@ class RoomRelation
 		return $st->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	function add(array $entity): bool // @TODO `RoomEntity $entity`
+	function add(RoomEntity $entity): bool // @TODO `RoomEntity $entity`
 	{
 		$st = $this->dbh->prepare('INSERT INTO `room` (`flat_id`, `room_prototype_id`) values (:flat_id, :room_prototype_id)');
-		$st->bindValue('flat_id'          , $entity['flat_id']          , PDO::PARAM_INT);
-		$st->bindValue('room_prototype_id', $entity['room_prototype_id'], PDO::PARAM_INT);
+		$st->bindValue('flat_id'          , $entity->flat_id          , PDO::PARAM_INT);
+		$st->bindValue('room_prototype_id', $entity->room_prototype_id, PDO::PARAM_INT);
 		return $st->execute();
 	}
 
-	function update(int $id, array $entity): bool // @TODO `RoomEntity $rec`
+	function update(int $id, RoomEntity $entity): bool // @TODO `RoomEntity $rec`
 	{
 		$st = $this->dbh->prepare('UPDATE `room` SET `flat_id` = :flat_id, `room_prototype_id` = :room_prototype_id WHERE `id` = :id');
-		$st->bindValue('id'               , $id                         , PDO::PARAM_INT);
-		$st->bindValue('flat_id'          , $entity['flat_id']          , PDO::PARAM_INT);
-		$st->bindValue('room_prototype_id', $entity['room_prototype_id'], PDO::PARAM_INT);
+		$st->bindValue('id'               , $id                       , PDO::PARAM_INT);
+		$st->bindValue('flat_id'          , $entity->flat_id          , PDO::PARAM_INT);
+		$st->bindValue('room_prototype_id', $entity->room_prototype_id, PDO::PARAM_INT);
 		return $st->execute();
 	}
 
@@ -571,6 +545,151 @@ class RoomRelation
 	}
 }
 
+
+/** Entity */
+
+abstract class Entity
+{
+	/*public static function load(array $record): Entity
+	{
+		return static::maybeImport($record)->maybe_exec(
+			function () {throw new Exception('Load error');},
+			function ($entity) {return $entity;}
+		);
+	}
+
+	public static function loadAll(array $records): array//Entity
+	{
+		return array_map(
+			function ($record) {return static::load($record);},
+			$records
+		);
+	}*/
+
+	public abstract static function maybeImport(array $post): Maybe/*Entity*/;
+
+	public static function maybePostback(array $post, $entityPredicate): Maybe//postback
+	{
+		return static::maybeImport($post)->maybe(
+			Maybe::just($post), // Maybe::just(static::comb($post))
+			function ($entity) use ($entityPredicate, $post) {return $entityPredicate($entity) ? Maybe::nothing() : Maybe::just($post);} // Maybe::just(static::comb($post))
+		);
+	}
+}
+
+class RoomEntity extends Entity
+{
+	public $id, $flat_id, $room_prototype_id;
+
+	public function __construct(?int $id, int $flatId, int $roomPrototypeId)
+	{
+		$this->id                = $id;
+		$this->flat_id           = $flatId;
+		$this->room_prototype_id = $roomPrototypeId;
+	}
+
+	public static function maybeImport(array $post): Maybe/*Entity*/
+	{
+		$id                = $post['id'] ?? null;
+		$flat_id           = $post['flat_id'];
+		$room_prototype_id = $post['room_prototype_id'];
+		$flag = preg_match('/^\d+$/', $flat_id) && preg_match('/^\d+$/', $room_prototype_id);
+		return $flag
+			? Maybe::just(new RoomEntity($id, $flat_id, $room_prototype_id))
+			: Maybe::nothing();
+	}
+}
+
 /** View helper? General? */
 
 function abbreviate(string $text, int $maxLength) {return strlen($text) <= $maxLength ? $text : mb_substr($text, 0, $maxLength, 'utf8') . '&hellip;';}
+
+/** Algebraic data types */
+
+class Maybe
+{
+	protected $representation;
+
+	private function __construct(array $representation) {$this->representation = $representation;}
+
+	public static function just($a) : Maybe {return new Maybe(['just', $a]);}
+	public static function nothing(): Maybe {return new Maybe(['nothing' ]);}
+
+	function maybe($nothingCase, $justCase)
+	{
+		switch ($this->representation[0]) {
+			case 'just'   : return $justCase($this->representation[1]);
+			case 'nothing': return $nothingCase;
+			default       : throw new Exception('`Maybe` internal label bug');
+		}
+	}
+
+	public static function yes($predicate, $arg) {return  $predicate($arg) ? self::just($arg) : self::nothing();}
+	public static function no ($predicate, $arg) {return !$predicate($arg) ? self::just($arg) : self::nothing();}
+
+	/*function maybe_exec($nothingCase, $justCase)
+	{
+		list($label, $arg) = $this->representation;
+		switch ($label) {
+			case 'just'   : return $justCase($arg);
+			case 'nothing': return $nothingCase();
+			default       : throw new Exception('`Maybe` internal label bug');
+		}
+	}*/
+}
+
+
+/*class Either
+{
+	protected $representation;
+
+	private function __construct(array $representation) {$this->representation = $representation;}
+
+	public static function left($a) : Either {return new Either(['left' , $a]);}
+	public static function right($b): Either {return new Either(['right', $b]);}
+
+	public function either($leftProcessor, $rightProcessor)
+	{
+		list($label, $arg) = $this->representation;
+		switch ($label) {
+			case 'left' : return $leftProcessor ($arg);
+			case 'right': return $rightProcessor($arg);
+			default     : throw new Exception('`Either` internal label bug');
+		}
+	}
+
+	public function map($rightProcessor): Either
+	{
+		return $this->either(
+			[self::class, 'fail'],
+			function ($rightContent) {return self::ret($rightProcessor($rightContent));}
+		);
+	}
+
+	public function bind($inject): Either
+	{
+		return $this->either(
+			[self::class, 'fail'],
+			$inject
+		);
+	}
+
+	public function ret($rightContent): Either {return self::right($rightContent);}
+	public function fail($leftContent): Either {return self::left ($leftContent );}
+
+	public function andPredicate($predicate, $leftContent): Either
+	{
+		return $this->bind(
+			function ($rightContent) use ($predicate, $leftContent) {
+				return $predicate($rightContent)
+					? self::ret ($rightContent)
+					: self::fail($leftContent );
+			}
+		);
+	}
+
+	//public function andMaybe(Maybe $leftContent)
+	//{
+	//	return $leftContent->maybe...
+	//}
+}*/
