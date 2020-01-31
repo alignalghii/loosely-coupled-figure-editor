@@ -193,6 +193,7 @@
 				<th>NEW-ID</th>
 				<td>
 					<select form="insertorform-room" name="flat_id">
+						<option class="choose" value="">&mdash; VÁLASSZ! &mdash;</option>
 <?php foreach ($flatsViewModel['records'] as $flatRecordViewModel): ?>
 						<option value="<?php echo $flatRecordViewModel['data']['id']; ?>"<?php if ($flatRecordViewModel['data']['id'] == $roomsViewModel['newRecord']['data']['flat_id']): ?> selected<?php endif; ?>><?php echo '#' . $flatRecordViewModel['data']['id'] . ': ' . abbreviate($flatRecordViewModel['data']['address'], 16); ?></option>
 <?php endforeach; ?>
@@ -200,6 +201,7 @@
 				</td>
 				<td>
 					<select form="insertorform-room" name="room_prototype_id">
+						<option class="choose" value="">&mdash; VÁLASSZ! &mdash;</option>
 <?php foreach ($roomPrototypesViewModel['records'] as $roomPrototypeRecordViewModel): ?>
 						<option value="<?php echo $roomPrototypeRecordViewModel['data']['id']; ?>"<?php if ($roomPrototypeRecordViewModel['data']['id'] == $roomsViewModel['newRecord']['data']['room_prototype_id']): ?> selected<?php endif; ?>><?php echo '#' . $roomPrototypeRecordViewModel['data']['id'] . ': ' . abbreviate($roomPrototypeRecordViewModel['data']['name'], 20); ?></option>
 <?php endforeach; ?>

@@ -13,6 +13,10 @@ td.error {
 	width: 23em;
 }
 
+option.choose {
+	background-color: lightgray;
+}
+
 caption {
 	color: white;
 	background-color: black;
