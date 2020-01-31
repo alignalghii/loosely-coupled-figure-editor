@@ -3,7 +3,7 @@
 
 vendor/sell/*
 !vendor/sell/README.md
-index.html
+index.php
 holy-grail.css
 
 vendor/buy/*

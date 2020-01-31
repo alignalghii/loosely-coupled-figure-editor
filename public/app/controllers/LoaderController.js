@@ -25,7 +25,7 @@ LoaderController.prototype.run = function (idStr)
 			id  => this.load(id),
 			eitherRawId
 		),
-		this.numberHelperAndValidator.readToMaybeEitherRawNat(idStr)
+		this.numberHelperAndValidator.readToMaybeEitherRawInt(idStr)
 	);
 };
 
@@ -33,10 +33,10 @@ LoaderController.prototype.load = function (i)
 {
 	this.clearError();
 	switch (i) {
-		case 1:
+		case -1:
 			if (this.clearAndTab()) {
 				this.tabSelectorDriver.relabelTab('DB', `#${i}`); // @TODO DRY
-				this.statusBarDriver.report(`${i}. rekord betöltése`);
+				this.statusBarDriver.report(`${i}. &bdquo;pszeudorekord&rdquo; betöltése beégetett mintából`);
 
 				//nst cellarFig__ = (new Figure(poly1_concave_ccw, {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
 				//nst cellarFig__ = (new Figure(poly1_concave_ccw, {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '62 5 42 18 55 15'})).translation([  4  , -7  ]);
@@ -122,10 +122,10 @@ LoaderController.prototype.load = function (i)
 			}
 
 			break;
-		case 2:
+		case -2:
 			if (this.clearAndTab()) {
 				this.tabSelectorDriver.relabelTab('DB', `#${i}`); // @TODO DRY
-				this.statusBarDriver.report(`${i}. rekord betöltése`);
+				this.statusBarDriver.report(`${i}. &bdquo;pszeudorekord&rdquo; betöltése beégetett mintából`);
 
 				/*const cellarFig__2 = (new Figure(poly1_concave_ccw,                        {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
 				const cellarBsn__2 = new Room (
@@ -207,10 +207,10 @@ LoaderController.prototype.load = function (i)
 			}
 
 			break;
-		case 3:
+		case -3:
 			if (this.clearAndTab()) {
 				this.tabSelectorDriver.relabelTab('DB', `#${i}`); // @TODO DRY
-				this.statusBarDriver.report(`${i}. rekord betöltése`);
+				this.statusBarDriver.report(`${i}. &bdquo;pszeudorekord&rdquo; betöltése beégetett mintából`);
 
 				//nst cellarFig__3 = (new Figure(poly1_concave_ccw, {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '125 10 84 35 110 30'})).translation([  4  , -7  ]);
 				//const cellarFig__3 = (new Figure(poly1_concave_ccw, {fill: 'url(#padlo1_dark)', 'stroke-dasharray': '62 5 42 18 55 15'})).translation([  4  , -7  ]);
@@ -298,9 +298,31 @@ LoaderController.prototype.load = function (i)
 
 			break;
 		default:
-			this.statusBarDriver.report(`<span class="error">${i}. rekord nem létezik!</span>`); // @TODO a helper for error messages, maybe inside or alongside `QuoteHelper`
-			this.audioODriver.error();
-			break;
+			if (flatIds.indexOf(i) >= 0 || flatIds.indexOf(`${i}`) >= 0) {
+				if (this.clearAndTab()) {
+					this.tabSelectorDriver.relabelTab('DB', `#${i}`); // @TODO DRY
+					this.statusBarDriver.report(`${i}. rekord betöltése valós adatbázisból`);
+					const goodRecords = records.filter(rec => rec.flat_id == i);
+					let counter = 0;
+					for (goodRecord of goodRecords) {
+						let figure = new Figure([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]], {fill: 'url(#csempe1_dark_small)'});
+						figure.doScale(11);
+						figure.doTranslation([0, -15 * (counter - (goodRecords.length-1)/2)])
+						let business = new Room (
+							goodRecord.name, figure,
+							[], ['nothing'],
+							[]//[new CircularSlit(10, 0.5), new CircularSlit(17, 0.8), new CircularSlit(24.6, 0.7), new CircularSlit(38.5, 1)]
+						);
+						//business.title.doTranslation([-1, 4.5]);
+						let widget = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(business);
+						counter++;
+					}
+				}
+			} else {
+				this.statusBarDriver.report(`<span class="error">${i}. rekord nem létezik!</span>`); // @TODO a helper for error messages, maybe inside or alongside `QuoteHelper`
+				this.audioODriver.error();
+				break;
+			}
 	}
 };
 

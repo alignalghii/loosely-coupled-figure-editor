@@ -33,3 +33,14 @@ NumberHelperAndValidator.prototype.readToMaybeEitherRawNat = function (raw)
 	                         )
 	                       : nothing;
 };
+
+
+NumberHelperAndValidator.prototype.readToMaybeEitherRawInt = function (raw)
+{
+	const word = raw.replace(/\s+/g, '');
+	return word.length > 0 ? just(
+	                               /^-?\d+$/.test(word) ? right(Number(word))
+	                                                    : left (raw         )
+	                         )
+	                       : nothing;
+};
