@@ -1,10 +1,12 @@
 CREATE DATABASE `floor_plan_designer` CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';
 
 CREATE USER 'floor_plan_designer_admin'@'localhost' IDENTIFIED BY 'floor_plan_designer_admin_password';
-GRANT SELECT, INSERT, DELETE, UPDATE ON `floor_plan_designer`.* TO 'floor_plan_designer_admin'@'localhost';
+GRANT ALL PRIVILEGES ON `floor_plan_designer`.* TO 'floor_plan_designer_admin'@'localhost';
 
 CREATE USER 'floor_plan_designer_user'@'localhost' IDENTIFIED BY 'floor_plan_designer_user_password';
 GRANT SELECT, INSERT, DELETE, UPDATE ON `floor_plan_designer`.* TO 'floor_plan_designer_user'@'localhost';
+
+FLUSH PRIVILEGES;
 
 USE `floor_plan_designer`;
 
