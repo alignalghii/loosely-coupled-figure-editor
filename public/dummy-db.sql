@@ -1,27 +1,27 @@
-create database floor_plan_designer character set 'utf8mb4' collate 'utf8mb4_unicode_ci';
+CREATE DATABASE `floor_plan_designer` CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';
 
-create user 'floor_plan_designer_admin'@'localhost' identified by 'floor_plan_designer_admin_password';
-grant select, insert, delete, update on floor_plan_designer.* to 'floor_plan_designer_admin'@'localhost';
+CREATE USER 'floor_plan_designer_admin'@'localhost' IDENTIFIED BY 'floor_plan_designer_admin_password';
+GRANT SELECT, INSERT, DELETE, UPDATE ON `floor_plan_designer`.* TO 'floor_plan_designer_admin'@'localhost';
 
-create user 'floor_plan_designer_user'@'localhost' identified by 'floor_plan_designer_user_password';
-grant select, insert, delete, update on floor_plan_designer.* to 'floor_plan_designer_user'@'localhost';
+CREATE USER 'floor_plan_designer_user'@'localhost' IDENTIFIED BY 'floor_plan_designer_user_password';
+GRANT SELECT, INSERT, DELETE, UPDATE ON `floor_plan_designer`.* TO 'floor_plan_designer_user'@'localhost';
 
-use floor_plan_designer;
+USE `floor_plan_designer`;
 
-create table `flat` (
-	`id` int not null auto_increment primary key,
-	`address` varchar(64) not null unique
+CREATE TABLE `flat` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`address` VARCHAR(64) NOT NULL UNIQUE
 );
 
-create table `room_prototype` (
-	`id` int not null auto_increment primary key,
-	`name` varchar(16) not null unique
+CREATE TABLE `room_prototype` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`name` VARCHAR(16) NOT NULL UNIQUE
 );
 
-create table `room` (
-	`id` int not null auto_increment primary key,
-	`flat_id` int not null,
-	`room_prototype_id` int not null,
-	foreign key (`flat_id`) references `flat` (`id`),
-	foreign key (`room_prototype_id`) references `room_prototype` (`id`)
+CREATE TABLE `room` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`flat_id` INT NOT NULL,
+	`room_prototype_id` INT NOT NULL,
+	FOREIGN KEY (`flat_id`) REFERENCES `flat` (`id`),
+	FOREIGN KEY (`room_prototype_id`) REFERENCES `room_prototype` (`id`)
 );

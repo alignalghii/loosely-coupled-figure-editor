@@ -1,4 +1,4 @@
-drop database floor_plan_designer;
+DROP DATABASE `floor_plan_designer`;
 
-drop user 'floor_plan_designer_admin'@'localhost';
-drop user 'floor_plan_designer_user'@'localhost';
+DROP USER 'floor_plan_designer_admin'@'localhost';
+DROP USER 'floor_plan_designer_user'@'localhost';
