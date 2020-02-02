@@ -27,3 +27,7 @@ CREATE TABLE `room` (
 	FOREIGN KEY (`flat_id`) REFERENCES `flat` (`id`),
 	FOREIGN KEY (`room_prototype_id`) REFERENCES `room_prototype` (`id`)
 );
+
+INSERT INTO `flat` (`id`, `address`) VALUES (56, 'Csónak u. 88/E.'), (63, 'Kisvirág u. 45.'), (49, 'Kisvirág u. 45/I.');
+INSERT INTO `room_prototype` (`id`, `name`) VALUES (67, 'amerikai konyha'), (81, 'ebédlő'), (85, 'WC');
+INSERT INTO `room` (`id`, `room_prototype_id`, `flat_id`) VALUES (82, 85, 56), (83, 81, 49), (84, 67, 49), (85, 67, 49);
