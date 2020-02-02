@@ -148,7 +148,7 @@ class RoomPrototypesViewModel extends ViewModel
 
 class RoomsViewModel extends ViewModel
 {
-	function fields(): array {return ['id' => PDO::PARAM_INT, 'flat_id' => PDO::PARAM_INT, 'room_prototype_id' => PDO::PARAM_INT];}
+	function fields(): array {return ['id' => PDO::PARAM_INT, 'flat_id' => PDO::PARAM_INT, 'prototype_id' => PDO::PARAM_INT];}
 }
 
 /** Controller */
@@ -509,18 +509,18 @@ class RoomRelation
 
 	function add(RoomEntity $entity): bool // @TODO `RoomEntity $entity`
 	{
-		$st = $this->dbh->prepare('INSERT INTO `room` (`flat_id`, `room_prototype_id`) values (:flat_id, :room_prototype_id)');
+		$st = $this->dbh->prepare('INSERT INTO `room` (`flat_id`, `prototype_id`) values (:flat_id, :prototype_id)');
 		$st->bindValue('flat_id'          , $entity->flat_id          , PDO::PARAM_INT);
-		$st->bindValue('room_prototype_id', $entity->room_prototype_id, PDO::PARAM_INT);
+		$st->bindValue('prototype_id', $entity->prototype_id, PDO::PARAM_INT);
 		return $st->execute();
 	}
 
 	function update(int $id, RoomEntity $entity): bool // @TODO `RoomEntity $rec`
 	{
-		$st = $this->dbh->prepare('UPDATE `room` SET `flat_id` = :flat_id, `room_prototype_id` = :room_prototype_id WHERE `id` = :id');
+		$st = $this->dbh->prepare('UPDATE `room` SET `flat_id` = :flat_id, `prototype_id` = :prototype_id WHERE `id` = :id');
 		$st->bindValue('id'               , $id                       , PDO::PARAM_INT);
 		$st->bindValue('flat_id'          , $entity->flat_id          , PDO::PARAM_INT);
-		$st->bindValue('room_prototype_id', $entity->room_prototype_id, PDO::PARAM_INT);
+		$st->bindValue('prototype_id', $entity->prototype_id, PDO::PARAM_INT);
 		return $st->execute();
 	}
 
@@ -566,23 +566,23 @@ abstract class Entity
 
 class RoomEntity extends Entity
 {
-	public $id, $flat_id, $room_prototype_id;
+	public $id, $flat_id, $prototype_id;
 
 	public function __construct(?int $id, int $flatId, int $roomPrototypeId)
 	{
 		$this->id                = $id;
 		$this->flat_id           = $flatId;
-		$this->room_prototype_id = $roomPrototypeId;
+		$this->prototype_id = $roomPrototypeId;
 	}
 
 	public static function maybeImport(array $post): Maybe/*Entity*/
 	{
 		$id                = $post['id'] ?? null;
 		$flat_id           = $post['flat_id'];
-		$room_prototype_id = $post['room_prototype_id'];
-		$flag = preg_match('/^\d+$/', $flat_id) && preg_match('/^\d+$/', $room_prototype_id);
+		$prototype_id = $post['prototype_id'];
+		$flag = preg_match('/^\d+$/', $flat_id) && preg_match('/^\d+$/', $prototype_id);
 		return $flag
-			? Maybe::just(new RoomEntity($id, $flat_id, $room_prototype_id))
+			? Maybe::just(new RoomEntity($id, $flat_id, $prototype_id))
 			: Maybe::nothing();
 	}
 }

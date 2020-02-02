@@ -152,7 +152,7 @@
 			<tr>
 				<th>ID</th>
 				<th>flat_id</th>
-				<th>room_prototype_id</th>
+				<th>prototype_id</th>
 				<th colspan="3">Parancs</th>
 				<th>Üzenet</th>
 			</tr>
@@ -168,9 +168,9 @@
 					<input type="submit" value="↻" disabled/>
 				</td>
 				<td>
-					<select form="roomUpdateForm-<?php echo $roomRecordViewModel['data']['id']; ?>" name="room_prototype_id">
+					<select form="roomUpdateForm-<?php echo $roomRecordViewModel['data']['id']; ?>" name="prototype_id">
 <?php foreach ($roomPrototypesViewModel['records'] as $roomPrototypeRecordViewModel): ?>
-						<option value="<?php echo $roomPrototypeRecordViewModel['data']['id']; ?>"<?php if ($roomPrototypeRecordViewModel['data']['id'] == $roomRecordViewModel['data']['room_prototype_id']): ?> selected<?php endif; ?>><?php echo '#' . $roomPrototypeRecordViewModel['data']['id'] . ': ' . abbreviate($roomPrototypeRecordViewModel['data']['name'], 20); ?></option>
+						<option value="<?php echo $roomPrototypeRecordViewModel['data']['id']; ?>"<?php if ($roomPrototypeRecordViewModel['data']['id'] == $roomRecordViewModel['data']['prototype_id']): ?> selected<?php endif; ?>><?php echo '#' . $roomPrototypeRecordViewModel['data']['id'] . ': ' . abbreviate($roomPrototypeRecordViewModel['data']['name'], 20); ?></option>
 <?php endforeach; ?>
 					</select>
 					<input type="submit" value="↻" disabled/>
@@ -200,10 +200,10 @@
 					</select>
 				</td>
 				<td>
-					<select form="insertorform-room" name="room_prototype_id">
+					<select form="insertorform-room" name="prototype_id">
 						<option class="choose" value="">&mdash; VÁLASSZ! &mdash;</option>
 <?php foreach ($roomPrototypesViewModel['records'] as $roomPrototypeRecordViewModel): ?>
-						<option value="<?php echo $roomPrototypeRecordViewModel['data']['id']; ?>"<?php if ($roomPrototypeRecordViewModel['data']['id'] == $roomsViewModel['newRecord']['data']['room_prototype_id']): ?> selected<?php endif; ?>><?php echo '#' . $roomPrototypeRecordViewModel['data']['id'] . ': ' . abbreviate($roomPrototypeRecordViewModel['data']['name'], 20); ?></option>
+						<option value="<?php echo $roomPrototypeRecordViewModel['data']['id']; ?>"<?php if ($roomPrototypeRecordViewModel['data']['id'] == $roomsViewModel['newRecord']['data']['prototype_id']): ?> selected<?php endif; ?>><?php echo '#' . $roomPrototypeRecordViewModel['data']['id'] . ': ' . abbreviate($roomPrototypeRecordViewModel['data']['name'], 20); ?></option>
 <?php endforeach; ?>
 					</select>
 				</td>
