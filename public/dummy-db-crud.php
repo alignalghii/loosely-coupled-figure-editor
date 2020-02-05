@@ -53,23 +53,6 @@
 				<td class="error"><?php echo $flatsViewModel['newRecord']['error']; ?></td>
 			</tr>
 		</table>
-		<!-- table>
-			<caption>flat</caption>
-			<tr>
-				<th>ID</th>
-				<th></th>
-			</tr>
-<?php foreach ($flatsViewModel['records'] as $flatRecordViewModel): ?>
-			<tr>
-				<td><?php echo $flatRecordViewModel['data']['id']; ?></td>
-				<td><form method="POST" action="/router.php/flat/del/<?php echo $flatRecordViewModel['data']['id']; ?>"><input type="submit" value="-" title="Töröl"/></form></th>
-			</tr>
-<?php endforeach; ?>
-			<tr>
-				<th>NEW-ID</th>
-				<td><form method="POST" action="/router.php/flat/add"><input type="submit" value="+" title="Beszúr"/></form></th>
-			</tr>
-		</table -->
 		<h3>Szoba-prototípusok</h3>
 		<table>
 			<caption>room_prototype</caption>
@@ -113,34 +96,6 @@
 				<td class="error"><?php echo $roomPrototypesViewModel['newRecord']['error']; ?></td>
 			</tr>
 		</table>
-		<!-- table>
-			<caption>room_prototype</caption>
-			<tr>
-				<th colspan="2">Attribútumok</th>
-				<th colspan="3">Kommunikáció</th>
-			</tr>
-			<tr>
-				<th>ID</th>
-				<th>name</th>
-				<th colspan="2">Parancs</th>
-				<th>Üzenet</th>
-			</tr>
-<?php foreach ($roomPrototypesViewModel['records'] as $roomPrototypeRecordViewModel): ?>
-			<tr>
-				<td><?php echo $roomPrototypeRecordViewModel['data']['id']; ?></td>
-				<td><input form="updaterform-room-prototype-<?php echo $roomPrototypeRecordViewModel['data']['id']; ?>" type="text" name="name" value="<?php echo $roomPrototypeRecordViewModel['data']['name']; ?>"/></td>
-				<td><form id="updaterform-room-prototype-<?php echo $roomPrototypeRecordViewModel['data']['id']; ?>" method="POST" action="/router.php/room-prototype/update/<?php echo $roomPrototypeRecordViewModel['data']['id']; ?>"><input type="submit" value="✍" title="Szerkeszt (változások érvényesítése)"/></form></th>
-				<td><form method="POST" action="/router.php/room-prototype/del/<?php echo $roomPrototypeRecordViewModel['data']['id']; ?>"><input type="submit" value="-" title="Töröl"/></form></th>
-				<td class="error"><?php echo $roomPrototypeRecordViewModel['error']; ?></td>
-			</tr>
-<?php endforeach; ?>
-			<tr>
-				<th>NEW-ID</th>
-				<th><input type="text" form="insertorform-room-prototype" name="name"/></th>
-				<td colspan="2"><form id="insertorform-room-prototype" method="POST" action="/router.php/room-prototype/add"><input type="submit" value="+" title="Beszúr"/></form></th>
-				<td class="error"><?php echo $roomPrototypesViewModel['newRecord']['error']; ?></td>
-			</tr>
-		</table -->
 		<h3>Szobák</h3>
 <?php if ($flatsViewModel['records'] && $roomPrototypesViewModel['records']): ?>
 		<table>
