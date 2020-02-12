@@ -26,6 +26,10 @@ class Router
 			case preg_match('!POST /router.php/room-prototype/update/(\d+)!', $request, $matches): $this->allController->updateRoomPrototype($matches[1], $this->post); break;
 			case preg_match('!POST /router.php/room-prototype/del/(\d+)!', $request, $matches): $this->allController->deleteRoomPrototype($matches[1]); break;
 
+			case preg_match('!POST /router.php/room-shape/add!', $request, $matches): $this->allController->addRoomShape($this->post); break;
+			case preg_match('!POST /router.php/room-shape/update/(\d+)!', $request, $matches): $this->allController->updateRoomShape($matches[1], $this->post); break;
+			case preg_match('!POST /router.php/room-shape/del/(\d+)!', $request, $matches): $this->allController->deleteRoomShape($matches[1]); break;
+
 			case preg_match('!POST /router.php/room/add!', $request, $matches): $this->allController->addRoom($this->post); break;
 			case preg_match('!POST /router.php/room/update/(\d+)!', $request, $matches): $this->allController->updateRoom($matches[1], $this->post); break;
 			case preg_match('!POST /router.php/room/del/(\d+)!', $request, $matches): $this->allController->deleteRoom($matches[1]); break;
@@ -37,6 +41,8 @@ class Router
 
 abstract class ViewModel
 {
+	const PARAM_FLOAT = 100;
+
 	protected $records;
 
 	public function __construct(array $records) {$this->records = $records;}
@@ -138,27 +144,33 @@ abstract class ViewModel
 
 class FlatsViewModel extends ViewModel
 {
-	public function fields(): array {return ['id' => PDO::PARAM_INT, 'address' => PDO::PARAM_STR];}
+	public function fields(): array {return ['id' => Either::right(PDO::PARAM_INT), 'address' => Either::right(PDO::PARAM_STR)];}
 }
 
 class RoomPrototypesViewModel extends ViewModel
 {
-	public function fields(): array {return ['id' => PDO::PARAM_INT, 'name' => PDO::PARAM_STR];}
+	public function fields(): array {return ['id' => Either::right(PDO::PARAM_INT), 'name' => Either::right(PDO::PARAM_STR)];}
+}
+
+class RoomShapesViewModel extends ViewModel
+{
+	public function fields(): array {return ['id' => Either::right(PDO::PARAM_INT), 'symbol' => Either::right(PDO::PARAM_STR), 'name' => Either::right(PDO::PARAM_STR), 'arity' => Either::right(PDO::PARAM_INT), 'interpret_argument_1' => Either::right(PDO::PARAM_STR), 'interpret_argument_2' => Either::right(PDO::PARAM_STR), 'interpret_argument_3' => Either::right(PDO::PARAM_STR), 'interpret_argument_4' => Either::right(PDO::PARAM_STR)];}
 }
 
 class RoomsViewModel extends ViewModel
 {
-	function fields(): array {return ['id' => PDO::PARAM_INT, 'flat_id' => PDO::PARAM_INT, 'prototype_id' => PDO::PARAM_INT];}
+	public function fields(): array {return ['id' => Either::right(PDO::PARAM_INT), 'flat_id' => Either::right(PDO::PARAM_INT), 'prototype_id' => Either::right(PDO::PARAM_INT), 'area' => Either::left(self::PARAM_FLOAT), 'autocorr_dir_fwd' => Either::right(PDO::PARAM_BOOL), 'shape_id' => Either::right(PDO::PARAM_INT), 'shape_argument_1' => Either::left(self::PARAM_FLOAT), 'shape_argument_2' => Either::left(self::PARAM_FLOAT), 'shape_argument_3' => Either::left(self::PARAM_FLOAT), 'shape_argument_4' => Either::left(self::PARAM_FLOAT)];}
 }
 
 /** Controller */
 
 class AllController // @TODO split it via mixins?
 {
-	function __construct($flatRelation, $roomPrototypeRelation, $roomRelation)
+	function __construct($flatRelation, $roomPrototypeRelation, $roomShapeRelation, $roomRelation)
 	{
 		$this->flatRelation          = $flatRelation;
 		$this->roomPrototypeRelation = $roomPrototypeRelation;
+		$this->roomShapeRelation     = $roomShapeRelation;
 		$this->roomRelation          = $roomRelation;
 	}
 
@@ -166,10 +178,12 @@ class AllController // @TODO split it via mixins?
 	{
 		$flatRecords          = $this->flatRelation->getAll();
 		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomShapeRecords     = $this->roomShapeRelation->getAll();
 		$roomRecords          = $this->roomRelation->getAll();
 
 		$flatsViewModel          = new FlatsViewModel($flatRecords);
 		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
@@ -177,6 +191,7 @@ class AllController // @TODO split it via mixins?
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomShapesViewModel'     => $roomShapesViewModel->showAll(),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
@@ -187,14 +202,16 @@ class AllController // @TODO split it via mixins?
 
 	function addFlat(array $post): void // @TODO FlatEntity
 	{
-		$maybeShowback = Maybe::no([$this->flatRelation, 'add'], $post);
+		$maybeShowback = FlatEntity::maybePostback($post, [$this->flatRelation, 'add']);
 
 		$flatRecords          = $this->flatRelation->getAll();
 		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomShapeRecords     = $this->roomShapeRelation->getAll();
 		$roomRecords          = $this->roomRelation->getAll();
 
 		$flatsViewModel          = new FlatsViewModel($flatRecords);
 		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
@@ -202,6 +219,7 @@ class AllController // @TODO split it via mixins?
 			[
 				'flatsViewModel'          => $flatsViewModel->add($maybeShowback),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomShapesViewModel'     => $roomShapesViewModel->showAll(),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
@@ -209,14 +227,19 @@ class AllController // @TODO split it via mixins?
 
 	function updateFlat(int $id, array $post): void // @TODO FlatEntity
 	{
-		$maybeShowback = $this->flatRelation->update($id, $post) ? Maybe::nothing() : Maybe::just($post);
+		$maybeShowback = FlatEntity::maybePostback(
+			$post,
+			function (FlatEntity $entity) use ($id): bool {return $this->flatRelation->update($id, $entity);} //$this->flatRelation->update($id, $post) ? Maybe::nothing() : Maybe::just($post);
+		);
 
 		$flatRecords          = $this->flatRelation->getAll();
 		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomShapeRecords     = $this->roomShapeRelation->getAll();
 		$roomRecords          = $this->roomRelation->getAll();
 
 		$flatsViewModel          = new FlatsViewModel($flatRecords);
 		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
@@ -224,6 +247,7 @@ class AllController // @TODO split it via mixins?
 			[
 				'flatsViewModel'          => $flatsViewModel->update($id, $maybeShowback),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomShapesViewModel'     => $roomShapesViewModel->showAll(),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
@@ -235,10 +259,12 @@ class AllController // @TODO split it via mixins?
 
 		$flatRecords          = $this->flatRelation->getAll();
 		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomShapeRecords     = $this->roomShapeRelation->getAll();
 		$roomRecords          = $this->roomRelation->getAll();
 
 		$flatsViewModel          = new FlatsViewModel($flatRecords);
 		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
@@ -246,6 +272,7 @@ class AllController // @TODO split it via mixins?
 			[
 				'flatsViewModel'          => $flatsViewModel->delete($maybeShowbackId),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomShapesViewModel'     => $roomShapesViewModel->showAll(),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
@@ -257,14 +284,19 @@ class AllController // @TODO split it via mixins?
 
 	function addRoomPrototype(array $post): void // @TODO FlatEntity
 	{
-		$maybeShowback = Maybe::no([$this->roomPrototypeRelation, 'add'], $post);
+		$maybeShowback = RoomPrototypeEntity::maybePostback( //Maybe::no([$this->roomPrototypeRelation, 'add'], $post);
+			$post,
+			[$this->roomPrototypeRelation, 'add']
+		);
 
 		$flatRecords          = $this->flatRelation->getAll();
 		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomShapeRecords     = $this->roomShapeRelation->getAll();
 		$roomRecords          = $this->roomRelation->getAll();
 
 		$flatsViewModel          = new FlatsViewModel($flatRecords);
 		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
@@ -272,6 +304,7 @@ class AllController // @TODO split it via mixins?
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->add($maybeShowback),
+				'roomShapesViewModel'     => $roomShapesViewModel->showAll(),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
@@ -279,14 +312,19 @@ class AllController // @TODO split it via mixins?
 
 	function updateRoomPrototype(int $id, array $post): void // @TODO FlatEntity
 	{
-		$maybeShowback = $this->roomPrototypeRelation->update($id, $post) ? Maybe::nothing() : Maybe::just($post);
+		$maybeShowback = RoomPrototypeEntity::maybePostback(
+			$post,
+			function (RoomPrototypeEntity $entity) use ($id): bool {return $this->roomPrototypeRelation->update($id, $entity);}
+		);
 
 		$flatRecords          = $this->flatRelation->getAll();
 		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomShapeRecords     = $this->roomShapeRelation->getAll();
 		$roomRecords          = $this->roomRelation->getAll();
 
 		$flatsViewModel          = new FlatsViewModel($flatRecords);
 		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
@@ -294,6 +332,7 @@ class AllController // @TODO split it via mixins?
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->update($id, $maybeShowback),
+				'roomShapesViewModel'     => $roomShapesViewModel->showAll(),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
@@ -305,10 +344,12 @@ class AllController // @TODO split it via mixins?
 
 		$flatRecords          = $this->flatRelation->getAll();
 		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomShapeRecords     = $this->roomShapeRelation->getAll();
 		$roomRecords          = $this->roomRelation->getAll();
 
 		$flatsViewModel          = new FlatsViewModel($flatRecords);
 		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
@@ -316,6 +357,90 @@ class AllController // @TODO split it via mixins?
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->delete($maybeShowbackId),
+				'roomShapesViewModel'     => $roomShapesViewModel->showAll(),
+				'roomsViewModel'          => $roomsViewModel->showAll()
+			]
+		);
+	}
+
+	// RoomShape:
+
+	function addRoomShape(array $post): void
+	{
+		$maybePostback = RoomShapeEntity::maybePostback(
+			$post,
+			[$this->roomShapeRelation, 'add']
+		);
+
+		$flatRecords          = $this->flatRelation->getAll();
+		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomShapeRecords     = $this->roomShapeRelation->getAll();
+		$roomRecords          = $this->roomRelation->getAll();
+
+		$flatsViewModel          = new FlatsViewModel($flatRecords);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
+		$roomsViewModel          = new RoomsViewModel($roomRecords);
+
+		$this->render(
+			'dummy-db-crud.php',
+			[
+				'flatsViewModel'          => $flatsViewModel->showAll(),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomShapesViewModel'     => $roomShapesViewModel->add($maybePostback),
+				'roomsViewModel'          => $roomsViewModel->showAll()
+			]
+		);
+	}
+
+	function updateRoomShape(int $id, array $post): void
+	{
+		$maybePostback = RoomShapeEntity::maybePostback(
+			$post,
+			function (RoomShapeEntity $entity) use ($id): bool {return $this->roomShapeRelation->update($id, $entity);}
+		);
+
+		$flatRecords          = $this->flatRelation->getAll();
+		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomShapeRecords     = $this->roomShapeRelation->getAll();
+		$roomRecords          = $this->roomRelation->getAll();
+
+		$flatsViewModel          = new FlatsViewModel($flatRecords);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
+		$roomsViewModel          = new RoomsViewModel($roomRecords);
+
+		$this->render(
+			'dummy-db-crud.php',
+			[
+				'flatsViewModel'          => $flatsViewModel->showAll(),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomShapesViewModel'     => $roomShapesViewModel->update($id, $maybePostback),
+				'roomsViewModel'          => $roomsViewModel->showAll()
+			]
+		);
+	}
+
+	function deleteRoomShape(int $id): void
+	{
+		$maybeShowbackId = Maybe::no([$this->roomShapeRelation, 'delete'], $id);
+
+		$flatRecords          = $this->flatRelation->getAll();
+		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomShapeRecords     = $this->roomShapeRelation->getAll();
+		$roomRecords          = $this->roomRelation->getAll();
+
+		$flatsViewModel          = new FlatsViewModel($flatRecords);
+		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
+		$roomsViewModel          = new RoomsViewModel($roomRecords);
+
+		$this->render(
+			'dummy-db-crud.php',
+			[
+				'flatsViewModel'          => $flatsViewModel->showAll(),
+				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomShapesViewModel'     => $roomShapesViewModel->delete($maybeShowbackId),
 				'roomsViewModel'          => $roomsViewModel->showAll()
 			]
 		);
@@ -333,10 +458,12 @@ class AllController // @TODO split it via mixins?
 
 		$flatRecords          = $this->flatRelation->getAll();
 		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomShapeRecords     = $this->roomShapeRelation->getAll();
 		$roomRecords          = $this->roomRelation->getAll();
 
 		$flatsViewModel          = new FlatsViewModel($flatRecords);
 		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
@@ -344,6 +471,7 @@ class AllController // @TODO split it via mixins?
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomShapesViewModel'     => $roomShapesViewModel->showAll(),
 				'roomsViewModel'          => $roomsViewModel->add($maybePostback)
 			]
 		);
@@ -353,15 +481,17 @@ class AllController // @TODO split it via mixins?
 	{
 		$maybePostback = RoomEntity::maybePostback(
 			$post,
-			function ($entity) use ($id) {return $this->roomRelation->update($id, $entity);}
+			function (RoomEntity $entity) use ($id): bool {return $this->roomRelation->update($id, $entity);}
 		);
 
 		$flatRecords          = $this->flatRelation->getAll();
 		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomShapeRecords     = $this->roomShapeRelation->getAll();
 		$roomRecords          = $this->roomRelation->getAll();
 
 		$flatsViewModel          = new FlatsViewModel($flatRecords);
 		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
@@ -369,6 +499,7 @@ class AllController // @TODO split it via mixins?
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomShapesViewModel'     => $roomShapesViewModel->showAll(),
 				'roomsViewModel'          => $roomsViewModel->update($id, $maybePostback)
 			]
 		);
@@ -380,10 +511,12 @@ class AllController // @TODO split it via mixins?
 
 		$flatRecords          = $this->flatRelation->getAll();
 		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
+		$roomShapeRecords     = $this->roomShapeRelation->getAll();
 		$roomRecords          = $this->roomRelation->getAll();
 
 		$flatsViewModel          = new FlatsViewModel($flatRecords);
 		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
+		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
@@ -391,6 +524,7 @@ class AllController // @TODO split it via mixins?
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
+				'roomShapesViewModel'     => $roomShapesViewModel->showAll(),
 				'roomsViewModel'          => $roomsViewModel->delete($maybeShowbackId)
 			]
 		);
@@ -419,25 +553,23 @@ class FlatRelation
 		return $st->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	function add(array $post): bool // @TODO `FlatEntity $rec`
+	function add(FlatEntity $entity): bool // @TODO `FlatEntity $rec`
 	{
-		$address = trim($post['address']);
-		if ($address) {
+		if ($entity->address) {
 			$st = $this->dbh->prepare('INSERT INTO `flat` (`address`) values (:address)');
-			$st->bindValue('address', $address, PDO::PARAM_STR);
+			$st->bindValue('address', $entity->address, PDO::PARAM_STR);
 		return $st->execute();
 		} else {
 			return false;
 		}
 	}
 
-	function update(int $id, array $post): bool  // @TODO `FlatEntity $rec`
+	function update(int $id, FlatEntity $entity): bool  // @TODO `FlatEntity $rec`
 	{
-		$address = trim($post['address']);
-		if ($address) {
+		if ($entity->address) {
 			$st = $this->dbh->prepare('UPDATE `flat` SET `address` = :address WHERE `id` = :id');
-			$st->bindValue('id'     , $id     , PDO::PARAM_INT);
-			$st->bindValue('address', $address, PDO::PARAM_STR);
+			$st->bindValue('id'     , $id             , PDO::PARAM_INT);
+			$st->bindValue('address', $entity->address, PDO::PARAM_STR);
 			return $st->execute();
 		} else {
 			return false;
@@ -463,25 +595,23 @@ class RoomPrototypeRelation
 		return $st->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	function add(array $post): bool // @TODO `RoomPrototypeEntity $rec`
+	function add(RoomPrototypeEntity $entity): bool // @TODO `RoomPrototypeEntity $rec`
 	{
-		$name = trim($post['name']);
-		if ($name) {
+		if ($entity->name) {
 			$st = $this->dbh->prepare('INSERT INTO `room_prototype` (`name`) values (:name)');
-			$st->bindValue('name', $name, PDO::PARAM_STR);
+			$st->bindValue('name', $entity->name, PDO::PARAM_STR);
 			return $st->execute();
 		} else {
 			return false;
 		}
 	}
 
-	function update(int $id, array $post): bool // @TODO `RoomPrototypeEntity $rec`
+	function update(int $id, RoomPrototypeEntity $entity): bool // @TODO `RoomPrototypeEntity $rec`
 	{
-		$name = trim($post['name']);
-		if ($name) {
+		if ($entity->name) {
 			$st = $this->dbh->prepare('UPDATE `room_prototype` SET `name` = :name WHERE `id` = :id');
-			$st->bindValue('id'  , $id  , PDO::PARAM_INT);
-			$st->bindValue('name', $name, PDO::PARAM_STR);
+			$st->bindValue('id'  , $id          , PDO::PARAM_INT);
+			$st->bindValue('name', $entity->name, PDO::PARAM_STR);
 			return $st->execute();
 		} else {
 			return false;
@@ -491,6 +621,75 @@ class RoomPrototypeRelation
 	function delete(int $id): bool
 	{
 		$st = $this->dbh->prepare('DELETE FROM `room_prototype` WHERE `id` = :id');
+		$st->bindValue('id', $id, PDO::PARAM_INT);
+		return $st->execute();
+	}
+}
+
+class RoomShapeRelation
+{
+	function __construct(PDO $dbh) {$this->dbh = $dbh;}
+
+	function getAll(): array
+	{
+		$st = $this->dbh->prepare('SELECT * FROM `room_shape` ORDER BY `id`');
+		$st->execute();
+		return $st->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	function add(RoomShapeEntity $entity): bool // @TODO `RoomShapeEntity $rec`
+	{
+		if (strlen($entity->symbol) == 1 && $entity->name && $entity->arity >= 0) {
+			$st = $this->dbh->prepare('
+				INSERT INTO `room_shape`
+					(`symbol`, `name`, `arity`, `interpret_argument_1`, `interpret_argument_2`, `interpret_argument_3`, `interpret_argument_4`) VALUES
+					(:symbol , :name , :arity , :interpret_argument_1 , :interpret_argument_2 , :interpret_argument_3 , :interpret_argument_4 )
+			');
+			$st->bindValue('symbol'              , $entity->symbol              , PDO::PARAM_STR);
+			$st->bindValue('name'                , $entity->name                , PDO::PARAM_STR);
+			$st->bindValue('arity'               , $entity->arity               , PDO::PARAM_INT);
+			$st->bindValue('interpret_argument_1', $entity->interpret_argument_1, PDO::PARAM_STR);
+			$st->bindValue('interpret_argument_2', $entity->interpret_argument_2, PDO::PARAM_STR);
+			$st->bindValue('interpret_argument_3', $entity->interpret_argument_3, PDO::PARAM_STR);
+			$st->bindValue('interpret_argument_4', $entity->interpret_argument_4, PDO::PARAM_STR);
+			return $st->execute();
+		} else {
+			return false;
+		}
+	}
+
+	function update(int $id, RoomShapeEntity $entity): bool // @TODO `RoomShapeEntity $rec`
+	{
+		if (strlen($entity->symbol) == 1 && $entity->name && $entity->arity >= 0) {
+			$st = $this->dbh->prepare('
+				UPDATE `room_shape`
+				SET
+					`symbol`               = :symbol,
+					`name`                 = :name,
+					`arity`                = :arity,
+					`interpret_argument_1` = :interpret_argument_1,
+					`interpret_argument_2` = :interpret_argument_2,
+					`interpret_argument_3` = :interpret_argument_3,
+					`interpret_argument_4` = :interpret_argument_4
+				WHERE `id` = :id
+			');
+			$st->bindValue('id'                  , $id                          , PDO::PARAM_INT);
+			$st->bindValue('symbol'              , $entity->symbol              , PDO::PARAM_STR);
+			$st->bindValue('name'                , $entity->name                , PDO::PARAM_STR);
+			$st->bindValue('arity'               , $entity->arity               , PDO::PARAM_INT);
+			$st->bindValue('interpret_argument_1', $entity->interpret_argument_1, PDO::PARAM_STR);
+			$st->bindValue('interpret_argument_2', $entity->interpret_argument_2, PDO::PARAM_STR);
+			$st->bindValue('interpret_argument_3', $entity->interpret_argument_3, PDO::PARAM_STR);
+			$st->bindValue('interpret_argument_4', $entity->interpret_argument_4, PDO::PARAM_STR);
+			return $st->execute();
+		} else {
+			return false;
+		}
+	}
+
+	function delete(int $id): bool
+	{
+		$st = $this->dbh->prepare('DELETE FROM `room_shape` WHERE `id` = :id');
 		$st->bindValue('id', $id, PDO::PARAM_INT);
 		return $st->execute();
 	}
@@ -509,19 +708,57 @@ class RoomRelation
 
 	function add(RoomEntity $entity): bool // @TODO `RoomEntity $entity`
 	{
-		$st = $this->dbh->prepare('INSERT INTO `room` (`flat_id`, `prototype_id`) values (:flat_id, :prototype_id)');
-		$st->bindValue('flat_id'          , $entity->flat_id          , PDO::PARAM_INT);
-		$st->bindValue('prototype_id', $entity->prototype_id, PDO::PARAM_INT);
-		return $st->execute();
+		if ($entity->area >= 0) {
+			$st = $this->dbh->prepare('
+				INSERT INTO `room`
+					(`flat_id`, `prototype_id`, `area`, `autocorr_dir_fwd`, `shape_id`, `shape_argument_1`, `shape_argument_2`, `shape_argument_3`, `shape_argument_4`) VALUES
+					(:flat_id , :prototype_id , :area , :autocorr_dir_fwd , :shape_id , :shape_argument_1 , :shape_argument_2 , :shape_argument_3 , :shape_argument_4 )
+			');
+			$st->bindValue('flat_id'         , $entity->flat_id          , PDO::PARAM_INT );
+			$st->bindValue('prototype_id'    , $entity->prototype_id     , PDO::PARAM_INT );
+			$st->bindValue('area'            , $entity->area             , PDO::PARAM_STR );
+			$st->bindValue('autocorr_dir_fwd', $entity->autocorr_dir_fwd , PDO::PARAM_BOOL);
+			$st->bindValue('shape_id'        , $entity->shape_id         , PDO::PARAM_INT );
+			$st->bindValue('shape_argument_1', $entity->shape_argument_1 , PDO::PARAM_STR );
+			$st->bindValue('shape_argument_2', $entity->shape_argument_2 , PDO::PARAM_STR );
+			$st->bindValue('shape_argument_3', $entity->shape_argument_3 , PDO::PARAM_STR );
+			$st->bindValue('shape_argument_4', $entity->shape_argument_4 , PDO::PARAM_STR );
+			return $st->execute();
+		} else {
+			return false;
+		}
 	}
 
 	function update(int $id, RoomEntity $entity): bool // @TODO `RoomEntity $rec`
 	{
-		$st = $this->dbh->prepare('UPDATE `room` SET `flat_id` = :flat_id, `prototype_id` = :prototype_id WHERE `id` = :id');
-		$st->bindValue('id'               , $id                       , PDO::PARAM_INT);
-		$st->bindValue('flat_id'          , $entity->flat_id          , PDO::PARAM_INT);
-		$st->bindValue('prototype_id', $entity->prototype_id, PDO::PARAM_INT);
-		return $st->execute();
+		if ($entity->area >= 0) {
+			$st = $this->dbh->prepare('
+				UPDATE `room` SET
+					`flat_id`          = :flat_id,
+					`prototype_id`     = :prototype_id,
+					`area`             = :area,
+					`autocorr_dir_fwd` = :autocorr_dir_fwd,
+					`shape_id`         = :shape_id,
+					`shape_argument_1` = :shape_argument_1,
+					`shape_argument_2` = :shape_argument_2,
+					`shape_argument_3` = :shape_argument_3,
+					`shape_argument_4` = :shape_argument_4
+				WHERE `id` = :id
+			');
+			$st->bindValue('id'              , $id                       , PDO::PARAM_INT );
+			$st->bindValue('flat_id'         , $entity->flat_id          , PDO::PARAM_INT );
+			$st->bindValue('prototype_id'    , $entity->prototype_id     , PDO::PARAM_INT );
+			$st->bindValue('area'            , $entity->area             , PDO::PARAM_STR );
+			$st->bindValue('autocorr_dir_fwd', $entity->autocorr_dir_fwd , PDO::PARAM_BOOL);
+			$st->bindValue('shape_id'        , $entity->shape_id         , PDO::PARAM_INT );
+			$st->bindValue('shape_argument_1', $entity->shape_argument_1 , PDO::PARAM_STR );
+			$st->bindValue('shape_argument_2', $entity->shape_argument_2 , PDO::PARAM_STR );
+			$st->bindValue('shape_argument_3', $entity->shape_argument_3 , PDO::PARAM_STR );
+			$st->bindValue('shape_argument_4', $entity->shape_argument_4 , PDO::PARAM_STR );
+			return $st->execute();
+		} else {
+			return false;
+		}
 	}
 
 	function delete(int $id): bool
@@ -559,30 +796,117 @@ abstract class Entity
 	{
 		return static::maybeImport($post)->maybe(
 			Maybe::just($post), // Maybe::just(static::comb($post))
-			function ($entity) use ($entityPredicate, $post) {return $entityPredicate($entity) ? Maybe::nothing() : Maybe::just($post);} // Maybe::just(static::comb($post))
+			function (Entity $entity) use ($entityPredicate, $post): Maybe/*postArr*/ {return $entityPredicate($entity) ? Maybe::nothing() : Maybe::just($post);} // Maybe::just(static::comb($post))
 		);
+	}
+}
+
+class FlatEntity extends Entity
+{
+	public $id, $address;
+
+	public function __construct(?int $id, string $address)
+	{
+		$this->id      = $id;
+		$this->address = $address;
+	}
+
+	public static function maybeImport(array $post): Maybe/*FlatEntity*/
+	{
+		$id      = $post['id'] ?? null;
+		$address = trim($post['address']);
+		return Maybe::just(new FlatEntity($id, $address));
+	}
+}
+
+class RoomPrototypeEntity extends Entity
+{
+	public $id, $name;
+
+	public function __construct(?int $id, string $name)
+	{
+		$this->id   = $id;
+		$this->name = $name;
+	}
+
+	public static function maybeImport(array $post): Maybe/*RoomPrototypeEntity*/
+	{
+		$id   = $post['id'] ?? null;
+		$name = trim($post['name']);
+		return Maybe::just(new RoomPrototypeEntity($id, $name));
+	}
+}
+
+class RoomShapeEntity extends Entity
+{
+	public $id, $symbol, $name, $arity, $interpret_argument_1, $interpret_argument_2, $interpret_argument_3, $interpret_argument_4;
+
+	public function __construct(?int $id, string $symbol, string $name, int $arity, ?string $interpret_argument_1, ?string $interpret_argument_2, ?string $interpret_argument_3, ?string $interpret_argument_4)
+	{
+		$this->id                   = $id;
+		$this->symbol               = $symbol;
+		$this->name                 = $name;
+		$this->arity                = $arity;
+		$this->interpret_argument_1 = $interpret_argument_1;
+		$this->interpret_argument_2 = $interpret_argument_2;
+		$this->interpret_argument_3 = $interpret_argument_3;
+		$this->interpret_argument_4 = $interpret_argument_4;
+	}
+
+	public static function maybeImport(array $post): Maybe/*RoomShapeEntity*/
+	{
+		$id                   = $post['id'] ?? null;
+		$symbol               = trim($post['symbol']);
+		$name                 = trim($post['name']);
+		$arity                = preg_replace('/\s+/', '', $post['arity']);
+		$interpret_argument_1 = $post['interpret_argument_1'] ?? null;
+		$interpret_argument_2 = $post['interpret_argument_2'] ?? null;
+		$interpret_argument_3 = $post['interpret_argument_3'] ?? null;
+		$interpret_argument_4 = $post['interpret_argument_4'] ?? null;
+
+		$flag = preg_match('/^\d+$/', $arity);
+		return $flag
+			? Maybe::just(new RoomShapeEntity($id, $symbol, $name, $arity, $interpret_argument_1, $interpret_argument_2, $interpret_argument_3, $interpret_argument_4))
+			: Maybe::nothing();
 	}
 }
 
 class RoomEntity extends Entity
 {
-	public $id, $flat_id, $prototype_id;
+	public $id, $flat_id, $prototype_id, $area, $autocorr_dir_fwd, $shape_id, $shape_argument_1, $shape_argument_2, $shape_argument_3, $shape_argument_4;
 
-	public function __construct(?int $id, int $flatId, int $roomPrototypeId)
+	public function __construct(?int $id, int $flatId, int $roomPrototypeId, ?float $area, bool $autocorr_dir_fwd, int $shape_id, ?string $shape_argument_1, ?string $shape_argument_2, ?string $shape_argument_3, ?string $shape_argument_4)
 	{
-		$this->id                = $id;
-		$this->flat_id           = $flatId;
-		$this->prototype_id = $roomPrototypeId;
+		$this->id               = $id;
+		$this->flat_id          = $flatId;
+		$this->prototype_id     = $roomPrototypeId;
+		$this->area             = $area;
+		$this->autocorr_dir_fwd = $autocorr_dir_fwd;
+		$this->shape_id         = $shape_id;
+		$this->shape_argument_1 = $shape_argument_1;
+		$this->shape_argument_2 = $shape_argument_2;
+		$this->shape_argument_3 = $shape_argument_3;
+		$this->shape_argument_4 = $shape_argument_4;
 	}
 
-	public static function maybeImport(array $post): Maybe/*Entity*/
+	public static function maybeImport(array $post): Maybe/*RoomEntity*/
 	{
 		$id                = $post['id'] ?? null;
 		$flat_id           = $post['flat_id'];
-		$prototype_id = $post['prototype_id'];
-		$flag = preg_match('/^\d+$/', $flat_id) && preg_match('/^\d+$/', $prototype_id);
+		$prototype_id      = $post['prototype_id'];
+		$area              = preg_replace('/\s+/', '', $post['area']);
+		$area              = str_replace(',', '.', $area);
+		if ($area === '') $area = null;
+		$autocorr_dir_fwd  = $post['autocorr_dir_fwd'] ?? '';
+		$shape_id          = $post['shape_id'];
+		$shape_argument_1  = trim($post['shape_argument_1']) ?: null;
+		$shape_argument_2  = trim($post['shape_argument_2']) ?: null;
+		$shape_argument_3  = trim($post['shape_argument_3']) ?: null;
+		$shape_argument_4  = trim($post['shape_argument_4']) ?: null;
+
+		$flag = preg_match('/^\d+$/', $flat_id) && preg_match('/^\d+$/', $prototype_id) && ($area === null || preg_match('/^[+-]?\d+(\.\d+)?$/', $area)) && in_array($autocorr_dir_fwd, ['0', '1'], true) && preg_match('/^\d+$/', $shape_id);
 		return $flag
-			? Maybe::just(new RoomEntity($id, $flat_id, $prototype_id))
+			? Maybe::just(new RoomEntity($id, $flat_id, $prototype_id, $area, $autocorr_dir_fwd, $shape_id, $shape_argument_1, $shape_argument_2, $shape_argument_3, $shape_argument_4))
 			: Maybe::nothing();
 	}
 }
@@ -626,7 +950,7 @@ class Maybe
 }
 
 
-/*class Either
+class Either
 {
 	protected $representation;
 
@@ -679,4 +1003,4 @@ class Maybe
 	//{
 	//	return $leftContent->maybe...
 	//}
-}*/
+}

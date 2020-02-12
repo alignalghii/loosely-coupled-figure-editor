@@ -8,9 +8,10 @@ $dbh = new PDO('mysql:host=localhost;dbname=floor_plan_designer', 'floor_plan_de
 
 $flatRelation          = new FlatRelation($dbh);
 $roomPrototypeRelation = new RoomPrototypeRelation($dbh);
+$roomShapeRelation     = new RoomShapeRelation($dbh);
 $roomRelation          = new RoomRelation($dbh);
 
-$allController = new AllController($flatRelation, $roomPrototypeRelation, $roomRelation);
+$allController = new AllController($flatRelation, $roomPrototypeRelation, $roomShapeRelation, $roomRelation);
 
 $router = new Router($allController, $_SERVER, $_POST);
 $router->run();

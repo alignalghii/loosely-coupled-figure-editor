@@ -35,7 +35,7 @@ CREATE TABLE `room` (
 	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`flat_id` INT NOT NULL,
 	`prototype_id` INT NOT NULL,
-	`area`	REAL NOT NULL,
+	`area`	REAL DEFAULT NULL COMMENT 'must not / need not provide when `autocorr_dir_fwd` is true @TODO decide mustnot vs neednot',
 	`autocorr_dir_fwd` BOOL NOT NULL COMMENT 'autocorrection direction: recalculate area forward by shape arguments or infer backward vice versa, maintaining consistence (degrees of freedom)',
 	`shape_id` INT NOT NULL,
 	`shape_argument_1` REAL DEFAULT NULL,
@@ -57,19 +57,22 @@ INSERT INTO `room_prototype`
 (`id`, `name`           ) VALUES
 ( 67 , 'amerikai konyha'),
 ( 81 , 'ebédlő'         ),
-( 85 , 'WC'             );
+( 85 , 'WC'             ),
+( 86 , 'konyha'         ),
+( 87 , 'fürdőszoba'     );
 
 INSERT INTO `room_shape`
 (`id`, `symbol`, `name`              , `arity`, `interpret_argument_1`, `interpret_argument_2`, `interpret_argument_3`                                                 , `interpret_argument_4`) VALUES
 (  1 , 'Q'     , 'négyzet'           ,  1     , 'edge'                , NULL                  , NULL                                                                   , NULL                  ),
 (  2 , 'R'     , 'téglalap'          ,  2     , 'x-edge'              , 'y-edge'              , NULL                                                                   , NULL                  ),
-(  3 , 'T'     , 'trapéz'            ,  3     , 'bottom-edge'         , 'height'              , 'left top vertex x-coord measured from that of bottom edge middlepoint', 'right top vertex ...'),
+(  3 , 'T'     , 'trapéz'            ,  4     , 'bottom-edge'         , 'height'              , 'left top vertex x-coord measured from that of bottom edge middlepoint', 'right top vertex ...'),
 (  4 , 'L'     , 'L-alak'            ,  4     , 'big width'           , 'big height'          , 'small width'                                                          , 'small height'        );
 
 INSERT INTO `room`
 (`id`, `flat_id`, `prototype_id`, `area`, `autocorr_dir_fwd`, `shape_id`, `shape_argument_1`, `shape_argument_2`, `shape_argument_3`, `shape_argument_4`) VALUES
 ( 82 ,  56      ,  85           ,  25   , FALSE             ,  1        ,  NULL             , NULL              , NULL              , NULL              ),
 ( 83 ,  49      ,  81           ,   9   , TRUE              ,  1        ,   3               , NULL              , NULL              , NULL              ),
-( 84 ,  49      ,  67           ,  24   , TRUE              ,  2        ,   6               ,   4               , NULL              , NULL              ),
-( 85 ,  49      ,  67           ,  10   , TRUE              ,  3        ,   6               ,   2               ,  -1               ,   3               ),
-( 86 ,  63      ,  67           ,  15   , TRUE              ,  4        ,   6               ,   5               ,   1               ,   2               );
+( 84 ,  49      ,  67           ,  24   , TRUE              ,  2        ,   8               ,   3               , NULL              , NULL              ),
+( 85 ,  49      ,  86           ,  10   , TRUE              ,  3        ,   6               ,   2               ,  -1               ,   3               ),
+( 86 ,  49      ,  87           ,  10   , TRUE              ,  4        ,   6               ,   5               ,   1               ,   2               ),
+( 87 ,  63      ,  67           ,  15   , TRUE              ,  4        ,   6               ,   5               ,   1               ,   2               );

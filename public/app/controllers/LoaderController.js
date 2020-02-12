@@ -304,8 +304,53 @@ LoaderController.prototype.load = function (i)
 					this.statusBarDriver.report(`${i}. rekord betöltése valós adatbázisból`);
 					const goodRecords = records.filter(rec => rec.flat_id == i);
 					let counter = 0;
-					for (goodRecord of goodRecords) {
-						let figure = new Figure([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]], {fill: 'url(#csempe1_dark_small)'});
+					for (let goodRecord of goodRecords) {
+						const shapeSymbol = goodRecord.shape_symbol; shapeName = goodRecord.shape_name; console.log(goodRecord);
+						let figure, countedArea, normalizer;
+						switch (shapeSymbol) {
+							case 'Q':
+								figure = new Figure([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]], {fill: 'url(#csempe1_dark_small)'});
+								break;
+							case 'R':
+								let w = goodRecord.shape_argument_1, h = goodRecord.shape_argument_2;
+								countedArea = w * h;
+								normalizer = Math.sqrt(countedArea);
+								let w_ = w / normalizer, h_ = h / normalizer,
+								    ww_ = w_ / 2, hh_ = h_ / 2;
+								figure = new Figure([[-ww_, -hh_], [ww_, -hh_], [ww_, hh_], [-ww_, hh_]], {fill: 'url(#csempe1_dark_small)'});
+								break;
+							case 'T':
+								let base = goodRecord.shape_argument_1, height = goodRecord.shape_argument_2, topLeftX = goodRecord.shape_argument_3, topRightX = goodRecord.shape_argument_4,
+								    ceiling = Math.abs(topRightX - topLeftX),
+								    midsegment = (base + ceiling) / 2;
+								countedArea = height * midsegment;
+								normalizer = Math.sqrt(countedArea);
+								let base_ = base / normalizer, height_ = height / normalizer,
+								    topLeftX_ = topLeftX / normalizer, topRightX_ = topRightX / normalizer;
+								figure = new Figure(
+									[[-base_/2, -height_/2], [base_/2, -height_/2], [topRightX_, height_/2], [topLeftX_, height_/2]],
+									{fill: 'url(#csempe1_dark_small)'}
+								);
+								break;
+							case 'L':
+								let LW = goodRecord.shape_argument_1, LH = goodRecord.shape_argument_2,
+								    Lw = goodRecord.shape_argument_3, Lh = goodRecord.shape_argument_4,
+								    Ldw = LW - Lw, Ldh = LH - Lh;
+								countedArea = LW * LH - Ldw * Ldh;
+								normalizer = Math.sqrt(countedArea);
+								let  LW_ = LW / normalizer, LH_ = LH / normalizer,
+								     Lw_ = Lw / normalizer, Lh_ = Lh / normalizer,
+								    Ldw_ = LW_ - Lw_, Ldh_ = LH_ - Lh_;
+								figure = new Figure(
+									[[-LW_/2, -LH_/2], [LW_/2, -LH_/2], [LW_/2, -LH_/2+Lh_], [-LW_/2+Lw_, -LH_/2+Lh_], [-LW_/2+Lw_, LH_/2], [-LW_/2, LH_/2]],
+									{fill: 'url(#csempe1_dark_small)'}
+								);
+								break;
+							default:
+								figure = new Figure([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]], {fill: 'url(#csempe1_dark_small)'});
+								break;
+						}
+
 						figure.doScale(11);
 						figure.doTranslation([0, -15 * (counter - (goodRecords.length-1)/2)])
 						let business = new Room (
