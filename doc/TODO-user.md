@@ -7,3 +7,11 @@
  - A gyakori alakzatok (L-alakú szoba) és a sarkalatos szögek (derékszög, 45°) szerkesztésének támogatása.
  - Az alakzattulajdonságok szöveges szerkesztőűrlapja legyen pontosan és intuitíven összekapcsolva az összes egyéb, egeres geometriai transzformációval (mozgatással fordgatással, átméretezéssel, tükrözéssel).
  - Az adatbázist szimulálja valami előkészített csonk, így lehessen tesztelni a mentés, beolvasás képességét legalább elvi szinten.
+
+
+ - A zoom funkciót használva a nyílászárók elválnak a faltól és vagy a szobákon kívülre vagy a szobákon belülre kerülnek.
+ - A falra tett ajtók nem illeszkednek pontosan a falakra
+ - A nyílászárókra duplán kattintva a falakon megjelennek üres szakaszok (hina reprodukálása eddig még nem sikerült).
+ - Ma 2020 feb 7-e van. Másfél hónap alatti még elfogadható lenne befejezni, de 1 hónap lenne igazán a jó.
+ - Jövő hétre: dummy DB admin felület javítása. Éltolás.
+ - Legvégén: keretszin keretvastagság, transzformációk yorsmenüje: ürlapba vagy jobbegérbe), esetleg gyorsbilentyűk. Szerethetőség
