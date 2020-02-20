@@ -25,3 +25,9 @@ function vectorToNearestPointOnSegment(segment, point)
 	var hit = nearestPointOnSegment(segment, point);
 	return fromTo(point, hit);
 }
+
+function vectorFromNearestPointOnSegment(segment, point)
+{
+	var hit = nearestPointOnSegment(segment, point);
+	return fromTo(hit, point);
+}

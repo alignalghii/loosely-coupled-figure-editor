@@ -22,6 +22,7 @@ const verticePathEchoHence                = (vertices, point) => tour(vertices).
           ['nothing']
       );
 
+
 const nearestFiguresHence = (board, point) => maybe(
 	[],
 	({distance: _, fronts: fronts}) => fronts.map(({figure: figure, selectedEdges: _}) => figure),
@@ -51,6 +52,15 @@ const nearestVerticesHence = (vertices, point) =>
 	).nearestVertices;
 
 const maybeNearestVertexHence = (vertices, point) => maybeUnambiguityByEq(ccVecEq, nearestVerticesHence(vertices, point));
+
+const nearestEdgesHence = (vertices, point) => maybe(
+	[],
+	({distance: minDistTillNow, selectedEdges: selectedEdges}) => selectedEdges,
+	verticePathReshapedMinimalEchoHence(vertices, point)
+);
+
+const maybeNearestEdgeHence = (vertices, point) => maybeUnambiguityByEq(ccTreeEq, nearestEdgesHence(vertices, point));
+
 
 const maybeMinimalDistanceOfEchos = figureEchos =>
 	safeMin(

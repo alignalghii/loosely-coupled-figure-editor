@@ -9,11 +9,13 @@ FigureEditorController.prototype = Object.create(Controller.prototype);
 
 FigureEditorController.prototype.constructor = FigureEditorController;
 
-FigureEditorController.prototype.addVertex    = function (point, eitherTarget) {this.work('addVertex'   , point, eitherTarget, 'Hozzáadom'  , 'alakzathoz');};
-FigureEditorController.prototype.deleteVertex = function (point, eitherTarget) {this.work('deleteVertex', point, eitherTarget, 'Elveszem'   , 'alakzatból');};
-FigureEditorController.prototype.moveVertex   = function (point, eitherTarget) {this.work('moveVertex'  , point, eitherTarget, 'Megmozdítom', 'alakzatnál');};
+FigureEditorController.prototype.addVertex    = function (point, eitherTarget) {this.withProxFig('addVertex'   , point, eitherTarget, 'Hozzáadom'  , 'alakzathoz');};
+FigureEditorController.prototype.deleteVertex = function (point, eitherTarget) {this.withProxFig('deleteVertex', point, eitherTarget, 'Elveszem'   , 'alakzatból');};
+FigureEditorController.prototype.moveVertex   = function (point, eitherTarget) {this.withProxFig('moveVertex'  , point, eitherTarget, 'Megmozdítom', 'alakzatnál');};
 
-FigureEditorController.prototype.work = function (command, currentWEPos, eitherTarget, template1, template2) // @TODO: reuse: almost the same algorithm exists in `GeomTransforamtionController` (or in its section in `Router`).
+FigureEditorController.prototype.pushEdge     = function (point, eitherTarget) {this.withProxFig('pushEdge'    , point, eitherTarget, 'Élt tolok'  , 'alakzatnál');};
+
+FigureEditorController.prototype.withProxFig = function (command, currentWEPos, eitherTarget, template1, template2) // @TODO: reuse: almost the same algorithm exists in `GeomTransforamtionController` (or in its section in `Router`).
 {
 	const canvasPseudoWidget = this.canvasPseudoWidgetForEitherTarget(eitherTarget),
 	      board              = canvasPseudoWidget.board();

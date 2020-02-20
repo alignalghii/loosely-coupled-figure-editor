@@ -7,3 +7,4 @@ FigureEditorByProximityHeuristic.prototype.addVertex    = function (point) {this
 FigureEditorByProximityHeuristic.prototype.deleteVertex = function (point) {this.figure.vertices = deleteVertex(this.figure.vertices, point);};
 FigureEditorByProximityHeuristic.prototype.moveVertex   = function (point) {this.figure.vertices = moveVertex  (this.figure.vertices, point);};
 
+FigureEditorByProximityHeuristic.prototype.pushEdge     = function (point) {this.figure.vertices = pushEdge    (this.figure.vertices, point);};

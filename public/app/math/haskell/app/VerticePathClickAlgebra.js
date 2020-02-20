@@ -1,4 +1,4 @@
-function addVertex(vertices, point)
+/*function addVertex(vertices, point) // head-preferring (no type conditions) // @TODO consider
 {
 	const maybeEcho = verticePathReshapedMinimalEchoHence(vertices, point);
 	return maybe(
@@ -6,7 +6,14 @@ function addVertex(vertices, point)
 		({distance: _, selectedEdges: [selectedEdge]}) => tour(vertices).flatMap(([beg, end]) => treeEq([beg, end], selectedEdge) ? [beg, point] : [beg]),
 		maybeEcho
 	);
-}
+}*/
+
+const addVertex = (vertices, point) =>
+	maybe(
+		vertices, // @TODO: consider `[point]` instead, it is logical for empty vertices, but illogical for tye condition (two or more nearest edges)
+		nearestEdge => tour(vertices).flatMap(([beg, end]) => treeEq([beg, end], nearestEdge) ? [beg, point] : [beg]),
+		maybeNearestEdgeHence(vertices, point)
+	);
 
 function deleteVertex(vertices, point)
 {
@@ -29,3 +36,13 @@ function moveVertex(vertices, point)
 }
 
 
+
+const pushEdge = (vertices, point) =>
+	maybe(
+		vertices, // @TODO consider
+		nearestEdge => {
+			const dragVector  = vectorFromNearestPointOnSegment(nearestEdge, point);
+			return pushEdge_projectDrag(dragVector, vertices, nearestEdge);
+		},
+		maybeNearestEdgeHence(vertices, point)
+	);
