@@ -123,7 +123,16 @@ FigureWidget.prototype.updateSvgAttribute = function (svgAttributeName)
 {
 	if (this.high && this.high.svgAttributes) { // @TODO this.high should always exist, this condition is superfluous
 		if (svgAttributeName in this.high.svgAttributes) {
-			this.low.setAttribute(svgAttributeName, this.high.svgAttributes[svgAttributeName]);
+			/** Az éltologatások során a falrések elheyezkedése  torzul (ezen komolyan el kell gondolkodni, reprezentációs probléma),
+			sőt akár új falrések is nyílhatnak. Ez utóbbi hiba viszont könnyen javíthtó, és imme épp itt már meg is lett oldva:
+			a FigureWidget vásznak közti átugrása során arra kell figyelni, hogy az SVG-attributomok firssítésénél
+			ha a szoba mint üzleti objektum nemrendelkezik slit-reprezentációval (vagyis az üres),
+			akkor a stroke-dasharray attribútumot eleve ne is adjuk meg, ill. töröljük az alaocsonyszintű SVG DOM-objektumból! */
+			if (svgAttributeName == 'stroke-dasharray' && this.businessObject.slitsRepresentationCircular.circularSlits.length == 0) {
+				this.low.removeAttribute(svgAttributeName);
+			} else {
+				this.low.setAttribute(svgAttributeName, this.high.svgAttributes[svgAttributeName]);
+			}
 		} else {
 			this.low.removeAttribute(svgAttributeName);
 		}

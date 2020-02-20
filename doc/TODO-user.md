@@ -15,3 +15,5 @@
  - Ma 2020 feb 7-e van. Másfél hónap alatti még elfogadható lenne befejezni, de 1 hónap lenne igazán a jó.
  - Jövő hétre: dummy DB admin felület javítása. Éltolás.
  - Legvégén: keretszin keretvastagság, transzformációk yorsmenüje: ürlapba vagy jobbegérbe), esetleg gyorsbilentyűk. Szerethetőség
+
+ -  az éltologatások során a falrések elheyezkedése  torzul (ezen komolyan el kell gondolkodni, reprezentációs probléma), sőt akár új falrések is nyílhatnak. Ez utóbbi hiba könnyen javíthtó, és már meg is lett oldva: a FigureWidget vásznak közti átugrása során arra kell figyelni, hogy az SVG-attributomok firssítésénél ha a szoba mint üzleti objektum nemrendelkezik slit-reprezentációval (vagyis az üres), akkor a stroke-dasharray attribútumot eleve ne is adjuk meg, ill. töröljük az alaocsonyszintű SVG DOM-objektumból!
