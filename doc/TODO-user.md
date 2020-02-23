@@ -17,3 +17,5 @@
  - Legvégén: keretszin keretvastagság, transzformációk yorsmenüje: ürlapba vagy jobbegérbe), esetleg gyorsbilentyűk. Szerethetőség
 
  -  az éltologatások során a falrések elheyezkedése  torzul (ezen komolyan el kell gondolkodni, reprezentációs probléma), sőt akár új falrések is nyílhatnak. Ez utóbbi hiba könnyen javíthtó, és már meg is lett oldva: a FigureWidget vásznak közti átugrása során arra kell figyelni, hogy az SVG-attributomok firssítésénél ha a szoba mint üzleti objektum nemrendelkezik slit-reprezentációval (vagyis az üres), akkor a stroke-dasharray attribútumot eleve ne is adjuk meg, ill. töröljük az alaocsonyszintű SVG DOM-objektumból!
+
+ - A szobafal-szerkesztésnél a ↠, ↦ műveletpár teljesebb, a ha ↠, ↦, ≠ (&ne;) művelethármasra bővítjük. A ≠ művelet mozgatja a ,,köztes'' élt az általak összekötött párhuzamos élpár mint sínpár mentén. A ↦ viszont nem előfeltételez párhuzamos élpárt, minden élre működik. Az élt saját magára nézve merőlegesen mozdítja el. Jól használható pl. trapéz magasságának megemelésére vagy csökketésére. Fontos, hogy e művelet még akkor is különbözik a ≠-től, ha létezik ,,sínpár'': gondoljuk át pl trapéz ferde szára esetében.
