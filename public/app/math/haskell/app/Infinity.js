@@ -9,6 +9,16 @@ function compareCases(a, b, ltCase, eqCase, gtCase)
 	}
 }
 
+function compareCases_exec(a, b, ltCase, eqCase, gtCase)
+{
+	switch (Math.sign(a - b)) {
+		case -1: return ltCase(a, b);
+		case  0: return eqCase(a);
+		case  1: return gtCase(a, b);
+		default: throw 'Invalid `compare` label at `compareCases`';
+	}
+}
+
 const val_compareCases_pIVal = (val1, pIVal2, ltCase, eqCase, gtCase) =>
 	maybe(
 		ltCase,

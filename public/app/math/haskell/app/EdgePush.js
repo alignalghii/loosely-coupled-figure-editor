@@ -11,7 +11,7 @@ function pushEdge_projectDrag(dragVector, vertices, grabbedEdge)
 	);
 }
 
-const projectToDir = (dir, vec) => slantScale(scalarProduct(dir, vec), dir);
+const projectToDir = (dir, vec) => slantScale(scalarProduct(dir, vec), dir); // @TODO `projectToDir_safe`, which normalizes `dir` internally automatically, use it also in `EdgeSpan` module
 
 function skeletonOfPush(vertexEq, edgeEq, pairing, edgeParallelity, vertices, grabbedEdge)
 {

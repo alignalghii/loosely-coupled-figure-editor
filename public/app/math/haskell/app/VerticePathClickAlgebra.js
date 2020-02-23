@@ -46,3 +46,16 @@ const pushEdge = (vertices, point) =>
 		},
 		maybeNearestEdgeHence(vertices, point)
 	);
+
+const spanEdge = (vertices, point, dragVector) =>
+	maybe(
+		vertices, // @TODO consider
+		nearestEdge => compareCases_exec(
+			distance(nearestEdge[0], point),
+			distance(point, nearestEdge[1]),
+			(smallD, greatD) => spanEdge_projectDrag(0, dragVector, vertices, nearestEdge),
+			sameD            => vertices,
+			(greatD, smallD) => spanEdge_projectDrag(1, dragVector, vertices, nearestEdge)
+		),
+		maybeNearestEdgeHence(vertices, point)
+	);

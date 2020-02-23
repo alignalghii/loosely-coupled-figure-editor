@@ -9,13 +9,14 @@ FigureEditorController.prototype = Object.create(Controller.prototype);
 
 FigureEditorController.prototype.constructor = FigureEditorController;
 
-FigureEditorController.prototype.addVertex    = function (point, eitherTarget) {this.withProxFig('addVertex'   , point, eitherTarget, 'Hozzáadom'  , 'alakzathoz');};
-FigureEditorController.prototype.deleteVertex = function (point, eitherTarget) {this.withProxFig('deleteVertex', point, eitherTarget, 'Elveszem'   , 'alakzatból');};
-FigureEditorController.prototype.moveVertex   = function (point, eitherTarget) {this.withProxFig('moveVertex'  , point, eitherTarget, 'Megmozdítom', 'alakzatnál');};
+FigureEditorController.prototype.addVertex    = function (point, eitherTarget           ) {this.withProxFig('addVertex'   , point, eitherTarget, 'Hozzáadom'    , 'alakzathoz'           );};
+FigureEditorController.prototype.deleteVertex = function (point, eitherTarget           ) {this.withProxFig('deleteVertex', point, eitherTarget, 'Elveszem'     , 'alakzatból'           );};
+FigureEditorController.prototype.moveVertex   = function (point, eitherTarget           ) {this.withProxFig('moveVertex'  , point, eitherTarget, 'Megmozdítom'  , 'alakzatnál'           );};
 
-FigureEditorController.prototype.pushEdge     = function (point, eitherTarget) {this.withProxFig('pushEdge'    , point, eitherTarget, 'Élt tolok'  , 'alakzatnál');};
+FigureEditorController.prototype.pushEdge     = function (point, eitherTarget           ) {this.withProxFig('pushEdge'    , point, eitherTarget, 'Élt tolok'    , 'alakzatnál'           );};
+FigureEditorController.prototype.spanEdge     = function (point, eitherTarget, mouseDrag) {this.withProxFig('spanEdge'    , point, eitherTarget, 'Élt nyújtok'  , 'alakzatnál', mouseDrag);};
 
-FigureEditorController.prototype.withProxFig = function (command, currentWEPos, eitherTarget, template1, template2) // @TODO: reuse: almost the same algorithm exists in `GeomTransforamtionController` (or in its section in `Router`).
+FigureEditorController.prototype.withProxFig = function (command, currentWEPos, eitherTarget, template1, template2, optArg) // @TODO: reuse: almost the same algorithm exists in `GeomTransforamtionController` (or in its section in `Router`).
 {
 	const canvasPseudoWidget = this.canvasPseudoWidgetForEitherTarget(eitherTarget),
 	      board              = canvasPseudoWidget.board();
@@ -23,7 +24,7 @@ FigureEditorController.prototype.withProxFig = function (command, currentWEPos, 
 		'Nem határozható meg egyértelműen legközelebbi alakzat.',
 		nearestFigure => {
 			const figureEditor  = new FigureEditorByProximityHeuristic(nearestFigure);
-			figureEditor[command](currentWEPos);
+			optArg ? figureEditor[command](currentWEPos, optArg) : figureEditor[command](currentWEPos);
 			const widget = canvasPseudoWidget.arbitrary.detectTypeAndComposeFromHigh(nearestFigure); // @TODO arbitrary
 			return widget.updateAndReport(currentWEPos, nearestFigure, template1, template2); // Image's boxing figure should not be allowed to be edited!
 		},
