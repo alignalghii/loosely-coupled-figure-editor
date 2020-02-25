@@ -61,7 +61,7 @@ BusinessObject.prototype.assertContainmentValidity = function ()
 			this.maybeHost
 		),
 		'mother-validity': this.escorts.every(
-			escort => maybeEq_shallow(escort.maybeHost, ['just', this]),
+			escort => maybeEq_shallow(escort.maybeHost, ['just', this])
 		)
 	};
 	if (anyFlagFalse(flags)) throw `Containment-validity inconsistence! Error subkinds: ${messageFalseFlags(flags)}.`;
