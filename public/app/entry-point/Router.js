@@ -170,6 +170,23 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 				break;
 		}
 	}
+	if (this.state.mode == 'figureeditorpushnormal') {
+		switch (eventType) {
+			case 'mousedown':
+				this.figureEditorController.state.pushnormalEdge_start = ird.currentWEPos;
+				break;
+			case 'mousemove':
+				if (this.figureEditorController.state.pushnormalEdge_start) {
+					//const mouseDrag = fromTo(this.figureEditorController.state.pushnormalEdge_start, ird.currentWEPos); // @TODO: consider for future
+					this.figureEditorController.pushnormalEdge(ird.currentWEPos, ird.eitherTarget);
+					this.figureEditorController.state.pushnormalEdge_start = ird.currentWEPos;
+				}
+				break;
+			case 'mouseup':
+				delete this.figureEditorController.state.pushnormalEdge_start;
+				break;
+		}
+	}
 	if (this.state.mode == 'figureeditorspan') {
 		switch (eventType) {
 			case 'mousedown':

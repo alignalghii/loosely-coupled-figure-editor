@@ -47,6 +47,16 @@ const pushEdge = (vertices, point) =>
 		maybeNearestEdgeHence(vertices, point)
 	);
 
+const pushnormalEdge = (vertices, point) =>
+	maybe(
+		vertices, // @TODO consider
+		nearestEdge => {
+			const dragVector  = vectorFromNearestPointOnSegment(nearestEdge, point);
+			return pushEdgenormal_projectDrag(dragVector, vertices, nearestEdge);
+		},
+		maybeNearestEdgeHence(vertices, point)
+	);
+
 const spanEdge = (vertices, point, dragVector) =>
 	maybe(
 		vertices, // @TODO consider
