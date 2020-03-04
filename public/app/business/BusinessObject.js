@@ -68,3 +68,6 @@ BusinessObject.prototype.assertContainmentValidity = function ()
 };
 
 BusinessObject.prototype.doTranslation = function (displacement) {throw 'Abstract method';};
+
+BusinessObject.prototype.exportToSerializableObject = function () {throw 'Abstract method';};
+BusinessObject.prototype.serialize                  = function () {return JSON.stringify(this.exportToSerializableObject());};

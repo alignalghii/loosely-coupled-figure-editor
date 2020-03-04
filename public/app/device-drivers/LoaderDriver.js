@@ -5,6 +5,7 @@ function LoaderDriver (aDocument)
 	this.idvalid        = aDocument.getElementById('loader-error');
 	this.loaderIdEntry  = aDocument.getElementById('loader-id-enter');
 	this.loaderIdCancel = aDocument.getElementById('loader-id-cancel');
+
 	this.workCanvas     = aDocument.getElementById('svgRoot_workCanvas'); // @TODO refactory?
 }
 

@@ -44,3 +44,13 @@ Furniture.prototype.goUpdatedByOwnFigure = function ()
 };
 
 Furniture.prototype.queryName = function () {return this.name;};
+
+Furniture.prototype.exportToSerializableObject = function ()
+{
+	return {
+		type: this.constructor.name,
+		name: this.name,
+		figure: this.figure,
+		imageFileName: this.imageFileName
+	};
+};

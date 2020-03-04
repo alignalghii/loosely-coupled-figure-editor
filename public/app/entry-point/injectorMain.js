@@ -53,6 +53,7 @@ onload = function (event)
 	const configIODriver             = new ConfigDriver(document);
 	const tabSelectorIODriver        = new TabSelectorDriver(document, domHelper);
 	const loaderIODriver             = new LoaderDriver(document);
+	const saveIODriver               = new SaveDriver(document);
 	const audioODriver               = new AudioDriver('sonar.ogg', 'bark.ogg', 'dialog-error.ogg', 'glass.ogg', 'drip.ogg');
 	const zoomDriver                 = new ZoomDriver(document);
 
@@ -70,12 +71,13 @@ onload = function (event)
 	const figureNestingController        = new FigureNestingController(state, canvasPseudoWidgets, statusBarODriver);
 	const tabSelectorController          = new TabSelectorController(tabSelectorIODriver, quoteHelper, statusBarODriver); // @TODO argument order
 	const loaderController               = new LoaderController(canvasPseudoWidgets, numberHelperAndValidator, loaderIODriver, tabSelectorIODriver, statusBarODriver, audioODriver);
+	const saveController                 = new SaveController(canvasPseudoWidgets, saveIODriver, statusBarODriver, audioODriver);
 	const zoomController                 = new ZoomController(canvasPseudoWidgets, statusBarODriver);
 
-	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, zoomController); // @TODO make globalOriginFigure obsolete
+	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, zoomController); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(canvasPseudoWidgets, router); // @TODO: could it be regarded as a kind of device driver, and renamed + moved appropriately?
 
-	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorIODriver, configIODriver, tabSelectorIODriver, loaderIODriver, zoomDriver); // @TODO Law of Demeter, see inside
+	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorIODriver, configIODriver, tabSelectorIODriver, loaderIODriver, saveIODriver, zoomDriver); // @TODO Law of Demeter, see inside
 
 	//console.log('App: live run');
 	app.run();
