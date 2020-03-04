@@ -17,5 +17,19 @@
  - Legvégén: keretszin keretvastagság, transzformációk yorsmenüje: ürlapba vagy jobbegérbe), esetleg gyorsbilentyűk. Szerethetőség
 
  -  az éltologatások során a falrések elheyezkedése  torzul (ezen komolyan el kell gondolkodni, reprezentációs probléma), sőt akár új falrések is nyílhatnak. Ez utóbbi hiba könnyen javíthtó, és már meg is lett oldva: a FigureWidget vásznak közti átugrása során arra kell figyelni, hogy az SVG-attributomok firssítésénél ha a szoba mint üzleti objektum nemrendelkezik slit-reprezentációval (vagyis az üres), akkor a stroke-dasharray attribútumot eleve ne is adjuk meg, ill. töröljük az alaocsonyszintű SVG DOM-objektumból!
+   - Fontos, hogy ez a megoldás nem jó, vissza kell vonni, mással helyettesíteni, vagy ki kell egészíteni, mert miatta a szűz (explicit falrésezés nélküli) szobákra nem lehet nyílászárót felvinni.
 
  - A szobafal-szerkesztésnél a ↠, ↦ műveletpár teljesebb, a ha ↠, ↦, ≠ (&ne;) művelethármasra bővítjük. A ≠ művelet mozgatja a ,,köztes'' élt az általak összekötött párhuzamos élpár mint sínpár mentén. A ↦ viszont nem előfeltételez párhuzamos élpárt, minden élre működik. Az élt saját magára nézve merőlegesen mozdítja el. Jól használható pl. trapéz magasságának megemelésére vagy csökketésére. Fontos, hogy e művelet még akkor is különbözik a ≠-től, ha létezik ,,sínpár'': gondoljuk át pl trapéz ferde szára esetében.
+
+ - A ↠, ↦, ≠ továbbővítendő egy párhuzamosságdetektáló-önjavító művelettel: a ≠ művelet nem működik, ha nincs párhuzamos ,,sínpár'', így pl. egy kissé elrontott párhuzamosságú trapéz szárai tologathatatlanná válnak. (A trapéz párhuzamsságát a csúszszerekesztő műveletek, és az észrkesztő műveletekből pedig  a ↦ képes elrontani, és szabad szemmel a dolog lényegében helyreállíthatatlan). A = művelet vagy detektálná a közel párhuzamos élpárokat, vagy pedig adott élhezmegkeresi a vele nem szomszédos (és nem egybeeső) élek közül a hozzá legkisebb hajlászögűt, és azt párhuzamossá forgatja (pl úgy, hogy midpontja körül forgatja, és a vele ragadott csúcspontok is eszerint fordulnak).
+
+ - Visszavonási funkció (úgy tudom, hogy ez egy afféle ,,metafunkció'', a loggoláshoz hasonlóan). Vagyis azért ,,meta'', mert' nem lehet egyszererűen csak úgy egyetlen funkcióként hozzáadni, hanem bizonyos értelemben áthatja az összes többi funkciót, és fölöttük áll. Utána nézni, átgondolni, hozzá kell-e kötni minden funkcióhoz, meg egyáltalán milyen jellegzetes megközelítések vannak hozzá. ,,[Undo](https://en.wikipedia.org/wiki/Undo)'', ,,[Rückgängig-Machen](https://de.wikipedia.org/wiki/Undo)'').
+
+ - Javítandó az a két programhiba, amely a második bemutatóvideón látszik (`atfogo-bemutato--valamivel-teljesebb.mp4`):
+   - A relatív viszonyítás nem mindig működik tükrözésre, aránytorzító átskálázásra. A bemutató videón először jól működnek, aztán bemutatom az abszolút viszonyítást, aztán vsszakapcsolok relatív viszonyításba, és ott valamiért ekkor mr nem teljesen jók.
+   - A nyílászárók, falrések fölrakása nem működik jól az adatbázisból betöltött szobák esetében (a -1, -2, -3 előrebeégetett szobák esetében viszont igen).
+
+ - Bútorokra nincs definiálva több geom. transzformáció, hibát dob. Ez gondo okoz butorozott szoba transzformálásakor: ha véletlen bútorhoz túl közel kerül az egér, arra próbálja végrehajtani, akkor meg hibát dob.
+ - Az L alakú szobára valamiért a tükrözés nem működik (a többi geom-tr igen). Ld: `bemutato-tukrozesi-hiba-L-alakra.mp4` videó.
+
+ - Mentés, visszatöltés, JPG
