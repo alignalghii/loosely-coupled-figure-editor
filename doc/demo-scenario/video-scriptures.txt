@@ -1,0 +1,45 @@
+
+Mértani transzformációk
+
+ - mozgatás
+ - forgatás
+ - aránytartó nagyítás/kicsinyítés
+ - aránytorzító széthúzás/zsugorítás
+    - vízszintesen, ill. függőlegesen
+ - tükrözés
+    - függőleges, ill. vízszintes tengelyre
+
+
+ A szoba alakjának szerkesztése
+   - Csúcsok (sarokpontok) szerkesztése
+     - Új sarokpont hozzáadása
+     - Sarokpont mozgatása
+     - Sarokpont törlése
+   - Élek (falszakaszok) szerkesztése
+     - Falszakasz hosszabbrahúzása/összébbhúzása saját hossza mentén
+     - Falszakasz arrébbhúzása két párhuzamos falpár mentén
+     - Falszakasz arrébbhúzása önmagára merőleges irány mentén
+
+
+Szobatartozékok
+   -Nyílászárók
+      - Falrések ütése és betömése
+      - Ajtók és ablakok
+
+
+
+
+
+
+Teljes lakásra vonatkozó műveletek
+   - Alaprajz betöltése adatbázis-ID alapján
+   - Alaprajz saját belső mentési formátuma
+  - ajtók és ablakok
+
+
+
+
+
+
+
+

@@ -1,0 +1,62 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{t1enc}
+\usepackage[magyar]{babel}
+\sloppy
+
+\title{Videóbemutató forgatókönyve}
+\author{Alaprajzszerkesztő webalkalmazás}
+
+\usepackage{amssymb}
+\usepackage{MnSymbol}
+\usepackage{amsmath}
+%\newcommand{\neswarrow}{%
+ % \mathrel{\text{\ooalign{$\swarrow$\cr$\nearrow$}}}%
+%/}
+
+\begin{document}{
+	\maketitle
+
+	\setcounter{tocdepth}{4}
+	\tableofcontents
+
+	\section{Alapfogalmak}
+	Módok: a szerkesztőprogram funkcionalitásai nagyrészt a baloldalt látható módok egyikének kijelölésétől függenek, tehát pl. ugyanaz az egérmozdulat mást és mást jelenthet az egyes módokban. A módokat rádiógombok testesítik meg a bal oldali oszlopban. Ennek megfelelően a lehetséges módok közül mindig pontosan egy lehet bekapcsolva.
+
+	A módok közül a legtöbbet használt módok a mozgatási-fókuszálási-átugrasztási módok. Ezekből elvileg két ilyen mód van, de ebből ma már csak a $\bigstar$ jelölésűnek van jelentősége (a $\pm$ elavult). Ennek a $\bigstar$ módnak bekapcsolása szükséges az alábbi funkcionalitások élővé tételéhez:
+	\begin{itemize}
+		\item Alakzat egérrel való vonszolása egy vásznon
+		\item Alakzat egyik vászonról másik vászonra való átvonszolása (tipikusan valamelyik menüvászonról a munkavászonra).
+		\item Alakzat fókuszálttá tétele. Ehhez az egérrel nem megvonszoljuk a kiszemelt alakzatot, csak rákattintunk (pl.~egy szobára vagy bútorra). Ritkán jut szerephez a fókuszba tevés, de pl.~törléshez ez kell. Maga a törlés a jobboldali menüvásznak \emph{alatt} látható fekete minusz-gombbal hajtatható végre az előzetesen fókuszba tett alakzatra. A lényeg itt mindenestre az, hogy magának a fókuszba tevésnek (rákattintásnak) is előzetes feltétele, hogy a baloldali módok közül a $\bigstar$ legyen kiválasztva.
+	\end{itemize}
+
+	A módoktól különböznek a szintén a baloldali oszlopban található konfigurációs beálltások, ezeket nem rádiógombok, hanem jelölőnégyzetek (checkboxok) testesítik meg, tehát (a módoktól eltérően) több is kiválasztható közülük, és a módválasztástól függetlenül jelölhetőek. Tehát egymással is szabadon kombinálódnak. és az aktuális móddal is szabadon kombinálhatóak. Ezek tehát inkább afféle shift-eknek tekinthetőek. Az egyetlen igazán jelentős kofiguráció az ,,abszolút vs relatív'' konfiguráció, amely a ,,\emph{Rel(/absz)}'' nevű jelölőnégyzetnél testesül meg, és egyes geometriai transzformációk viszonyítási irányát befolyásolja.
+	\section{Adott szobán végezhető műveletek}
+	\subsection{Mértani műveletek}
+	\subsubsection{Mértani transzformációk}
+	\paragraph{Mozgatás.} Alakzat (szoba, bútor, nyílászáró) mozgatása egész egyszerűen egérrel való vonszolással történik. Arra kell ügyelni, hogy ehhez a $\bigstar$ módnak kell bekapcsolva lennie.
+	\paragraph{Forgatás, skálázások és tükrözések}
+	\begin{itemize}
+		\item $\rcirclearrowright$: forgatás
+		\item $\neswarrow$: aránytartó átskálázás (kicsinyítés vagy nagyítás). A mód bekapcsolása után a kívánt kicsinyítés/nagyítás egyszerű egérvonszolással történik az átméretezendő alakzat közelében. Használata néha unintiutívnak tűnhetik, ilyenkor tudni kell, hogy mindig az alakzat geometriai súlypontja képezi a transzformáció középpontját.
+		\item $\Leftrightarrow$ és $\Updownarrow$: aránytorzító átskálázások (vízszintes és függőleges). A súlypontra voatkozó megjegyzés itt is érvényes.
+	\end{itemize}
+	\paragraph{Abszolút és relatív konfiguráció.} A módokat tartalmazó baloldali oszlop tetején látható jelölőnégyzetek közül ,,\emph{Rel(/absz)}'' nevű jelölőnégyzet testesíti meg azt a kofigurációt, amellyel az elébb tárgyalt geometriai transzformációk viszonyítási irányát lehet szabályozni. E konfigurációnak csak a tükrözésenél és az aránytorzító skálázásoknál van jelentősége. Alapértelmezetten a jelölőnégyzet pipálva van, ami a ,,relatív'' beállítást jelenti. Relatív beállítás azt jelenti, hogy ha pl. egy ferdén elhelyezkedő ajtót vízszintesen nyújtunk vagy vízszintesen tükrözünk, akkor az ajtó \emph{a saját magához mért vízszintes} mntén nyúlik ill.~ tükröződik, nem pedig a vászon ,,abszolút'' vízszinteséhez képest.
+	\subsubsection{A szoba alakjának szerkesztése}
+	\paragraph{Csúcsszerkesztés (,,sarkok'')}
+	\paragraph{Élszerkesztés (,,falak'')}
+	\subsection{Szobatartozékok}
+	\subsubsection{Bútorok}
+	\subsubsection{Nyílászárók}
+	\paragraph{Falrések}
+	\paragraph{Ajtók-ablakok}
+	\subsection{Tulajdonság-űrlap}
+
+	\section{Teljes lakás összeállításához tartozó műveletek}
+	\subsection{Betöltő, elmentő műveletek}
+	\subsubsection{Adatbázisból való betöltés}
+	\subsubsection{Saját (natív) formátumban való mentés}
+	\subsection{Falrés-ikresedés összetolt szobapár közös nyílászáróin}
+	Az ikresítés nem jó végső megoldás, hosszútávon valódi magasszintű megosztásos reprezentációra lenne szükség.
+\end{document}

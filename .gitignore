@@ -41,3 +41,9 @@ doc/look-of-the-old-planner.png
 
 public/img-vendor/*
 !public/img-vendor/README.md
+
+doc/demo-scenario/demo-secenario.aux
+doc/demo-scenario/demo-secenario.dvi
+doc/demo-scenario/demo-secenario.log
+doc/demo-scenario/demo-secenario.pdf
+doc/demo-scenario/demo-secenario.toc
