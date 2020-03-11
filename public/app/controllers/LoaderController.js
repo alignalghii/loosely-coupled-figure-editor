@@ -371,6 +371,7 @@ LoaderController.prototype.load = function (i)
 	}
 };
 
+// @TODO DRY with `NativeLoaderController`: factor out to a `LoaderComponent`
 LoaderController.prototype.prepareAndConfirm = function ()
 {
 	const loaderCanvasPsWdg = this.canvasPseudoWidgets[3];
@@ -379,6 +380,7 @@ LoaderController.prototype.prepareAndConfirm = function ()
 	return flag ? just(hostlessWidgets) : nothing;
 };
 
+// @TODO DRY with `NativeLoaderController`: factor out to a `LoaderComponent`. !!! If it turns out that there must be a little difference, parametrize it out!
 LoaderController.prototype.clearAndTab = function ()
 {
 	return maybe(

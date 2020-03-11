@@ -1,4 +1,4 @@
-function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, zoomController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
@@ -13,6 +13,7 @@ function Router(state, normalModeController, compactModeController, roomControll
 	this.tabSelectorController = tabSelectorController;
 	this.loaderController = loaderController;
 	this.saveController   = saveController;
+	this.nativeLoaderController = nativeLoaderController;
 	this.zoomController = zoomController;
 }
 
@@ -38,6 +39,8 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 	if (eventType == 'submit' && Eq.eq(inputSignature, ['IdString']) && 'loaderIdStr'  in ird) this.loaderController.run(ird.loaderIdStr); // @TODO better name, loaderid is rather eitherEId
 	if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'loaderAction' in ird && ird.loaderAction == 'cancel') this.loaderController.cancel();
 	if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'saveAction'   in ird && ird.saveAction   == 'save'  ) this.saveController  .save  ();
+	if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'loadAction' in ird && ird.loadAction == 'native')     this.nativeLoaderController.view();
+	if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'loadAction' in ird && ird.loadAction == 'interpret')  this.nativeLoaderController.interpret();
 	if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'zoomAction' in ird) {
 		switch (ird.zoomAction) {
 			case 'up'     : this.zoomController.up     (); break;
