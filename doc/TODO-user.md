@@ -33,3 +33,15 @@
  - Az L alakú szobára valamiért a tükrözés nem működik (a többi geom-tr igen). Ld: `bemutato-tukrozesi-hiba-L-alakra.mp4` videó.
 
  - Mentés, visszatöltés, JPG
+
+
+
+ - Padló mintázata lecserélhető legyen. Például az űrlapon lehessen ilyen padlócsere.
+ - Az űrlapnak nem kell bonyolultnak lennie. Méret, pozíció, egyszerű dolgok.
+ - Ugyanakkor az űrlap (esetleg valami alternatív megoldás) venné át a baloldali menüoszlop szerepét, ugyanis ennek a mukavászon elől elfoglat helyigényét sokalljuk. A baloldali menüoszlop ,,elshiftelehető'', láthatása szabáyozható lenne (view).
+ - jpg-export
+ - Ha már olyan szinten van az alkalamazás fejlesztése, hogy tényleg alaprajzok készíthetőek, akkor minta-alaprajzokon teszünk próbát,
+     - olyan is, amely a régi alaprajzszerkesztő programon készült,
+     - olyan is, amelyeket tulajdonosoktól kaptunk.
+   Ergonómiai kérdések, körülményesség vizsgálatára lesz ez jó, eleve akkor jönnek ki a fontos dolgok.
+   Sok ilyen minta van, évek alatt összegyűjtögetve a kollégák több százas adatbázisba. De önnálóan is használhatóak e célra a Central Home-os honlap alaprajzai.
