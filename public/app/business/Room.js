@@ -64,6 +64,10 @@ Room.prototype.exportToSerializableObject = function ()
 	return {
 		type: this.constructor.name,
 		name: this.title.name,
-		figure: this.figure
-	};
+		figure: this.figure,
+		circularSlits: this.slitsRepresentationCircular.circularSlits, // @TODO consider but only in late future: other properties of slitsRepresentationCircular are not used yet
+		escorts: this.escorts.map(
+			escort => escort.exportToSerializableObject()
+		)
+	}
 };

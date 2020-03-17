@@ -45,3 +45,7 @@
      - olyan is, amelyeket tulajdonosoktól kaptunk.
    Ergonómiai kérdések, körülményesség vizsgálatára lesz ez jó, eleve akkor jönnek ki a fontos dolgok.
    Sok ilyen minta van, évek alatt összegyűjtögetve a kollégák több százas adatbázisba. De önnálóan is használhatóak e célra a Central Home-os honlap alaprajzai.
+
+ - A csoportok (pontosabban a hosztobjektumok, vagyis pl egy szobához rendelt kamra) viszonylatát nem tudja a natív mentés/visszatöltés megőrizni.
+ - Valószínűleg a fókusz metése megtévesztő lesz (piros kerettel menti, közben pedig nem is lesz visszatöltéskor fókuszban). A fókusz magaszntű mentése nincs megoldva.
+ - Nem mentődik a z-mélység (fedési sorrend) sem

@@ -51,6 +51,11 @@ Furniture.prototype.exportToSerializableObject = function ()
 		type: this.constructor.name,
 		name: this.name,
 		figure: this.figure,
-		imageFileName: this.imageFileName
+		imageFileName: this.imageFileName,
+		grasp: this.figure.grasp,
+		sizing: [ // @TODO ha a bútorokat majd forgatjuk, ez bonyolódni fog
+			distance(this.figure.vertices[0], this.figure.vertices[1]),
+			distance(this.figure.vertices[1], this.figure.vertices[2])
+		]
 	};
 };

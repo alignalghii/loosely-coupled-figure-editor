@@ -21,6 +21,23 @@ ImageWidgetFactory.prototype.create = function (name, fileName, [width, height],
 	return imageWidget;
 };
 
+ImageWidgetFactory.prototype.createFromBusiness = function (business)
+{
+	const figure = business.figure;
+	const name = business.name;
+	const fileName = business.imageFileName;
+	const [A, B, C, D] = figure.vertices;
+	const [width, height] = [distance(A, B), distance(B, C)];
+	const [x, y] = figure.grasp;
+	const info = this.calculate([width, height], [x, y]);
+	const imageElem = this.svgLowLevel.createImage(fileName, info.sizes_low, info.point_lowcorner);
+	const imageWidget = new ImageWidget(this.canvasPesudoWidget, imageElem, figure, business);
+	this.bijectionSvgToGeom.set(imageElem, figure);
+	this.partialFunctionGeomToBusiness.set(figure, furniture);
+	return imageWidget;
+};
+
+
 ImageWidgetFactory.prototype.calculate = function ([width, height], [x, y])
 {
 	const quotient                   = this.coordSysTransformer.scalingFactor_hl,

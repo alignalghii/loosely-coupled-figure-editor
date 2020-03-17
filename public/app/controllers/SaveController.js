@@ -14,7 +14,7 @@ SaveController.prototype.save = function ()
 	const businessPF_work = canvasPseudoWidget_work.arbitrary.partialFunctionGeomToBusiness;
 	let businessExports = [];
 	for (const [high, business] of businessPF_work) {
-		if (business) {
+		if (business && isNothing(business.maybeHost)) {
 			businessExports.push(business.exportToSerializableObject());
 		}
 	}
