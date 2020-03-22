@@ -21,17 +21,17 @@ ImageWidgetFactory.prototype.create = function (name, fileName, [width, height],
 	return imageWidget;
 };
 
-ImageWidgetFactory.prototype.createFromBusiness = function (business)
+ImageWidgetFactory.prototype.createFromBusiness = function (furniture)
 {
-	const figure = business.figure;
-	const name = business.name;
-	const fileName = business.imageFileName;
+	const figure = furniture.figure;
+	const name = furniture.name;
+	const fileName = furniture.imageFileName;
 	const [A, B, C, D] = figure.vertices;
 	const [width, height] = [distance(A, B), distance(B, C)];
 	const [x, y] = figure.grasp;
 	const info = this.calculate([width, height], [x, y]);
 	const imageElem = this.svgLowLevel.createImage(fileName, info.sizes_low, info.point_lowcorner);
-	const imageWidget = new ImageWidget(this.canvasPesudoWidget, imageElem, figure, business);
+	const imageWidget = new ImageWidget(this.canvasPseudoWidget, imageElem, figure, furniture);
 	this.bijectionSvgToGeom.set(imageElem, figure);
 	this.partialFunctionGeomToBusiness.set(figure, furniture);
 	return imageWidget;

@@ -59,3 +59,8 @@ Furniture.prototype.exportToSerializableObject = function ()
 		]
 	};
 };
+
+Furniture.prototype.executeOn = function (canvasPseudoWidget)
+{
+	const furnitureWidget = canvasPseudoWidget.imageWidgetFactory.createFromBusiness(this);
+};

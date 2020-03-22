@@ -71,3 +71,4 @@ BusinessObject.prototype.doTranslation = function (displacement) {throw 'Abstrac
 
 BusinessObject.prototype.exportToSerializableObject = function () {throw 'Abstract method';};
 BusinessObject.prototype.serialize                  = function () {return JSON.stringify(this.exportToSerializableObject());};
+BusinessObject.prototype.executeOn                  = function (nativeLoaderController) {throw 'Abstract method!';};

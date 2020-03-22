@@ -71,3 +71,11 @@ Room.prototype.exportToSerializableObject = function ()
 		)
 	}
 };
+
+Room.prototype.executeOn = function (canvasPseudoWidget)
+{
+	const roomWidget = canvasPseudoWidget.figureWidgetFactory.createFromBusiness0(this);
+	this.escorts.map(
+		escort => escort.executeOn(canvasPseudoWidget)
+	);
+};

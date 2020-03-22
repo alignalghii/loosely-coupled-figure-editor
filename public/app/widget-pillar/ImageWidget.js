@@ -3,6 +3,7 @@ const   IMFOCUS = [[{name: 'opacity', value: '0.8'  }], [                 ]], //
 
 function ImageWidget(canvasPseudoWidget,    low, high, businessObject)
 {
+	if (high != businessObject.figure) throw 'Inconsistent';
 	Widget.call(this, canvasPseudoWidget,    low, high);
 	this.businessObject = businessObject;
 }

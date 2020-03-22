@@ -81,96 +81,36 @@ NativeLoaderController.prototype.load = function (interpretationObject)
 
 	// @TODO DRY OOP
 	interpretationObject.map(
-		businessSerialization => this.loadBusiness_fix1(businessSerialization)
+		businessSerialization => this.loadBusiness(businessSerialization, nothing)
 	);
 	this.reportOK('Natív betöltés sikeres!');
 	this.statusBarDriver.report('Natív betöltés');
 };
 
-NativeLoaderController.prototype.loadBusiness = function (businessSerialization)
+
+NativeLoaderController.prototype.loadBusiness = function (businessSerialization, maybeHost = nothing)
 {
-	switch (businessSerialization.type) {
-		case 'Room':
-			const {name: roomName, figure: figureSerialization, circularSlits: circularSlitsSerialization, escorts: roomEscortsSerialization} = businessSerialization;
-			const figure = new Figure(figureSerialization.vertices, figureSerialization.svgAttributes);
-			const circularSlits = circularSlitsSerialization.map(({center: center, radius: radius}) => new CircularSlit(center, radius)); // @TODO delegate to CircularSlit
-			const roomEscorts = roomEscortsSerialization.map(
-				escortSerialization => this.loadBusiness(escortSerialization)
-			);
-			const room = new Room(roomName, figure, roomEscorts, nothing, circularSlits); // `escorts` is temporarily `[]`
-			const roomWidget = this.canvasPseudoWidgets[4].figureWidgetFactory.createFromBusiness0(room);
-			return room;
-		case 'Furniture':
-			const {grasp: grasp, sizing: sizing, name: furnitureName, imageFileName: imageFileName} = businessSerialization;
-			const furnitureWidget = this.canvasPseudoWidgets[4].imageWidgetFactory.create(furnitureName, imageFileName, sizing, grasp);
-			return furnitureWidget.businessObject; // @TODO a furniture be able to have further escorts, here shortcut
-		default: throw 'Error';
-	}
+	const business = this.deserialize(businessSerialization, maybeHost);
+	business.executeOn(this.canvasPseudoWidgets[4]);
 }
 
-NativeLoaderController.prototype.loadBusiness_fix1 = function (businessSerialization)
+NativeLoaderController.prototype.deserialize = function (businessSerialization, maybeHost)
 {
 	switch (businessSerialization.type) {
 		case 'Room':
-			const {name: roomName, figure: figureSerialization, circularSlits: circularSlitsSerialization, escorts: roomEscortsSerialization} = businessSerialization;
-			const figure = new Figure(figureSerialization.vertices, figureSerialization.svgAttributes);
+			const {name: roomName, figure: roomFigureSerialization, circularSlits: circularSlitsSerialization, escorts: roomEscortsSerialization} = businessSerialization;
+			const roomFigure = new Figure(roomFigureSerialization.vertices, roomFigureSerialization.svgAttributes);
 			const circularSlits = circularSlitsSerialization.map(({center: center, radius: radius}) => new CircularSlit(center, radius)); // @TODO delegate to CircularSlit
-			const room = new Room(roomName, figure, [], nothing, circularSlits); // `escorts` is temporarily `[]`
-			const roomWidget = this.canvasPseudoWidgets[4].figureWidgetFactory.createFromBusiness0(room);
+			const room = new Room(roomName, roomFigure, [], maybeHost, circularSlits); // `escorts` is temporarily `[]`
 			const roomEscorts = roomEscortsSerialization.map(
-				escortSerialization => this.loadBusiness_fix1(escortSerialization)
+				escortSerialization => this.deserialize(escortSerialization, just(room))
 			);
 			room.escorts = roomEscorts;
 			return room;
 		case 'Furniture':
-			const {grasp: grasp, sizing: sizing, name: furnitureName, imageFileName: imageFileName} = businessSerialization;
-			const furnitureWidget = this.canvasPseudoWidgets[4].imageWidgetFactory.create(furnitureName, imageFileName, sizing, grasp);
-			return furnitureWidget.businessObject; // @TODO a furniture be able to have further escorts, here shortcut
-		default: throw 'Error';
-	}
-}
-
-
-NativeLoaderController.prototype.loadBusiness_fix2 = function (businessSerialization, maybeHost)
-{
-	const business = this.loadBusiness_fix2_plan(businessSerialization, maybeHost);
-	this.loadBusiness_fix2_execute(business);
-}
-
-
-NativeLoaderController.prototype.loadBusiness_fix2_plan = function (businessSerialization, maybeHost)
-{
-	switch (businessSerialization.type) {
-		case 'Room':
-			const {name: roomName, figure: figureSerialization, circularSlits: circularSlitsSerialization, escorts: roomEscortsSerialization} = businessSerialization;
-			const figure = new Figure(figureSerialization.vertices, figureSerialization.svgAttributes);
-			const circularSlits = circularSlitsSerialization.map(({center: center, radius: radius}) => new CircularSlit(center, radius)); // @TODO delegate to CircularSlit
-			const room = new Room(roomName, figure, [], maybeHost, circularSlits); // `escorts` is temporarily `[]`
-			const roomEscorts = roomEscortsSerialization.map(
-				escortSerialization => this.loadBusiness_fix2_plan(escortSerialization, just(room))
-			);
-			room.escorts = roomEscorts;
-			return room;
-		case 'Furniture':
-			const {figure: furnitureFigure, name: furnitureName, imageFileName: imageFileName} = businessSerialization;
+			const {figure: furnitureFigureSerialization, name: furnitureName, imageFileName: imageFileName} = businessSerialization;
+			const furnitureFigure = new Figure(furnitureFigureSerialization.vertices, furnitureFigureSerialization.svgAttributes);
 			return new Furniture(furnitureName, furnitureFigure, imageFileName, [], maybeHost); // @TODO a furniture be able to have further escorts, here shortcut to []
 		default: throw 'Error';
-	}
-}
-
-NativeLoaderController.prototype.loadBusiness_fix2_execute = function (business) // @TODO OOP polymorphism
-{
-	switch (business.constructor.name) {
-		case 'Room':
-			const roomWidget = this.canvasPseudoWidgets[4].figureWidgetFactory.createFromBusiness0(business);
-			business.escorts.map(
-				escort => this.loadBusiness_fix2_execute(escort)
-			);
-			break;
-		case 'Furniture':
-			const furnitureWidget = this.canvasPseudoWidgets[4].imageWidgetFactory.createFromBusiness(business);
-			// @TODO a furniture be able to have further escorts, here shortcut
-			break;
-		default: throw `Error: [${business.constructor.name}](${business.constructor.name == 'Furniture'})`;
 	}
 }
