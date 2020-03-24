@@ -16,3 +16,5 @@ Title.prototype.doTranslation = function (displacement)
 }
 
 Title.prototype.readaptTo = function (figure) {this.position = figure.titlePosition();};
+
+Title.prototype.exportToSerializableObject = function () {return {name: this.name, position: this.position};};

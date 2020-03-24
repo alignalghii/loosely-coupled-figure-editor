@@ -98,10 +98,14 @@ NativeLoaderController.prototype.deserialize = function (businessSerialization, 
 {
 	switch (businessSerialization.type) {
 		case 'Room':
-			const {name: roomName, figure: roomFigureSerialization, circularSlits: circularSlitsSerialization, escorts: roomEscortsSerialization} = businessSerialization;
+			const {title: titleSerialization, figure: roomFigureSerialization, circularSlits: circularSlitsSerialization, escorts: roomEscortsSerialization} = businessSerialization;
 			const roomFigure = new Figure(roomFigureSerialization.vertices, roomFigureSerialization.svgAttributes);
 			const circularSlits = circularSlitsSerialization.map(({center: center, radius: radius}) => new CircularSlit(center, radius)); // @TODO delegate to CircularSlit
-			const room = new Room(roomName, roomFigure, [], maybeHost, circularSlits); // `escorts` is temporarily `[]`
+
+			const title = new Title(null, titleSerialization.name, titleSerialization.position);
+			const room = new Room(title, roomFigure, [], maybeHost, circularSlits); // `escorts` is temporarily `[]`
+			room.title = title;
+
 			const roomEscorts = roomEscortsSerialization.map(
 				escortSerialization => this.deserialize(escortSerialization, just(room))
 			);

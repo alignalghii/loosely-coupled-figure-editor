@@ -6,7 +6,11 @@ function Room(name, figure, escorts, maybeHost, circularSlits = [], openings, ge
 {
 	BusinessObject.call(this, figure, escorts, maybeHost);
 
-	this.title        = new Title(this, name, figure.titlePosition());
+	switch (typeof name) { // @TODO
+		case 'string': this.title = new Title(this, name, figure.titlePosition()); break;
+		case 'object': this.title = name; break;
+		default: throw 'Type error';
+	}
 	//this.figure       = figure; // @TODO lehet hogy jó lenne helyreállítani, és az absztrakt BusinessObject osztályból meg kivenni. Nem feltétlen minden üzletiolbektum kötődik alakzathoz. Pl. van cím is, igaz, az nem köthető üzleti objektumhoz. Lehet, hogy a Furniture sem fog alakzathoz kötődni (ez még bizonytalan, hisz a bútornak azért bennfoglaló téglalapdoboza azért biztos van, aszerint ütközik is. Mindenesetre a Furniture képhez is kötődik.
 	this.slitsRepresentationCircular = new SlitsRepresentationCircular(figure.perimeter(), circularSlits);
 	this.openings     = openings;
@@ -63,7 +67,7 @@ Room.prototype.exportToSerializableObject = function ()
 {
 	return {
 		type: this.constructor.name,
-		name: this.title.name,
+		title: this.title.exportToSerializableObject(),
 		figure: this.figure,
 		circularSlits: this.slitsRepresentationCircular.circularSlits, // @TODO consider but only in late future: other properties of slitsRepresentationCircular are not used yet
 		escorts: this.escorts.map(
