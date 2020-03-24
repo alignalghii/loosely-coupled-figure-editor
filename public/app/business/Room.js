@@ -76,6 +76,11 @@ Room.prototype.exportToSerializableObject = function ()
 	}
 };
 
+/**
+ * @TODO `Room` should not know about implementation details
+ *       On the other hand, `executeOn` is a good ide due to polymporhism
+ *       Solution: make `executeOn` code more clean, it shold delegate the low-level details to its `convasPseudoWidget` argument (in short: use any inversion-of-control approach with any context-like interface). Analogously, it should delegate tasks to `title` (and maybe also to `figure`): these, although not business objects (but physics objects), also should provide a serialization-deserialization-execution interface.
+ */
 Room.prototype.executeOn = function (canvasPseudoWidget)
 {
 	const figureWidgetFactory = canvasPseudoWidget.figureWidgetFactory;
