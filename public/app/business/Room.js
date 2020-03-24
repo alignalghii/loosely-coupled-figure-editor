@@ -74,8 +74,20 @@ Room.prototype.exportToSerializableObject = function ()
 
 Room.prototype.executeOn = function (canvasPseudoWidget)
 {
-	const roomWidget = canvasPseudoWidget.figureWidgetFactory.createFromBusiness0(this);
+	const figureWidgetFactory = canvasPseudoWidget.figureWidgetFactory;
+	const roomFigure = this.figure;
+
+	const svgVertices       = roomFigure.vertices.map((p) => figureWidgetFactory.coordSysTransformer.highToLow(p));//console.log('Origin figure: low-level (SVG) coordinates: {'+svgVertices.join(' | ')+'}');
+	const svgNewPolygonCild = figureWidgetFactory.svgLowLevel.createPolygonChild(svgVertices, roomFigure.svgAttributes); // @TODO consider `this.originFigure.svgAttributes`
+
+	figureWidgetFactory.bijectionSvgToGeom.set(svgNewPolygonCild, roomFigure);
+	figureWidgetFactory.partialFunctionGeomToBusiness.set(roomFigure, this);
+
 	this.escorts.map(
 		escort => escort.executeOn(canvasPseudoWidget)
 	);
+
+	canvasPseudoWidget.titleWidgetFactory.createFromHigh(this.title); // @TODO: 1) not necessarily all figs have a title 2) there'll be also other businessobs than rooms with titles
+
+	return new FigureWidget(canvasPseudoWidget, svgNewPolygonCild, roomFigure, this);
 };
