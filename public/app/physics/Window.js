@@ -29,3 +29,8 @@ Window.prototype.doTranslation = function (displacement)
 
 
 Window.prototype.isCollidable_ = function () {return nothing;};
+
+Window.prototype.executeOn = function (canvasPseudoWidget)
+{
+	return canvasPseudoWidget.windowWidgetFactory.createFromHigh(this);
+};

@@ -7,6 +7,16 @@ WindowWidgetFactory.prototype.constructor = WindowWidgetFactory;
 
 WindowWidgetFactory.prototype.createFromBusiness = function (businessObject) {throw 'Disabled inheritance';}; // @TODO ,,Néma kacsa'' öröklődési probléma
 
+WindowWidgetFactory.prototype.createFromHigh = function (window)
+{
+	const {size: size, position: position} = window;
+	const info = this.calculate([size, size], position);//console.log(info);
+	const imageElem = this.svgLowLevel.createImage('/assets-proper/window-attached.png', info.sizes_low, info.point_lowcorner);
+	const windowWidget = new WindowWidget(this.canvasPseudoWidget, imageElem, window);
+	this.bijectionSvgToGeom.set(imageElem, window);
+	return windowWidget;
+};
+
 WindowWidgetFactory.prototype.create = function (size, position) // @TODO DRY: same as in ImageWidgetFactory
 {
 	const info = this.calculate([size, size], position);//console.log(info);

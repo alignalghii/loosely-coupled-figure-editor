@@ -2,7 +2,7 @@
 // Thus here, the Room constructor is simply setting possible properties from arguments
 
 
-function Room(name, figure, escorts, maybeHost, circularSlits = [], openings, generalSizes) // @TODO consider: escorts = [], maybeHost = ['nothing']
+function Room(name, figure, escorts, maybeHost, circularSlits = [], openings = [], generalSizes) // @TODO consider: escorts = [], maybeHost = ['nothing']
 {
 	BusinessObject.call(this, figure, escorts, maybeHost);
 
@@ -72,7 +72,8 @@ Room.prototype.exportToSerializableObject = function ()
 		circularSlits: this.slitsRepresentationCircular.circularSlits, // @TODO consider but only in late future: other properties of slitsRepresentationCircular are not used yet
 		escorts: this.escorts.map(
 			escort => escort.exportToSerializableObject()
-		)
+		),
+		openings: this.openings ? this.openings.map(widget => widget.high.exportToSerializableObject()) : []
 	}
 };
 
@@ -94,6 +95,11 @@ Room.prototype.executeOn = function (canvasPseudoWidget)
 
 	this.escorts.map(
 		escort => escort.executeOn(canvasPseudoWidget)
+	);
+
+	// @TODO!
+	this.openings = this.openings.map(
+		opening => opening.executeOn(canvasPseudoWidget)
 	);
 
 	canvasPseudoWidget.titleWidgetFactory.createFromHigh(this.title); // @TODO: 1) not necessarily all figs have a title 2) there'll be also other businessobs than rooms with titles

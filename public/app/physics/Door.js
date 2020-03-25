@@ -29,3 +29,8 @@ Door.prototype.doTranslation = function (displacement)
 
 
 Door.prototype.isCollidable_ = function () {return nothing;};
+
+Door.prototype.executeOn = function (canvasPseudoWidget)
+{
+	return canvasPseudoWidget.doorWidgetFactory.createFromHigh(this);
+};

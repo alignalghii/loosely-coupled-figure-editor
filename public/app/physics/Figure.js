@@ -24,6 +24,15 @@ Figure.prototype = Object.create(MathematicalObject.prototype);
 
 Figure.prototype.constructor = Figure;
 
+Figure.prototype.exportToSerializableObject = function ()
+{
+	const ob = JSON.parse(JSON.stringify(this)); // hack a deep copy
+	ob.type = this.constructor.name;
+	return ob;
+};
+
+
+
 Figure.prototype.isCollidable_ = function () {return ['just', function (board) {return mbVectorTransformationForAllowance_(this, board);}];}; // @TODO should be raised to business object level?
 
 

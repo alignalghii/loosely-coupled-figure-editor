@@ -7,6 +7,16 @@ DoorWidgetFactory.prototype.constructor = DoorWidgetFactory;
 
 DoorWidgetFactory.prototype.createFromBusiness = function (businessObject) {throw 'Disabled inheritance';}; // @TODO ,,Néma kacsa'' öröklődési probléma
 
+DoorWidgetFactory.prototype.createFromHigh = function (door)
+{
+	const {size: size, position: position} = door;
+	const info = this.calculate([size, size], position);//console.log(info);
+	const imageElem = this.svgLowLevel.createImage('/assets-proper/door-attached.png', info.sizes_low, info.point_lowcorner);
+	const doorWidget = new DoorWidget(this.canvasPseudoWidget, imageElem, door);
+	this.bijectionSvgToGeom.set(imageElem, door);
+	return doorWidget;
+};
+
 DoorWidgetFactory.prototype.create = function (size, position) // @TODO DRY: same as in ImageWidgetFactory
 {
 	const info = this.calculate([size, size], position);//console.log(info);

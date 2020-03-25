@@ -248,6 +248,9 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - befelé nyíló ajtó esetén is úgy kell rákattintani az ajtóra, mintha az kifelé nyílnék
  - A másik vászontra átrántott szoba nem viszi magával nyílászáróit, azok ott maradnak, amúgy az együttmozgás akkor is működik, visszarátáskor tök korrektül újraegyütt vannak.
 
+ - natív formátumba jól menti és visszatörli a nyílászárókat, de a visszatöltött nyílászáók ugyan majdnem egyenrangúak a felhasználó által kézileg felcsatoltakkal, de a kézileg felcsatoltak lecsatoláskor betömik maguk után a falréseket, a visszatltéses nyílászárók erre nem képesek. Megoldás: a natív töltéskor az openingeket attachToWall-lak kell felcsatolni.
+ - A fókusz (és esetleg a helyfókusz is) legyen natív formátumba menthető és onnan visszatölthető.
+
 
 # Fontend
  - Freeze lenne jó, mint ahogy az excelben táblasorokat lehet rögzíteni. itt persze a statussort lenne jó így. (Úgy tűnik, az overflow scroll erre elfogadható eszköz lesz)

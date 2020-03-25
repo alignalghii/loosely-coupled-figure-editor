@@ -92,18 +92,21 @@ NativeLoaderController.prototype.loadBusiness = function (businessSerialization,
 {
 	const business = this.deserialize(businessSerialization, maybeHost);
 	business.executeOn(this.canvasPseudoWidgets[4]);
-}
+};
 
 NativeLoaderController.prototype.deserialize = function (businessSerialization, maybeHost)
 {
 	switch (businessSerialization.type) {
 		case 'Room':
-			const {title: titleSerialization, figure: roomFigureSerialization, circularSlits: circularSlitsSerialization, escorts: roomEscortsSerialization} = businessSerialization;
+			const {title: titleSerialization, figure: roomFigureSerialization, circularSlits: circularSlitsSerialization, escorts: roomEscortsSerialization, openings: openingsSerialization} = businessSerialization;
 			const roomFigure = new Figure(roomFigureSerialization.vertices, roomFigureSerialization.svgAttributes);
 			const circularSlits = circularSlitsSerialization.map(({center: center, radius: radius}) => new CircularSlit(center, radius)); // @TODO delegate to CircularSlit
 
+			// @TODO define a high-order function for circular object creation. `title` host and `escort` host are circular. `openings` are not circular (as of now)
+
 			const title = new Title(null, titleSerialization.name, titleSerialization.position);
-			const room = new Room(title, roomFigure, [], maybeHost, circularSlits); // `escorts` is temporarily `[]`
+			const openings = openingsSerialization.map(openingSerialization => this.deserializeOpening(openingSerialization));
+			const room = new Room(title, roomFigure, [], maybeHost, circularSlits, openings); // `escorts` is temporarily `[]`
 			room.title = title;
 
 			const roomEscorts = roomEscortsSerialization.map(
@@ -117,4 +120,13 @@ NativeLoaderController.prototype.deserialize = function (businessSerialization, 
 			return new Furniture(furnitureName, furnitureFigure, imageFileName, [], maybeHost); // @TODO a furniture be able to have further escorts, here shortcut to []
 		default: throw 'Error';
 	}
-}
+};
+
+NativeLoaderController.prototype.deserializeOpening = function (openingSerialization)
+{
+	switch (openingSerialization.type) {
+		case 'Window': return new Window(openingSerialization.size, openingSerialization.position);
+		case 'Door'  : return new Door  (openingSerialization.size, openingSerialization.position);
+		default      : throw `Unknow opening type ${openingSerialization.type}`;
+	}
+};
