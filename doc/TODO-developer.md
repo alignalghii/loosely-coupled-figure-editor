@@ -250,6 +250,10 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
 
  - natív formátumba jól menti és visszatörli a nyílászárókat, de a visszatöltött nyílászáók ugyan majdnem egyenrangúak a felhasználó által kézileg felcsatoltakkal, de a kézileg felcsatoltak lecsatoláskor betömik maguk után a falréseket, a visszatltéses nyílászárók erre nem képesek. Megoldás: a natív töltéskor az openingeket attachToWall-lak kell felcsatolni.
  - A fókusz (és esetleg a helyfókusz is) legyen natív formátumba menthető és onnan visszatölthető.
+ - Vajon akkor is jól nmentődnek-töltődnek vissza natívan a nyílászárók, ha két egymás melletti szoba közös falára húzzuk őket?
+ - Nem menti a nyílászárók ún. pótlólagos transzformációit. Pl. az ajtó kissé elcsúszva töltődik vissza. Az ablak is csak függőleges fal esetében töltődik vissza jól, ferdve vgy vízszintes falnál is függőlegesen állva töltődik vissza.
+ - Bár nyilászárót szabad falrésre is ráhúzni (nem dob "Invalid arrangement" hibát), de ezt elmentve, majd visszatöltve igenis "Invalid arrangement" hibát dob!
+ - A menüvászonról a munkavászonra áthúzott nyílászáró automatikusan (vagy az attacholódó nyílászáró) automatikus veszítse el szaggatott vonalas keretét.
 
 
 # Fontend

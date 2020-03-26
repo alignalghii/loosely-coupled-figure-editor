@@ -105,9 +105,10 @@ NativeLoaderController.prototype.deserialize = function (businessSerialization, 
 			// @TODO define a high-order function for circular object creation. `title` host and `escort` host are circular. `openings` are not circular (as of now)
 
 			const title = new Title(null, titleSerialization.name, titleSerialization.position);
-			const openings = openingsSerialization.map(openingSerialization => this.deserializeOpening(openingSerialization));
-			const room = new Room(title, roomFigure, [], maybeHost, circularSlits, openings); // `escorts` is temporarily `[]`
+			const room = new Room(title, roomFigure, [], maybeHost, circularSlits, []); // `escorts` and `openings` are temporarily `[]`
+			const openings = openingsSerialization.map(openingSerialization => this.deserializeOpeningBy(openingSerialization, room));
 			room.title = title;
+			room.openings = openings;
 
 			const roomEscorts = roomEscortsSerialization.map(
 				escortSerialization => this.deserialize(escortSerialization, just(room))
@@ -122,11 +123,24 @@ NativeLoaderController.prototype.deserialize = function (businessSerialization, 
 	}
 };
 
-NativeLoaderController.prototype.deserializeOpening = function (openingSerialization)
+NativeLoaderController.prototype.deserializeOpeningBy = function (openingSerialization, room)
 {
+	const {size: size, position: position, memHitsMap: memHitsMap} = openingSerialization;
+	let opening;
 	switch (openingSerialization.type) {
-		case 'Window': return new Window(openingSerialization.size, openingSerialization.position);
-		case 'Door'  : return new Door  (openingSerialization.size, openingSerialization.position);
+		case 'Window': opening = new Window(openingSerialization.size, openingSerialization.position); break;
+		case 'Door'  : opening = new Door  (openingSerialization.size, openingSerialization.position); break;
 		default      : throw `Unknow opening type ${openingSerialization.type}`;
 	}
+	if (memHitsMap && memHitsMap.own) {
+		const {center: center, radius: radius} = memHitsMap.own;
+		const newSlit = new CircularSlit(center, radius);
+		const oldSlit = room.slitsRepresentationCircular.circularSlits.find(
+			slit => slit.ccEq(newSlit)
+		);
+		if (!oldSlit) throw 'Error';
+		opening.memHitsMap = new Bijection;
+		opening.memHitsMap.set(room, oldSlit);
+	}
+	return opening;
 };

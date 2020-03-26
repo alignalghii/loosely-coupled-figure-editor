@@ -73,7 +73,7 @@ Room.prototype.exportToSerializableObject = function ()
 		escorts: this.escorts.map(
 			escort => escort.exportToSerializableObject()
 		),
-		openings: this.openings ? this.openings.map(widget => widget.high.exportToSerializableObject()) : []
+		openings: this.openings ? this.openings.map(widget => widget.high.exportToSerializableObjectBy(this)) : []
 	}
 };
 

@@ -18,3 +18,43 @@ Bijection.prototype.deleteInverse = function (b) {var a = this.mapInverse .get(b
 Bijection.prototype.doInvertIt = function () {[this.mapStraight, this.mapInverse] = [this.mapInverse, this.mapStraight];};
 
 Bijection.prototype.deleteAll = function () {this.mapStraight.clear(); this.mapInverse.clear();};
+
+
+Bijection.prototype.exportToSerializableObject = function ()
+{
+	return {
+		mapStraight: exportMapToSerializableObject(this.mapStraight),
+		mapInverse : exportMapToSerializableObject(this.mapInverse )
+	};
+};
+
+Bijection.prototype.exportToSerializableObjectBy = function (specialKey)
+{
+	return exportMapToSerializableObjectBy(this.mapStraight, specialKey);
+};
+
+
+// @TODO put it into a better module file
+function exportMapToSerializableObject(map)
+{
+	const arrayRepresentation = [];
+	for (let [x, y] of map) {
+		arrayRepresentation.push([x, y]);
+	}
+	return arrayRepresentation;
+}
+
+
+function exportMapToSerializableObjectBy(map, specialKey)
+{
+	const objectRepresentation = {};
+	let i = 1;
+	for (let [x, y] of map) {
+		if (x == specialKey) {
+			objectRepresentation.own = y;
+		} else {
+			objectRepresentation[`other_${i++}`] = y;
+		}
+	}
+	return objectRepresentation;
+}

@@ -31,6 +31,14 @@ Figure.prototype.exportToSerializableObject = function ()
 	return ob;
 };
 
+Figure.prototype.exportToSerializableObjectBy = function (specialKey)
+{
+	const ob = this.exportToSerializableObject();
+	if ('memHitsMap' in this) {
+		ob.memHitsMap = this.memHitsMap.exportToSerializableObjectBy(specialKey);
+	}
+	return ob;
+};
 
 
 Figure.prototype.isCollidable_ = function () {return ['just', function (board) {return mbVectorTransformationForAllowance_(this, board);}];}; // @TODO should be raised to business object level?
