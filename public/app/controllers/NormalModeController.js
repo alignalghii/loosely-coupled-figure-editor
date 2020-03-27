@@ -145,11 +145,13 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 						currentWidget.attachToWall(currentWidget.high.memHitsMap, edgesBij, this.canvasPseudoWidgets);
 					}
 				}
-				if (currentWidget.high.memHitsMap.size() == 0 && this.state.focus && this.state.focus.high == currentWidget.high) {
-					/* @TODO DRY, copypasted from `mouseDown` method */
-					this.state.focus.unshowFocus();
-					this.state.focus = null;
-					this.statusBarDriver.addReport('Automatikus alakzatfókusz levéve.');
+				if (currentWidget.high.memHitsMap.size() == 0 && (!this.state.focus || this.state.focus && this.state.focus.high == currentWidget.high)) {
+					/* @TODO DRY, copypasted from `mouseDown` method, and modified somewhat */
+					if (this.state.focus) {
+						this.state.focus.unshowFocus();
+						this.state.focus = null;
+						this.statusBarDriver.addReport('Automatikus alakzatfókusz levéve.');
+					}
 
 					if (currentWidget.constructor.name == 'WindowWidget' || currentWidget.constructor.name == 'DoorWidget') { // @TODO OOP polymorphism
 						currentWidget.detachFromWall(this.canvasPseudoWidgets);

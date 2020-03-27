@@ -253,6 +253,7 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - Vajon akkor is jól nmentődnek-töltődnek vissza natívan a nyílászárók, ha két egymás melletti szoba közös falára húzzuk őket?
  - Nem menti a nyílászárók ún. pótlólagos transzformációit. Pl. az ajtó kissé elcsúszva töltődik vissza. Az ablak is csak függőleges fal esetében töltődik vissza jól, ferdve vgy vízszintes falnál is függőlegesen állva töltődik vissza.
  - Bár nyilászárót szabad falrésre is ráhúzni (nem dob "Invalid arrangement" hibát), de ezt elmentve, majd visszatöltve igenis "Invalid arrangement" hibát dob!
+ - (FIXED JUST NOW): Az ajtót le lehet venni a falról úgy, hogy nem alakul vissza vonszolási alakjába, feltétel, hogy 1) ne legyen fókuszban, & 2) abba az irányba húzzuk, hogy már egy pixel is megszönteti az érintkezési viszonyt, vagy vonhatkuk rossz irányba is, de akkor erősen meg kell rántani. (Amúgy a sajér falrését ekkor is szépen betömi maga mögött). Ablaknál is előhozható, de ott mindenképp erősen el kell rántani.
  - A menüvászonról a munkavászonra áthúzott nyílászáró automatikusan (vagy az attacholódó nyílászáró) automatikus veszítse el szaggatott vonalas keretét.
 
 
