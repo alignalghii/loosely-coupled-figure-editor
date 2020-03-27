@@ -7,6 +7,8 @@ function NativeLoaderController (canvasPseudoWidgets, nativeLoaderDriver, tabSel
 	this.audioDriver         = audioDriver;
 
 	this.flag = false;
+
+	this.canvasPseudoWidget_work = this.canvasPseudoWidgets[4]; // @TODO
 }
 
 NativeLoaderController.prototype.view = function ()
@@ -125,13 +127,14 @@ NativeLoaderController.prototype.deserialize = function (businessSerialization, 
 
 NativeLoaderController.prototype.deserializeOpeningBy = function (openingSerialization, room)
 {
-	const {size: size, position: position, memHitsMap: memHitsMap} = openingSerialization;
+	const {size: size, position: position, memHitsMap: memHitsMap, transform: transform} = openingSerialization;
 	let opening;
 	switch (openingSerialization.type) {
 		case 'Window': opening = new Window(openingSerialization.size, openingSerialization.position); break;
 		case 'Door'  : opening = new Door  (openingSerialization.size, openingSerialization.position); break;
 		default      : throw `Unknow opening type ${openingSerialization.type}`;
 	}
+
 	if (memHitsMap && memHitsMap.own) {
 		const {center: center, radius: radius} = memHitsMap.own;
 		const newSlit = new CircularSlit(center, radius);
@@ -142,5 +145,10 @@ NativeLoaderController.prototype.deserializeOpeningBy = function (openingSeriali
 		opening.memHitsMap = new Bijection;
 		opening.memHitsMap.set(room, oldSlit);
 	}
+
+	if (transform) {
+		opening.transform = transform;
+	}
+
 	return opening;
 };

@@ -30,7 +30,12 @@ Window.prototype.doTranslation = function (displacement)
 
 Window.prototype.isCollidable_ = function () {return nothing;};
 
+// @TODO DRY `Door.prototype.executeOn` has almost the same source code
 Window.prototype.executeOn = function (canvasPseudoWidget)
 {
-	return canvasPseudoWidget.windowWidgetFactory.createFromHigh(this);
+	const windowWidget = canvasPseudoWidget.windowWidgetFactory.createFromHigh(this);
+	if (this.transform) {
+		windowWidget.low.setAttribute('transform', this.transform);
+	}
+	return windowWidget;
 };
