@@ -159,12 +159,12 @@ DoorWidget.prototype.reflectHorizontally = function () {console.log('Flip door h
 
 DoorWidget.prototype.restoreOn = canvasPseudoWidget => canvasPseudoWidget.doorWidgetFactory.create(2.3, [ 1.7, -4]); // @TODO note that this is a class method
 
-DoorWidget.prototype.attachToWall   = function (memHitsMap, edgesBij, canvasPseudoWidgets)
+DoorWidget.prototype.attachToWall   = function (wallsBackRefSet)
 {
 	console.log('Attach door to wall');
 	const r = this.high.size / 2;
 	const  rooms = [], slits = [];
-	for (let [room, slit] of memHitsMap.mapStraight) {
+	for (let [room, slit] of this.high.attachmentBackRefing.mapStraight) {
 		console.log('Room:', room, 'Slit:', slit);
 		rooms.push(room);
 		slits.push(slit);
@@ -172,17 +172,13 @@ DoorWidget.prototype.attachToWall   = function (memHitsMap, edgesBij, canvasPseu
 
 		/* @TODO DRY */
 		maybeMap(
-			point => {
-				console.log('Old pos', this.position, 'new pos', point);
-				this.high.position = point;
-				this.updateDownward();
-			},
+			point => this.translateTo(point),
 			maybeReachEndPoint(room.figure.vertices[0], tour(room.figure.vertices).map(edgeVector), slit.center)
 		);
 	}
 	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/door-attached2.png'); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
 	let edge = null, _ = null;
-	for ([edge, _] of edgesBij.mapStraight);
+	for ([edge, _] of wallsBackRefSet.mapStraight);
 	if (edge) {
 		const plumbBob = [0, 1];
 		const [ex, ey] = edgeVector(edge),
@@ -198,17 +194,30 @@ DoorWidget.prototype.attachToWall   = function (memHitsMap, edgesBij, canvasPseu
 		      Oy = Number(this.low.getAttribute('y')) + Number(this.low.getAttribute('height')) / 2;
 		this.low.setAttribute('transform', `translate(${-Rx} ${Ry}) rotate(${180-angle} ${Ox} ${Oy})`); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
 	}  //  rotate(${-angle} ${Ox} ${Oy})
-	this.restoreOn(canvasPseudoWidgets[2]);
+	//this.restoreOn(canvasPseudoWidgets[2]);
 };
 
-DoorWidget.prototype.detachFromWall = function (canvasPseudoWidgets)
+DoorWidget.prototype.detachFromWall = function ()
 {
 	console.log('Detach door from wall');
 	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/door-detached.png'); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
 	this.low.removeAttribute('transform');
-	canvasPseudoWidgets[2].doorWidgets().map(windowWidget => windowWidget.delete());
+	//canvasPseudoWidgets[2].doorWidgets().map(doorWidget => doorWidget.delete());
 };
 
+// @TODO DRY the source is the same with `WindowWidget`
+DoorWidget.prototype.hasBeenAttached = function ()
+{
+	const href = this.low.getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+	return /attached/.test(href);
+};
+
+// @TODO DRY the source is the same with `WindowWidget`
+DoorWidget.prototype.hasBeenDetached = function ()
+{
+	const href = this.low.getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+	return /detached/.test(href);
+};
 
 
 DoorWidget.prototype.showGlittering = function ()
@@ -259,3 +268,7 @@ DoorWidget.prototype.unshowFocus = function ()
 	//IMUNFOCUS[1].map(del);
 	//IMUNFOCUS[0].map(add);
 };
+
+
+DoorWidget.prototype.isActor        = function () {return true;};
+DoorWidget.prototype.isShapeshifter = function () {return true;};

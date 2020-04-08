@@ -1,4 +1,4 @@
-function SlitsRepresentationCircular(perimeter, circularSlits, maybeMinimalAllowedDistance = just(0), valueCheckOptionFlag = true, autoSort = true)
+function SlitsRepresentationCircular(perimeter, circularSlits, maybeMinimalAllowedDistance = just(0), valueCheckOptionFlag = true, autoSort = true) // @TODO use check, but integrate it well
 {
 	this.perimeter                   = perimeter;
 	this.circularSlits               = circularSlits; // <center, radius> pairs

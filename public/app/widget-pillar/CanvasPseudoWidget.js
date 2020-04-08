@@ -44,6 +44,17 @@ CanvasPseudoWidget.prototype.board               = function () {return this.arbi
 CanvasPseudoWidget.prototype.businessBoard       = function () {return this.arbitrary.partialFunctionGeomToBusiness;}; // @TODO: rude arbitrariness
 
 CanvasPseudoWidget.prototype.clear  = function () {this.arbitrary.clearAll(); }; // @TODO: rude arbitrariness
+CanvasPseudoWidget.prototype.clearHostlessWidgets  = function () {this.hostlessWidgets().map(w => w.delete());};
+CanvasPseudoWidget.prototype.clearHostlessWidgetsOtherThan  = function (excludedWidget) {this.hostlessWidgets().filter(w => !w.eq(excludedWidget)).map(w => w.delete());};
+
+
+CanvasPseudoWidget.prototype.hackFoolSafeClear  = function ()
+{
+	this.arbitrary.svgLowLevel.deleteAllPolygonChildren();
+	this.arbitrary.bijectionSvgToGeom.deleteAll();
+	this.arbitrary.partialFunctionGeomToBusiness.clear();
+};
+
 CanvasPseudoWidget.prototype.update = function () {this.arbitrary.updateAll();}; // @TODO: rude arbitrariness
 
 CanvasPseudoWidget.prototype.widgets = function (predicate)

@@ -255,6 +255,18 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - Bár nyilászárót szabad falrésre is ráhúzni (nem dob "Invalid arrangement" hibát), de ezt elmentve, majd visszatöltve igenis "Invalid arrangement" hibát dob!
  - (FIXED JUST NOW): Az ajtót le lehet venni a falról úgy, hogy nem alakul vissza vonszolási alakjába, feltétel, hogy 1) ne legyen fókuszban, & 2) abba az irányba húzzuk, hogy már egy pixel is megszönteti az érintkezési viszonyt, vagy vonhatkuk rossz irányba is, de akkor erősen meg kell rántani. (Amúgy a sajér falrését ekkor is szépen betömi maga mögött). Ablaknál is előhozható, de ott mindenképp erősen el kell rántani.
  - A menüvászonról a munkavászonra áthúzott nyílászáró automatikusan (vagy az attacholódó nyílászáró) automatikus veszítse el szaggatott vonalas keretét.
+ - A bútorok esetében még nem menthető-visszatölthető tulajdonság a bútorhoz csatolt esetleges kísérők (pl. asztalhoz csatolt virág vagy széksor, asztalhoz csatolt szőnyeg stb.) Ez az ún grouping információ viszont működik szoba esetében (szoba bútorai).
+ - A malterosvödör szerepe rossz (ugyanúgy viselkedik, mint a csákány)
+
+ - Az ajtó a szoba falához csatoláskor-lecsatoláskor különösen viselkedik, nem oly kezesen, mint az ablak. Ennek oka, hogy az ablak SVG-jének transform attribútumában csak rotate van, de az ajtónál translate is, és az torzít. Az alacsonyszintű kiigazító translate bevezetésének eredeti oka az volt, hogy az ajtó tükrözésekor nem a közepéhez, hanem a nyilásához kell viszonyítani. Azonban e megoldást magas (DoorWidget) szintű translate-vel is ki lehet váltani
+ - A nyilászáró ikonok másolódása (pontosabban eredeti helyükön való újrarakása) akkor történjék, mikor menüvásznukról a munkavászonra ugranak. Ennek figyeléését a NormalModeController move metodusába érdemes rekni, mert az rendelkezik a vásznak indexeivel. Érdemes a másik irányba is figyelést rakni: ha a mnkavászonról ugrik vissza a menüvászonra, törlődjék!
+   - Ha ezt igy megoldjuk, feleselgessé válik a `Widget.prototype.shapeshiftAndReplenish` metódus replenish része, és egyszerűsödik a `(Window|Door)Widget.prototype.attachToWall` és `(Window|Door)Widget.prototype.detachFromWall` metódus is. Ezáltal mindeme metódusok átvihetők lennének az `AttachmentsHub` osztályba.
+ - A `memMinusRoom` legyen csak `minusRoom`!
+ - Az `eitherTarget` nem az `Either` osztály példánya, hanem `['left', ...]` ill `['right ..]` féle meztelen implementáció
+ - A hely- és a widgetfókusz is legyen menthető-visszatölthető natív formátumba/ból
+ - A bútorok replenish és discard vászonugrása is működjék, sőt a sablonszobáké is. Egyedül az adatbázis menüvászna legyen nem-újratöltődő.
+ - !!! A Menük újratöltődése (replenish) más-más az egyes menükre (adatbázismenü, nyilászárómenü, bútormenü, mintaszobamenü). Jelenleg ezt egy nagy `switch` végzi, de ha az egész nagymetódust átmozgatnánk a CanvasPseudoWidget alá, és a CanvasPseudoWidget-nek részoszályai lennének, épp a menük szerint, akkor az egyes menük mind megaphatnák saját alosztályaikat, és így a relplenish ügyét egyszerű polimorfizmussal meg lehetne oldani!
+ - A Küönböző `WidetFactory` osztályok lehet, hogy fölöslegesek. Ahogy az algebrai adaszerkeszeteknél (`Maybe`, `Either`, `EqOrDiff`) a konstruktort factory metódusok egszitik ki (`Maybe.just`, `Either.left`, `EqOrDiff.compare`), ugyanúgy lehetnének az egyes Widget-osztályoknak is maga a `*Widget.create*` és `*Widget.compose*` metódusai
 
 
 # Fontend

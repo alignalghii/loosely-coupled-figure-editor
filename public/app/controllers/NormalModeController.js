@@ -40,121 +40,48 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 		if (vectorLength(infinitezimalDisplacement) > 0) { // drag event provides sometimes also 0-displacements, we filter them out for better clarity's sake
 			const targetCanvas = canvasOfEitherTarget(eitherTarget);
 			const canvasPseudoWidget = this.canvasPseudoWidgetForCanvas(targetCanvas);
-			const maybeAllowJump = this.jumpWidgetToIfNeeded(canvasPseudoWidget); // @TODO: rossz helyen van, szervesen részt kell vennie az ütközésvizgálatban
-			const [mbAllowable, minFallTargetFigures] = this.state.prevWidget.allowable_(infinitezimalDisplacement);
-			const allowable = fromMaybe_exec(
-				() => { // @TODO: an axception should be thrown rather
-					this.statusBarDriver.report('<span class="error">Tiltott zóna!</span>');
-					this.audioDriver.ouch();
-					return infinitezimalDisplacement;
-				},
-				mbAllowable
-			);
-			//console.log('maybeAllowJump: ', maybeAllowJump);
-			if (!vecEq(maybeAllowJump, ['just', false]) && (this.state.prevWidget.constructor.name != 'WindowWidget' && this.state.prevWidget.constructor.name != 'DoorWidget' || (!this.state.focus || this.state.focus.high != this.state.prevWidget.high))) { // @TODO contract with code hadling window and door actors, and use an OOP polymorphism approach
-				this.translatePrevWidgetAndRememberItsNewPosition(allowable);
-			}
 
-			//console.log('Allowable: ', allowable);
-			if (vectorLength(infinitezimalDisplacement) > 0 && vectorLength(allowable) == 0) {
-				//console.log('allowable = 0');
-				this.statusBarDriver.report(`Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ${JSON.stringify(infinitezimalDisplacement)} irányban.`);
-			}
-
-
-			// @TODO refactory, huge code smell
-			if (!ccVecEq(allowable, infinitezimalDisplacement)) {
-				//console.log('allowable = infinitezimalDisplacement');
-				if (minFallTargetFigures.length == 1)
-					this.state.prevWidget.collisionActionSpecialty(this, canvasPseudoWidget, minFallTargetFigures[0], currentWEPos);
-			}
-
-			if (this.state.prevWidget && (this.state.prevWidget.constructor.name == 'PickaxeWidget' || this.state.prevWidget.constructor.name == 'BucketWidget' || this.state.prevWidget.constructor.name == 'WindowWidget' || this.state.prevWidget.constructor.name == 'DoorWidget')) { // @TODO OOP
-				const hitsMap = new Bijection, edgesBij = new Bijection;
-				for (let figureWidget of canvasPseudoWidget.figureWidgets()) {
-					for (let edge of tour(figureWidget.high.vertices)) {
-						if (distanceSegmentHence(edge, currentWEPos) < 20 / figureWidget.q()) {
-							hitsMap .set(figureWidget.businessObject, {});
-							edgesBij.set(edge, {});
-						}
-					}
-				}
-
-				const widgetEq = (w1, w2) => w1.eq(w2);
-				if (!this.state.prevWidget.high.memHitsMap) this.state.prevWidget.high.memHitsMap = new Bijection;
-				for (let plusRoom of hitsMap.domain()) {
-					if (!this.state.prevWidget.high.memHitsMap.has(plusRoom)) {
-						const plusFigureWidget = canvasPseudoWidget.arbitrary.composeFromBusiness(plusRoom);
-						const maybeCircularSlit = plusFigureWidget.loseWall_(this, this.state.prevWidget, true);
-						maybeMap(
-							circularSlit => {
-								this.state.prevWidget.high.memHitsMap.set(plusRoom, circularSlit);
-								touchProp(plusRoom, 'openings', []);
-								beMemberIfNotYetByEq(this.state.prevWidget, plusRoom.openings, widgetEq); // @TODO very nasty that we store a widget in a business level object
-								this.statusBarDriver.report(`${plusRoom.title.name} gaining ${this.state.prevWidget.constructor.name}: there are now ${plusRoom.openings.filter(w => w.constructor.name == 'WindowWidget').length} windows and ${plusRoom.openings.filter(w => w.constructor.name == 'DoorWidget').length} doors.`);
-							},
-							maybeCircularSlit
-						);
-					}
-				}
-				for (let memMinusRoom of this.state.prevWidget.high.memHitsMap.domain()) {
-					if (!hitsMap.has(memMinusRoom)) {
-						const minusFigureWidget = canvasPseudoWidget.arbitrary.composeFromBusiness(memMinusRoom);
-						const slit = this.state.prevWidget.high.memHitsMap.get(memMinusRoom);
-
-						deleteItem(slit, minusFigureWidget.businessObject.slitsRepresentationCircular.circularSlits);
-						touchProp(memMinusRoom, 'openings', []);
-						deleteItemByEq(this.state.prevWidget, memMinusRoom.openings, widgetEq); // @TODO
-						this.statusBarDriver.report(`${memMinusRoom.title.name} losing ${this.state.prevWidget.constructor.name}: there remain ${memMinusRoom.openings.filter(w => w.constructor.name == 'WindowWidget').length} windows and ${memMinusRoom.openings.filter(w => w.constructor.name == 'DoorWidget').length} doors.`);
-
-						minusFigureWidget.updateSlitStructure();
-						minusFigureWidget.updateDasharray();
-						minusFigureWidget.updateDownward();
-
-						this.state.prevWidget.high.memHitsMap.delete(memMinusRoom);
-
-						/* @TODO DRY, copypasted from `FigureWidget.prototype.regainWall_` method */
-						this.audioDriver.rebuildWall();
-					}
-				}
-				for (let [room, slit] of this.state.prevWidget.high.memHitsMap.mapStraight) {
-					/* @TODO DRY: also copypasted to: `GeomTransformationController.prototype.sustainScaleStressSpan` */
-					const figureWidget = canvasPseudoWidget.arbitrary.composeFromBusiness(room),
-					      actorWidget  = this.state.prevWidget;
-					maybeMap(
-						till => {
-							slit.center = till;
-							figureWidget.updateSlitStructure();
-							figureWidget.updateDasharray();
-							figureWidget.updateDownward();
+			if (this.state.prevWidget) {
+				const jumpStatus = JumpStatus.detect(this.state.prevWidget, canvasPseudoWidget);
+				const jumpExecStatus = jumpStatus.executeIfSo(this.canvasPseudoWidgets, [[0, 1, 2], [4]]); // @TODO wrong synergy with collision detecton
+				jumpExecStatus.maybeAllow.map(
+					allow => this.statusBarDriver.report(allow ? 'Alakzat átugrasztása vásznak között!' : 'Gazdaobjektuma nélkül nem ugrasztható át!')
+				);
+				if (jumpExecStatus.releaseDrag) {
+					this.state.forgetDrag(); // it assigns null to `this.state.prevWidget`, thus it must come here at the end of the upper big if-block!
+				} else {
+					const [mbAllowable, minFallTargetFigures] = this.state.prevWidget.allowable_(infinitezimalDisplacement);
+					const allowable = fromMaybe_exec(
+						() => { // @TODO: an axception should be thrown rather
+							this.statusBarDriver.report('<span class="error">Tiltott zóna!</span>');
+							this.audioDriver.ouch();
+							return infinitezimalDisplacement;
 						},
-						figureWidget.maybeTill(actorWidget.high.position)
+						mbAllowable
 					);
-				}
 
-				const currentWidget = this.state.prevWidget;
-				if (currentWidget.high.memHitsMap.size() > 0 && (!this.state.focus || this.state.focus && this.state.focus.high != currentWidget.high)) {
-					/* @TODO DRY, copypasted from `mouseDown` method */
-					if (this.state.focus && currentWidget.high != this.state.focus.high) this.state.focus.unshowFocus();
-					this.state.focus = currentWidget; this.state.spaceFocus = null;
-					currentWidget.unshowGlittering(); // order 1
-					this.state.focus.showFocus();     // order 2: unshowglittering must not undo SVG-<image> styling @TODO alternative solution
-					this.statusBarDriver.addReport('Alakzatfókusz automatikusan megjegyezve, üreshelyfókusz levéve.');
-
-					if (currentWidget.constructor.name == 'WindowWidget' || currentWidget.constructor.name == 'DoorWidget') { // @TODO OOP polymorphism
-						currentWidget.attachToWall(currentWidget.high.memHitsMap, edgesBij, this.canvasPseudoWidgets);
-					}
-				}
-				if (currentWidget.high.memHitsMap.size() == 0 && (!this.state.focus || this.state.focus && this.state.focus.high == currentWidget.high)) {
-					/* @TODO DRY, copypasted from `mouseDown` method, and modified somewhat */
-					if (this.state.focus) {
-						this.state.focus.unshowFocus();
-						this.state.focus = null;
-						this.statusBarDriver.addReport('Automatikus alakzatfókusz levéve.');
+					if ( // @TODO seems to be unnecessary: either condition always holds, or the action is not too important
+						!jumpStatus.explicitDeny() && // !vecEq(maybeAllowJump, ['just', false])
+						(
+							this.state.prevWidget.isShapeshifter() ||
+							!this.state.focus || this.state.focus.eq(this.state.prevWidget)
+						)
+					) { // @TODO contract with code hadling window and door actors, and use an OOP polymorphism approach
+						this.translatePrevWidgetAndRememberItsNewPosition(allowable);
 					}
 
-					if (currentWidget.constructor.name == 'WindowWidget' || currentWidget.constructor.name == 'DoorWidget') { // @TODO OOP polymorphism
-						currentWidget.detachFromWall(this.canvasPseudoWidgets);
+					if (vectorLength(infinitezimalDisplacement) > 0 && vectorLength(allowable) == 0) {
+						this.statusBarDriver.report(`Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ${JSON.stringify(infinitezimalDisplacement)} irányban.`);
+					}
+
+
+					if (!ccVecEq(allowable, infinitezimalDisplacement)) {
+						if (minFallTargetFigures.length == 1)
+							this.state.prevWidget.collisionActionSpecialty(this, canvasPseudoWidget, minFallTargetFigures[0], currentWEPos);
+					}
+
+					if (this.state.prevWidget.isActor()) { // @TODO OOP @TODO build the condition into `manageAttachments`
+						this.state.prevWidget.manageAttachments(this);
 					}
 				}
 			}
@@ -163,6 +90,32 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 		}
 	}
 };
+
+
+/**
+if (!this.state.focus || this.state.focus && this.state.focus.high != currentWidget.high) {
+	// @TODO DRY, copypasted from `mouseDown` method
+	if (this.state.focus && currentWidget.high != this.state.focus.high) this.state.focus.unshowFocus();
+	this.state.focus = currentWidget; this.state.spaceFocus = null;
+	currentWidget.unshowGlittering(); // order 1
+	this.state.focus.showFocus();     // order 2: unshowglittering must not undo SVG-<image> styling @TODO alternative solution
+	this.statusBarDriver.addReport('Alakzatfókusz automatikusan megjegyezve, üreshelyfókusz levéve.');
+}
+if (this.state.focus && this.state.focus.high == currentWidget.high) {
+	// @TODO DRY, copypasted from `mouseDown` method, and modified somewhat
+	//if (this.state.focus) {
+		this.state.focus.unshowFocus();
+		this.state.focus = null;
+		this.statusBarDriver.addReport('Automatikus alakzatfókusz levéve.');
+	//}
+
+}
+*/
+/*NormalModeController.prototype.manageAttachments = function (canvasPseudoWidget) // @TODO use `this.state.prevWidget.centroid` instead of `currentWEPos`
+{
+	const attachmentsHub = new AttachmentsHub(this.state.prevWidget, canvasPseudoWidget); // @TODO redefine and delegate into `AttachmentsHub`
+	attachmentsHub.run(this); // @TODO factor out controller dependent parts + delagate more to AttHub
+};*/
 
 
 NormalModeController.prototype.translatePrevWidgetAndRememberItsNewPosition = function (allowableDisplacement)

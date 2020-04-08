@@ -110,3 +110,6 @@ PickaxeWidget.prototype.unshowFocus = function ()
 	//IMUNFOCUS[1].map(del);
 	//IMUNFOCUS[0].map(add);
 };
+
+
+PickaxeWidget.prototype.isActor = function () {return true;};

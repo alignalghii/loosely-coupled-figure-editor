@@ -34,8 +34,8 @@ Figure.prototype.exportToSerializableObject = function ()
 Figure.prototype.exportToSerializableObjectBy = function (specialKey)
 {
 	const ob = this.exportToSerializableObject();
-	if ('memHitsMap' in this) {
-		ob.memHitsMap = this.memHitsMap.exportToSerializableObjectBy(specialKey);
+	if ('attachmentBackRefing' in this) {
+		ob.attachmentBackRefing = this.attachmentBackRefing.exportToSerializableObjectBy(specialKey);
 	}
 	return ob;
 };

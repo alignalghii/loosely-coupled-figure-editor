@@ -71,9 +71,9 @@ GeomTransformationController.prototype.sustainScaleStressSpan = function (curren
 		scaleStressSpan => {
 			const log = scaleStressSpan.stepOrWaitAlsoLog(currentWEPos); // @TODO: Discuss breach of command-query separation principle
 			this.statusBarDriver.report('......');//log.message(); // @TODO: Plan log message
-			if (this.state.focus && this.state.focus.high.memHitsMap) {
+			if (this.state.focus && this.state.focus.high.attachmentBackRefing) {
 				const canvasPseudoWidget = this.state.focus;
-				for (let [room, slit] of this.state.focus.high.memHitsMap.mapStraight) {
+				for (let [room, slit] of this.state.focus.high.attachmentBackRefing.mapStraight) {
 					/* @TODO DRY: copypasted from: `NormalModeController.prototype.mouseMove` */
 					const actorWidget  = this.state.focus,
 					      figureWidget = actorWidget.canvasPseudoWidget.arbitrary.composeFromBusiness(room);

@@ -127,7 +127,7 @@ NativeLoaderController.prototype.deserialize = function (businessSerialization, 
 
 NativeLoaderController.prototype.deserializeOpeningBy = function (openingSerialization, room)
 {
-	const {size: size, position: position, memHitsMap: memHitsMap, transform: transform} = openingSerialization;
+	const {size: size, position: position, attachmentBackRefing: attachmentBackRefing, transform: transform} = openingSerialization;
 	let opening;
 	switch (openingSerialization.type) {
 		case 'Window': opening = new Window(openingSerialization.size, openingSerialization.position); break;
@@ -135,15 +135,15 @@ NativeLoaderController.prototype.deserializeOpeningBy = function (openingSeriali
 		default      : throw `Unknow opening type ${openingSerialization.type}`;
 	}
 
-	if (memHitsMap && memHitsMap.own) {
-		const {center: center, radius: radius} = memHitsMap.own;
+	if (attachmentBackRefing && attachmentBackRefing.own) {
+		const {center: center, radius: radius} = attachmentBackRefing.own;
 		const newSlit = new CircularSlit(center, radius);
 		const oldSlit = room.slitsRepresentationCircular.circularSlits.find(
 			slit => slit.ccEq(newSlit)
 		);
 		if (!oldSlit) throw 'Error';
-		opening.memHitsMap = new Bijection;
-		opening.memHitsMap.set(room, oldSlit);
+		opening.attachmentBackRefing = new Bijection;
+		opening.attachmentBackRefing.set(room, oldSlit);
 	}
 
 	if (transform) {

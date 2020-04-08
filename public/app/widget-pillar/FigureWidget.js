@@ -41,6 +41,9 @@ FigureWidget.prototype.whileExistEscortWidgets = function (doWith) // @TODO fact
 
 FigureWidget.prototype.delete = function ()
 {
+	if (this.businessObject.openings) {
+		this.businessObject.openings.map(opening => opening.delete());
+	}
 	this.businessObject.liberate();
 	this.whileExistDependentWidgets_unsafe(
 		escortWidget => escortWidget.delete(),
