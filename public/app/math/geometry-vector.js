@@ -106,3 +106,11 @@ function normalizeVector(vector)
 
 function rotVec90CCW([x, y]) {return [-y,  x];}
 function rotVec90CW ([x, y]) {return [ y, -x];}
+
+
+function slideProject(what, ontoWhat)
+{
+	const u = normalizeVector(ontoWhat),
+	      l = scalarProduct(u, what);
+	return slantScale(l, u);
+}

@@ -147,6 +147,34 @@ Widget.prototype.shapeshift = function (wallsBackRefSet)
 	}
 };
 
+Widget.prototype.shapeshifterSlide = function (displacement, currentWEPos)
+{
+	if (this.high.position && this.high.size && this.high.attachmentBackRefing) { // @TODO!! OOP-poly: it belongs to Shapeshifter widgets, make a class for them, put Window + Door under it, and move this method there
+		const point = this.high.position;
+		const size = this.high.size;
+		const modifiers = [];
+		for (let [room, _] of this.high.attachmentBackRefing.mapStraight) {
+			for (let edge of tour(room.figure.vertices)) {
+				const dep = distanceSegmentHence(edge, point);
+				const dew = distanceSegmentHence(edge, currentWEPos);
+				const touching = ccEq(dep, 0);
+				const loose = dew < size;
+				if (touching && loose) {
+					const ev = edgeVector(edge);
+					const angle = absoluteConvexAngleOfSegment(edge);
+					return {
+						displacement: slideProject(displacement, ev),
+						maybeAngle  : Maybe.just(angle)
+					}; // @TODO design a standalone class for it, and delegete tasks to it @TODO it is a Monad
+				}
+			}
+		}
+		return {displacement: displacement, maybeAngle: Maybe.nothing()}; // @TODO design a standalone class for it, and delegete tasks to it @TODO use >>= as for a Maybe-monad
+	} else {
+		return {displacement: displacement, maybeAngle: Maybe.nothing()}; // @TODO design a standalone class for it, and delegete tasks to it @TODO use >>= as for a Maybe-monad
+	}
+};
+
 
 Widget.prototype.manageAttachments = function (controller) // @TODO factor out controller dependent parts
 {

@@ -51,7 +51,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 					this.state.forgetDrag(); // it assigns null to `this.state.prevWidget`, thus it must come here at the end of the upper big if-block!
 				} else {
 					const [mbAllowable, minFallTargetFigures] = this.state.prevWidget.allowable_(infinitezimalDisplacement);
-					const allowable = fromMaybe_exec(
+					const allowable0 = fromMaybe_exec(
 						() => { // @TODO: an axception should be thrown rather
 							this.statusBarDriver.report('<span class="error">Tiltott zóna!</span>');
 							this.audioDriver.ouch();
@@ -59,6 +59,16 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 						},
 						mbAllowable
 					);
+					const {displacement: allowable, maybeAngle: maybeAngle} = this.state.prevWidget.isShapeshifter() ?
+						this.state.prevWidget.shapeshifterSlide(allowable0, currentWEPos)                        :
+						{displacement: allowable0, maybeAngle: Maybe.nothing()}; // @TODO design a standalone class for it, and delegete tasks to it @TODO use >>= as for a Maybe-monad
+						maybeAngle.map(
+							angle => { // @TODO make a function out of this, moreover a standalone class RewriteTransform(lowElem) with methods family (set|get|update)(Rotation|Translation)
+								let transform = this.state.prevWidget.low.getAttribute('transform');
+								transform = transform.replace(/rotate\([\+\-0-9\.]+/, `rotate(${angle-90}`);
+								this.state.prevWidget.low.setAttribute('transform', transform);
+							}
+						);
 
 					if ( // @TODO seems to be unnecessary: either condition always holds, or the action is not too important
 						!jumpStatus.explicitDeny() && // !vecEq(maybeAllowJump, ['just', false])
