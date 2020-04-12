@@ -49,3 +49,11 @@
  - A csoportok (pontosabban a hosztobjektumok, vagyis pl egy szobához rendelt kamra) viszonylatát nem tudja a natív mentés/visszatöltés megőrizni.
  - Valószínűleg a fókusz metése megtévesztő lesz (piros kerettel menti, közben pedig nem is lesz visszatöltéskor fókuszban). A fókusz magaszntű mentése nincs megoldva.
  - Nem mentődik a z-mélység (fedési sorrend) sem
+
+ - A kontextus / objektuműrlap: Ugye eddig atróól volt szó, hogy ennek kettős szerpe legyen:
+   - Az, ami a régi Java-s programban: oldalhosszak szöveges módosítása ill, padlóminta lecserélése
+   - Az amit jelenleg a baloldali menü lát el, amit vagy teljesen leváltana, vagy esetleg a baloldali menü opcionálisan elrejthető-előhívható
+ Ezek után jogos a kérdés: e két egész különböző funkciókört nem lenne-e jobb két külön dologként megvalósítani?
+ A válasz: ez rám van bizva, egy a léneg: kényelmesen elő lehessen hívni (pl jobklikk, vagy pl két balklikk)
+ Szét lehet persze választani, a  ha az adott objektumra vonatkozó dolgok el lehetnek választva a globális dolgoktól. De akkor is a kénelmes kezelhetőség a lényeg
+ Mindenesetre a kontext, adott objektumra vonatkozó űrlap működjék mndenfajta objektumra (persze a maga módján).
