@@ -39,6 +39,13 @@ Maybe.prototype.bind = function (f) // f: a -> Maybe<b> @TODO type check in Type
 	);
 };
 
+Maybe.prototype.fromJustWith = function (errorMsg)
+{
+	return this.maybe_exec(
+		()  => {throw errorMsg;},
+		val => val
+	);
+};
 
 Maybe.asTruey = value => value ? Maybe.just(value) : Maybe.nothing();
 

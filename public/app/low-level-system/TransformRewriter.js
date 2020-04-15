@@ -51,3 +51,30 @@ TransformRewriter.prototype.updateRotationAngle_excp = function (angle)
 	const isSuccess = this.updateRotationAngle_flag(angle);
 	if (!isSuccess) throw 'Transform rewrite error: no rotation to rewrite';
 };
+
+TransformRewriter.prototype.getBox = function () // @TODO it is not for all kinds of svg elems, it is a partial function
+{
+	const x = Number(this.svgElem.getAttribute('x')),
+	      y = Number(this.svgElem.getAttribute('y'));
+	const w = Number(this.svgElem.getAttribute('width')),
+	      h = Number(this.svgElem.getAttribute('height'));
+	return [[x, y], [w, h]]; // @TODO introduce a `Box` class and delgate some responsibilities to it
+};
+
+TransformRewriter.prototype.conjointVerticalDoorFlipRef = function () // @TODO generalize+parametrize this method further + contract with other methods of this family: `conjoint(Horizont|Vertic)al(Door|Window)Flip(Ref?)`
+{
+	const [[x, y], [w, h]] = this.getBox(); // @TODO `h` is not used
+	const transform = this.maybeTransform().maybe_exec(
+		() => `translate(${x+w} ${y}) scale(-1, 1) translate(${-x-w} ${-y})`,
+		transform => {
+			const regexp = /(^|.*[^ ])\s*translate\(-?\d+(\.\d+)?[, ]\s*-?\d+(\.\d+)?\)\s*scale\(-1[, ]\s*1\)\s*translate\(-?\d+(\.\d+)?[, ]\s*-?\d+(\.\d+)?\)\s*$/;
+			if (regexp.test(transform)) {
+				const submatches = regexp.exec(transform);
+				return Maybe.at(submatches, 1).fromJustWith('Regexp bug');
+			} else {
+				return transform + ` translate(${x+w} ${y}) scale(-1, 1) translate(${-x-w} ${-y})`;
+			}
+		}
+	);
+	this.svgElem.setAttribute('transform', transform);
+};
