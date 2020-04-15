@@ -30,3 +30,26 @@ Maybe.prototype.map = function (f)
 		internRep => Maybe.just(f(internRep))
 	);
 };
+
+Maybe.prototype.bind = function (f) // f: a -> Maybe<b> @TODO type check in TypeScript?
+{
+	return this.maybe_val(
+		Maybe.nothing(),
+		value => f(value)
+	);
+};
+
+
+Maybe.asTruey = value => value ? Maybe.just(value) : Maybe.nothing();
+
+Maybe.at = (arr, i) => i in arr ?
+	Maybe.just(arr[i]) :
+	Maybe.nothing();
+
+Maybe.number = function (rep)
+{
+	const num = Number(rep); // @TODO `Number` is too tolerant, it accepts '' and ' ' and converts them to 0
+	return Number.isNaN(num) ?
+		Maybe.nothing()  :
+		Maybe.just(num);
+};

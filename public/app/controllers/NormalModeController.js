@@ -63,11 +63,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 						this.state.prevWidget.shapeshifterSlide(allowable0, currentWEPos)                        :
 						{displacement: allowable0, maybeAngle: Maybe.nothing()}; // @TODO design a standalone class for it, and delegete tasks to it @TODO use >>= as for a Maybe-monad
 						maybeAngle.map(
-							angle => { // @TODO make a function out of this, moreover a standalone class RewriteTransform(lowElem) with methods family (set|get|update)(Rotation|Translation)
-								let transform = this.state.prevWidget.low.getAttribute('transform');
-								transform = transform.replace(/rotate\([\+\-0-9\.]+/, `rotate(${angle-90}`);
-								this.state.prevWidget.low.setAttribute('transform', transform);
-							}
+							angle => TransformRewriter.createAsRerotated_excp(this.state.prevWidget.low, angle-90)
 						);
 
 					if ( // @TODO seems to be unnecessary: either condition always holds, or the action is not too important
