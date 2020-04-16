@@ -17,8 +17,9 @@ function Router(state, normalModeController, compactModeController, roomControll
 	this.zoomController = zoomController;
 }
 
-Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: inputRoledData
+Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // ird: inputRoledData
 {
+	if (ird.mouseButton !== 2) {
 		//console.log(`| ${eventType} |`);
 		if (eventType == 'change') {
 			if (Eq.eq(inputSignature, ['string', 'string']) && 'mode' in ird) this.normalModeController.changeMode(ird.mode); // @TODO common
@@ -280,6 +281,11 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird) // ird: in
 					break;
 			}
 		}
+	}
+	if (eventType == 'contextmenu') event.preventDefault();
+	if (ird.mouseButton === 2) {
+		console.log('Jobbegérke!', JSON.stringify(inputSignature));
+	}
 };
 
 /** A compound route method: */

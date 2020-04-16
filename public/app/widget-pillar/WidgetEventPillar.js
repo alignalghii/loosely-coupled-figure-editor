@@ -10,7 +10,7 @@ function WidgetEventPillar (canvasPseudoWidgets, routerInterface)
 
 WidgetEventPillar.prototype.pipeToSM = function ()
 {
-	['mousedown', 'mousemove', 'mouseup'].map((eventType) => this.mergeAndPipeSubsribe(eventType));
+	['mousedown', 'mousemove', 'mouseup', 'contextmenu'].map(eventType => this.mergeAndPipeSubsribe(eventType));
 };
 
 // In case of moucemove, the emptyCase probably never occurs due to dragging (maybe if very quick)
@@ -18,8 +18,8 @@ WidgetEventPillar.prototype.pipeToSM = function ()
 WidgetEventPillar.prototype.mergeAndPipeSubsribe = function (eventType)
 {
 	this.mergelessSubscribe(eventType,
-		(canvas       , currentWEPos) => this.router.dispatch(eventType, ['Canvas', 'WEPos'], {eitherTarget: ['left' , canvas       ], currentWEPos: currentWEPos}), // @TODO: use `Either`
-		(currentWidget, currentWEPos) => this.router.dispatch(eventType, ['Widget', 'WEPos'], {eitherTarget: ['right', currentWidget], currentWEPos: currentWEPos})  // @TODO: use `Either`
+		(canvas       , currentWEPos, mouseButton, event) => this.router.dispatch(eventType, ['Canvas', 'WEPos'], {eitherTarget: ['left' , canvas       ], currentWEPos: currentWEPos, mouseButton: mouseButton}, event), // @TODO: use `Either`
+		(currentWidget, currentWEPos, mouseButton, event) => this.router.dispatch(eventType, ['Widget', 'WEPos'], {eitherTarget: ['right', currentWidget], currentWEPos: currentWEPos, mouseButton: mouseButton}, event)  // @TODO: use `Either`
 	);
 };
 

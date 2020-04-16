@@ -89,16 +89,16 @@ WidgetFactory.prototype.queryFromBusiness = function (businessObject)
 
 WidgetFactory.prototype.mergelessSubscribe = function (eventTypeName, emptyCase, widgetCase) // @TODO a `return` valószínűleg fölösleges itt is, és a hivatkozott svgLowLevel.subscribe-on is
 {
-	const svgEmptyCase = (canvas, svgPosition) =>
+	const svgEmptyCase = (canvas, svgPosition, mouseButton, event) =>
 	{
 		var widgetEventPosition  = this.coordSysTransformer.lowToHigh(svgPosition);
-		return emptyCase(canvas, widgetEventPosition);
+		return emptyCase(canvas, widgetEventPosition, mouseButton, event);
 	}
-	const svgPolygonCase = (svgSubelem, svgPosition) =>
+	const svgPolygonCase = (svgSubelem, svgPosition, mouseButton, event) =>
 	{
 		var widget               = this.detectTypeAndComposeFromLow(svgSubelem);
 		var widgetEventPosition  = this.coordSysTransformer.lowToHigh(svgPosition);  // @TODO Demeter principle
-		return widgetCase(widget, widgetEventPosition);
+		return widgetCase(widget, widgetEventPosition, mouseButton, event);
 	}
 	this.svgLowLevel.subscribe(eventTypeName, svgEmptyCase, svgPolygonCase); // @TODO Demeter principle
 };
