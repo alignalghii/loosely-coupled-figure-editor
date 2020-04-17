@@ -193,3 +193,6 @@ WindowWidget.prototype.unshowFocus = function ()
 
 WindowWidget.prototype.isActor        = function () {return true;};
 WindowWidget.prototype.isShapeshifter = function () {return true;};
+
+
+WindowWidget.prototype.contextMenu = () => new ContextMenu('Nyílászáró: ablak',  [[CMO('Mozgatás', 'Mozgatás és fókusz')], [CMO('Áméretezés', 'Szabad ikonként aránytartóan, vagy nyújtás/zsugorítás kötötten a fal mentén')], [CMO('Űrlap', 'Objektumtulajdonságok űrlapja')]]);

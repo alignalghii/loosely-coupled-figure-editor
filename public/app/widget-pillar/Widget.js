@@ -398,3 +398,6 @@ Widget.prototype.restore2On = function (canvasPseudoWidget, i)
 			throw `Ismeretlen vászonhivatkozási sorszám: ${i}`;
 	}
 };
+
+
+Widget.prototype.contextMenu = () => new ContextMenu('Kontextusmenü'); // @TODO

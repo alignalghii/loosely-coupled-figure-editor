@@ -1,0 +1,29 @@
+/* @credit to https://dev.to/iamafro/how-to-create-a-custom-context-menu--5d7p for the underlying HTML menu and its CSS, and the main logic of the JavaScript */
+
+.context-menu {
+	xwidth: 120px;
+	box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.2);
+	position: absolute;
+	display: none;
+	background-color: gray;
+}
+
+.context-menu-caption {
+	color: white;
+	background-color: black;
+	font-weight: bold;
+	padding: 0.4em;
+	text-align: center;
+}
+
+.context-menu-options {
+	list-style: none;
+	padding: 10px 0;
+}
+
+.context-menu-option {
+	font-weight: 500;
+	font-size: 14px;
+	padding: 10px 40px 10px 20px;
+	cursor: pointer;
+}

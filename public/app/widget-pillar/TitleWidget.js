@@ -83,3 +83,6 @@ TitleWidget.prototype.directlyOrViaTitle = function ()
 };
 
 TitleWidget.prototype.beDescribedOnOpeningForm = function (FigPropEdcontroller) {throw 'Inconsistence';};
+
+
+TitleWidget.prototype.contextMenu = () => new ContextMenu('Cím', [[CMO('Mozgatás')], [CMO('Átméretezés')]]);

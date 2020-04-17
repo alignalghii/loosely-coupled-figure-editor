@@ -154,3 +154,5 @@ ImageWidget.prototype.scale = function (q)
 	this.high.doScale (q);
 	this.updateDownward();
 };
+
+ImageWidget.prototype.contextMenu = () => new ContextMenu('Bútor', [[CMO('Mozgatás', 'Mozgatás és fókusz')], [CMO('Forgatás'), CMO('Átskálázás ⤢', 'Aránytartó átméretezés'), CMO('Átskálázás ⇔', 'Aránytorzítás - vízszintes'), CMO('Átskálázás ⇕', 'Aránytorzítás - függőleges'), CMO('Tükrözés ⇹', 'Tükrözés - függőleges tengely körül'), CMO('Tükrözés ⤉', 'Tükrözés - vízszintes tengely körül')], [CMO('Űrlap', 'Objektumtulajdonságok űrlapja'), CMO('Követés', 'Együttmozgó objektumok csatolása')]]);

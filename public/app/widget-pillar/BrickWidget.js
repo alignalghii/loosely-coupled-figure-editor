@@ -109,3 +109,6 @@ BrickWidget.prototype.unshowFocus = function ()
 	//IMUNFOCUS[1].map(del);
 	//IMUNFOCUS[0].map(add);
 };
+
+
+BrickWidget.prototype.contextMenu = () => new ContextMenu('Falrés-akció 1', [[CMO('Mozgatás', 'Mozgatás és fókusz')], [CMO('Áméretezés', 'Szabad ikonként aránytartóan, vagy nyújtás/zsugorítás kötötten a fal mentén')], [CMO('Űrlap', 'Objektumtulajdonságok űrlapja')]]);

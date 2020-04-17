@@ -362,3 +362,5 @@ FigureWidget.prototype.updateAndReport = function (currentWEPos, nearestFigure, 
 	this.updateUpAndDownward();
 	return 'Alakzatszerkesztő. ' + template1 + ' a ' + JSON.stringify(currentWEPos) + ' pontot a legközelebbi ' + template2 + '. Ennek változása: ' + oldVertices + ' --> ' + JSON.stringify(nearestFigure.vertices) + '.';
 };
+
+FigureWidget.prototype.contextMenu = () => new ContextMenu('Szoba', [[CMO('Mozgatás', 'Mozgatás és fókusz')], [CMO('Csúcs +', 'Csúcs hozzáadása'), CMO('Csúcs -', 'Csúcs törlése'), CMO('Csúcs ⇌', 'Csúcs mozgatása')], [CMO('Él ↠', 'Élnyújtás/kurtítás'), CMO('Él ≠', 'Él „sínes” oldalrahúzása'), CMO('Él ↦', 'Él magára merőleges oldalrahúzása')], [CMO('Forgatás'), CMO('Átskálázás ⤢', 'Aránytartó átméretezés'), CMO('Átskálázás ⇔', 'Aránytorzítás - vízszintes'), CMO('Átskálázás ⇕', 'Aránytorzítás - függőleges'), CMO('Tükrözés ⇹', 'Tükrözés - függőleges tengely körül'), CMO('Tükrözés ⤉', 'Tükrözés - vízszintes tengely körül')], [CMO('Űrlap', 'Objektumtulajdonságok űrlapja'), CMO('Követés', 'Együttmozgó objektumok csatolása')]]);
