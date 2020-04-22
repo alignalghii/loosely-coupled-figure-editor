@@ -155,4 +155,4 @@ ImageWidget.prototype.scale = function (q)
 	this.updateDownward();
 };
 
-ImageWidget.prototype.contextMenu = () => new ContextMenu('Bútor', [[CMO('Mozgatás', 'Mozgatás és fókusz')], [CMO('Forgatás'), CMO('Átskálázás ⤢', 'Aránytartó átméretezés'), CMO('Átskálázás ⇔', 'Aránytorzítás - vízszintes'), CMO('Átskálázás ⇕', 'Aránytorzítás - függőleges'), CMO('Tükrözés ⇹', 'Tükrözés - függőleges tengely körül'), CMO('Tükrözés ⤉', 'Tükrözés - vízszintes tengely körül')], [CMO('Űrlap', 'Objektumtulajdonságok űrlapja'), CMO('Követés', 'Együttmozgó objektumok csatolása')]]);
+ImageWidget.prototype.contextMenu = () => new ContextMenu('Bútor', [[CMO('Mozgatás', 'move', 'Mozgatás és fókusz')], [CMO('Forgatás', 'rotate'), CMO('Átskálázás ⤢', 'scale', 'Aránytartó átméretezés'), CMO('Átskálázás ⇔', 'scaleX', 'Aránytorzítás - vízszintes'), CMO('Átskálázás ⇕', 'scaleY', 'Aránytorzítás - függőleges'), CMO('Tükrözés ⇹', 'flipX', 'Tükrözés - függőleges tengely körül'), CMO('Tükrözés ⤉', 'flipY', 'Tükrözés - vízszintes tengely körül')], [CMO('Űrlap', 'form', 'Objektumtulajdonságok űrlapja'), CMO('Követés', 'follow', 'Együttmozgó objektumok csatolása')]]);

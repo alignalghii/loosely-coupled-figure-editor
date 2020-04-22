@@ -79,6 +79,8 @@ case "$1" in
 		cp public/assets-proper/holy-grail.css ../loosely-coupled-figure-editor--vendor/vendor/sell/holy-grail.css;;
 	pull)
 		echo 'Not implemented for security reasons. Do it manually.';;
+	contextmenu-universe)
+		sed -nf console.aux/CMO-constructoralias-2nd-arg.sed public/app/widget-pillar/FigureWidget.js | sed 's/\[//g' | sed 's/\]//g' | sed 's/.*(\(.\+\)).*/\1/' | sed "s/'Szoba',\s*//";; # @TODO: the main sed script should do more, maybe the whole task could be done by a simgle sed script
 	help)
 		echo 'Take special care of these vendor-like files:';
 		echo '============================================='
@@ -98,7 +100,7 @@ case "$1" in
 		echo '=========';
 		echo;
 		echo './console.bash';
-		echo -e "\thelp\n\tpull || checkout-sell  | checkout-buy | checkout-free\n\tpush || commit-sell    | commit-buy\n\t        clean-sell     | clean-buy    | clean-all\n\t        branches       | diff         | syncstatus    | status";;
+		echo -e "\thelp\n\tpull || checkout-sell  | checkout-buy | checkout-free\n\tpush || commit-sell    | commit-buy\n\t        clean-sell     | clean-buy    | clean-all\n\t        branches       | diff         | syncstatus    | status\n\tcontextmenu-universe";;
 	*)
 		echo "Invalid console command [$1], type [./console.bash help] for details.";;
 esac;

@@ -1,4 +1,4 @@
-function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuDriver) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
@@ -15,8 +15,7 @@ function Router(state, normalModeController, compactModeController, roomControll
 	this.saveController   = saveController;
 	this.nativeLoaderController = nativeLoaderController;
 	this.zoomController = zoomController;
-
-	this.contextMenuDriver = contextMenuDriver;
+	this.contextMenuController = contextMenuController;
 }
 
 Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // ird: inputRoledData
@@ -51,6 +50,9 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 				case 'default': this.zoomController.default(); break;
 				default       : throw 'Invalid zoom action'  ; break;
 			}
+		}
+		if (eventType == 'click' && Eq.eq(inputSignature ['void']) && 'contextAction' in ird) {
+			return this.contextMenuController.select(ird.contextAction); // `return` not needed really: no other condition will match afterwards
 		}
 
 		if (this.state.mode == 'compact') {
@@ -285,15 +287,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		}
 	}
 	if (eventType == 'contextmenu') { // @TODO consider why it is sometimes different condition: `mouseButton == 2`
-		event.preventDefault(); // @TODO consider: usually ContextMnuDriver should do this, thus, a low-level code part. But we want to leave open the possibility to selectively allow default for e.g.empty canvas rightclicks. Thus we raise this code part to the rather high level: we raise it to the level of the `Router`!
-		either( // @TODO use the more modern Either class
-			canvas => this.contextMenuDriver.toggleMenu('hide'), // @TODO quick and temporarily satisfactory, but hacky and nonscalable untenable solution
-			widget => {
-				this.contextMenuDriver.adaptTo(event);
-				this.contextMenuDriver.refillContent(widget.contextMenu());
-			},
-			ird.eitherTarget
-		);
+		return this.contextMenuController.rightClick(event, ird.eitherTarget);
 	}
 };
 

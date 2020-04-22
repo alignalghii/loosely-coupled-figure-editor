@@ -111,4 +111,4 @@ BrickWidget.prototype.unshowFocus = function ()
 };
 
 
-BrickWidget.prototype.contextMenu = () => new ContextMenu('Falrés-akció 1', [[CMO('Mozgatás', 'Mozgatás és fókusz')], [CMO('Áméretezés', 'Szabad ikonként aránytartóan, vagy nyújtás/zsugorítás kötötten a fal mentén')], [CMO('Űrlap', 'Objektumtulajdonságok űrlapja')]]);
+BrickWidget.prototype.contextMenu = () => new ContextMenu('Falrés-akció 1', [[CMO('Mozgatás', 'move', 'Mozgatás és fókusz')], [CMO('Átméretezés', 'scale', 'Szabad ikonként aránytartóan, vagy nyújtás/zsugorítás kötötten a fal mentén')], [CMO('Űrlap', 'form', 'Objektumtulajdonságok űrlapja')]]);

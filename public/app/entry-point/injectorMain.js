@@ -43,6 +43,7 @@ onload = function (event)
 	// `.copy` (hidden in `centering`) is needed here, because the blue suare rendered during `app.populate` must remain intact
 	// `.copy` is needed -- for another reason -- also at `widgetFactory.stampAt` and probably also at `app.populate` (hidden in `createWidgetFromDomain1`),
 	// because otherwise, any user transformations on the last stamped object would affect the future stamps (see `spec/last-inserted-room-owns-stamp--clone-error.mp4`).
+	var state               = new State(domainStamp);
 
 	const statusBarODriver           = new StatusBarDriver(document);
 	var roomStampDriver              = new RoomStampDriver(document, roomBank);
@@ -57,11 +58,11 @@ onload = function (event)
 	const nativeLoaderIODriver       = new NativeLoaderDriver(document);
 	const audioODriver               = new AudioDriver('sonar.ogg', 'bark.ogg', 'dialog-error.ogg', 'glass.ogg', 'drip.ogg');
 	const zoomDriver                 = new ZoomDriver(document);
-	const contextMenuDriver          = new ContextMenuDriver(document);
+	const contextMenuDriver          = new ContextMenuDriver(document, state.mode);
 
 	var widgetCollision = new WidgetCollision(audioODriver);
 
-	var state               = new State(domainStamp);
+
 
 	var compactModeController            = new CompactModeController(state, canvasPseudoWidgets, widgetCollision, statusBarODriver); // widgetCollision = new WidgetCollision(board, audio) // board: Bijection low->fig as fig set
 	var normalModeController             = new NormalModeController (state, canvasPseudoWidgets, statusBarODriver, audioODriver);
@@ -76,8 +77,9 @@ onload = function (event)
 	const saveController                 = new SaveController(canvasPseudoWidgets, saveIODriver, statusBarODriver, audioODriver);
 	const nativeLoaderController         = new NativeLoaderController(canvasPseudoWidgets, nativeLoaderIODriver, tabSelectorIODriver, statusBarODriver, audioODriver);
 	const zoomController                 = new ZoomController(canvasPseudoWidgets, statusBarODriver);
+	const contextMenuController          = new ContextMenuController(state, contextMenuDriver);
 
-	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuDriver); // @TODO make globalOriginFigure obsolete
+	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuController); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(canvasPseudoWidgets, router); // @TODO: could it be regarded as a kind of device driver, and renamed + moved appropriately?
 
 	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorIODriver, configIODriver, tabSelectorIODriver, loaderIODriver, saveIODriver, nativeLoaderIODriver, zoomDriver, contextMenuDriver); // @TODO Law of Demeter, see inside

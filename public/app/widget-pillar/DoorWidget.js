@@ -248,4 +248,4 @@ DoorWidget.prototype.isActor        = function () {return true;};
 DoorWidget.prototype.isShapeshifter = function () {return true;};
 
 
-DoorWidget.prototype.contextMenu = () => new ContextMenu('Nyílászáró: ajtó', [[CMO('Mozgatás', 'Mozgatás és fókusz')], [CMO('Áméretezés', 'Szabad ikonként aránytartóan, vagy nyújtás/zsugorítás kötötten a fal mentén'), CMO('Tükrözés ⇹', 'Tükrözés - kfelé vagy befelé nyíljék?'), CMO('Tükrözés ⤉', 'Tükrözés - jobbkezes/balkezes ajtó váltás')], [CMO('Űrlap', 'Objektumtulajdonságok űrlapja')]]);
+DoorWidget.prototype.contextMenu = () => new ContextMenu('Nyílászáró: ajtó', [[CMO('Mozgatás', 'move', 'Mozgatás és fókusz')], [CMO('Átméretezés', 'scale', 'Szabad ikonként aránytartóan, vagy nyújtás/zsugorítás kötötten a fal mentén'), CMO('Tükrözés ⇹', 'flipX', 'Tükrözés - kfelé vagy befelé nyíljék?'), CMO('Tükrözés ⤉', 'flipY', 'Tükrözés - jobbkezes/balkezes ajtó váltás')], [CMO('Űrlap', 'form', 'Objektumtulajdonságok űrlapja')]]);
