@@ -80,7 +80,7 @@ case "$1" in
 	pull)
 		echo 'Not implemented for security reasons. Do it manually.';;
 	contextmenu-universe)
-		sed -nf console.aux/CMO-constructoralias-2nd-arg.sed public/app/widget-pillar/FigureWidget.js | sed 's/\[//g' | sed 's/\]//g' | sed 's/.*(\(.\+\)).*/\1/' | sed "s/'Szoba',\s*//";; # @TODO: the main sed script should do more, maybe the whole task could be done by a simgle sed script
+		sed -nf console.aux/CMO-constructoralias-2nd-arg.sed public/app/widget-pillar/FigureWidget.js;;
 	help)
 		echo 'Take special care of these vendor-like files:';
 		echo '============================================='
