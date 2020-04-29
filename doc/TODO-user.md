@@ -61,3 +61,5 @@
  - Szoba tükrözése: leglább mozgatásnál és tükrözésnél kövessék a butorok és nyilászárók a szobát! Ebből a mozgtás OK, de türközésnél is!
  - Ajtó csak a bal-főmenüből tükrözhető, a kontextusmenüből nem! Baj! [MEGOLDVA]
  - Ajtó tükrözhető balkezesjobbkzesen is, és kibemódon is, de aztán ha lerántom a falról, és átviszem másik falra, az előző falnál beállított tükrözéses tulajdonságai elvesznek.
+
+ - Ikonok, képek: túl unicode-függő jelenleg, speckó fontok nélküli böngészőkben baj lehet.
