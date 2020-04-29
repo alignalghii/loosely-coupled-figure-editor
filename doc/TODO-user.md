@@ -57,3 +57,7 @@
  A válasz: ez rám van bizva, egy a léneg: kényelmesen elő lehessen hívni (pl jobklikk, vagy pl két balklikk)
  Szét lehet persze választani, a  ha az adott objektumra vonatkozó dolgok el lehetnek választva a globális dolgoktól. De akkor is a kénelmes kezelhetőség a lényeg
  Mindenesetre a kontext, adott objektumra vonatkozó űrlap működjék mndenfajta objektumra (persze a maga módján).
+
+ - Szoba tükrözése: leglább mozgatásnál és tükrözésnél kövessék a butorok és nyilászárók a szobát! Ebből a mozgtás OK, de türközésnél is!
+ - Ajtó csak a bal-főmenüből tükrözhető, a kontextusmenüből nem! Baj! [MEGOLDVA]
+ - Ajtó tükrözhető balkezesjobbkzesen is, és kibemódon is, de aztán ha lerántom a falról, és átviszem másik falra, az előző falnál beállított tükrözéses tulajdonságai elvesznek.

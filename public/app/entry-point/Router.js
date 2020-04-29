@@ -242,20 +242,6 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		}
 
 
-		if (this.state.mode == 'geomtransformationreflectionhorizontallyref') { // @TODO: should not use the same `State` as `NormalModeController`
-			switch (eventType) {
-				case 'mouseup':
-					this.geomTransformationController.reflectionFlip(['doReflectHorizontallyRef', 'reflectHorizontallyRef'], ird.currentWEPos, ird.eitherTarget);
-					break;
-			}
-		}
-		if (this.state.mode == 'geomtransformationreflectionverticallyref') { // @TODO: should not use the same `State` as `NormalModeController`
-			switch (eventType) {
-				case 'mouseup':
-					this.geomTransformationController.reflectionFlip(['doReflectVerticallyRef', 'reflectVerticallyRef'], ird.currentWEPos, ird.eitherTarget);
-					break;
-			}
-		}
 		if (this.state.mode == 'geomtransformationreflectionhorizontally') { // @TODO: should not use the same `State` as `NormalModeController`
 			switch (eventType) {
 				case 'mouseup':

@@ -17,7 +17,7 @@ ContextMenuController.prototype.rightClick= function (event, eitherTarget)
 	);
 };
 
-ContextMenuController.prototype.select = function (contextAction) {this.state.mode = ContextMenu.associatedStateMode(this.state.isRelative)(contextAction);};
+ContextMenuController.prototype.select = function (contextAction) {this.state.mode = ContextMenu.associatedStateMode(contextAction);};
 
 
 // Auxiliary (inner) methods:
