@@ -63,3 +63,7 @@
  - Ajtó tükrözhető balkezesjobbkzesen is, és kibemódon is, de aztán ha lerántom a falról, és átviszem másik falra, az előző falnál beállított tükrözéses tulajdonságai elvesznek.
 
  - Ikonok, képek: túl unicode-függő jelenleg, speckó fontok nélküli böngészőkben baj lehet.
+
+Undo:
+
+ - A folyamatos mozgást megvalósító funkciók (jelenleg ilyen az alkzatszerkesztés csúcsmozgató funkciója) csak a végmozzanataikat közöljék le a history-ba, a history ne kövessen folyamatos mozgást.

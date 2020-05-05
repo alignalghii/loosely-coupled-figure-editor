@@ -1,4 +1,4 @@
-function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuController, historyController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
@@ -16,6 +16,7 @@ function Router(state, normalModeController, compactModeController, roomControll
 	this.nativeLoaderController = nativeLoaderController;
 	this.zoomController = zoomController;
 	this.contextMenuController = contextMenuController;
+	this.historyController = historyController;
 }
 
 Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // ird: inputRoledData
@@ -53,6 +54,12 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		}
 		if (eventType == 'click' && Eq.eq(inputSignature ['void']) && 'contextAction' in ird) {
 			return this.contextMenuController.select(ird.contextAction); // `return` not needed really: no other condition will match afterwards
+		}
+		if (eventType == 'click' && Eq.eq(inputSignature, ['void']) && 'historyAction' in ird) {
+			switch (ird.historyAction) {
+				case 'undo': return this.historyController.undo();
+				default    : throw 'Invalid history action';
+			}
 		}
 
 		if (this.state.mode == 'compact') {

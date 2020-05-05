@@ -19,6 +19,8 @@ FigureEditorController.prototype.spanEdge       = function (point, eitherTarget,
 
 FigureEditorController.prototype.withProxFig = function (command, currentWEPos, eitherTarget, template1, template2, optArg) // @TODO: reuse: almost the same algorithm exists in `GeomTransforamtionController` (or in its section in `Router`).
 {
+	this.saveHistory();
+
 	const canvasPseudoWidget = this.canvasPseudoWidgetForEitherTarget(eitherTarget),
 	      board              = canvasPseudoWidget.board();
 	const editorMessage = maybe(
@@ -32,4 +34,37 @@ FigureEditorController.prototype.withProxFig = function (command, currentWEPos, 
 		maybeNearestFigureHence(board, currentWEPos)
 	);
 	this.statusBarDriver.report(editorMessage);
+};
+
+FigureEditorController.prototype.saveHistory = function ()
+{
+	// @TODO DRY: make a `serialize` method for `CanvasPseudoWidget`. This is a copy from `SaveController`
+	const businessPF_work = this.canvasPseudoWidgets[4].arbitrary.partialFunctionGeomToBusiness;
+	let businessExports = [];
+	for (const [high, business] of businessPF_work) {
+		if (business && isNothing(business.maybeHost)) {
+			this.hack(business.openings); // @TODO nasty
+			businessExports.push(business.exportToSerializableObject());
+		}
+	}
+	const ser = JSON.stringify(businessExports, null, "\t");
+
+	this.state.history.stack.push(ser); // @TODO loss of information: push reports whether shifting is necessary
+};
+
+// @TODO DRY: make a `serialize` method for `CanvasPseudoWidget`. This is a copy from `SaveController`
+FigureEditorController.prototype.hack = function (openingWidgetsOrNull) // @TODO should contain the high-level parts, not widgets
+{
+	// const elemBj_work = this.canvasPseudoWidget_work.arbitrary.bijectionSvgToGeom; // @TODO
+	if (openingWidgetsOrNull) {
+		openingWidgetsOrNull.map(
+			({high: high, low: low}) => { // @TODO should be only the high
+				// const low = elemBj_work.getInverse(high); // @TODO
+				const transform = low.getAttribute('transform');
+				if (transform) {
+					high.transform = transform;
+				}
+			}
+		);
+	}
 };

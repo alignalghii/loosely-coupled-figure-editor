@@ -59,6 +59,7 @@ onload = function (event)
 	const audioODriver               = new AudioDriver('sonar.ogg', 'bark.ogg', 'dialog-error.ogg', 'glass.ogg', 'drip.ogg');
 	const zoomDriver                 = new ZoomDriver(document);
 	const contextMenuDriver          = new ContextMenuDriver(document, state.mode);
+	const historyIODriver            = new HistoryDriver(document);
 
 	var widgetCollision = new WidgetCollision(audioODriver);
 
@@ -78,11 +79,12 @@ onload = function (event)
 	const nativeLoaderController         = new NativeLoaderController(canvasPseudoWidgets, nativeLoaderIODriver, tabSelectorIODriver, statusBarODriver, audioODriver);
 	const zoomController                 = new ZoomController(canvasPseudoWidgets, statusBarODriver);
 	const contextMenuController          = new ContextMenuController(state, contextMenuDriver);
+	const historyController              = new HistoryController(state, canvasPseudoWidgets, historyIODriver, statusBarODriver);
 
-	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuController); // @TODO make globalOriginFigure obsolete
+	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuController, historyController); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(canvasPseudoWidgets, router); // @TODO: could it be regarded as a kind of device driver, and renamed + moved appropriately?
 
-	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorIODriver, configIODriver, tabSelectorIODriver, loaderIODriver, saveIODriver, nativeLoaderIODriver, zoomDriver, contextMenuDriver); // @TODO Law of Demeter, see inside
+	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorIODriver, configIODriver, tabSelectorIODriver, loaderIODriver, saveIODriver, nativeLoaderIODriver, zoomDriver, contextMenuDriver, historyIODriver); // @TODO Law of Demeter, see inside
 
 	//console.log('App: live run');
 	app.run();
