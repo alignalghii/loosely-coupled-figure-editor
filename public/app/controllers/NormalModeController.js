@@ -14,8 +14,7 @@ function NormalModeController(state, canvasPseudoWidgets, statusBarDriver, audio
 	this.epsilonAngle    = canvasPseudoWidgets[0].arbitrary.coordSysTransformer.epsilonAngle();    // @TODO Demeter priciple // @TODO: this arbitrary choice hides a conceptual smell
 }
 
-NormalModeController.prototype = Object.create(Controller.prototype);
-NormalModeController.prototype.constructor = NormalModeController;
+Object.assign(NormalModeController.prototype, ControllerMixinCanvasWidgetable);
 
 // @TODO The GU API should introduce a Mouse object/interface? (like many APIs introduce a Context obejct)
 NormalModeController.prototype.mouseDown = function (position, eitherTarget)

@@ -5,9 +5,8 @@ function FigureEditorController(state, canvasPseudoWidgets, statusBarDriver)
 	this.statusBarDriver = statusBarDriver;
 }
 
-FigureEditorController.prototype = Object.create(Controller.prototype);
-Object.assign(Controller.prototype, ControllerMixinHistoryFollowable);
-FigureEditorController.prototype.constructor = FigureEditorController;
+Object.assign(FigureEditorController.prototype, ControllerMixinCanvasWidgetable );
+Object.assign(FigureEditorController.prototype, ControllerMixinHistoryFollowable);
 
 FigureEditorController.prototype.addVertex      = function (point, eitherTarget           ) {this.withProxFig('addVertex'     , point, eitherTarget, 'Hozzáadom'    , 'alakzathoz'           );};
 FigureEditorController.prototype.deleteVertex   = function (point, eitherTarget           ) {this.withProxFig('deleteVertex'  , point, eitherTarget, 'Elveszem'     , 'alakzatból'           );};

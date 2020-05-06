@@ -9,9 +9,7 @@ function CompactModeController(state, canvasPseudoWidgets, widgetCollision, stat
 	this.statusBarDriver.greet();
 }
 
-CompactModeController.prototype = Object.create(Controller.prototype);
-
-CompactModeController.prototype.constructor = CompactModeController;
+Object.assign(CompactModeController.prototype, ControllerMixinCanvasWidgetable);
 
 // @TODO The GU API should introduce a Mouse object/interface? (like many APIs introduce a Context obejct)
 CompactModeController.prototype.mouseDown = function (position, eitherTarget)

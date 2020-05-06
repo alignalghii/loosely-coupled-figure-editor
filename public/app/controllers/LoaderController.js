@@ -10,9 +10,6 @@ function LoaderController (canvasPseudoWidgets, numberHelperAndValidator, loader
 	this.focusID();
 }
 
-LoaderController.prototype = Object.create(Controller.prototype);
-
-LoaderController.prototype.constructor = LoaderController;
 
 LoaderController.prototype.run = function (idStr)
 {

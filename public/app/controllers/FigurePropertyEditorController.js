@@ -7,9 +7,7 @@ function FigurePropertyEditorController(state, canvasPseudoWidgets, figureProper
 	this.statusBarDriver            = statusBarDriver;
 }
 
-FigurePropertyEditorController.prototype = Object.create(Controller.prototype);
-
-FigurePropertyEditorController.prototype.constructor = FigurePropertyEditorController;
+Object.assign(FigurePropertyEditorController.prototype, ControllerMixinCanvasWidgetable);
 
 FigurePropertyEditorController.prototype.editEdge = function (edgeIndex, value)
 {

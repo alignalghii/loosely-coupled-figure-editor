@@ -5,8 +5,7 @@ function GeomTransformationController(state, canvasPseudoWidgets, statusBarDrive
 	this.statusBarDriver = statusBarDriver;
 }
 
-GeomTransformationController.prototype = Object.create(Controller.prototype);
-GeomTransformationController.prototype.constructor = GeomTransformationController;
+Object.assign(GeomTransformationController.prototype, ControllerMixinCanvasWidgetable);
 
 /** Rotation: */
 
