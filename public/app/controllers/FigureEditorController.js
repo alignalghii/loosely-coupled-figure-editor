@@ -3,7 +3,10 @@ function FigureEditorController(state, canvasPseudoWidgets, statusBarDriver)
 	this.state           = state;
 	this.canvasPseudoWidgets = canvasPseudoWidgets;
 	this.statusBarDriver = statusBarDriver;
+
+	this.locker = new Locker(this, ['moveVertex', 'pushEdge', 'pushnormalEdge', 'spanEdge']); // @TODO
 }
+
 
 Object.assign(FigureEditorController.prototype, ControllerMixinCanvasWidgetable );
 Object.assign(FigureEditorController.prototype, ControllerMixinHistoryFollowable);
@@ -18,19 +21,21 @@ FigureEditorController.prototype.spanEdge       = function (point, eitherTarget,
 
 FigureEditorController.prototype.withProxFig = function (command, currentWEPos, eitherTarget, template1, template2, optArg) // @TODO: reuse: almost the same algorithm exists in `GeomTransforamtionController` (or in its section in `Router`).
 {
-	this.saveHistory();
+	this.locker.lockCommandIfNecessary(command);
 
-	const canvasPseudoWidget = this.canvasPseudoWidgetForEitherTarget(eitherTarget),
-	      board              = canvasPseudoWidget.board();
-	const editorMessage = maybe(
-		'Nem határozható meg egyértelműen legközelebbi alakzat.',
-		nearestFigure => {
-			const figureEditor  = new FigureEditorByProximityHeuristic(nearestFigure);
-			optArg ? figureEditor[command](currentWEPos, optArg) : figureEditor[command](currentWEPos);
-			const widget = canvasPseudoWidget.arbitrary.detectTypeAndComposeFromHigh(nearestFigure); // @TODO arbitrary
-			return widget.updateAndReport(currentWEPos, nearestFigure, template1, template2); // Image's boxing figure should not be allowed to be edited!
-		},
-		maybeNearestFigureHence(board, currentWEPos)
-	);
-	this.statusBarDriver.report(editorMessage);
+		const canvasPseudoWidget = this.canvasPseudoWidgetForEitherTarget(eitherTarget),
+		      board              = canvasPseudoWidget.board();
+		const editorMessage = maybe(
+			'Nem határozható meg egyértelműen legközelebbi alakzat.',
+			nearestFigure => {
+				const figureEditor  = new FigureEditorByProximityHeuristic(nearestFigure);
+				optArg ? figureEditor[command](currentWEPos, optArg) : figureEditor[command](currentWEPos);
+				const widget = canvasPseudoWidget.arbitrary.detectTypeAndComposeFromHigh(nearestFigure); // @TODO arbitrary
+				return widget.updateAndReport(currentWEPos, nearestFigure, template1, template2); // Image's boxing figure should not be allowed to be edited!
+			},
+			maybeNearestFigureHence(board, currentWEPos)
+		);
+		this.statusBarDriver.report(editorMessage);
+
+	this.locker.log(command);
 };
