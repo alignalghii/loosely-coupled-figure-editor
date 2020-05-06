@@ -70,3 +70,40 @@ CanvasPseudoWidget.prototype.hostlessWidgets = function () {return this.widgets(
 CanvasPseudoWidget.prototype.figureWidgets   = function () {return this.widgets().filter(widget => widget.constructor.name == 'FigureWidget');}; // @TODO
 CanvasPseudoWidget.prototype.windowWidgets   = function () {return this.widgets().filter(widget => widget.constructor.name == 'WindowWidget');}; // @TODO
 CanvasPseudoWidget.prototype.doorWidgets     = function () {return this.widgets().filter(widget => widget.constructor.name == 'DoorWidget'  );}; // @TODO
+
+CanvasPseudoWidget.prototype.objectSerialize = function ()
+{
+	const businessPF_work = this.arbitrary.partialFunctionGeomToBusiness;
+	let businessExports = [];
+	for (const [high, business] of businessPF_work) {
+		if (business && isNothing(business.maybeHost)) {
+			CanvasPseudoWidget.hack(business.openings); // @TODO nasty
+			businessExports.push(business.exportToSerializableObject());
+		}
+	}
+	return businessExports;
+};
+
+CanvasPseudoWidget.prototype.stringSerialize = function ()
+{
+	return JSON.stringify(
+		this.objectSerialize(),
+		null, "\t"
+	);
+};
+
+CanvasPseudoWidget.hack = function (openingWidgetsOrNull) // @TODO should contain the high-level parts, not widgets
+{
+	// const elemBj_work = this.canvasPseudoWidget_work.arbitrary.bijectionSvgToGeom; // @TODO
+	if (openingWidgetsOrNull) {
+		openingWidgetsOrNull.map(
+			({high: high, low: low}) => { // @TODO should be only the high
+				// const low = elemBj_work.getInverse(high); // @TODO
+				const transform = low.getAttribute('transform');
+				if (transform) {
+					high.transform = transform;
+				}
+			}
+		);
+	}
+};

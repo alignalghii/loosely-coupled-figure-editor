@@ -1,3 +1,4 @@
+// @TODO Not all controllers use this, let it be a mixin, not an ancestor
 function Controller () {} // abstract // @TODO should initialize state, statusBarDriver
 
 Controller.prototype.canvasPseudoWidgetForEitherTarget = function (eitherTarget) {return this.canvasPseudoWidgetForCanvas(canvasOfEitherTarget(eitherTarget));};
