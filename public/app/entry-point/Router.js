@@ -157,7 +157,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (this.state.mode == 'figureeditormove') { // @TODO: delegate more responsibility from the router to the controller. @TODO: should not use the same `State` as `NormalModeController`
 			switch (eventType) {
 				case 'mousedown':
-					this.figureEditorController.moveVertex(ird.currentWEPos, ird.eitherTarget);
+					this.figureEditorController.moveVertex(ird.currentWEPos, ird.eitherTarget); // Implies `this.figureEditorController.saveHistory()` automatically
 					this.figureEditorController.state.editorMoveFlag = true;
 					break;
 				case 'mousemove':
@@ -173,6 +173,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (this.state.mode == 'figureeditorpush') {
 			switch (eventType) {
 				case 'mousedown':
+					this.figureEditorController.saveHistory();
 					this.figureEditorController.state.pushEdge_start = ird.currentWEPos;
 					break;
 				case 'mousemove':
@@ -190,6 +191,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (this.state.mode == 'figureeditorpushnormal') {
 			switch (eventType) {
 				case 'mousedown':
+					this.figureEditorController.saveHistory();
 					this.figureEditorController.state.pushnormalEdge_start = ird.currentWEPos;
 					break;
 				case 'mousemove':
@@ -207,6 +209,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (this.state.mode == 'figureeditorspan') {
 			switch (eventType) {
 				case 'mousedown':
+					this.figureEditorController.saveHistory();
 					this.figureEditorController.state.spanEdge_start = ird.currentWEPos;
 					break;
 				case 'mousemove':
