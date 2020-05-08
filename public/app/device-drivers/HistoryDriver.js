@@ -1,6 +1,7 @@
 function HistoryDriver (aDocument)
 {
-	this.undoButton = aDocument.getElementById('loader-new');
+	this.undoButton = aDocument.getElementById('undo');
+	this.redoButton = aDocument.getElementById('redo');
 }
 
 
