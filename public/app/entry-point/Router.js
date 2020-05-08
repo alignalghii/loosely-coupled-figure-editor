@@ -25,7 +25,10 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		//console.log(`| ${eventType} |`);
 		if (eventType == 'change') {
 			if (Eq.eq(inputSignature, ['string', 'string']) && 'mode' in ird) this.normalModeController.changeMode(ird.mode); // @TODO common
-			if (Eq.eq(inputSignature, ['edge'  , 'number'])) this.figurePropertyEditorController.editEdge  (ird.edge, ird.value);
+			if (Eq.eq(inputSignature, ['edge'  , 'number'])) {
+				this.figureEditorController.saveHistory(); // @TODO
+				this.figurePropertyEditorController.editEdge  (ird.edge, ird.value);
+			}
 			if (Eq.eq(inputSignature, ['string', 'checkbox']) && ('optionName' in ird)) {
 				switch (ird.optionName) {
 					case 'areainvariance'           : this.configController.setAreaInvariance(ird.value); break;
@@ -64,7 +67,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 
 		if (this.state.mode == 'compact') {
 			switch (eventType) {
-				case 'mousedown': this.compactModeController.mouseDown(ird.currentWEPos, ird.eitherTarget); break;
+				case 'mousedown': this.figureEditorController.saveHistory(); /* @TODO */ this.compactModeController.mouseDown(ird.currentWEPos, ird.eitherTarget); break;
 				case 'mousemove': this.compactModeController.mouseMove(ird.currentWEPos, ird.eitherTarget); break;
 				case 'mouseup'  : this.compactModeController.mouseUp  (ird.currentWEPos, ird.eitherTarget); break;
 			}
@@ -73,6 +76,9 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 			const isGraphicalEvent = !('tabName' in ird); // @TODO refactor this condition jungle below:
 			switch (eventType) {
 					case 'mousedown':
+						if (this.normalModeController.canvasPseudoWidgets[4].arbitrary.svgLowLevel.svgRootElement, canvasOfEitherTarget(ird.eitherTarget) == this.normalModeController.canvasPseudoWidgets[4].arbitrary.svgLowLevel.svgRootElement) {
+							this.figureEditorController.saveHistory(); // @TODO
+						}
 						if (isGraphicalEvent) this.normalModeController.mouseDown(ird.currentWEPos, ird.eitherTarget);
 						break;
 					case 'mousemove':
@@ -173,7 +179,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (this.state.mode == 'figureeditorpush') {
 			switch (eventType) {
 				case 'mousedown':
-					this.figureEditorController.saveHistory();
+					this.figureEditorController.saveHistory(); // @TODO
 					this.figureEditorController.state.pushEdge_start = ird.currentWEPos;
 					break;
 				case 'mousemove':
@@ -191,7 +197,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (this.state.mode == 'figureeditorpushnormal') {
 			switch (eventType) {
 				case 'mousedown':
-					this.figureEditorController.saveHistory();
+					this.figureEditorController.saveHistory(); // @TODO
 					this.figureEditorController.state.pushnormalEdge_start = ird.currentWEPos;
 					break;
 				case 'mousemove':
@@ -209,7 +215,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (this.state.mode == 'figureeditorspan') {
 			switch (eventType) {
 				case 'mousedown':
-					this.figureEditorController.saveHistory();
+					this.figureEditorController.saveHistory(); // @TODO
 					this.figureEditorController.state.spanEdge_start = ird.currentWEPos;
 					break;
 				case 'mousemove':
@@ -227,6 +233,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (this.state.mode == 'geomtransformationrotation') { // @TODO: should not use the same `State` as `NormalModeController`
 			switch (eventType) {
 				case 'mousedown': // @TODO: reuse: almost the same algorithm exists in `FigureEditorController`.
+					this.figureEditorController.saveHistory(); // @TODO
 					this.geomTransformationController.openRotationArcSpan(ird.currentWEPos, ird.eitherTarget);
 					break;
 				case 'mousemove': // @TODO: reuse: almost the same algorithm exists in `FigureEditorController`. @TODO: Ha a vásznan belül lenyomott egérgombot vásznonkívül engedem fel: dragbanragad
@@ -246,6 +253,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 				geomtransformationscaley        : ['doScaleY'                    , 'scaleY'                    ],
 			};
 			if (this.state.mode in scaleCases) {
+				if (eventType == 'mousedown') this.figureEditorController.saveHistory(); // @TODO
 				const commands = scaleCases[this.state.mode];
 				this.routeDragCasesOpen3Sustain1Close0ScaleStressSpan(commands, eventType, ird.currentWEPos, ird.eitherTarget);
 			}
@@ -255,6 +263,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (this.state.mode == 'geomtransformationreflectionhorizontally') { // @TODO: should not use the same `State` as `NormalModeController`
 			switch (eventType) {
 				case 'mouseup':
+					this.figureEditorController.saveHistory(); // @TODO
 					this.geomTransformationController.reflectionFlip(['doReflectHorizontally', 'reflectHorizontally'], ird.currentWEPos, ird.eitherTarget);
 					break;
 			}
@@ -262,6 +271,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (this.state.mode == 'geomtransformationreflectionvertically') { // @TODO: should not use the same `State` as `NormalModeController`
 			switch (eventType) {
 				case 'mouseup':
+					this.figureEditorController.saveHistory(); // @TODO
 					this.geomTransformationController.reflectionFlip(['doReflectVertically', 'reflectVertically'], ird.currentWEPos, ird.eitherTarget);
 					break;
 			}
@@ -277,6 +287,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (this.state.mode == 'figurenesting') {
 			switch (eventType) {
 				case 'mouseup':
+					this.figureEditorController.saveHistory(); // @TODO
 					this.figureNestingController.onOrOff(ird.currentWEPos, ird.eitherTarget);
 					break;
 			}
