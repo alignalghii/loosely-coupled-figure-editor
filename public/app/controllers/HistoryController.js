@@ -4,8 +4,16 @@ function HistoryController (state, canvasPseudoWidgets, historyDriver, statusBar
 	this.canvasPseudoWidget_work = canvasPseudoWidgets[4]; // @TODO
 	this.historyDriver       = historyDriver;
 	this.statusBarDriver = statusBarDriver;
+
+	this.updateDisablings();
 }
 
+
+HistoryController.prototype.updateDisablings = function ()
+{
+	this.historyDriver.disableUndo(this.stack.isEmpty());
+	this.historyDriver.disableRedo(true);
+};
 
 HistoryController.prototype.undo = function ()
 {
@@ -17,6 +25,7 @@ HistoryController.prototype.undo = function ()
 			this.load(rep);
 		}
 	);
+	this.updateDisablings();
 };
 
 

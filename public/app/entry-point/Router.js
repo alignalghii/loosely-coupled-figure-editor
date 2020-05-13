@@ -22,7 +22,6 @@ function Router(state, normalModeController, compactModeController, roomControll
 Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // ird: inputRoledData
 {
 	if (ird.mouseButton !== 2) {
-		//console.log(`| ${eventType} |`);
 		if (eventType == 'change') {
 			if (Eq.eq(inputSignature, ['string', 'string']) && 'mode' in ird) this.normalModeController.changeMode(ird.mode); // @TODO common
 			if (Eq.eq(inputSignature, ['edge'  , 'number'])) {
@@ -296,6 +295,8 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 	if (eventType == 'contextmenu') { // @TODO consider why it is sometimes different condition: `mouseButton == 2`
 		return this.contextMenuController.rightClick(event, ird.eitherTarget);
 	}
+
+	this.historyController.updateDisablings();
 };
 
 /** A compound route method: */
