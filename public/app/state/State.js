@@ -18,6 +18,7 @@ function State(toBeDomainStamp)
 	this.isRelative     = true;
 
 	this.isAdmin        = false;
+	this.isJPEG          = false;
 
 	this.history = new History(50);
 }
