@@ -4,17 +4,26 @@
 
 class Router
 {
-	function __construct(AllController $allController, array $server, array $post)
+	function __construct(AppProperController $appProperController, AllController $allController, array $server, array $post, string $rawPost)
 	{
-		$this->allController = $allController;
-		$this->server        = $server;
-		$this->post          = $post;
+		$this->appProperController = $appProperController;
+		$this->allController       = $allController;
+
+		$this->server  = $server;
+		$this->post    = $post;
+		$this->rawPost = $rawPost;
 	}
 
 	function run(): void
 	{
 		$request = "{$this->server['REQUEST_METHOD']} {$this->server['REQUEST_URI']}";
 		switch (true) {
+			/** Application proper: **/
+
+			case preg_match('!POST /router.php/update-jpeg!', $request, $matches): $this->appProperController->updateJPEG($this->rawPost); break;
+
+			/** DB-admin: **/
+
 			case preg_match('!GET /router.php/show-all!', $request, $matches): $this->allController->showAll(); break;
 
 			case preg_match('!POST /router.php/flat/add!', $request, $matches): $this->allController->addFlat($this->post); break;
@@ -33,6 +42,7 @@ class Router
 			case preg_match('!POST /router.php/room/add!', $request, $matches): $this->allController->addRoom($this->post); break;
 			case preg_match('!POST /router.php/room/update/(\d+)!', $request, $matches): $this->allController->updateRoom($matches[1], $this->post); break;
 			case preg_match('!POST /router.php/room/del/(\d+)!', $request, $matches): $this->allController->deleteRoom($matches[1]); break;
+
 
 			default: echo 'Router error'; break; // @TODO: `throw 'Router error'`?
 		}
@@ -162,7 +172,27 @@ class RoomsViewModel extends ViewModel
 	public function fields(): array {return ['id' => Either::right(PDO::PARAM_INT), 'flat_id' => Either::right(PDO::PARAM_INT), 'prototype_id' => Either::right(PDO::PARAM_INT), 'area' => Either::left(self::PARAM_FLOAT), 'autocorr_dir_fwd' => Either::right(PDO::PARAM_BOOL), 'shape_id' => Either::right(PDO::PARAM_INT), 'shape_argument_1' => Either::left(self::PARAM_FLOAT), 'shape_argument_2' => Either::left(self::PARAM_FLOAT), 'shape_argument_3' => Either::left(self::PARAM_FLOAT), 'shape_argument_4' => Either::left(self::PARAM_FLOAT)];}
 }
 
-/** Controller */
+/** Controllers: */
+
+class AppProperController
+{
+	function updateJPEG(string $svgString)
+	{
+		`find var -name 'work--*-*.*' -mmin +1 -delete`; // Deleting too old temporary files @TODO reconsider
+
+		$stamp = time() . '-' . rand();
+		$extlessPath = "var/work--$stamp";
+		$svgFile = fopen("$extlessPath.svg", 'w');
+			fwrite($svgFile, $svgString);
+		fclose($svgFile);
+		`sed -i 's!\<href="/!href="!g' $extlessPath.svg`;
+		`inkscape -z -e $extlessPath.png -w 1175 -h 692 $extlessPath.svg`; // credit to https://www.systutorials.com/how-to-convert-svg-to-png-in-linux/
+		`convert $extlessPath.png -background "rgb(255,255,255)" -flatten $extlessPath-bg.png`; // credit to https://stackoverflow.com/questions/25208116/imagemagick-how-to-change-transparent-background-to-a-color
+		`convert $extlessPath-bg.png $extlessPath.jpeg`;
+		header('Content-Type: application/json');
+		echo json_encode(['downloadLink' => "$extlessPath.jpeg"]);
+	}
+}
 
 class AllController // @TODO split it via mixins?
 {
@@ -173,6 +203,7 @@ class AllController // @TODO split it via mixins?
 		$this->roomShapeRelation     = $roomShapeRelation;
 		$this->roomRelation          = $roomRelation;
 	}
+
 
 	function showAll(): void
 	{

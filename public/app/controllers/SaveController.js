@@ -11,7 +11,7 @@ function SaveController(state, canvasPseudoWidgets, saveIODriver, statusBarODriv
 	this.canvasPseudoWidget_work = this.canvasPseudoWidgets[4]; // @TODO
 }
 
-SaveController.prototype.save = function () {this[this.state.isJPEG ? 'saveJPEG' : 'saveNative']();};
+SaveController.prototype.save = function () {this[this.state.isJPEG ? 'prepareJPEG' : 'saveNative']();};
 
 SaveController.prototype.saveNative = function ()
 {
@@ -28,7 +28,42 @@ SaveController.prototype.saveNative = function ()
 	tab.document.write(`<html><head><meta charset="UTF-8"/><title>Save-${++this.counter}</title></head><body><pre>${ser}</pre></body></html>`);
 };
 
-SaveController.prototype.saveJPEG = function ()
+SaveController.prototype.setIsJPEG = function (flag)
+{
+	this.saveIODriver.showDownloadJpegLink(flag);
+	this.saveIODriver.retitleSaveButton   (flag);
+};
+
+SaveController.prototype.prepareJPEG = function ()
+{
+	this.statusBarODriver.report('Munkavászon JPEG-változatának naprakésszé előkészítése');
+
+
+	const svg    = this.canvasPseudoWidget_work.arbitrary.svgLowLevel.svgRootElement,
+	      a      = this.saveIODriver.jpegDownloadLink,
+	      svgString = new XMLSerializer().serializeToString(svg);
+
+	const xhr = new XMLHttpRequest();
+	xhr.open("POST", "/router.php/update-jpeg");
+	xhr.responseType = 'json';
+	xhr.setRequestHeader("Content-Type", "image/svg+xml;charset=UTF-8");
+	xhr.onload = e => {
+		switch (xhr.status) {
+			case 200:
+				if (xhr.response.downloadLink) {
+					a.setAttribute('href', xhr.response.downloadLink);
+				} else {
+					throw 'No download link sent back by AJAX';
+				}
+				break;
+			default:
+				throw 'Ajax wrong';
+		}
+	};
+	xhr.send(svgString);
+}
+
+/*SaveController.prototype.saveJPEG = function ()
 {
 	console.log('Save JPEG');
 	const svgEl = this.canvasPseudoWidgets[4].arbitrary.svgLowLevel.svgRootElement;
@@ -78,7 +113,7 @@ SaveController.prototype.saveJPEG = function ()
 	}
 	image.src = blobURL;
 	document.body.appendChild(image);
-};
+};*/
 
 SaveController.prototype.hack = function (openingWidgetsOrNull) // @TODO should contain the high-level parts, not widgets
 {

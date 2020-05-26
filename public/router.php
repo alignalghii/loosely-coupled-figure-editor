@@ -11,7 +11,8 @@ $roomPrototypeRelation = new RoomPrototypeRelation($dbh);
 $roomShapeRelation     = new RoomShapeRelation($dbh);
 $roomRelation          = new RoomRelation($dbh);
 
-$allController = new AllController($flatRelation, $roomPrototypeRelation, $roomShapeRelation, $roomRelation);
+$appProperController = new AppProperController();
+$allController       = new AllController($flatRelation, $roomPrototypeRelation, $roomShapeRelation, $roomRelation);
 
-$router = new Router($allController, $_SERVER, $_POST);
+$router = new Router($appProperController, $allController, $_SERVER, $_POST, file_get_contents('php://input'));
 $router->run();
