@@ -1,14 +1,16 @@
-function SaveController(state, canvasPseudoWidgets, saveIODriver, statusBarODriver, audioODriver)
+function SaveController(state, canvasPseudoWidgets, saveIODriver, statusBarODriver, audioODriver, timeout)
 {
 	this.state               = state;
 	this.canvasPseudoWidgets = canvasPseudoWidgets;
  	this.saveIODriver        = saveIODriver;
  	this.statusBarODriver    = statusBarODriver;
  	this.audioODriver        = audioODriver;
+	this.timeout = timeout;
 
 	this.counter = 0;
 
 	this.canvasPseudoWidget_work = this.canvasPseudoWidgets[4]; // @TODO
+	this.maybeTimer = Maybe.nothing();
 }
 
 SaveController.prototype.save = function () {this[this.state.isJPEG ? 'prepareJPEG' : 'saveNative']();};
@@ -38,30 +40,40 @@ SaveController.prototype.prepareJPEG = function ()
 {
 	this.statusBarODriver.report('Munkavászon JPEG-változatának naprakésszé előkészítése');
 
-
-	const svg    = this.canvasPseudoWidget_work.arbitrary.svgLowLevel.svgRootElement,
-	      a      = this.saveIODriver.jpegDownloadLink,
-	      svgString = new XMLSerializer().serializeToString(svg);
+	const svgElem   = this.canvasPseudoWidget_work.arbitrary.svgLowLevel.svgRootElement,
+	      svgString = new XMLSerializer().serializeToString(svgElem);
 
 	const xhr = new XMLHttpRequest();
 	xhr.open("POST", "/router.php/update-jpeg");
 	xhr.responseType = 'json';
 	xhr.setRequestHeader("Content-Type", "image/svg+xml;charset=UTF-8");
-	xhr.onload = e => {
-		switch (xhr.status) {
-			case 200:
-				if (xhr.response.downloadLink) {
-					a.setAttribute('href', xhr.response.downloadLink);
-				} else {
-					throw 'No download link sent back by AJAX';
-				}
-				break;
-			default:
-				throw 'Ajax wrong';
-		}
-	};
+	xhr.onload = event => this.xhrOnLoad.call(this, xhr, event); // @TODO: Should call the `dispatch` of `Router.js`, moreover, should be piped in withe the device's `pipeToSM`
 	xhr.send(svgString);
 }
+
+SaveController.prototype.xhrOnLoad = function (xhr, event) {
+	switch (xhr.status) {
+		case 200:
+			if (xhr.response.downloadLink) {
+				this.reincarnateLink(xhr.response.downloadLink);
+			} else {
+				throw 'No download link sent back by AJAX';
+			}
+			break;
+		default:
+			throw 'Ajax wrong';
+	}
+};
+
+SaveController.prototype.reincarnateLink = function (href)
+{
+	const enable  = () => this.saveIODriver.linkDownloadJpegLink(href),
+	      disable = () => this.saveIODriver.unlinkDownloadJpegLink();
+	enable();
+	this.maybeTimer.map(clearTimeout);
+	newTimer = setTimeout(disable, this.timeout);
+	this.maybeTimer = Maybe.just(newTimer);
+};
 
 /*SaveController.prototype.saveJPEG = function ()
 {
