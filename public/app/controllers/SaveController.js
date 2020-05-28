@@ -49,9 +49,13 @@ SaveController.prototype.prepareJPEG = function ()
 	xhr.setRequestHeader("Content-Type", "image/svg+xml;charset=UTF-8");
 	xhr.onload = event => this.xhrOnLoad.call(this, xhr, event); // @TODO: Should call the `dispatch` of `Router.js`, moreover, should be piped in withe the device's `pipeToSM`
 	xhr.send(svgString);
+	this.saveIODriver.stubLinkProgress();
 }
 
-SaveController.prototype.xhrOnLoad = function (xhr, event) {
+SaveController.prototype.xhrOnLoad = function (xhr, event)
+{
+	this.saveIODriver.unsuffixLink();
+	this.saveIODriver.hourglass(false);
 	switch (xhr.status) {
 		case 200:
 			if (xhr.response.downloadLink) {
@@ -67,8 +71,15 @@ SaveController.prototype.xhrOnLoad = function (xhr, event) {
 
 SaveController.prototype.reincarnateLink = function (href)
 {
-	const enable  = () => this.saveIODriver.linkDownloadJpegLink(href),
-	      disable = () => this.saveIODriver.unlinkDownloadJpegLink();
+	const enable  = () => {
+		this.saveIODriver.linkDownloadJpegLink(href);
+		this.saveIODriver.jpegDownloadLink.innerHTML += '&dArr;'
+	      },
+	      disable = () => {
+		this.saveIODriver.unsuffixLink();
+		this.saveIODriver.unlinkDownloadJpegLink();
+		this.saveIODriver.showDownloadJpegLink(false);
+	      };
 	enable();
 	this.maybeTimer.map(clearTimeout);
 	newTimer = setTimeout(disable, this.timeout);

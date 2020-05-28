@@ -4,7 +4,6 @@ function ConfigDriver(aDocument)
 	this.areaInvariance = aDocument.getElementById('config_areainvariance');
 	this.isRelative     = aDocument.getElementById('config_relativeinsteadofabsolute');
 	this.isAdmin        = aDocument.getElementById('config_admin');
-	this.isJPEG         = aDocument.getElementById('config_jpeg');
 }
 
 ConfigDriver.prototype.pipeToSM = function (dispatch)
@@ -25,4 +24,3 @@ ConfigDriver.prototype.checkOrUncheckAreaInvarianceCheckbox = function (flag) {t
 ConfigDriver.prototype.checkOrUncheckIsRelativeCheckbox     = function (flag) {this.isRelative    .checked = flag;};
 
 ConfigDriver.prototype.checkOrUncheckIsAdmin                = function (flag) {this.isAdmin       .checked = flag;};
-ConfigDriver.prototype.checkOrUncheckIsJPEG                 = function (flag) {this.isJPEG        .checked = flag;};

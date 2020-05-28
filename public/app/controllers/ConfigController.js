@@ -10,7 +10,6 @@ function ConfigController(state, configDriver, tabSelectorDriver, statusBarDrive
 	this.configDriver.checkOrUncheckIsRelativeCheckbox    (this.state.isRelative    );
 
 	this.configDriver.checkOrUncheckIsAdmin               (this.state.isAdmin       );
-	this.configDriver.checkOrUncheckIsJPEG                (this.state.isJPEG        );
 	this.redesignByPrivileges(this.state.isAdmin);
 }
 
@@ -24,5 +23,3 @@ ConfigController.prototype.redesignByPrivileges = function (flag)
 	if (!this.state.isAdmin)
 		this.tabSelectorDriver.switchTo('DB', flag);
 };
-
-ConfigController.prototype.setIsJPEG = function (flag) {this.state.isJPEG = flag;};

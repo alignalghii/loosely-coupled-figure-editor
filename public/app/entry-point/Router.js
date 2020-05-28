@@ -33,10 +33,6 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 					case 'areainvariance'           : this.configController.setAreaInvariance(ird.value); break;
 					case 'relativeinsteadofabsolute': this.configController.setIsRelative    (ird.value); break;
 					case 'admin'                    : this.configController.setIsAdmin       (ird.value); break;
-					case 'jpeg':
-						this.configController.setIsJPEG(ird.value);
-						this.saveController  .setIsJPEG(ird.value);
-						break;
 					default                         : throw 'Invalid option name'                       ; break;
 				}
 			}
@@ -48,7 +44,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (eventType == 'submit' && Eq.eq(inputSignature, ['IdString']) && 'loaderIdStr'  in ird) this.loaderController.run(ird.loaderIdStr); // @TODO better name, loaderid is rather eitherEId
 		if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'loaderAction' in ird && ird.loaderAction == 'cancel') this.loaderController.cancel();
 		if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'saveAction'   in ird && ird.saveAction   == 'save'  ) this.saveController  .save  ();
-		if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'saveAction'   in ird && ird.saveAction   == 'update-JPEG') this.saveController  .updateJPEG  ();
+		if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'saveAction'   in ird && ird.saveAction   == 'update-JPEG') this.saveController  .prepareJPEG  ();
 		if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'loadAction' in ird && ird.loadAction == 'native')     this.nativeLoaderController.view();
 		if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'loadAction' in ird && ird.loadAction == 'interpret')  this.nativeLoaderController.interpret();
 		if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'zoomAction' in ird) {
