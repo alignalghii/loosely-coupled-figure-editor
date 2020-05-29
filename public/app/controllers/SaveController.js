@@ -30,12 +30,6 @@ SaveController.prototype.saveNative = function ()
 	tab.document.write(`<html><head><meta charset="UTF-8"/><title>Save-${++this.counter}</title></head><body><pre>${ser}</pre></body></html>`);
 };
 
-SaveController.prototype.setIsJPEG = function (flag)
-{
-	this.saveIODriver.showDownloadJpegLink(flag);
-	this.saveIODriver.retitleSaveButton   (flag);
-};
-
 SaveController.prototype.prepareJPEG = function ()
 {
 	this.statusBarODriver.report('Munkavászon JPEG-változatának naprakésszé előkészítése');
@@ -78,12 +72,20 @@ SaveController.prototype.reincarnateLink = function (href)
 	      disable = () => {
 		this.saveIODriver.unsuffixLink();
 		this.saveIODriver.unlinkDownloadJpegLink();
+
+		this.saveIODriver.virginTitlingUpdateJpegButton(true);
 		this.saveIODriver.showDownloadJpegLink(false);
 	      };
 	enable();
 	this.maybeTimer.map(clearTimeout);
 	newTimer = setTimeout(disable, this.timeout);
 	this.maybeTimer = Maybe.just(newTimer);
+};
+
+SaveController.prototype.leaveJPEG = function ()
+{
+	this.saveIODriver.showDownloadJpegLink(false);
+	this.saveIODriver.virginTitlingUpdateJpegButton(false);
 };
 
 /*SaveController.prototype.saveJPEG = function ()

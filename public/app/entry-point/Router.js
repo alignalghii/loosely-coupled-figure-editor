@@ -45,6 +45,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'loaderAction' in ird && ird.loaderAction == 'cancel') this.loaderController.cancel();
 		if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'saveAction'   in ird && ird.saveAction   == 'save'  ) this.saveController  .save  ();
 		if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'saveAction'   in ird && ird.saveAction   == 'update-JPEG') this.saveController  .prepareJPEG  ();
+		if (eventType == 'mouseout' && Eq.eq(inputSignature, ['void'  ]) && 'saveAction'   in ird && ird.saveAction   == 'leave-JPEG' ) this.saveController.leaveJPEG();
 		if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'loadAction' in ird && ird.loadAction == 'native')     this.nativeLoaderController.view();
 		if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'loadAction' in ird && ird.loadAction == 'interpret')  this.nativeLoaderController.interpret();
 		if (eventType == 'click'  && Eq.eq(inputSignature, ['void'    ]) && 'zoomAction' in ird) {

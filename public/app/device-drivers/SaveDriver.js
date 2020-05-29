@@ -15,6 +15,9 @@ SaveDriver.prototype.pipeToSM = function (dispatch)
 
 	const clickUpdateJpeg = event => dispatch('click', ['void'], {saveAction: 'update-JPEG'});
 	this.updateJpegButton.addEventListener('click', clickUpdateJpeg);
+
+	const linkLeaving = event => dispatch('mouseout', ['void'], {saveAction: 'leave-JPEG'});
+	this.jpegDownloadLink.addEventListener('mouseout', linkLeaving);
 };
 
 SaveDriver.prototype.showDownloadJpegLink   = function (flag)
@@ -51,4 +54,4 @@ SaveDriver.prototype.hourglass = function (flag) {this.document.body.style.curso
 
 SaveDriver.prototype.unsuffixLink = function () {this.jpegDownloadLink.innerHTML = this.jpegDownloadLink.innerHTML.replace(/[^a-zA-Z0-9_]*$/, '');};
 
-SaveDriver.prototype.retitleUpdateJpegButton = function (flag) {this.updateJpegButton.innerHTML     = flag ? 'JPEG-export' : '⟲ JPEG-csere';}; // @TODO DRY with frontend
+SaveDriver.prototype.virginTitlingUpdateJpegButton = function (flag) {this.updateJpegButton.innerHTML = flag ? 'JPEG-export' : '⟲ JPEG-csere';}; // @TODO DRY with frontend
