@@ -284,6 +284,24 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - A `public/app/context-menu` mappába (csomagba, modulcsoportba) kerüljenek a régi tulajdonság-űrlappal kifejezetten kapcsolatos dolgok is!
  - Check HTML validity by `lint`. Ennek keretében ellenőrizendő az is: szabad-e, hogy `<ul>` gyerekei ne csak `<li>`, hanem `<hr/>`-ek is legyenek?
 
+ - A még vonszolt nyílászáró legyen képes automatikusan is alkalmazkodni a fal irányához akkor is, amikor saroknál húzzuk át:
+	--- a/public/app/controllers/NormalModeController.js
+	+++ b/public/app/controllers/NormalModeController.js
+	@@ -62,7 +62,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
+		                                        this.state.prevWidget.shapeshifterSlide(allowable0, currentWEPos)                        :
+		                                        {displacement: allowable0, maybeAngle: Maybe.nothing()}; // @TODO design a standalone class for it, and delegete tasks to it @TODO use >>= as for a Maybe-monad
+		                                        maybeAngle.map(
+	-                                                       angle => TransformRewriter.createAsRerotated_excp(this.state.prevWidget.low, angle-90)
+	+                                                       angle => angle // TransformRewriter.createAsRerotated_excp(this.state.prevWidget.low, angle-90) @TODO!!!!
+		                                        );
+
+                                        if ( // @TODO seems to be unnecessary: either condition always holds, or the action is not too importan
+
+ - Törölni a nagyméretű `mp4`-fájlokat git kontroll alól, esetleg külön repóba? (Megnézhetőek: `ls -l $(git ls-files | grep '\.mp4$')`)
+ - Az aktorobjektumok közül a téglafal hibaüzenettel állítja le a javascript futását
+ - A Global ,,objektum'' definíciója is, és konrét felhasználása is átgondolandó
+    - konrétan az is, ahogy a circularSlit képes értelmetlen esetekre throw hibával reagálni: `-SlitsRepresentationCircular.prototype.distanceCheck` és `valueCheck`
+
 
 # Fontend
  - Freeze lenne jó, mint ahogy az excelben táblasorokat lehet rögzíteni. itt persze a statussort lenne jó így. (Úgy tűnik, az overflow scroll erre elfogadható eszköz lesz)

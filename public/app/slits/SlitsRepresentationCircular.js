@@ -11,8 +11,8 @@ function SlitsRepresentationCircular(perimeter, circularSlits, maybeMinimalAllow
 	if (this.autoSort            ) this.sort();
 }
 
-SlitsRepresentationCircular.prototype.distanceCheck = function () {if (!this.isDistanceValid()) throw this.errorMsg();};
-SlitsRepresentationCircular.prototype.valueCheck = function () {if (!this.isValueValid()) throw this.errorMsg();};
+SlitsRepresentationCircular.prototype.distanceCheck = function () {if (!this.isDistanceValid() && Global.fatal_error_sensitivity >= Global.consts.paranoid) throw this.errorMsg();}; // @TODO
+SlitsRepresentationCircular.prototype.valueCheck = function () {if (!this.isValueValid() && Global.fatal_error_sensitivity >= Global.consts.paranoid) throw this.errorMsg();}; // @TODO
 
 SlitsRepresentationCircular.prototype.isDistanceValid = function ()
 {

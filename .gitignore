@@ -50,3 +50,5 @@ doc/demo-scenario/demo-secenario.dvi
 doc/demo-scenario/demo-secenario.log
 doc/demo-scenario/demo-secenario.pdf
 doc/demo-scenario/demo-secenario.toc
+
+obsolete/*
