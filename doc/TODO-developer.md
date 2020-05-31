@@ -302,6 +302,13 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - A Global ,,objektum'' definíciója is, és konrét felhasználása is átgondolandó
     - konrétan az is, ahogy a circularSlit képes értelmetlen esetekre throw hibával reagálni: `-SlitsRepresentationCircular.prototype.distanceCheck` és `valueCheck`
 
+ - ADT-korszerűsítés feladatok (algebrai adattípusok). Az óriási refactoryhoz és a sok keresgéléshez használhatjuk a `console.bash` kisalkalmazás `eitherTarget` parancsát illetve annak leendő javításait, bővítéseit.
+     - A `maybe*`-függvények használatának lecserélése a `Maybe` osztály használatára
+     - A `either*`-függvények használatának lecserélése a `Either` osztály használatára
+     - Az `EqOrDiff` osztály jelenleg típusozás szempontjából két felhasználást egyesít keverve:
+        - válasszuk szét a tipológiailag is helyesen használt `EqOrDiff`-re (`type EqOrDiff a b = Equ a | Diff aa`),
+        - és a OneOrTwo (`type OneOrTwo a b c = One a | Two b c`) esetére.
+        - Elvileg, ha a kettős értékben az értékek közt fontossági különbség van (egyikük meghatározó jelentőségű a másikuk mellékes jelentéséhez képes), akkor létezik egy `type AloneOrShaded = Alone a | Shaded a b` is.
 
 # Fontend
  - Freeze lenne jó, mint ahogy az excelben táblasorokat lehet rögzíteni. itt persze a statussort lenne jó így. (Úgy tűnik, az overflow scroll erre elfogadható eszköz lesz)

@@ -81,6 +81,10 @@ case "$1" in
 		echo 'Not implemented for security reasons. Do it manually.';;
 	contextmenu-universe)
 		sed -nf console.aux/CMO-constructoralias-2nd-arg.sed public/app/widget-pillar/FigureWidget.js;;
+	logfinder)
+		console.aux/logfinder.bash;;
+	eitherTarget)
+		console.aux/eitherTarget.bash;;
 	help)
 		echo 'Take special care of these vendor-like files:';
 		echo '============================================='
@@ -100,7 +104,7 @@ case "$1" in
 		echo '=========';
 		echo;
 		echo './console.bash';
-		echo -e "\thelp\n\tpull || checkout-sell  | checkout-buy | checkout-free\n\tpush || commit-sell    | commit-buy\n\t        clean-sell     | clean-buy    | clean-all\n\t        branches       | diff         | syncstatus    | status\n\tcontextmenu-universe";;
+		echo -e "\thelp\n\tpull || checkout-sell  | checkout-buy | checkout-free\n\tpush || commit-sell    | commit-buy\n\t        clean-sell     | clean-buy    | clean-all\n\t        branches       | diff         | syncstatus    | status\n\tcontextmenu-universe   | logfinder    | eitherTarget";;
 	*)
 		echo "Invalid console command [$1], type [./console.bash help] for details.";;
 esac;
