@@ -38,7 +38,7 @@ SaveController.prototype.prepareJPEG = function ()
 	      svgString = new XMLSerializer().serializeToString(svgElem);
 
 	const xhr = new XMLHttpRequest();
-	xhr.open("POST", "/router.php/update-jpeg");
+	xhr.open("POST", "/mainDependencyInjector.php/update-jpeg");
 	xhr.responseType = 'json';
 	xhr.setRequestHeader("Content-Type", "image/svg+xml;charset=UTF-8");
 	xhr.onload = event => this.xhrOnLoad.call(this, xhr, event); // @TODO: Should call the `dispatch` of `Router.js`, moreover, should be piped in withe the device's `pipeToSM`

@@ -20,28 +20,28 @@ class Router
 		switch (true) {
 			/** Application proper: **/
 
-			case preg_match('!POST /router.php/update-jpeg!', $request, $matches): $this->appProperController->updateJPEG($this->rawPost); break;
+			case preg_match('!POST /mainDependencyInjector.php/update-jpeg!', $request, $matches): $this->appProperController->updateJPEG($this->rawPost); break;
 
 			/** DB-admin: **/
 
-			case preg_match('!GET /router.php/show-all!', $request, $matches): $this->allController->showAll(); break;
+			case preg_match('!GET /mainDependencyInjector.php/show-all!', $request, $matches): $this->allController->showAll(); break;
 
-			case preg_match('!POST /router.php/flat/add!', $request, $matches): $this->allController->addFlat($this->post); break;
-			case preg_match('!POST /router.php/flat/update/(\d+)!', $request, $matches): $this->allController->updateFlat($matches[1], $this->post); break;
-			case preg_match('!POST /router.php/flat/del/(\d+)!', $request, $matches): $this->allController->deleteFlat($matches[1]); break;
+			case preg_match('!POST /mainDependencyInjector.php/flat/add!', $request, $matches): $this->allController->addFlat($this->post); break;
+			case preg_match('!POST /mainDependencyInjector.php/flat/update/(\d+)!', $request, $matches): $this->allController->updateFlat($matches[1], $this->post); break;
+			case preg_match('!POST /mainDependencyInjector.php/flat/del/(\d+)!', $request, $matches): $this->allController->deleteFlat($matches[1]); break;
 
 			// @TODO use entity instead of arguments listing or record data array
-			case preg_match('!POST /router.php/room-prototype/add!', $request, $matches): $this->allController->addRoomPrototype($this->post); break;
-			case preg_match('!POST /router.php/room-prototype/update/(\d+)!', $request, $matches): $this->allController->updateRoomPrototype($matches[1], $this->post); break;
-			case preg_match('!POST /router.php/room-prototype/del/(\d+)!', $request, $matches): $this->allController->deleteRoomPrototype($matches[1]); break;
+			case preg_match('!POST /mainDependencyInjector.php/room-prototype/add!', $request, $matches): $this->allController->addRoomPrototype($this->post); break;
+			case preg_match('!POST /mainDependencyInjector.php/room-prototype/update/(\d+)!', $request, $matches): $this->allController->updateRoomPrototype($matches[1], $this->post); break;
+			case preg_match('!POST /mainDependencyInjector.php/room-prototype/del/(\d+)!', $request, $matches): $this->allController->deleteRoomPrototype($matches[1]); break;
 
-			case preg_match('!POST /router.php/room-shape/add!', $request, $matches): $this->allController->addRoomShape($this->post); break;
-			case preg_match('!POST /router.php/room-shape/update/(\d+)!', $request, $matches): $this->allController->updateRoomShape($matches[1], $this->post); break;
-			case preg_match('!POST /router.php/room-shape/del/(\d+)!', $request, $matches): $this->allController->deleteRoomShape($matches[1]); break;
+			case preg_match('!POST /mainDependencyInjector.php/room-shape/add!', $request, $matches): $this->allController->addRoomShape($this->post); break;
+			case preg_match('!POST /mainDependencyInjector.php/room-shape/update/(\d+)!', $request, $matches): $this->allController->updateRoomShape($matches[1], $this->post); break;
+			case preg_match('!POST /mainDependencyInjector.php/room-shape/del/(\d+)!', $request, $matches): $this->allController->deleteRoomShape($matches[1]); break;
 
-			case preg_match('!POST /router.php/room/add!', $request, $matches): $this->allController->addRoom($this->post); break;
-			case preg_match('!POST /router.php/room/update/(\d+)!', $request, $matches): $this->allController->updateRoom($matches[1], $this->post); break;
-			case preg_match('!POST /router.php/room/del/(\d+)!', $request, $matches): $this->allController->deleteRoom($matches[1]); break;
+			case preg_match('!POST /mainDependencyInjector.php/room/add!', $request, $matches): $this->allController->addRoom($this->post); break;
+			case preg_match('!POST /mainDependencyInjector.php/room/update/(\d+)!', $request, $matches): $this->allController->updateRoom($matches[1], $this->post); break;
+			case preg_match('!POST /mainDependencyInjector.php/room/del/(\d+)!', $request, $matches): $this->allController->deleteRoom($matches[1]); break;
 
 
 			default: echo 'Router error'; break; // @TODO: `throw 'Router error'`?
