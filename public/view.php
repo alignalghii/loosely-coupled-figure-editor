@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<link rel="shortcut icon" href="/assets-proper/favicon.ico"/>
-		<link rel="stylesheet" href="/dummy-db-crud.css"/>
+		<link rel="stylesheet" href="/CRUD-table.css"/>
 		<meta charset="UTF-8"/>
 		<title>Dummy DB CRUD</title>
 	</head>

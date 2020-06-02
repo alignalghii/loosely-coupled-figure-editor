@@ -218,7 +218,7 @@ class AllController // @TODO split it via mixins?
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
-			'dummy-db-crud.php',
+			'view.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
@@ -246,7 +246,7 @@ class AllController // @TODO split it via mixins?
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
-			'dummy-db-crud.php',
+			'view.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->add($maybeShowback),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
@@ -274,7 +274,7 @@ class AllController // @TODO split it via mixins?
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
-			'dummy-db-crud.php',
+			'view.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->update($id, $maybeShowback),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
@@ -299,7 +299,7 @@ class AllController // @TODO split it via mixins?
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
-			'dummy-db-crud.php',
+			'view.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->delete($maybeShowbackId),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
@@ -331,7 +331,7 @@ class AllController // @TODO split it via mixins?
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
-			'dummy-db-crud.php',
+			'view.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->add($maybeShowback),
@@ -359,7 +359,7 @@ class AllController // @TODO split it via mixins?
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
-			'dummy-db-crud.php',
+			'view.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->update($id, $maybeShowback),
@@ -384,7 +384,7 @@ class AllController // @TODO split it via mixins?
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
-			'dummy-db-crud.php',
+			'view.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->delete($maybeShowbackId),
@@ -414,7 +414,7 @@ class AllController // @TODO split it via mixins?
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
-			'dummy-db-crud.php',
+			'view.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
@@ -442,7 +442,7 @@ class AllController // @TODO split it via mixins?
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
-			'dummy-db-crud.php',
+			'view.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
@@ -467,7 +467,7 @@ class AllController // @TODO split it via mixins?
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
-			'dummy-db-crud.php',
+			'view.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
@@ -498,7 +498,7 @@ class AllController // @TODO split it via mixins?
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
-			'dummy-db-crud.php',
+			'view.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
@@ -526,7 +526,7 @@ class AllController // @TODO split it via mixins?
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
-			'dummy-db-crud.php',
+			'view.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
@@ -551,7 +551,7 @@ class AllController // @TODO split it via mixins?
 		$roomsViewModel          = new RoomsViewModel($roomRecords);
 
 		$this->render(
-			'dummy-db-crud.php',
+			'view.php',
 			[
 				'flatsViewModel'          => $flatsViewModel->showAll(),
 				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
