@@ -54,13 +54,13 @@ case "$1" in
 		echo '| index.php: |';
 		echo '+-------------+';
 		echo;
-		diff ../loosely-coupled-figure-editor--vendor/vendor/sell/index.php vendor/sell/index.php;
+		diff ../../loosely-coupled-figure-editor--vendor/vendor/sell/index.php vendor/sell/index.php;
 		echo;
 		echo '+-----------------+';
 		echo '| holy-grail.css: |';
 		echo '+-----------------+';
 		echo;
-		diff ../loosely-coupled-figure-editor--vendor/vendor/sell/holy-grail.css vendor/sell/holy-grail.css;;
+		diff ../../loosely-coupled-figure-editor--vendor/vendor/sell/holy-grail.css vendor/sell/holy-grail.css;;
 	status)
 		echo ' ================================================';
 		echo '||                    D I F F                   ||';
@@ -75,8 +75,8 @@ case "$1" in
 		./console.bash syncstatus;
 		echo;;
 	push)
-		cp public/index.php ../loosely-coupled-figure-editor--vendor/vendor/sell/index.php;
-		cp public/assets-proper/holy-grail.css ../loosely-coupled-figure-editor--vendor/vendor/sell/holy-grail.css;;
+		cp public/index.php ../../loosely-coupled-figure-editor--vendor/vendor/sell/index.php;
+		cp public/assets-proper/holy-grail.css ../../loosely-coupled-figure-editor--vendor/vendor/sell/holy-grail.css;;
 	pull)
 		echo 'Not implemented for security reasons. Do it manually.';;
 	contextmenu-universe)

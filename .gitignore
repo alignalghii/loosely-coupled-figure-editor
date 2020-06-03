@@ -1,13 +1,13 @@
 *.o
 *.hi
 
-vendor/sell/*
-!vendor/sell/README.md
+floor-plan-designer/vendor/sell/*
+!floor-plan-designer/vendor/sell/README.md
 index.php
 holy-grail.css
 
-vendor/buy/*
-!vendor/buy/README.md
+floor-plan-designer/vendor/buy/*
+!floor-plan-designer/vendor/buy/README.md
 
 sonar.ogg
 bark.ogg
@@ -15,40 +15,40 @@ drip.ogg
 dialog-error.ogg
 glass.ogg
 
-public/assets-proper/logo*.*
-public/assets-proper/info*.png
-public/assets-proper/info*.svg
+floor-plan-designer/public/assets-proper/logo*.*
+floor-plan-designer/public/assets-proper/info*.png
+floor-plan-designer/public/assets-proper/info*.svg
 
-public/assets-proper/battering-ram*.png
-public/assets-proper/battering-ram*.svg
-public/assets-proper/brick*.png
-public/assets-proper/brick*.svg
-public/assets-proper/pickaxe*.png
-public/assets-proper/pickaxe*.svg
-public/assets-proper/bucket*.png
-public/assets-proper/bucket*.svg
-public/assets-proper/door-and-window-detached.svg
-public/assets-proper/window-detached.png
-public/assets-proper/door-detached.png
-public/assets-proper/door-and-window-attached.svg
-public/assets-proper/window-attached.png
-public/assets-proper/door-attached.png
-public/assets-proper/door-attached2.png
+floor-plan-designer/public/assets-proper/battering-ram*.png
+floor-plan-designer/public/assets-proper/battering-ram*.svg
+floor-plan-designer/public/assets-proper/brick*.png
+floor-plan-designer/public/assets-proper/brick*.svg
+floor-plan-designer/public/assets-proper/pickaxe*.png
+floor-plan-designer/public/assets-proper/pickaxe*.svg
+floor-plan-designer/public/assets-proper/bucket*.png
+floor-plan-designer/public/assets-proper/bucket*.svg
+floor-plan-designer/public/assets-proper/door-and-window-detached.svg
+floor-plan-designer/public/assets-proper/window-detached.png
+floor-plan-designer/public/assets-proper/door-detached.png
+floor-plan-designer/public/assets-proper/door-and-window-attached.svg
+floor-plan-designer/public/assets-proper/window-attached.png
+floor-plan-designer/public/assets-proper/door-attached.png
+floor-plan-designer/public/assets-proper/door-attached2.png
 
 #favicon?
 
-doc/look-of-the-old-planner.png
+floor-plan-designer/doc/look-of-the-old-planner.png
 
-public/img-vendor/*
-!public/img-vendor/README.md
+floor-plan-designer/public/img-vendor/*
+!floor-plan-designer/public/img-vendor/README.md
 
-public/var/*
-!public/var/README.md
+floor-plan-designer/public/var/*
+!floor-plan-designer/public/var/README.md
 
-doc/demo-scenario/demo-secenario.aux
-doc/demo-scenario/demo-secenario.dvi
-doc/demo-scenario/demo-secenario.log
-doc/demo-scenario/demo-secenario.pdf
-doc/demo-scenario/demo-secenario.toc
+floor-plan-designer/doc/demo-scenario/demo-secenario.aux
+floor-plan-designer/doc/demo-scenario/demo-secenario.dvi
+floor-plan-designer/doc/demo-scenario/demo-secenario.log
+floor-plan-designer/doc/demo-scenario/demo-secenario.pdf
+floor-plan-designer/doc/demo-scenario/demo-secenario.toc
 
-obsolete/*
+floor-plan-designer/obsolete/*
