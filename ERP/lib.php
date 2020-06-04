@@ -25,6 +25,7 @@ class Router
 
 			/** DB-admin: **/
 
+			case preg_match('!GET /!', $request, $matches):
 			case preg_match('!GET /show-all!', $request, $matches): $this->allController->showAll(); break;
 
 			case preg_match('!POST /flat/add!', $request, $matches): $this->allController->addFlat($this->post); break;
