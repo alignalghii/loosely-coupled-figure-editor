@@ -1,8 +1,9 @@
+<?php use function viewHelper\abbreviate; ?>
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="shortcut icon" href="favicon.ico"/>
-		<link rel="stylesheet" href="/CRUD-table.css"/>
+		<link rel="shortcut icon" href="/assets/favicon.ico"/>
+		<link rel="stylesheet" href="/assets/CRUD-table.css"/>
 		<meta charset="UTF-8"/>
 		<title>Dummy DB CRUD</title>
 	</head>

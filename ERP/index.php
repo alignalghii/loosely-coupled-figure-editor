@@ -2,7 +2,15 @@
 
 /** Main dependency injector */
 
-require 'lib.php';
+use models\FlatRelation;
+use models\RoomPrototypeRelation;
+use models\RoomShapeRelation;
+use models\RoomRelation;
+
+use controllers\AppProperController;
+use controllers\AllController;
+
+require 'autoload.php';
 
 $dbh = new PDO('mysql:host=localhost;dbname=floor_plan_designer', 'floor_plan_designer_user', 'floor_plan_designer_user_password', [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"]);
 
