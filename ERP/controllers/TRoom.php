@@ -8,7 +8,7 @@ use viewModels\{FlatsViewModel, RoomPrototypesViewModel, RoomShapesViewModel, Ro
 
 trait TRoom
 {
-	function addRoom(array $post): void // @TODO RoomEntity
+	function add(array $post): void // @TODO RoomEntity
 	{
 		$maybePostback = RoomEntity::maybePostback(
 			$post,
@@ -36,7 +36,7 @@ trait TRoom
 		);
 	}
 
-	function updateRoom(int $id, array $post): void // @TODO RoomEntity
+	function update(int $id, array $post): void // @TODO RoomEntity
 	{
 		$maybePostback = RoomEntity::maybePostback(
 			$post,
@@ -64,7 +64,7 @@ trait TRoom
 		);
 	}
 
-	function deleteRoom(int $id): void
+	function delete(int $id): void
 	{
 		$maybeShowbackId = Maybe::no([$this->roomRelation, 'delete'], $id);
 

@@ -8,7 +8,7 @@ use viewModels\{FlatsViewModel, RoomPrototypesViewModel, RoomShapesViewModel, Ro
 
 trait TFlat
 {
-	function addFlat(array $post): void // @TODO FlatEntity
+	function add(array $post): void // @TODO FlatEntity
 	{
 		$maybeShowback = FlatEntity::maybePostback($post, [$this->flatRelation, 'add']);
 
@@ -33,7 +33,7 @@ trait TFlat
 		);
 	}
 
-	function updateFlat(int $id, array $post): void // @TODO FlatEntity
+	function update(int $id, array $post): void // @TODO FlatEntity
 	{
 		$maybeShowback = FlatEntity::maybePostback(
 			$post,
@@ -61,7 +61,7 @@ trait TFlat
 		);
 	}
 
-	function deleteFlat(int $id): void
+	function delete(int $id): void
 	{
 		$maybeShowbackId = Maybe::no([$this->flatRelation, 'delete'], $id);
 

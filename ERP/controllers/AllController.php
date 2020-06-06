@@ -5,9 +5,29 @@ namespace controllers;
 use models\{FlatRelation, RoomPrototypeRelation, RoomShapeRelation, RoomRelation};
 use viewModels\{FlatsViewModel, RoomPrototypesViewModel, RoomShapesViewModel, RoomsViewModel};
 
-class AllController // @TODO split it via mixins?
+class AllController // @TODO wrong approach, turn it upside-down
 {
-	use TFlat, TRoomPrototype, TRoomShape, TRoom;
+	use TFlat, TRoomPrototype, TRoomShape, TRoom {
+		TFlat::add    insteadof TRoomPrototype, TRoomShape, TRoom;
+		TFlat::update insteadof TRoomPrototype, TRoomShape, TRoom;
+		TFlat::delete insteadof TRoomPrototype, TRoomShape, TRoom;
+
+		TFlat::add    as addFlat;
+		TFlat::update as updateFlat;
+		TFlat::delete as deleteFlat;
+
+		TRoomPrototype::add    as addRoomPrototype   ;
+		TRoomPrototype::update as updateRoomPrototype;
+		TRoomPrototype::delete as deleteRoomPrototype;
+
+		TRoomShape::add    as addRoomShape   ;
+		TRoomShape::update as updateRoomShape;
+		TRoomShape::delete as deleteRoomShape;
+
+		TRoom::add    as addRoom   ;
+		TRoom::update as updateRoom;
+		TRoom::delete as deleteRoom;
+	}
 
 	function __construct(FlatRelation $flatRelation, RoomPrototypeRelation $roomPrototypeRelation, RoomShapeRelation $roomShapeRelation, RoomRelation $roomRelation)
 	{
