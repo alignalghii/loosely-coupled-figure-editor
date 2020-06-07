@@ -18,7 +18,7 @@ class FlatRelation
 		if ($entity->address) {
 			$st = $this->dbh->prepare('INSERT INTO `flat` (`address`) values (:address)');
 			$st->bindValue('address', $entity->address, \PDO::PARAM_STR);
-		return $st->execute();
+			return $st->execute();
 		} else {
 			return false;
 		}
