@@ -4,7 +4,10 @@ namespace controllers;
 
 use ADT\Maybe;
 use models\RoomPrototypeEntity;
-use viewModels\{FlatsViewModel, RoomPrototypesViewModel, RoomShapesViewModel, RoomsViewModel};
+use viewModels\{
+	FlatsViewModel, RoomPrototypesViewModel, RoomShapesViewModel, RoomsViewModel,
+	ViewModelMeta
+};
 
 trait TRoomPrototype
 {
@@ -14,26 +17,9 @@ trait TRoomPrototype
 			$post,
 			[$this->roomPrototypeRelation, 'add']
 		);
-
-		$flatRecords          = $this->flatRelation->getAll();
-		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
-		$roomShapeRecords     = $this->roomShapeRelation->getAll();
-		$roomRecords          = $this->roomRelation->getAll();
-
-		$flatsViewModel          = new FlatsViewModel($flatRecords);
-		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
-		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
-		$roomsViewModel          = new RoomsViewModel($roomRecords);
-
-		$this->render(
-			'view.php',
-			[
-				'flatsViewModel'          => $flatsViewModel->showAll(),
-				'roomPrototypesViewModel' => $roomPrototypesViewModel->add($maybeShowback),
-				'roomShapesViewModel'     => $roomShapesViewModel->showAll(),
-				'roomsViewModel'          => $roomsViewModel->showAll()
-			]
-		);
+		$viewModelMeta = new ViewModelMeta($this);
+		$viewModel = $viewModelMeta->add('roomPrototypesViewModel', $maybeShowback);
+		$this->render('view.php', $viewModel);
 	}
 
 	function update(int $id, array $post): void // @TODO FlatEntity
@@ -42,50 +28,16 @@ trait TRoomPrototype
 			$post,
 			function (RoomPrototypeEntity $entity) use ($id): bool {return $this->roomPrototypeRelation->update($id, $entity);}
 		);
-
-		$flatRecords          = $this->flatRelation->getAll();
-		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
-		$roomShapeRecords     = $this->roomShapeRelation->getAll();
-		$roomRecords          = $this->roomRelation->getAll();
-
-		$flatsViewModel          = new FlatsViewModel($flatRecords);
-		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
-		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
-		$roomsViewModel          = new RoomsViewModel($roomRecords);
-
-		$this->render(
-			'view.php',
-			[
-				'flatsViewModel'          => $flatsViewModel->showAll(),
-				'roomPrototypesViewModel' => $roomPrototypesViewModel->update($id, $maybeShowback),
-				'roomShapesViewModel'     => $roomShapesViewModel->showAll(),
-				'roomsViewModel'          => $roomsViewModel->showAll()
-			]
-		);
+		$viewModelMeta = new ViewModelMeta($this);
+		$viewModel = $viewModelMeta->update('roomPrototypesViewModel', $id, $maybeShowback);
+		$this->render('view.php', $viewModel);
 	}
 
 	function delete(int $id): void
 	{
 		$maybeShowbackId = Maybe::no([$this->roomPrototypeRelation, 'delete'], $id);
-
-		$flatRecords          = $this->flatRelation->getAll();
-		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
-		$roomShapeRecords     = $this->roomShapeRelation->getAll();
-		$roomRecords          = $this->roomRelation->getAll();
-
-		$flatsViewModel          = new FlatsViewModel($flatRecords);
-		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
-		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
-		$roomsViewModel          = new RoomsViewModel($roomRecords);
-
-		$this->render(
-			'view.php',
-			[
-				'flatsViewModel'          => $flatsViewModel->showAll(),
-				'roomPrototypesViewModel' => $roomPrototypesViewModel->delete($maybeShowbackId),
-				'roomShapesViewModel'     => $roomShapesViewModel->showAll(),
-				'roomsViewModel'          => $roomsViewModel->showAll()
-			]
-		);
+		$viewModelMeta = new ViewModelMeta($this);
+		$viewModel = $viewModelMeta->delete('roomPrototypesViewModel', $maybeShowbackId);
+		$this->render('view.php', $viewModel);
 	}
 }

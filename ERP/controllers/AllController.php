@@ -3,7 +3,10 @@
 namespace controllers;
 
 use models\{FlatRelation, RoomPrototypeRelation, RoomShapeRelation, RoomRelation};
-use viewModels\{FlatsViewModel, RoomPrototypesViewModel, RoomShapesViewModel, RoomsViewModel};
+use viewModels\{
+	FlatsViewModel, RoomPrototypesViewModel, RoomShapesViewModel, RoomsViewModel,
+	ViewModelMeta
+};
 
 class AllController // @TODO wrong approach, turn it upside-down
 {
@@ -29,7 +32,9 @@ class AllController // @TODO wrong approach, turn it upside-down
 		TRoom::delete as deleteRoom;
 	}
 
-	function __construct(FlatRelation $flatRelation, RoomPrototypeRelation $roomPrototypeRelation, RoomShapeRelation $roomShapeRelation, RoomRelation $roomRelation)
+	public $flatRelation, $roomPrototypeRelation, $roomShapeRelation, $roomRelation;
+
+	public function __construct(FlatRelation $flatRelation, RoomPrototypeRelation $roomPrototypeRelation, RoomShapeRelation $roomShapeRelation, RoomRelation $roomRelation)
 	{
 		$this->flatRelation          = $flatRelation;
 		$this->roomPrototypeRelation = $roomPrototypeRelation;
@@ -37,31 +42,14 @@ class AllController // @TODO wrong approach, turn it upside-down
 		$this->roomRelation          = $roomRelation;
 	}
 
-	function showAll(): void
+	public function showAll(): void
 	{
-		$flatRecords          = $this->flatRelation->getAll();
-		$roomPrototypeRecords = $this->roomPrototypeRelation->getAll();
-		$roomShapeRecords     = $this->roomShapeRelation->getAll();
-		$roomRecords          = $this->roomRelation->getAll();
-
-		$flatsViewModel          = new FlatsViewModel($flatRecords);
-		$roomPrototypesViewModel = new RoomPrototypesViewModel($roomPrototypeRecords);
-		$roomShapesViewModel     = new RoomShapesViewModel($roomShapeRecords);
-		$roomsViewModel          = new RoomsViewModel($roomRecords);
-
-		$this->render(
-			'view.php',
-			[
-				'flatsViewModel'          => $flatsViewModel->showAll(),
-				'roomPrototypesViewModel' => $roomPrototypesViewModel->showAll(),
-				'roomShapesViewModel'     => $roomShapesViewModel->showAll(),
-				'roomsViewModel'          => $roomsViewModel->showAll()
-			]
-		);
+		$viewModelMeta = new ViewModelMeta($this);
+		$viewModel = $viewModelMeta->showAll();
+		$this->render('view.php', $viewModel);
 	}
 
-	// Auxiliary:
-	function render(string $viewFile, array $viewModel): void
+	private function render(string $viewFile, array $viewModel): void
 	{
 		extract($viewModel);
 		require $viewFile;
