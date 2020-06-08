@@ -8,6 +8,8 @@ function SaveDriver(aDocument)
 	this.document = aDocument; // for mouse pointer (hourglass)
 }
 
+Object.assign(SaveDriver.prototype, DriverMixinProgress);
+
 SaveDriver.prototype.pipeToSM = function (dispatch)
 {
 	const clickSaveNative = event => dispatch('click', ['void'], {saveAction: 'save'});
@@ -49,8 +51,6 @@ SaveDriver.prototype.stubLinkProgress = function ()
 	this.jpegDownloadLink.innerHTML += '...';
 	this.hourglass(true);
 };
-
-SaveDriver.prototype.hourglass = function (flag) {this.document.body.style.cursor = flag ? 'wait' : 'default';}; // @credit to https://stackoverflow.com/a/25207986 and https://stackoverflow.com/a/48873802
 
 SaveDriver.prototype.unsuffixLink = function () {this.jpegDownloadLink.innerHTML = this.jpegDownloadLink.innerHTML.replace(/[^a-zA-Z0-9_]*$/, '');};
 

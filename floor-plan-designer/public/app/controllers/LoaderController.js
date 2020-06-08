@@ -413,6 +413,33 @@ LoaderController.prototype.cancel     = function ()
 	this.clearError();
 	this.statusBarDriver.report('ID visszavonása');
 	this.focusID();
+
+	console.log('Sending AJAX for loader IDs...');	const xhr = new XMLHttpRequest();
+	xhr.open("GET", "/index.php/loadable-flat-ids");
+	xhr.responseType = 'json';
+	xhr.onload = event => this.xhrOnLoad.call(this, xhr, event); // @TODO: Should call the `dispatch` of `Router.js`, moreover, should be piped in withe the device's `pipeToSM`
+	xhr.send();
+	this.loaderDriver.indicateProgress();
+};
+
+
+
+LoaderController.prototype.xhrOnLoad = function (xhr, event)
+{
+	console.log('Received AJAX reposone for loader flar IDs');
+	this.loaderDriver.hourglass(false);
+	switch (xhr.status) {
+		case 200:
+			console.log(xhr);
+			if (xhr.response) {
+				console.log(`Response is OK: ${xhr.response}`);
+			} else {
+				throw `Response is wrong: ${xhr.response}`;
+			}
+			break;
+		default:
+			throw 'Ajax wrong';
+	}
 };
 
 LoaderController.prototype.focusID = function () {this.loaderDriver.focus('loaderIdField');};

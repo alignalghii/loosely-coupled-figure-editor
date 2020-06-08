@@ -7,7 +7,11 @@ function LoaderDriver (aDocument)
 	this.loaderIdCancel = aDocument.getElementById('loader-id-cancel');
 
 	this.workCanvas     = aDocument.getElementById('svgRoot_workCanvas'); // @TODO refactory?
+
+	this.document = aDocument;
 }
+
+Object.assign(LoaderDriver.prototype, DriverMixinProgress);
 
 LoaderDriver.prototype.pipeToSM = function (dispatch)
 {
@@ -18,8 +22,12 @@ LoaderDriver.prototype.pipeToSM = function (dispatch)
 	};
 	this.loaderForm.addEventListener('submit', idFormSubmit);
 
-	const clickCancel = event => dispatch('click', ['void'], {loaderAction: 'cancel'});
-	this.loaderIdCancel.addEventListener('click', clickCancel);
+	const dispatchCancelAction = () => dispatch('click', ['void'], {loaderAction: 'cancel'});
+		if (!this.loaderIdField.value) dispatchCancelAction();
+		const clickCancel = event => dispatchCancelAction();
+		this.loaderIdCancel.addEventListener('click', clickCancel);
+		const loaderIdEmpty = event => {if (this.loaderIdField === this.document.activeElement && !this.loaderIdField.value) dispatchCancelAction();};
+		this.document.addEventListener('keyup', loaderIdEmpty);
 };
 
 LoaderDriver.prototype.message = function (str) {this.idvalid.innerHTML = str;};
@@ -34,3 +42,5 @@ LoaderDriver.prototype.message = function (str) {this.idvalid.innerHTML = str;};
 };*/
 
 LoaderDriver.prototype.focus = function (loaderName) {this[loaderName].focus();};
+
+LoaderDriver.prototype.indicateProgress = function () {console.log('progresss...');};
