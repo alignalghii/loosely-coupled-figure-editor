@@ -96,7 +96,7 @@ DoorWidget.prototype.reflectVerticallyRef = function ()
 DoorWidget.prototype.reflectHorizontallyRef = function ()
 {
 	console.log('Flip door horizontally (ref)');
-	// @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30
+	// @TODO delegate a function to `public/app.js/low-level-system/SvgLowLevel.js`, see line #30
 	const x = Number(this.low.getAttribute('x')),
 	      y = Number(this.low.getAttribute('y'));
 	const w = Number(this.low.getAttribute('width')),
@@ -114,13 +114,13 @@ DoorWidget.prototype.reflectHorizontallyRef = function ()
 			t = t + ` translate(${x} ${y+h/2}) scale(1, -1) translate(${-x} ${-y-h/2})`;
 			console.log('Direct addition');
 		}
-		//this.low.setAttribute('transform', t); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30
+		//this.low.setAttribute('transform', t); // @TODO delegate a function to `public/app.js/low-level-system/SvgLowLevel.js`, see line #30
 	} else {
 		t = `translate(${x} ${y+h/2}) scale(1, -1) translate(${-x} ${-y-h/2})`;
 		console.log('Virgin direct addition');
 	}
 	if (t) {
-		this.low.setAttribute('transform', t); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30
+		this.low.setAttribute('transform', t); // @TODO delegate a function to `public/app.js/low-level-system/SvgLowLevel.js`, see line #30
 	} else {
 		this.low.removeAttribute('transform');
 	}
@@ -150,7 +150,7 @@ DoorWidget.prototype.attachToWall   = function (wallsBackRefSet)
 			maybeReachEndPoint(room.figure.vertices[0], tour(room.figure.vertices).map(edgeVector), slit.center)
 		);
 	}
-	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/door-attached2.png'); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there. In summary: use a rewriter wrapper, like TransformRewriter
+	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/door-attached2.png'); // @TODO delegate a function to `public/app.js/low-level-system/SvgLowLevel.js`, see line #30 there. In summary: use a rewriter wrapper, like TransformRewriter
 	let edge = null, _ = null;
 	for ([edge, _] of wallsBackRefSet.mapStraight);
 	if (edge) {
@@ -166,7 +166,7 @@ DoorWidget.prototype.attachToWall   = function (wallsBackRefSet)
 		const angle = signedRotAngleOfVectors(plumbBob, [ex, ey]);
 		const Ox = Number(this.low.getAttribute('x')) + Number(this.low.getAttribute('width' )) / 2,
 		      Oy = Number(this.low.getAttribute('y')) + Number(this.low.getAttribute('height')) / 2;
-		this.low.setAttribute('transform', `translate(${-Rx} ${Ry}) rotate(${180-angle} ${Ox} ${Oy})`); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
+		this.low.setAttribute('transform', `translate(${-Rx} ${Ry}) rotate(${180-angle} ${Ox} ${Oy})`); // @TODO delegate a function to `public/app.js/low-level-system/SvgLowLevel.js`, see line #30 there
 	}  //  rotate(${-angle} ${Ox} ${Oy})
 	//this.restoreOn(canvasPseudoWidgets[2]);
 };
@@ -174,7 +174,7 @@ DoorWidget.prototype.attachToWall   = function (wallsBackRefSet)
 DoorWidget.prototype.detachFromWall = function ()
 {
 	console.log('Detach door from wall');
-	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/door-detached.png'); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
+	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/door-detached.png'); // @TODO delegate a function to `public/app.js/low-level-system/SvgLowLevel.js`, see line #30 there
 	this.low.removeAttribute('transform');
 	//canvasPseudoWidgets[2].doorWidgets().map(doorWidget => doorWidget.delete());
 };

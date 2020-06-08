@@ -228,9 +228,9 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
        - Megvan a jelenség oka. Akkor jelentkezik, ha a szobához csatolt bútorok belül vannak és egyben nagyon közel vannak a falhoz. Az akadás pont az ezzel ellentétes irányba való vonszoláskor jelentkezik. Valószínűleg a bútorok ideiglenes lemaradozása, a kísérés nem megfeleő szinkronizálása okozza (hisz tudjuk, a folyamatos vonszolás valójában kicsi de nemnulla ugrásokból áll).
  - Jelenleg azért nem romlik el vászonugrás közben a nyílászárók lehelyezkedése, mert a jumpTo automatikusan konvertál. Ez nem jó megoldás, mert így egy megtervezett falnyilásozatú szoba gép kirakása nem vászonfüggetlen. Például a jelenlegi loader, amely a menüvászon egyes alakzatait teszi ki, láthatóan elcsúsznak a nyilászárók azokhoz képes. Kénytelen vagyok arra a vásznra kitenni, ahova tervezve van, és ha nem oda szeretném, akkor ráhívok egy jumpTo-t. Mindez azonban code smell. A nyilászárókaz magas szinten, business object szintjén kell modellezni.
  - xlink:href is dperecated: https://developer.mozilla.org/pt-BR/docs/Web/SVG/Attribute/xlink:href
- - mv public/app/domain public/app/business
+ - mv public/app.js/domain public/app.js/business
  - A `this.state.focus` ne `Widget | null` típusú legyen legyen, hanem `Maybe<Widget>`.
- - A `public/app/widget-pillar/CanvasMultiverse.js` modul szerepének tisztázása. Jelenleg teljes üres osztály.
+ - A `public/app.js/widget-pillar/CanvasMultiverse.js` modul szerepének tisztázása. Jelenleg teljes üres osztály.
  - Legyen csengő hang ütközéskor! (pl. `glass.ogg`)
  - Vajon, amikor végigmegyünk az <svg> elem gyerekein, a <defs> miért nem számít annak? persze ez pont jól jön, mert kivételt dobna, ha `<image>`  `<polygon>` `<text>` -től különböző gyerekre futna rá (sőt tulajdonképp ezt szűrni is kellene!).
  - A loader ID-jét ne csak a pipa gombbal, hanem enter megynomsával is aktiválni lehessen
@@ -281,12 +281,12 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - Az élnyújtás, az él sínes elhúzása, és az éltolás mellett ltyezik egy negyedik magasszintű élművelet is, ez a párhuzamosságkiigazítás. Ígylehet pl. egy elrontott párhuzamosságú trapézra visszaállítani az oldalél sínes tologatásának lehetőségét.
  - A listaszerű megjelenítés nem a legkellemesebb és leglogikusabb layout a kontextusmenüre. A tematikus műveletcsoportok miatt a táblázatos, grides, rácsszerű forma sokkal logikusabb, tömörebb, kényelmesebb lenne.
  - Szimbólumok, unicode karakterikonok használatával a grides elrendezésű kontextmenü még tömörebbé tehető. Ha ez nagyon szoktatlan, akkor a baloldali menüben meghagyott konfigopciókkal lehetne a kontextusmenü számára verbose-abb és tömörebb megjelenítési formák közt választani.
- - A `public/app/context-menu` mappába (csomagba, modulcsoportba) kerüljenek a régi tulajdonság-űrlappal kifejezetten kapcsolatos dolgok is!
+ - A `public/app.js/context-menu` mappába (csomagba, modulcsoportba) kerüljenek a régi tulajdonság-űrlappal kifejezetten kapcsolatos dolgok is!
  - Check HTML validity by `lint`. Ennek keretében ellenőrizendő az is: szabad-e, hogy `<ul>` gyerekei ne csak `<li>`, hanem `<hr/>`-ek is legyenek?
 
  - A még vonszolt nyílászáró legyen képes automatikusan is alkalmazkodni a fal irányához akkor is, amikor saroknál húzzuk át:
-	--- a/public/app/controllers/NormalModeController.js
-	+++ b/public/app/controllers/NormalModeController.js
+	--- a/public/app.js/controllers/NormalModeController.js
+	+++ b/public/app.js/controllers/NormalModeController.js
 	@@ -62,7 +62,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 		                                        this.state.prevWidget.shapeshifterSlide(allowable0, currentWEPos)                        :
 		                                        {displacement: allowable0, maybeAngle: Maybe.nothing()}; // @TODO design a standalone class for it, and delegete tasks to it @TODO use >>= as for a Maybe-monad

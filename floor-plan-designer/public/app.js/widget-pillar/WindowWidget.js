@@ -106,7 +106,7 @@ WindowWidget.prototype.attachToWall   = function (wallsBackRefSet)
 		}
 	}*/
 	/**/
-	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/window-attached.png'); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
+	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/window-attached.png'); // @TODO delegate a function to `public/app.js/low-level-system/SvgLowLevel.js`, see line #30 there
 	let edge = null, _ = null;
 	for ([edge, _] of wallsBackRefSet.mapStraight);
 	if (edge) {
@@ -114,7 +114,7 @@ WindowWidget.prototype.attachToWall   = function (wallsBackRefSet)
 		const angle = signedRotAngleOfEdges(plumbBob, edge);
 		const Ox = Number(this.low.getAttribute('x')) + Number(this.low.getAttribute('width' )) / 2,
 		      Oy = Number(this.low.getAttribute('y')) + Number(this.low.getAttribute('height')) / 2;
-		this.low.setAttribute('transform', `rotate(${-angle} ${Ox} ${Oy})`); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30 there
+		this.low.setAttribute('transform', `rotate(${-angle} ${Ox} ${Oy})`); // @TODO delegate a function to `public/app.js/low-level-system/SvgLowLevel.js`, see line #30 there
 	}
 	//this.restoreOn(canvasPseudoWidgets[2]);
 };
@@ -122,7 +122,7 @@ WindowWidget.prototype.attachToWall   = function (wallsBackRefSet)
 WindowWidget.prototype.detachFromWall = function ()
 {
 	console.log('Detach window from wall');
-	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/window-detached.png'); // @TODO delegate a function to `public/app/low-level-system/SvgLowLevel.js`, see line #30
+	this.low.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/assets-proper/window-detached.png'); // @TODO delegate a function to `public/app.js/low-level-system/SvgLowLevel.js`, see line #30
 	this.low.removeAttribute('transform');
 	//canvasPseudoWidgets[2].windowWidgets().map(windowWidget => windowWidget.delete());
 };

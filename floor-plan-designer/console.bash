@@ -80,7 +80,7 @@ case "$1" in
 	pull)
 		echo 'Not implemented for security reasons. Do it manually.';;
 	contextmenu-universe)
-		sed -nf console.aux/CMO-constructoralias-2nd-arg.sed public/app/widget-pillar/FigureWidget.js;;
+		sed -nf console.aux/CMO-constructoralias-2nd-arg.sed public/app.js/widget-pillar/FigureWidget.js;;
 	logfinder)
 		console.aux/logfinder.bash;;
 	eitherTarget)
