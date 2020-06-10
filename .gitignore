@@ -3,7 +3,7 @@
 
 floor-plan-designer/vendor/sell/*
 !floor-plan-designer/vendor/sell/README.md
-index.php
+floor-plan-designer/app.php/view.php
 holy-grail.css
 
 floor-plan-designer/vendor/buy/*

@@ -3,18 +3,18 @@
 namespace viewModels;
 
 use ADT\{Maybe, ArrayColoring};
-use controllers\AllController;
+use controllers\HumanController;
 
 class ViewModelMeta
 {
 	private $flatsViewModel, $roomPrototypesViewModel, $roomShapesViewModel, $roomsViewModel;
 
-	public function __construct(AllController $allController)
+	public function __construct(HumanController $humanController)
 	{
-		$flatRecords          = $allController->flatRelation->getAll();
-		$roomPrototypeRecords = $allController->roomPrototypeRelation->getAll();
-		$roomShapeRecords     = $allController->roomShapeRelation->getAll();
-		$roomRecords          = $allController->roomRelation->getAll();
+		$flatRecords          = $humanController->flatRelation->getAll();
+		$roomPrototypeRecords = $humanController->roomPrototypeRelation->getAll();
+		$roomShapeRecords     = $humanController->roomShapeRelation->getAll();
+		$roomRecords          = $humanController->roomRelation->getAll();
 
 		$this->assoc = [
 			'flatsViewModel'          => new FlatsViewModel($flatRecords),

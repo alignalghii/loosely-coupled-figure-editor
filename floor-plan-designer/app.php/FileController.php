@@ -1,10 +1,10 @@
 <?php
 
-namespace controllers;
-
-class AppProperController
+class FileController
 {
-	function updateJPEG(string $svgString)
+	public function show() {$this->render('view.php');}
+
+	public function updateJPEG(string $svgString)
 	{
 		`find var -name 'work--*-*.*' -mmin +1 -delete`; // Deleting too old temporary files @TODO reconsider
 
@@ -20,4 +20,6 @@ class AppProperController
 		header('Content-Type: application/json');
 		echo json_encode(['downloadLink' => "$extlessPath.jpeg"]);
 	}
+
+	private function render($viewFileName) {require $viewFileName;}
 }

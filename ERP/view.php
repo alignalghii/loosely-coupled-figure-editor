@@ -8,7 +8,7 @@
 		<title>Dummy DB CRUD</title>
 	</head>
 	<body>
-		<a href="/">[Vissza az alkalmazáshoz]</a><a href="/" target="_blank">[+]</a>
+		<a href="http://localhost:8000">[Vissza az alkalmazáshoz]</a><a href="http://localhost:8000" target="_blank">[+]</a>
 		<h1>Dummy DB CRUD</h1>
 		<h2>Táblák</h2>
 		<h3>Lakások</h3>

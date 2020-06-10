@@ -43,4 +43,4 @@ LoaderDriver.prototype.message = function (str) {this.idvalid.innerHTML = str;};
 
 LoaderDriver.prototype.focus = function (loaderName) {this[loaderName].focus();};
 
-LoaderDriver.prototype.indicateProgress = function () {console.log('progresss...');};
+LoaderDriver.prototype.indicateProgress = function (flag) {this.hourglass(flag);}; // `hourglass` from `device-drivers/DriverMixinProgress.js` @TODO user-friendlie (status flashuplabel, sounds)

@@ -2,22 +2,22 @@
 
 case "$1" in
 	checkout-free)
-		cp public/index.tpl.php public/index.php;
+		cp app.php/view.tpl.php app.php/view.php;
 		cp public/assets-proper/holy-grail.tpl.css public/assets-proper/holy-grail.css;;
 	checkout-sell)
-		cp vendor/sell/index.php public/index.php;
+		cp vendor/sell/FPD-view.php app.php/view.php;
 		cp vendor/sell/holy-grail.css public/assets-proper/holy-grail.css;;
 	checkout-buy)
 		cp vendor/buy/logo.jpeg public/assets-proper/logo.jpeg;
 		cp vendor/buy/sonar.ogg public/assets-proper/sonar.ogg;;
 	commit-sell)
-		cp public/index.php vendor/sell/index.php;
+		cp app.php/view.php vendor/sell/FPD-view.php;
 		cp public/assets-proper/holy-grail.css vendor/sell/holy-grail.css;;
 	commit-buy)
 		cp public/assets-proper/logo.jpeg vendor/buy/logo.jpeg;
 		cp public/assets-proper/sonar.ogg vendor/buy/sonar.ogg;;
 	clean-sell)
-		rm public/index.php;
+		rm app.php/view.php;
 		rm public/assets-proper/holy-grail.css;;
 	clean-buy)
 		rm public/assets-proper/logo.jpeg;
@@ -27,10 +27,10 @@ case "$1" in
 		./console.bash clean-buy;; # call user-defined bash-function instead
 	branches)
 		echo '+-------------+';
-		echo '| index.php: |';
+		echo '| view.php: |';
 		echo '+-------------+';
 		echo;
-		diff public/index.tpl.php vendor/sell/index.php;
+		diff app.php/view.tpl.php vendor/sell/FPD-view.php;
 		echo;
 		echo '+-----------------+';
 		echo '| holy-grail.css: |';
@@ -39,10 +39,10 @@ case "$1" in
 		diff public/assets-proper/holy-grail.tpl.css vendor/sell/holy-grail.css;;
 	diff)
 		echo '+-------------+';
-		echo '| index.php: |';
+		echo '| view.php: |';
 		echo '+-------------+';
 		echo;
-		diff vendor/sell/index.php public/index.php;
+		diff vendor/sell/FPD-view.php app.php/view.php;
 		echo;
 		echo '+-----------------+';
 		echo '| holy-grail.css: |';
@@ -51,10 +51,10 @@ case "$1" in
 		diff vendor/sell/holy-grail.css public/assets-proper/holy-grail.css;;
 	syncstatus)
 		echo '+-------------+';
-		echo '| index.php: |';
+		echo '| view.php: |';
 		echo '+-------------+';
 		echo;
-		diff ../../loosely-coupled-figure-editor--vendor/vendor/sell/index.php vendor/sell/index.php;
+		diff ../../loosely-coupled-figure-editor--vendor/vendor/sell/FPD-view.php vendor/sell/FPD-view.php;
 		echo;
 		echo '+-----------------+';
 		echo '| holy-grail.css: |';
@@ -75,7 +75,7 @@ case "$1" in
 		./console.bash syncstatus;
 		echo;;
 	push)
-		cp public/index.php ../../loosely-coupled-figure-editor--vendor/vendor/sell/index.php;
+		cp app.php/view.php ../../loosely-coupled-figure-editor--vendor/vendor/sell/FPD-view.php;
 		cp public/assets-proper/holy-grail.css ../../loosely-coupled-figure-editor--vendor/vendor/sell/holy-grail.css;;
 	pull)
 		echo 'Not implemented for security reasons. Do it manually.';;
@@ -91,7 +91,7 @@ case "$1" in
 		echo;
 		echo 'Customer-specific files (e.g. skins) You will sell, meant to become private, not open-source:';
 		echo;
-		echo ' - index.php';
+		echo ' - view.php';
 		echo ' - holy-grail.css';
 		echo;
 		echo 'Third-party files You use:';

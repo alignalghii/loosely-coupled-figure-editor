@@ -295,76 +295,106 @@ LoaderController.prototype.load = function (i)
 
 			break;
 		default:
-			if (flatIds.indexOf(i) >= 0 || flatIds.indexOf(`${i}`) >= 0) {
-				if (this.clearAndTab()) {
-					this.tabSelectorDriver.relabelTab('DB', `#${i}`); // @TODO DRY
-					this.statusBarDriver.report(`${i}. rekord betöltése valós adatbázisból`);
-					const goodRecords = records.filter(rec => rec.flat_id == i);
-					let counter = 0;
-					for (let goodRecord of goodRecords) {
-						const shapeSymbol = goodRecord.shape_symbol; shapeName = goodRecord.shape_name; console.log(goodRecord);
-						let figure, countedArea, normalizer;
-						switch (shapeSymbol) {
-							case 'Q':
-								figure = new Figure([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]], {fill: 'url(#csempe1_dark_small)'});
-								break;
-							case 'R':
-								let w = goodRecord.shape_argument_1, h = goodRecord.shape_argument_2;
-								countedArea = w * h;
-								normalizer = Math.sqrt(countedArea);
-								let w_ = w / normalizer, h_ = h / normalizer,
-								    ww_ = w_ / 2, hh_ = h_ / 2;
-								figure = new Figure([[-ww_, -hh_], [ww_, -hh_], [ww_, hh_], [-ww_, hh_]], {fill: 'url(#csempe1_dark_small)'});
-								break;
-							case 'T':
-								let base = goodRecord.shape_argument_1, height = goodRecord.shape_argument_2, topLeftX = goodRecord.shape_argument_3, topRightX = goodRecord.shape_argument_4,
-								    ceiling = Math.abs(topRightX - topLeftX),
-								    midsegment = (base + ceiling) / 2;
-								countedArea = height * midsegment;
-								normalizer = Math.sqrt(countedArea);
-								let base_ = base / normalizer, height_ = height / normalizer,
-								    topLeftX_ = topLeftX / normalizer, topRightX_ = topRightX / normalizer;
-								figure = new Figure(
-									[[-base_/2, -height_/2], [base_/2, -height_/2], [topRightX_, height_/2], [topLeftX_, height_/2]],
-									{fill: 'url(#csempe1_dark_small)'}
-								);
-								break;
-							case 'L':
-								let LW = goodRecord.shape_argument_1, LH = goodRecord.shape_argument_2,
-								    Lw = goodRecord.shape_argument_3, Lh = goodRecord.shape_argument_4,
-								    Ldw = LW - Lw, Ldh = LH - Lh;
-								countedArea = LW * LH - Ldw * Ldh;
-								normalizer = Math.sqrt(countedArea);
-								let  LW_ = LW / normalizer, LH_ = LH / normalizer,
-								     Lw_ = Lw / normalizer, Lh_ = Lh / normalizer,
-								    Ldw_ = LW_ - Lw_, Ldh_ = LH_ - Lh_;
-								figure = new Figure(
-									[[-LW_/2, -LH_/2], [LW_/2, -LH_/2], [LW_/2, -LH_/2+Lh_], [-LW_/2+Lw_, -LH_/2+Lh_], [-LW_/2+Lw_, LH_/2], [-LW_/2, LH_/2]],
-									{fill: 'url(#csempe1_dark_small)'}
-								);
-								break;
-							default:
-								figure = new Figure([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]], {fill: 'url(#csempe1_dark_small)'});
-								break;
-						}
+			this.sendFlatQueryToERP(i);
+	}
+};
 
-						figure.doScale(11);
-						figure.doTranslation([0, -15 * (counter - (goodRecords.length-1)/2)])
-						let business = new Room (
-							goodRecord.name, figure,
-							[], ['nothing'],
-							[]//[new CircularSlit(10, 0.5), new CircularSlit(17, 0.8), new CircularSlit(24.6, 0.7), new CircularSlit(38.5, 1)]
-						);
-						//business.title.doTranslation([-1, 4.5]);
-						let widget = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(business);
-						counter++;
-					}
-				}
+LoaderController.prototype.sendFlatQueryToERP = function (i)
+{
+	const xhr = new XMLHttpRequest();
+	xhr.open('GET', `http://localhost:8001/flat-record-on-id/${i}`); // @TODO template or templated constants
+	xhr.responseType = 'json';
+	xhr.onload = event => this.loadFlatRecordFromERP.call(this, xhr, event, i); // @TODO: Should call the `dispatch` of `Router.js`, moreover, should be piped in withe the device's `pipeToSM`
+	xhr.send();
+	this.loaderDriver.indicateProgress(true);
+};
+
+LoaderController.prototype.loadFlatRecordFromERP = function (xhr, event, i) // @TODO DRY with `xhrOnLoad`
+{
+	this.loaderDriver.indicateProgress(false);
+	switch (xhr.status) {
+		case 200:
+			if (xhr.response) {
+				this.loadFlatRecord(xhr.response.flatIds, xhr.response.records, i);
 			} else {
-				this.statusBarDriver.report(`<span class="error">${i}. rekord nem létezik!</span>`); // @TODO a helper for error messages, maybe inside or alongside `QuoteHelper`
-				this.audioODriver.error();
-				break;
+				throw `Response is wrong: ${xhr.response}`;
 			}
+			break;
+		default:
+			throw 'Ajax wrong';
+	}
+};
+
+LoaderController.prototype.loadFlatRecord = function (flatIds, records, i)
+{
+	if (flatIds.indexOf(i) >= 0 || flatIds.indexOf(`${i}`) >= 0) {
+		if (this.clearAndTab()) {
+			this.tabSelectorDriver.relabelTab('DB', `#${i}`); // @TODO DRY
+			this.statusBarDriver.report(`${i}. rekord betöltése valós adatbázisból`);
+			const goodRecords = records.filter(rec => rec.flat_id == i);
+			let counter = 0;
+			for (let goodRecord of goodRecords) {
+				const shapeSymbol = goodRecord.shape_symbol; shapeName = goodRecord.shape_name; console.log(goodRecord);
+				let figure, countedArea, normalizer;
+				switch (shapeSymbol) {
+					case 'Q':
+						figure = new Figure([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]], {fill: 'url(#csempe1_dark_small)'});
+						break;
+					case 'R':
+						let w = goodRecord.shape_argument_1, h = goodRecord.shape_argument_2;
+						countedArea = w * h;
+						normalizer = Math.sqrt(countedArea);
+						let w_ = w / normalizer, h_ = h / normalizer,
+						    ww_ = w_ / 2, hh_ = h_ / 2;
+						figure = new Figure([[-ww_, -hh_], [ww_, -hh_], [ww_, hh_], [-ww_, hh_]], {fill: 'url(#csempe1_dark_small)'});
+						break;
+					case 'T':
+						let base = goodRecord.shape_argument_1, height = goodRecord.shape_argument_2, topLeftX = goodRecord.shape_argument_3, topRightX = goodRecord.shape_argument_4,
+						    ceiling = Math.abs(topRightX - topLeftX),
+						    midsegment = (base + ceiling) / 2;
+						countedArea = height * midsegment;
+						normalizer = Math.sqrt(countedArea);
+						let base_ = base / normalizer, height_ = height / normalizer,
+						    topLeftX_ = topLeftX / normalizer, topRightX_ = topRightX / normalizer;
+						figure = new Figure(
+							[[-base_/2, -height_/2], [base_/2, -height_/2], [topRightX_, height_/2], [topLeftX_, height_/2]],
+							{fill: 'url(#csempe1_dark_small)'}
+						);
+						break;
+					case 'L':
+						let LW = goodRecord.shape_argument_1, LH = goodRecord.shape_argument_2,
+						    Lw = goodRecord.shape_argument_3, Lh = goodRecord.shape_argument_4,
+						    Ldw = LW - Lw, Ldh = LH - Lh;
+						countedArea = LW * LH - Ldw * Ldh;
+						normalizer = Math.sqrt(countedArea);
+						let  LW_ = LW / normalizer, LH_ = LH / normalizer,
+						     Lw_ = Lw / normalizer, Lh_ = Lh / normalizer,
+						    Ldw_ = LW_ - Lw_, Ldh_ = LH_ - Lh_;
+						figure = new Figure(
+							[[-LW_/2, -LH_/2], [LW_/2, -LH_/2], [LW_/2, -LH_/2+Lh_], [-LW_/2+Lw_, -LH_/2+Lh_], [-LW_/2+Lw_, LH_/2], [-LW_/2, LH_/2]],
+							{fill: 'url(#csempe1_dark_small)'}
+						);
+						break;
+					default:
+						figure = new Figure([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]], {fill: 'url(#csempe1_dark_small)'});
+						break;
+				}
+
+				figure.doScale(11);
+				figure.doTranslation([0, -15 * (counter - (goodRecords.length-1)/2)])
+				let business = new Room (
+					goodRecord.name, figure,
+					[], ['nothing'],
+					[]//[new CircularSlit(10, 0.5), new CircularSlit(17, 0.8), new CircularSlit(24.6, 0.7), new CircularSlit(38.5, 1)]
+				);
+				//business.title.doTranslation([-1, 4.5]);
+				let widget = this.canvasPseudoWidgets[3].figureWidgetFactory.createFromBusiness0(business);
+				counter++;
+			}
+		}
+	} else {
+		this.statusBarDriver.report(`<span class="error">${i}. rekord nem létezik!</span>`); // @TODO a helper for error messages, maybe inside or alongside `QuoteHelper`
+		this.audioODriver.error();
 	}
 };
 
@@ -414,25 +444,31 @@ LoaderController.prototype.cancel     = function ()
 	this.statusBarDriver.report('ID visszavonása');
 	this.focusID();
 
-	console.log('Sending AJAX for loader IDs...');	const xhr = new XMLHttpRequest();
-	xhr.open("GET", "/index.php/loadable-flat-ids");
-	xhr.responseType = 'json';
-	xhr.onload = event => this.xhrOnLoad.call(this, xhr, event); // @TODO: Should call the `dispatch` of `Router.js`, moreover, should be piped in withe the device's `pipeToSM`
-	xhr.send();
-	this.loaderDriver.indicateProgress();
+	this.sendFlatIdsQueryToERP();
 };
 
-
-
-LoaderController.prototype.xhrOnLoad = function (xhr, event)
+LoaderController.prototype.sendFlatIdsQueryToERP = function ()
 {
-	console.log('Received AJAX reposone for loader flar IDs');
-	this.loaderDriver.hourglass(false);
+	const xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://localhost:8001/nontrivial-flat-ids"); // @TODO template or templated constants
+	xhr.responseType = 'json';
+	xhr.onload = event => this.loadFlatIdsFromERP.call(this, xhr, event); // @TODO: Should call the `dispatch` of `Router.js`, moreover, should be piped in withe the device's `pipeToSM`
+	xhr.send();
+	this.loaderDriver.indicateProgress(true);
+};
+
+LoaderController.prototype.loadFlatIdsFromERP = function (xhr, event) // @TODO DRY with `loadFlatFromERP`
+{
+	this.loaderDriver.indicateProgress(false);
 	switch (xhr.status) {
 		case 200:
-			console.log(xhr);
 			if (xhr.response) {
-				console.log(`Response is OK: ${xhr.response}`);
+				if (xhr.response.length > 0) {
+					const placeholder0 = this.loaderDriver.loaderIdField.getAttribute('placeholder');
+					const placeholderPlus = xhr.response.join(', ');
+					const placeholder = placeholder0.replace(/;.*/, `; ${placeholderPlus}`);
+					this.loaderDriver.loaderIdField.setAttribute('placeholder', placeholder);
+				}
 			} else {
 				throw `Response is wrong: ${xhr.response}`;
 			}

@@ -8,7 +8,7 @@ use viewModels\{
 	ViewModelMeta
 };
 
-class AllController // @TODO wrong approach, turn it upside-down
+class HumanController // @TODO wrong approach, turn it upside-down
 {
 	use TFlat, TRoomPrototype, TRoomShape, TRoom {
 		TFlat::add    insteadof TRoomPrototype, TRoomShape, TRoom;

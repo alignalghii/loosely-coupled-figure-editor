@@ -7,8 +7,8 @@ use models\RoomPrototypeRelation;
 use models\RoomShapeRelation;
 use models\RoomRelation;
 
-use controllers\AppProperController;
-use controllers\AllController;
+use controllers\MachineController;
+use controllers\HumanController;
 
 require 'autoload.php';
 
@@ -19,8 +19,8 @@ $roomPrototypeRelation = new RoomPrototypeRelation($dbh);
 $roomShapeRelation     = new RoomShapeRelation($dbh);
 $roomRelation          = new RoomRelation($dbh);
 
-$appProperController = new AppProperController();
-$allController       = new AllController($flatRelation, $roomPrototypeRelation, $roomShapeRelation, $roomRelation);
+$machineController = new MachineController();
+$humanController   = new HumanController($flatRelation, $roomPrototypeRelation, $roomShapeRelation, $roomRelation);
 
-$router = new Router($appProperController, $allController, $_SERVER, $_POST, file_get_contents('php://input'));
+$router = new Router($machineController, $humanController, $_SERVER, $_POST, file_get_contents('php://input'));
 $router->run();
