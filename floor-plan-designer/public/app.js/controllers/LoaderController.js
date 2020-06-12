@@ -301,28 +301,11 @@ LoaderController.prototype.load = function (i)
 
 LoaderController.prototype.sendFlatQueryToERP = function (i)
 {
-	const xhr = new XMLHttpRequest();
-	xhr.open('GET', `http://localhost:8001/flat-record-on-id/${i}`); // @TODO template or templated constants
-	xhr.responseType = 'json';
-	xhr.onload = event => this.loadFlatRecordFromERP.call(this, xhr, event, i); // @TODO: Should call the `dispatch` of `Router.js`, moreover, should be piped in withe the device's `pipeToSM`
-	xhr.send();
-	this.loaderDriver.indicateProgress(true);
-};
-
-LoaderController.prototype.loadFlatRecordFromERP = function (xhr, event, i) // @TODO DRY with `xhrOnLoad`
-{
-	this.loaderDriver.indicateProgress(false);
-	switch (xhr.status) {
-		case 200:
-			if (xhr.response) {
-				this.loadFlatRecord(xhr.response.flatIds, xhr.response.records, i);
-			} else {
-				throw `Response is wrong: ${xhr.response}`;
-			}
-			break;
-		default:
-			throw 'Ajax wrong';
-	}
+	UnfailableProgressingAjaj.get(
+		`http://localhost:8001/flat-record-on-id/${i}`,
+		({flatIds, records}) => this.loadFlatRecord(flatIds, records, i), // ...loadFlatRecordFromERP = function ({flatIds, records}, i) {this.loadFlatRecord(flatIds, records);};
+		flag => this.loaderDriver.indicateProgress(flag)
+	);
 };
 
 LoaderController.prototype.loadFlatRecord = function (flatIds, records, i)
@@ -449,33 +432,20 @@ LoaderController.prototype.cancel     = function ()
 
 LoaderController.prototype.sendFlatIdsQueryToERP = function ()
 {
-	const xhr = new XMLHttpRequest();
-	xhr.open("GET", "http://localhost:8001/nontrivial-flat-ids"); // @TODO template or templated constants
-	xhr.responseType = 'json';
-	xhr.onload = event => this.loadFlatIdsFromERP.call(this, xhr, event); // @TODO: Should call the `dispatch` of `Router.js`, moreover, should be piped in withe the device's `pipeToSM`
-	xhr.send();
-	this.loaderDriver.indicateProgress(true);
+	UnfailableProgressingAjaj.get(
+		'http://localhost:8001/nontrivial-flat-ids',
+		response => this.loadFlatIdsFromERP(response),
+		flag => this.loaderDriver.indicateProgress(flag)
+	);
 };
 
-LoaderController.prototype.loadFlatIdsFromERP = function (xhr, event) // @TODO DRY with `loadFlatFromERP`
+LoaderController.prototype.loadFlatIdsFromERP = function (response) // @TODO DRY with `loadFlatFromERP`
 {
-	this.loaderDriver.indicateProgress(false);
-	switch (xhr.status) {
-		case 200:
-			if (xhr.response) {
-				if (xhr.response.length > 0) {
-					const placeholder0 = this.loaderDriver.loaderIdField.getAttribute('placeholder');
-					const placeholderPlus = xhr.response.join(', ');
-					const placeholder = placeholder0.replace(/;.*/, `; ${placeholderPlus}`);
-					this.loaderDriver.loaderIdField.setAttribute('placeholder', placeholder);
-				}
-			} else {
-				throw `Response is wrong: ${xhr.response}`;
-			}
-			break;
-		default:
-			throw 'Ajax wrong';
-	}
+	const field = this.loaderDriver.loaderIdField;
+	const placeholder0 = field.getAttribute('placeholder');
+	const placeholderPlus = response.join(', ');
+	const placeholder = placeholder0.replace(/;.*/, `; ${placeholderPlus}`);
+	field.setAttribute('placeholder', placeholder);
 };
 
 LoaderController.prototype.focusID = function () {this.loaderDriver.focus('loaderIdField');};

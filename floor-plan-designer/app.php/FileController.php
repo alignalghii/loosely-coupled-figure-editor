@@ -17,8 +17,8 @@ class FileController
 		`inkscape -z -e $extlessPath.png -w 1175 -h 692 $extlessPath.svg`; // credit to https://www.systutorials.com/how-to-convert-svg-to-png-in-linux/
 		`convert $extlessPath.png -background "rgb(255,255,255)" -flatten $extlessPath-bg.png`; // credit to https://stackoverflow.com/questions/25208116/imagemagick-how-to-change-transparent-background-to-a-color
 		`convert $extlessPath-bg.png $extlessPath.jpeg`;
-		header('Content-Type: application/json');
-		echo json_encode(['downloadLink' => "$extlessPath.jpeg"]);
+		header('Content-Type: text/plain');
+		echo "$extlessPath.jpeg";
 	}
 
 	private function render($viewFileName) {require $viewFileName;}

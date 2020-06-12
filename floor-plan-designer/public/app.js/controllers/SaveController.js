@@ -37,30 +37,21 @@ SaveController.prototype.prepareJPEG = function ()
 	const svgElem   = this.canvasPseudoWidget_work.arbitrary.svgLowLevel.svgRootElement,
 	      svgString = new XMLSerializer().serializeToString(svgElem);
 
-	const xhr = new XMLHttpRequest();
-	xhr.open("POST", "/update-jpeg");
-	xhr.responseType = 'json';
-	xhr.setRequestHeader("Content-Type", "image/svg+xml;charset=UTF-8");
-	xhr.onload = event => this.xhrOnLoad.call(this, xhr, event); // @TODO: Should call the `dispatch` of `Router.js`, moreover, should be piped in withe the device's `pipeToSM`
-	xhr.send(svgString);
-	this.saveIODriver.stubLinkProgress();
-}
-
-SaveController.prototype.xhrOnLoad = function (xhr, event)
-{
-	this.saveIODriver.unsuffixLink();
-	this.saveIODriver.hourglass(false);
-	switch (xhr.status) {
-		case 200:
-			if (xhr.response.downloadLink) {
-				this.reincarnateLink(xhr.response.downloadLink);
+	UnfailableProgressingAjax.post(
+		'/update-jpeg',
+		svgString,
+		response => this.reincarnateLink(response),
+		flag => {
+			if (flag) {  // @TODO use terary operator
+				this.saveIODriver.stubLinkProgress(); // includes `this.hourglass(true);` @TODO make `stubLinkProgress` vs `unsuffixLink` more symmetric
 			} else {
-				throw 'No download link sent back by AJAX';
+				this.saveIODriver.unsuffixLink();
+				this.saveIODriver.hourglass(false);
 			}
-			break;
-		default:
-			throw 'Ajax wrong';
-	}
+		},
+		'image/svg+xml;charset=UTF-8',
+		''
+	);
 };
 
 SaveController.prototype.reincarnateLink = function (href)
