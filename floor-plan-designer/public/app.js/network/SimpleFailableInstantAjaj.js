@@ -6,27 +6,34 @@ const SFIA =
 	{
 		SFIA._get(
 			url,
-			SFIA.toLow(processMaybeResponse)
+			SFIA.toLow(processMaybeResponse, true ),
+			SFIA.toLow(processMaybeResponse, false).
 		);
 	},
 
-	_get: function (url, xhrOnLoad)
+	_get: function (url, xhrOnLoad, xhrOnLowProblem)
 	{
 		const xhr = new XMLHttpRequest();
-		xhr.responseType = 'json';
-		xhr.addEventListener('load', xhrOnLoad);
+		xhr.responseType = 'json'; // @TODO `'json'` portability is weak, use `JSON.parse(httpRequest.responseText)` instead
+		xhr.addEventListener('load' , xhrOnLoad);
+		xhr.addEventListener('error', xhrOnLowProblem);
+		xhr.addEventListener('abort', xhrOnLowProblem);
 		xhr.open('GET', url);
 		xhr.send();
 	},
 
-	toLow: function (processMaybeResponse)
+	toLow: function (processMaybeResponse, isLoad)
 	{
 		return event =>
 		{
-			const xhr = event.target;
-			switch (xhr.status) {
-				case 200: return processMaybeResponse(Maybe.just(xhr.response));
-				default : return processMaybeResponse(Maybe.nothing());
+			if (isLoad) {
+				const xhr = event.target;
+				switch (xhr.status) {
+					case 200: return processMaybeResponse(Maybe.just(xhr.response), event);
+					default : return processMaybeResponse(Maybe.nothing()         , event);
+				}
+			} else {
+				return ;
 			}
 		};
 	}

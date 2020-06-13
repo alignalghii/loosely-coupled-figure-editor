@@ -13,8 +13,10 @@ const UFIA =
 	_get: function (url, xhrOnLoad)
 	{
 		const xhr = new XMLHttpRequest();
-		xhr.responseType = 'json';
-		xhr.addEventListener('load', xhrOnLoad);
+		xhr.responseType = 'json'; // @TODO 'json' portability is weak, use `JSON.parse(httpRequest.responseText)` instead
+		xhr.addEventListener('load' , xhrOnLoad);
+		xhr.addEventListener('error', e => {throw 'Error';});
+		xhr.addEventListener('abort', e => {throw 'Abort';});
 		xhr.open('GET', url);
 		xhr.send();
 	},

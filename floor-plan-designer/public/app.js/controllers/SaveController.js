@@ -50,7 +50,7 @@ SaveController.prototype.prepareJPEG = function ()
 			}
 		},
 		'image/svg+xml;charset=UTF-8',
-		''
+		'text'
 	);
 };
 

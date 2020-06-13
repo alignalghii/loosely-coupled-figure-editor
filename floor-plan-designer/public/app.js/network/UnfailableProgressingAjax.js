@@ -8,7 +8,7 @@ const UFPAx =
 			url,
 			UFPAx.toLow(processResponse),
 			progressing,
-			responseType
+			responseType // @TODO 'json' portability is weak, use `JSON.parse(httpRequest.responseText)` instead
 		);
 	},
 
@@ -20,7 +20,7 @@ const UFPAx =
 			UFPAx.toLow(processResponse),
 			progressing,
 			requestMediaType,
-			responseType
+			responseType // @TODO 'json' portability is weak, use `JSON.parse(httpRequest.responseText)` instead
 		);
 	},
 
@@ -28,7 +28,9 @@ const UFPAx =
 	{
 		const xhr = new XMLHttpRequest();
 		xhr.responseType = responseType;
-		xhr.addEventListener('load', e => {progressing(false); xhrOnLoad(e);});
+		xhr.addEventListener('load' , e => {progressing(false); xhrOnLoad(e) ;});
+		xhr.addEventListener('error', e => {progressing(false); throw 'Error';});
+		xhr.addEventListener('abort', e => {progressing(false); throw 'Abort';});
 		xhr.open('GET', url);
 		xhr.send();
 		progressing(true);
@@ -38,7 +40,9 @@ const UFPAx =
 	{
 		const xhr = new XMLHttpRequest();
 		xhr.responseType = responseType;
-		xhr.addEventListener('load', e => {progressing(false); xhrOnLoad(e);});
+		xhr.addEventListener('load' , e => {progressing(false); xhrOnLoad(e) ;});
+		xhr.addEventListener('error', e => {progressing(false); throw 'Error';});
+		xhr.addEventListener('abort', e => {progressing(false); throw 'Abort';});
 		xhr.open('POST', url);
 		xhr.setRequestHeader("Content-Type", requestMediaType);
 		xhr.send(requestBody);

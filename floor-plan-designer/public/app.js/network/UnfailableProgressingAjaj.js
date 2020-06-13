@@ -14,8 +14,10 @@ const UFPA =
 	_get: function (url, xhrOnLoad, progressing)
 	{
 		const xhr = new XMLHttpRequest();
-		xhr.responseType = 'json';
-		xhr.addEventListener('load', e => {progressing(false); xhrOnLoad(e);});
+		xhr.responseType = 'json'; // @TODO 'json' portability is weak, use `JSON.parse(httpRequest.responseText)` instead
+		xhr.addEventListener('load' , e => {progressing(false); xhrOnLoad(e) ;});
+		xhr.addEventListener('error', e => {progressing(false); throw 'Error';});
+		xhr.addEventListener('abort', e => {progressing(false); throw 'Abort';});
 		xhr.open('GET', url);
 		xhr.send();
 		progressing(true);
