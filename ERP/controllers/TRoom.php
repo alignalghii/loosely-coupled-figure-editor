@@ -19,7 +19,7 @@ trait TRoom
 		);
 		$viewModelMeta = new ViewModelMeta($this);
 		$viewModel = $viewModelMeta->add('roomsViewModel', $maybeShowback);
-		$this->render('view.php', $viewModel);
+		$this->render('main-view.php', $viewModel);
 	}
 
 	function update(int $id, array $post): void // @TODO RoomEntity
@@ -30,7 +30,7 @@ trait TRoom
 		);
 		$viewModelMeta = new ViewModelMeta($this);
 		$viewModel = $viewModelMeta->update('roomsViewModel', $id, $maybeShowback);
-		$this->render('view.php', $viewModel);
+		$this->render('main-view.php', $viewModel);
 	}
 
 	function delete(int $id): void
@@ -38,6 +38,6 @@ trait TRoom
 		$maybeShowbackId = Maybe::no([$this->roomRelation, 'delete'], $id);
 		$viewModelMeta = new ViewModelMeta($this);
 		$viewModel = $viewModelMeta->delete('roomsViewModel', $maybeShowbackId);
-		$this->render('view.php', $viewModel);
+		$this->render('main-view.php', $viewModel);
 	}
 }

@@ -46,7 +46,7 @@ class HumanController // @TODO wrong approach, turn it upside-down
 	{
 		$viewModelMeta = new ViewModelMeta($this);
 		$viewModel = $viewModelMeta->showAll();
-		$this->render('view.php', $viewModel);
+		$this->render('main-view.php', $viewModel);
 	}
 
 	private function render(string $viewFile, array $viewModel): void

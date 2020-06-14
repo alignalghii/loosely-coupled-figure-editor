@@ -19,7 +19,7 @@ trait TRoomPrototype
 		);
 		$viewModelMeta = new ViewModelMeta($this);
 		$viewModel = $viewModelMeta->add('roomPrototypesViewModel', $maybeShowback);
-		$this->render('view.php', $viewModel);
+		$this->render('main-view.php', $viewModel);
 	}
 
 	function update(int $id, array $post): void // @TODO FlatEntity
@@ -30,7 +30,7 @@ trait TRoomPrototype
 		);
 		$viewModelMeta = new ViewModelMeta($this);
 		$viewModel = $viewModelMeta->update('roomPrototypesViewModel', $id, $maybeShowback);
-		$this->render('view.php', $viewModel);
+		$this->render('main-view.php', $viewModel);
 	}
 
 	function delete(int $id): void
@@ -38,6 +38,6 @@ trait TRoomPrototype
 		$maybeShowbackId = Maybe::no([$this->roomPrototypeRelation, 'delete'], $id);
 		$viewModelMeta = new ViewModelMeta($this);
 		$viewModel = $viewModelMeta->delete('roomPrototypesViewModel', $maybeShowbackId);
-		$this->render('view.php', $viewModel);
+		$this->render('main-view.php', $viewModel);
 	}
 }

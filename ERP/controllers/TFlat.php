@@ -16,7 +16,7 @@ trait TFlat
 		$maybeShowback = FlatEntity::maybePostback($post, [$this->flatRelation, 'add']);
 		$viewModelMeta = new ViewModelMeta($this);
 		$viewModel = $viewModelMeta->add('flatsViewModel', $maybeShowback);
-		$this->render('view.php', $viewModel);
+		$this->render('main-view.php', $viewModel);
 	}
 
 	function update(int $id, array $post): void // @TODO FlatEntity
@@ -27,7 +27,7 @@ trait TFlat
 		);
 		$viewModelMeta = new ViewModelMeta($this);
 		$viewModel = $viewModelMeta->update('flatsViewModel', $id, $maybeShowback);
-		$this->render('view.php', $viewModel);
+		$this->render('main-view.php', $viewModel);
 	}
 
 	function delete(int $id): void
@@ -35,6 +35,6 @@ trait TFlat
 		$maybeShowbackId = Maybe::no([$this->flatRelation, 'delete'], $id);
 		$viewModelMeta = new ViewModelMeta($this);
 		$viewModel = $viewModelMeta->delete('flatsViewModel', $maybeShowbackId);
-		$this->render('view.php', $viewModel);
+		$this->render('main-view.php', $viewModel);
 	}
 }
