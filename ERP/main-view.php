@@ -2,9 +2,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="UTF-8"/>
 		<link rel="shortcut icon" href="/assets/favicon.ico"/>
 		<link rel="stylesheet" href="/assets/CRUD-table.css"/>
-		<meta charset="UTF-8"/>
 		<title>Dummy DB CRUD</title>
 	</head>
 	<body>

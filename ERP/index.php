@@ -7,6 +7,7 @@ use models\RoomPrototypeRelation;
 use models\RoomShapeRelation;
 use models\RoomRelation;
 
+use controllers\LoginController;
 use controllers\MachineController;
 use controllers\HumanController;
 
@@ -19,8 +20,9 @@ $roomPrototypeRelation = new RoomPrototypeRelation($dbh);
 $roomShapeRelation     = new RoomShapeRelation($dbh);
 $roomRelation          = new RoomRelation($dbh);
 
+$loginController   = new LoginController();
 $machineController = new MachineController();
 $humanController   = new HumanController($flatRelation, $roomPrototypeRelation, $roomShapeRelation, $roomRelation);
 
-$router = new Router($machineController, $humanController, $_SERVER, $_POST, file_get_contents('php://input'));
+$router = new Router($loginController, $machineController, $humanController, $_SERVER, $_GET, $_POST, file_get_contents('php://input'));
 $router->run();
