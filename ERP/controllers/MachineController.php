@@ -27,7 +27,7 @@ class MachineController
 			JOIN `room_shape`     AS `rs` ON `rs`.`id` = `r`.`shape_id`
 			ORDER BY `r`.`flat_id`, `r`.`id`
 		');
-		$st->execute();
+		$status = $st->execute();
 		$records = $st->fetchAll(PDO::FETCH_ASSOC);
 		$flatIds = array_values(
 			array_unique(
@@ -39,7 +39,7 @@ class MachineController
 		);
 		//$flatIdsSequenceString = implode(', ', $flatIds);
 		//echo []
-		echo json_encode($flatIds);
+		echo json_encode(compact('status', 'flatIds'));
 	}
 
 	public function getFlatRecordOnId(int $flatID): void
@@ -59,7 +59,7 @@ class MachineController
 			JOIN `room_shape`     AS `rs` ON `rs`.`id` = `r`.`shape_id`
 			ORDER BY `r`.`flat_id`, `r`.`id`
 		');
-		$st->execute();
+		$status = $st->execute();
 		$records = $st->fetchAll(PDO::FETCH_ASSOC);
 		$flatIds = array_values(
 			array_unique(
@@ -69,6 +69,6 @@ class MachineController
 				)
 			)
 		);
-		echo json_encode(compact('flatIds', 'records'));
+		echo json_encode(compact('status','flatIds', 'records'));
 	}
 }

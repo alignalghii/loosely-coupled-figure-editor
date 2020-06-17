@@ -99,6 +99,7 @@ class Router
 	{
 		$isMachine = preg_match('!GET /nontrivial-flat-ids!', $this->request) || preg_match('!GET /flat-record-on-id/(\d+)!', $this->request) || preg_match('!GET /login-machine!', $this->request) || preg_match('!POST /login-machine/(\d+)!', $this->request);
 		if ($isMachine) {
+			header('Access-Control-Allow-Origin: *');
 			echo json_encode(['status' => false, 'error' => 'GET /login-machine']);
 		} else {
 			header('Location: /login-human');

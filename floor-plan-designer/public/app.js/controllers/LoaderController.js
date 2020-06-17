@@ -441,11 +441,16 @@ LoaderController.prototype.sendFlatIdsQueryToERP = function ()
 
 LoaderController.prototype.loadFlatIdsFromERP = function (response) // @TODO DRY with `loadFlatFromERP`
 {
-	const field = this.loaderDriver.loaderIdField;
-	const placeholder0 = field.getAttribute('placeholder');
-	const placeholderPlus = response.join(', ');
-	const placeholder = placeholder0.replace(/;.*/, `; ${placeholderPlus}`);
-	field.setAttribute('placeholder', placeholder);
+	if (response.status) {
+		const field = this.loaderDriver.loaderIdField;
+		const placeholder0 = field.getAttribute('placeholder');
+		const placeholderPlus = response.flatIds.join(', ');
+		const placeholder = placeholder0.replace(/;.*/, `; ${placeholderPlus}`);
+		field.setAttribute('placeholder', placeholder);
+	} else {
+		this.statusBarDriver.report('Offline mód, valószínűleg nem vagy belépve a társalkalmazásba');
+		this.loaderDriver.message('Offline!');
+	}
 };
 
 LoaderController.prototype.focusID = function () {this.loaderDriver.focus('loaderIdField');};
