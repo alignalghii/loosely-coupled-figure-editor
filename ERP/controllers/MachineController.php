@@ -6,6 +6,10 @@ use PDO;
 
 class MachineController
 {
+	public $token;
+
+	public function __construct(int $token) {$this->token = $token;}
+
 	public function getNontrivialFlatIds(): void
 	{
 		header('Content-type: application/json');

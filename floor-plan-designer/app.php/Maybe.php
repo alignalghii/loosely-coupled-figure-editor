@@ -1,7 +1,5 @@
 <?php
 
-namespace ADT;
-
 class Maybe
 {
 	protected $representation;
@@ -11,11 +9,11 @@ class Maybe
 	public static function just($a) :self {return new Maybe(['just', $a]);}
 	public static function nothing():self {return new Maybe(['nothing' ]);}
 
-	function maybe_val($nothingCase, $justCase)
+	function maybe_val($nothingValue, $justCase)
 	{
 		switch ($this->representation[0]) {
 			case 'just'   : return $justCase($this->representation[1]);
-			case 'nothing': return $nothingCase;
+			case 'nothing': return $nothingValue;
 			default       : throw new Exception('`Maybe` internal label bug');
 		}
 	}

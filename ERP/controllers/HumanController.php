@@ -32,14 +32,17 @@ class HumanController // @TODO wrong approach, turn it upside-down
 		TRoom::delete as deleteRoom;
 	}
 
-	public $flatRelation, $roomPrototypeRelation, $roomShapeRelation, $roomRelation;
+	public $flatRelation, $roomPrototypeRelation, $roomShapeRelation, $roomRelation; // @TODO encapsulation
+	private $token;
 
-	public function __construct(FlatRelation $flatRelation, RoomPrototypeRelation $roomPrototypeRelation, RoomShapeRelation $roomShapeRelation, RoomRelation $roomRelation)
+	public function __construct(FlatRelation $flatRelation, RoomPrototypeRelation $roomPrototypeRelation, RoomShapeRelation $roomShapeRelation, RoomRelation $roomRelation, int $token)
 	{
 		$this->flatRelation          = $flatRelation;
 		$this->roomPrototypeRelation = $roomPrototypeRelation;
 		$this->roomShapeRelation     = $roomShapeRelation;
 		$this->roomRelation          = $roomRelation;
+
+		$this->token = $token;
 	}
 
 	public function showAll(): void
@@ -52,6 +55,7 @@ class HumanController // @TODO wrong approach, turn it upside-down
 	private function render(string $viewFile, array $viewModel): void
 	{
 		extract($viewModel);
+		$token = $this->token;
 		require $viewFile;
 	}
 }

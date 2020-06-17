@@ -26,7 +26,7 @@ abstract class Entity
 
 	public static function maybePostback(array $post, $entityPredicate): Maybe//postback
 	{
-		return static::maybeImport($post)->maybe(
+		return static::maybeImport($post)->maybe_val(
 			Maybe::just($post), // Maybe::just(static::comb($post))
 			function (Entity $entity) use ($entityPredicate, $post): Maybe/*postArr*/ {return $entityPredicate($entity) ? Maybe::nothing() : Maybe::just($post);} // Maybe::just(static::comb($post))
 		);

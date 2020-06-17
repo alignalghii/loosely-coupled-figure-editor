@@ -13,16 +13,5 @@ use controllers\HumanController;
 
 require 'autoload.php';
 
-$dbh = new PDO('mysql:host=localhost;dbname=floor_plan_designer', 'floor_plan_designer_user', 'floor_plan_designer_user_password', [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"]);
-
-$flatRelation          = new FlatRelation($dbh);
-$roomPrototypeRelation = new RoomPrototypeRelation($dbh);
-$roomShapeRelation     = new RoomShapeRelation($dbh);
-$roomRelation          = new RoomRelation($dbh);
-
-$loginController   = new LoginController();
-$machineController = new MachineController();
-$humanController   = new HumanController($flatRelation, $roomPrototypeRelation, $roomShapeRelation, $roomRelation);
-
-$router = new Router($loginController, $machineController, $humanController, $_SERVER, $_GET, $_POST, file_get_contents('php://input'));
+$router = new Router($_SERVER, $_GET, $_POST, file_get_contents('php://input'));
 $router->run();

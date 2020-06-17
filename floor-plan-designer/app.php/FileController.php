@@ -2,9 +2,9 @@
 
 class FileController
 {
-	public function show() {$this->render('view.php');}
+	public function show(Maybe/*string*/ $maybeToken): void {$this->render('view.php', compact('maybeToken'));}
 
-	public function updateJPEG(string $svgString)
+	public function updateJPEG(string $svgString): void
 	{
 		`find var -name 'work--*-*.*' -mmin +1 -delete`; // Deleting too old temporary files @TODO reconsider
 
@@ -21,5 +21,9 @@ class FileController
 		echo "$extlessPath.jpeg";
 	}
 
-	private function render($viewFileName) {require $viewFileName;}
+	private function render(string $viewFileName, array $viewModel): void
+	{
+		extract($viewModel);
+		require $viewFileName;
+	}
 }

@@ -8,7 +8,7 @@
 		<title>Dummy DB CRUD</title>
 	</head>
 	<body>
-		<a href="http://localhost:8000">[Vissza az alkalmazáshoz]</a><a href="http://localhost:8000" target="_blank">[+]</a>
+		<a href="http://localhost:8000?token=<?php echo $token; ?>">[Vissza az alkalmazáshoz]</a><a href="http://localhost:8000?token=<?php echo $token; ?>" target="_blank">[+]</a>
 		<h1>Dummy DB CRUD</h1>
 		<h2>Táblák</h2>
 		<h3>Lakások</h3>
@@ -32,15 +32,15 @@
 					<input type="submit" value="↻" disabled/>
 				</td>
 				<td>
-					<form id="updaterform-flat-<?php echo $flatRecordViewModel['data']['id']; ?>" method="POST" action="/index.php/flat/update/<?php echo $flatRecordViewModel['data']['id']; ?>">
+					<form id="updaterform-flat-<?php echo $flatRecordViewModel['data']['id']; ?>" method="POST" action="/index.php/flat/update/<?php echo $flatRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>">
 						<input type="submit" value="✍" title="Szerkeszt (változások érvényesítése)"/>
 					</form>
 				</td>
 				<td>
-					<a href="/index.php/show-all" title="Újratölt (változások elvetése)">↻</a>
+					<a href="/index.php/show-all?token=<?php echo $token; ?>" title="Újratölt (változások elvetése)">↻</a>
 				</td>
 				<td>
-					<form method="POST" action="/index.php/flat/del/<?php echo $flatRecordViewModel['data']['id']; ?>"><input type="submit" value="-" title="Töröl"/></form>
+					<form method="POST" action="/index.php/flat/del/<?php echo $flatRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>"><input type="submit" value="-" title="Töröl"/></form>
 				</td>
 				<td class="error"><?php echo $flatRecordViewModel['error'] ?></td>
 			</tr>
@@ -48,8 +48,8 @@
 			<tr>
 				<th>NEW-ID</th>
 				<td><input form="insertorform-flat" type="text" name="address" value="<?php echo $flatsViewModel['newRecord']['data']['address']; ?>"/></td>
-				<td><form id="insertorform-flat" method="POST" action="/index.php/flat/add"><input type="submit" value="+" title="Beszúr"/></form></td>
-				<td><a href="/index.php/show-all" title="Újratölt (új adatok elvetése)">↻</a></td>
+				<td><form id="insertorform-flat" method="POST" action="/index.php/flat/add?token=<?php echo $token; ?>"><input type="submit" value="+" title="Beszúr"/></form></td>
+				<td><a href="/index.php/show-all?token=<?php echo $token; ?>" title="Újratölt (új adatok elvetése)">↻</a></td>
 				<td></td>
 				<td class="error"><?php echo $flatsViewModel['newRecord']['error']; ?></td>
 			</tr>
@@ -75,15 +75,15 @@
 					<input type="submit" value="↻" disabled/>
 				</td>
 				<td>
-					<form id="updaterform-roomPrototype-<?php echo $roomPrototypeRecordViewModel['data']['id']; ?>" method="POST" action="/index.php/room-prototype/update/<?php echo $roomPrototypeRecordViewModel['data']['id']; ?>">
+					<form id="updaterform-roomPrototype-<?php echo $roomPrototypeRecordViewModel['data']['id']; ?>" method="POST" action="/index.php/room-prototype/update/<?php echo $roomPrototypeRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>">
 						<input type="submit" value="✍" title="Szerkeszt (változások érvényesítése)"/>
 					</form>
 				</td>
 				<td>
-					<a href="/index.php/show-all" title="Újratölt (változások elvetése)">↻</a>
+					<a href="/index.php/show-all?token=<?php echo $token; ?>" title="Újratölt (változások elvetése)">↻</a>
 				</td>
 				<td>
-					<form method="POST" action="/index.php/room-prototype/del/<?php echo $roomPrototypeRecordViewModel['data']['id']; ?>"><input type="submit" value="-" title="Töröl"/></form>
+					<form method="POST" action="/index.php/room-prototype/del/<?php echo $roomPrototypeRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>"><input type="submit" value="-" title="Töröl"/></form>
 				</td>
 				<td class="error"><?php echo $roomPrototypeRecordViewModel['error'] ?></td>
 			</tr>
@@ -91,8 +91,8 @@
 			<tr>
 				<th>NEW-ID</th>
 				<td><input type="text" form="insertorform-roomPrototype" name="name" value="<?php echo $roomPrototypesViewModel['newRecord']['data']['name']; ?>" /></td>
-				<td><form id="insertorform-roomPrototype" method="POST" action="/index.php/room-prototype/add"><input type="submit" value="+" title="Beszúr"/></form></td>
-				<td><a href="/index.php/show-all" title="Újratölt (új adatok elvetése)">↻</a></td>
+				<td><form id="insertorform-roomPrototype" method="POST" action="/index.php/room-prototype/add?token=<?php echo $token; ?>"><input type="submit" value="+" title="Beszúr"/></form></td>
+				<td><a href="/index.php/show-all?token=<?php echo $token; ?>" title="Újratölt (új adatok elvetése)">↻</a></td>
 				<td></td>
 				<td class="error"><?php echo $roomPrototypesViewModel['newRecord']['error']; ?></td>
 			</tr>
@@ -140,15 +140,15 @@
 				<td><input form="updaterform-roomShape-<?php echo $roomShapeRecordViewModel['data']['id']; ?>" type="text" name="interpret_argument_3" value="<?php echo $roomShapeRecordViewModel['data']['interpret_argument_3']; ?>" size="9"/></td>
 				<td><input form="updaterform-roomShape-<?php echo $roomShapeRecordViewModel['data']['id']; ?>" type="text" name="interpret_argument_4" value="<?php echo $roomShapeRecordViewModel['data']['interpret_argument_4']; ?>" size="9"/></td>
 				<td>
-					<form id="updaterform-roomShape-<?php echo $roomShapeRecordViewModel['data']['id']; ?>" method="POST" action="/index.php/room-shape/update/<?php echo $roomShapeRecordViewModel['data']['id']; ?>">
+					<form id="updaterform-roomShape-<?php echo $roomShapeRecordViewModel['data']['id']; ?>" method="POST" action="/index.php/room-shape/update/<?php echo $roomShapeRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>">
 						<input type="submit" value="✍" title="Szerkeszt (változások érvényesítése)"/>
 					</form>
 				</td>
 				<td>
-					<a href="/index.php/show-all" title="Újratölt (változások elvetése)">↻</a>
+					<a href="/index.php/show-all?token=<?php echo $token; ?>" title="Újratölt (változások elvetése)">↻</a>
 				</td>
 				<td>
-					<form method="POST" action="/index.php/room-shape/del/<?php echo $roomShapeRecordViewModel['data']['id']; ?>"><input type="submit" value="-" title="Töröl"/></form>
+					<form method="POST" action="/index.php/room-shape/del/<?php echo $roomShapeRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>"><input type="submit" value="-" title="Töröl"/></form>
 				</td>
 				<td class="error"><?php echo $roomShapeRecordViewModel['error'] ?></td>
 			</tr>
@@ -168,8 +168,8 @@
 				<td><input form="insertorform-roomShape" type="text" name="interpret_argument_2" value="<?php echo $roomShapesViewModel['newRecord']['data']['interpret_argument_2']; ?>" size="9"/></td>
 				<td><input form="insertorform-roomShape" type="text" name="interpret_argument_3" value="<?php echo $roomShapesViewModel['newRecord']['data']['interpret_argument_3']; ?>" size="9"/></td>
 				<td><input form="insertorform-roomShape" type="text" name="interpret_argument_4" value="<?php echo $roomShapesViewModel['newRecord']['data']['interpret_argument_4']; ?>" size="9"/></td>
-				<td><form id="insertorform-roomShape" method="POST" action="/index.php/room-shape/add"><input type="submit" value="+" title="Beszúr"/></form></td>
-				<td><a href="/index.php/show-all" title="Újratölt (új adatok elvetése)">↻</a></td>
+				<td><form id="insertorform-roomShape" method="POST" action="/index.php/room-shape/add?token=<?php echo $token; ?>"><input type="submit" value="+" title="Beszúr"/></form></td>
+				<td><a href="/index.php/show-all?token=<?php echo $token; ?>" title="Újratölt (új adatok elvetése)">↻</a></td>
 				<td></td>
 				<td class="error"><?php echo $roomShapesViewModel['newRecord']['error']; ?></td>
 			</tr>
@@ -236,15 +236,15 @@
 				<td><input form="updaterform-room-<?php echo $roomRecordViewModel['data']['id']; ?>" type="text" name="shape_argument_3" value="<?php echo $roomRecordViewModel['data']['shape_argument_3']; ?>" size="4"/></td>
 				<td><input form="updaterform-room-<?php echo $roomRecordViewModel['data']['id']; ?>" type="text" name="shape_argument_4" value="<?php echo $roomRecordViewModel['data']['shape_argument_4']; ?>" size="4"/></td>
 				<td>
-					<form id="updaterform-room-<?php echo $roomRecordViewModel['data']['id']; ?>" method="POST" action="/index.php/room/update/<?php echo $roomRecordViewModel['data']['id']; ?>">
+					<form id="updaterform-room-<?php echo $roomRecordViewModel['data']['id']; ?>" method="POST" action="/index.php/room/update/<?php echo $roomRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>">
 						<input type="submit" value="✍" title="Szerkeszt (változások érvényesítése)"/>
 					</form>
 				</td>
 				<td>
-					<a href="/index.php/show-all" title="Újratölt (változások elvetése)">↻</a>
+					<a href="/index.php/show-all?token=<?php echo $token; ?>" title="Újratölt (változások elvetése)">↻</a>
 				</td>
 				<td>
-					<form method="POST" action="/index.php/room/del/<?php echo $roomRecordViewModel['data']['id']; ?>"><input type="submit" value="-" title="Töröl"/></form>
+					<form method="POST" action="/index.php/room/del/<?php echo $roomRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>"><input type="submit" value="-" title="Töröl"/></form>
 				</td>
 				<td class="error"><?php echo $roomRecordViewModel['error'] ?></td>
 			</tr>
@@ -282,8 +282,8 @@
 				<td><input form="insertorform-room" type="text" name="shape_argument_2" value="<?php echo $roomsViewModel['newRecord']['data']['shape_argument_2']; ?>" size="4"/></td>
 				<td><input form="insertorform-room" type="text" name="shape_argument_3" value="<?php echo $roomsViewModel['newRecord']['data']['shape_argument_3']; ?>" size="4"/></td>
 				<td><input form="insertorform-room" type="text" name="shape_argument_4" value="<?php echo $roomsViewModel['newRecord']['data']['shape_argument_4']; ?>" size="4"/></td>
-				<td><form id="insertorform-room" method="POST" action="/index.php/room/add"><input type="submit" value="+" title="Beszúr"/></form></td>
-				<td><a href="/index.php/show-all" title="Újratölt (új adatok elvetése)">↻</a></td>
+				<td><form id="insertorform-room" method="POST" action="/index.php/room/add?token=<?php echo $token; ?>"><input type="submit" value="+" title="Beszúr"/></form></td>
+				<td><a href="/index.php/show-all?token=<?php echo $token; ?>" title="Újratölt (új adatok elvetése)">↻</a></td>
 				<td></td>
 				<td class="error"><?php echo $roomsViewModel['newRecord']['error']; ?></td>
 			</tr>

@@ -28,7 +28,7 @@ abstract class ViewModel
 	{
 		return [
 			'records' => $this->packRecords(),
-			'newRecord' => $maybeShowback->maybe(
+			'newRecord' => $maybeShowback->maybe_val(
 				$this->blank(),
 				[$this, 'showBack'] // @TODO: `showBack` must be public, because called in Maybe context
 			)
@@ -69,7 +69,7 @@ abstract class ViewModel
 
 	protected function allPackOrShowBackHere(int $id, Maybe $maybeShowback): array
 	{
-		return $maybeShowback->maybe(
+		return $maybeShowback->maybe_val(
 			$this->packRecords(),
 			function ($showback) use ($id) {
 				return array_map(
@@ -88,7 +88,7 @@ abstract class ViewModel
 	public function delete(Maybe $maybeShowbackId): array
 	{
 		return [
-			'records' => $maybeShowbackId->maybe(
+			'records' => $maybeShowbackId->maybe_val(
 				$this->packRecords(),
 				function ($showbackId) {
 					return array_map(

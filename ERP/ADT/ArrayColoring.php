@@ -13,8 +13,8 @@ class ArrayColoring
 
 	public function map(): array
 	{
-		return ArrayX::indexedMap(
-			function ($val, $key) {return $this->trans($val, $key);}, // [$this, 'trans'] causes `Uncaught Error: Call to private method ADT\ArrayColoring::trans() from context 'ADT\ArrayX']`
+		return ArrayWithListAlgebra::indexedMap(
+			function ($val, $key) {return $this->trans($val, $key);}, // [$this, 'trans'] causes `Uncaught Error: Call to private method ADT\ArrayColoring::trans() from context 'ADT\ArrayWithListAlgebra']`
 			$this->array
 		);
 	}
