@@ -1,9 +1,10 @@
-function LoaderController (canvasPseudoWidgets, numberHelperAndValidator, loaderDriver, tabSelectorDriver, statusBarDriver, audioODriver)
+function LoaderController (canvasPseudoWidgets, numberHelperAndValidator, loaderDriver, tabSelectorDriver, urlPartDriver, statusBarDriver, audioODriver)
 {
 	this.canvasPseudoWidgets      = canvasPseudoWidgets;
 	this.numberHelperAndValidator = numberHelperAndValidator;
 	this.loaderDriver             = loaderDriver;
 	this.tabSelectorDriver        = tabSelectorDriver;
+	this.urlPartDriver            = urlPartDriver;
 	this.statusBarDriver          = statusBarDriver;
 	this.audioODriver             = audioODriver;
 
@@ -433,7 +434,7 @@ LoaderController.prototype.cancel     = function ()
 LoaderController.prototype.sendFlatIdsQueryToERP = function ()
 {
 	UnfailableProgressingAjaj.get(
-		'http://localhost:8001/nontrivial-flat-ids',
+		this.urlPartDriver.addMaybeToken('http://localhost:8001/nontrivial-flat-ids'),
 		response => this.loadFlatIdsFromERP(response),
 		flag => this.loaderDriver.indicateProgress(flag)
 	);

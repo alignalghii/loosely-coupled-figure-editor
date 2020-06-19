@@ -60,6 +60,7 @@ onload = function (event)
 	const zoomDriver                 = new ZoomDriver(document);
 	const contextMenuDriver          = new ContextMenuDriver(document, state.mode);
 	const historyIODriver            = new HistoryDriver(document);
+	const urlPartDriver              = new UrlPartDriver(window);
 
 	var widgetCollision = new WidgetCollision(audioODriver);
 
@@ -74,7 +75,7 @@ onload = function (event)
 	const configController               = new ConfigController(state, configIODriver, tabSelectorIODriver, statusBarODriver);
 	const figureNestingController        = new FigureNestingController(state, canvasPseudoWidgets, statusBarODriver);
 	const tabSelectorController          = new TabSelectorController(tabSelectorIODriver, quoteHelper, statusBarODriver); // @TODO argument order
-	const loaderController               = new LoaderController(canvasPseudoWidgets, numberHelperAndValidator, loaderIODriver, tabSelectorIODriver, statusBarODriver, audioODriver);
+	const loaderController               = new LoaderController(canvasPseudoWidgets, numberHelperAndValidator, loaderIODriver, tabSelectorIODriver, urlPartDriver, statusBarODriver, audioODriver);
 	const saveController                 = new SaveController(state, canvasPseudoWidgets, saveIODriver, statusBarODriver, audioODriver, 50000);
 	const nativeLoaderController         = new NativeLoaderController(canvasPseudoWidgets, nativeLoaderIODriver, tabSelectorIODriver, statusBarODriver, audioODriver);
 	const zoomController                 = new ZoomController(canvasPseudoWidgets, statusBarODriver);
@@ -84,7 +85,7 @@ onload = function (event)
 	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuController, historyController); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(canvasPseudoWidgets, router); // @TODO: could it be regarded as a kind of device driver, and renamed + moved appropriately?
 
-	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorIODriver, configIODriver, tabSelectorIODriver, loaderIODriver, saveIODriver, nativeLoaderIODriver, zoomDriver, contextMenuDriver, historyIODriver); // @TODO Law of Demeter, see inside
+	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorIODriver, configIODriver, tabSelectorIODriver, loaderIODriver, saveIODriver, nativeLoaderIODriver, zoomDriver, contextMenuDriver, historyIODriver, urlPartDriver); // @TODO Law of Demeter, see inside
 
 	//console.log('App: live run');
 	app.run();
