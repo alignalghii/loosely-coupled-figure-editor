@@ -8,7 +8,7 @@
 		<title>Dummy DB CRUD</title>
 	</head>
 	<body>
-		<a href="http://localhost:8000?token=<?php echo $token; ?>">[Vissza az alkalmazáshoz]</a><a href="http://localhost:8000?token=<?php echo $token; ?>" target="_blank">[+]</a>
+		<a href="http://localhost:8000?token=<?php echo $token; ?>">[Alaprajztervező &bdquo;üres&rdquo; indítása]</a><a href="http://localhost:8000?token=<?php echo $token; ?>" target="_blank">[+]</a>
 		<h1>Dummy DB CRUD</h1>
 		<h2>Táblák</h2>
 		<h3>Lakások</h3>
