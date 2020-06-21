@@ -25,3 +25,9 @@ caption {
 }
 
 [disabled] {display: none;}
+
+*.nonempty {
+	font-weight: 900;
+	background-color: lightgray;
+}
+*.empty    {font-weight: 100;}

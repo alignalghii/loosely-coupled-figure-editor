@@ -5,11 +5,12 @@
 		<meta charset="UTF-8"/>
 		<link rel="shortcut icon" href="/assets/favicon.ico"/>
 		<link rel="stylesheet" href="/assets/CRUD-table.css"/>
-		<title>Dummy DB CRUD</title>
+		<title>ERP: DB CRUD</title>
 	</head>
 	<body>
-		<a href="http://localhost:8000?token=<?php echo $token; ?>">[Alaprajztervező &bdquo;üres&rdquo; indítása]</a><a href="http://localhost:8000?token=<?php echo $token; ?>" target="_blank">[+]</a>
-		<h1>Dummy DB CRUD</h1>
+		<a href="http://localhost:8000?token=<?php echo $token; ?>">Alaprajztervező &bdquo;üres&rdquo; megnyitása</a>
+		(<a href="http://localhost:8000?token=<?php echo $token; ?>" target="_blank">+</a>)
+		<h1>ERP: DB CRUD &mdash; A vállalatirányitási rendszer DB-admin felülete</h1>
 		<h2>Táblák</h2>
 		<h3>Lakások</h3>
 		<table>
@@ -23,7 +24,7 @@
 				<th>address</th>
 				<th colspan="3">Parancs</th>
 				<th>Üzenet</th>
-				<th>Alaprajztervező vele</th>
+				<th>Alaprajztervező megnyitása</th>
 			</tr>
 <?php foreach ($flatsViewModel['records'] as $flatRecordViewModel): ?>
 			<tr>
@@ -44,9 +45,9 @@
 					<form method="POST" action="/index.php/flat/del/<?php echo $flatRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>"><input type="submit" value="-" title="Töröl"/></form>
 				</td>
 				<td class="error"><?php echo $flatRecordViewModel['error'] ?></td>
-				<td>
-					[<a href="http://localhost:8000/<?php echo $flatRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>">Oldalugrás</a>]
-					[<a href="http://localhost:8000/<?php echo $flatRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>" target="_blank">Új fülben</a>]
+				<td class="<?php if ($flatRecordViewModel['data']['rooms'] > 0): ?>nonempty<?php else: ?>empty<?php endif; ?>">
+					<a href="http://localhost:8000/<?php echo $flatRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>"><?php if ($flatRecordViewModel['data']['rooms'] > 0): ?><?php echo $flatRecordViewModel['data']['rooms']; ?>-szobás<?php else: ?>Még üres<?php endif; ?></a>
+					(<a href="http://localhost:8000/<?php echo $flatRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>" target="_blank">+</a>)
 				</td>
 			</tr>
 <?php endforeach; ?>

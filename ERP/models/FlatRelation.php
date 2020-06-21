@@ -8,7 +8,15 @@ class FlatRelation
 
 	function getAll(): array
 	{
-		$st = $this->dbh->prepare('SELECT * FROM `flat` ORDER BY `id`');
+		$st = $this->dbh->prepare('
+			SELECT
+				`f`.`id`, `f`.`address`,
+				COUNT(`r`.`id`) AS `rooms`
+			FROM `flat` AS  `f`
+			LEFT JOIN `room` AS `r` ON `r`.`flat_id` = `f`.`id`
+			GROUP BY `f`.`id`
+			ORDER BY `id`
+		');
 		$st->execute();
 		return $st->fetchAll(\PDO::FETCH_ASSOC);
 	}
