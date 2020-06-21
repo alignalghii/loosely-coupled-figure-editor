@@ -1,6 +1,6 @@
 <?php
 
-namespace ADT;
+namespace algebraicDataTypes;
 
 class ArrayColoring
 {
@@ -14,7 +14,7 @@ class ArrayColoring
 	public function map(): array
 	{
 		return ArrayWithListAlgebra::indexedMap(
-			function ($val, $key) {return $this->trans($val, $key);}, // [$this, 'trans'] causes `Uncaught Error: Call to private method ADT\ArrayColoring::trans() from context 'ADT\ArrayWithListAlgebra']`
+			function ($val, $key) {return $this->trans($val, $key);}, // [$this, 'trans'] causes `Uncaught Error: Call to private method algebraicDataTypes\ArrayColoring::trans() from context 'algebraicDataTypes\ArrayWithListAlgebra']`
 			$this->array
 		);
 	}

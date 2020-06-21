@@ -1,6 +1,6 @@
 <?php
 
-namespace ADT;
+namespace algebraicDataTypes;
 
 class Maybe2
 {

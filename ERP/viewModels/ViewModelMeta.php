@@ -2,7 +2,7 @@
 
 namespace viewModels;
 
-use ADT\{Maybe, ArrayColoring};
+use algebraicDataTypes\{Maybe, ArrayColoring};
 use controllers\HumanController;
 
 class ViewModelMeta

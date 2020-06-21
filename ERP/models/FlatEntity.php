@@ -2,7 +2,7 @@
 
 namespace models;
 
-use ADT\Maybe;
+use algebraicDataTypes\Maybe;
 
 class FlatEntity extends Entity
 {

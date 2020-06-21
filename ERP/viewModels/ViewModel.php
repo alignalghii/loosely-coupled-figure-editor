@@ -2,7 +2,7 @@
 
 namespace viewModels;
 
-use ADT\Maybe;
+use algebraicDataTypes\Maybe;
 
 abstract class ViewModel
 {

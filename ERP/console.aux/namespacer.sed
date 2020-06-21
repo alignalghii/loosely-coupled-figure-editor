@@ -2,5 +2,5 @@
 
 /namespace/ {
 	a
-	a use ADT\\Maybe;
+	a use algebraicDataTypes\\Maybe;
 }

@@ -2,7 +2,7 @@
 
 namespace viewModels;
 
-use ADT\Either;
+use algebraicDataTypes\Either;
 
 class FlatsViewModel extends ViewModel
 {

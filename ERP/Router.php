@@ -3,7 +3,7 @@
 use controllers\{LoginController, MachineController, HumanController};
 use models\{FlatRelation, RoomPrototypeRelation, RoomShapeRelation, RoomRelation};
 
-use ADT\Maybe;
+use algebraicDataTypes\Maybe;
 
 class Router
 {

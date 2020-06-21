@@ -2,7 +2,7 @@
 
 namespace controllers;
 
-use ADT\Maybe;
+use algebraicDataTypes\Maybe;
 use models\RoomShapeEntity;
 use viewModels\{
 	FlatsViewModel, RoomPrototypesViewModel, RoomShapesViewModel, RoomsViewModel,
