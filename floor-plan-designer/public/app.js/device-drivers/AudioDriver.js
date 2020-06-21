@@ -9,8 +9,13 @@ function AudioDriver(bangAudioFileName, ouchAudioFileName, errorAudioFileName, b
 
 AudioDriver.prototype.bang  = function () {this.bangAudio.play();};
 AudioDriver.prototype.ouch  = function () {this.ouchAudio.play();};
-AudioDriver.prototype.error = function () {this.errorAudio.play();};
+AudioDriver.prototype.error = function (alternativeMessage)
+{
+	// https://developers.google.com/web/updates/2017/09/autoplay-policy-changes
+	const promise = this.errorAudio.play();
+	promise.catch(_ => alert(alternativeMessage));
+};
 AudioDriver.prototype.breakWall = function () {this.breachAudio.play();};
 AudioDriver.prototype.rebuildWall = function () {this.mortarAudio.play();};
 
-AudioDriver.prototype.access = fileName => new Audio(`assets-proper/${fileName}`);
+AudioDriver.prototype.access = fileName => new Audio(`/assets-proper/${fileName}`);

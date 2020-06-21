@@ -9,6 +9,10 @@ function LoaderController (canvasPseudoWidgets, numberHelperAndValidator, loader
 	this.audioODriver             = audioODriver;
 
 	this.focusID();
+
+	if (this.loaderDriver.loaderIdField.value) {
+		this.run(this.loaderDriver.loaderIdField.value, false);
+	}
 }
 
 
@@ -303,11 +307,22 @@ LoaderController.prototype.load = function (i)
 LoaderController.prototype.sendFlatQueryToERP = function (i)
 {
 	UnfailableProgressingAjaj.get(
-		`http://localhost:8001/flat-record-on-id/${i}`,
-		({flatIds, records}) => this.loadFlatRecord(flatIds, records, i), // ...loadFlatRecordFromERP = function ({flatIds, records}, i) {this.loadFlatRecord(flatIds, records);};
+		this.urlPartDriver.addMaybeToken(`http://localhost:8001/flat-record-on-id/${i}`),
+		response => this.receiveFlatResponseFromERP(response, i),
 		flag => this.loaderDriver.indicateProgress(flag)
 	);
 };
+
+LoaderController.prototype.receiveFlatResponseFromERP = function (response, i)
+{
+	if (response.status) {
+		const {flatIds, records} = response;
+		this.loadFlatRecord(flatIds, records, i);
+	} else {
+		this.audioODriver.error(`Offline mód, valószínűleg nem vagy belépve a társalkalmazásba`);
+		this.statusBarDriver.report(`Offline mód, valószínűleg nem vagy belépve a társalkalmazásba`);
+	}
+}
 
 LoaderController.prototype.loadFlatRecord = function (flatIds, records, i)
 {
@@ -378,7 +393,7 @@ LoaderController.prototype.loadFlatRecord = function (flatIds, records, i)
 		}
 	} else {
 		this.statusBarDriver.report(`<span class="error">${i}. rekord nem létezik!</span>`); // @TODO a helper for error messages, maybe inside or alongside `QuoteHelper`
-		this.audioODriver.error();
+		this.audioODriver.error(`Nincs #${i} rekord!`);
 	}
 };
 

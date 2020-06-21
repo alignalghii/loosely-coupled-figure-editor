@@ -64,7 +64,7 @@ class Router
 			// Microservice:
 
 			case preg_match('!GET /nontrivial-flat-ids!'    , $request, $matches): $this->makeMachineController($token)->getNontrivialFlatIds(); break;
-			case preg_match('!GET /flat-record-on-id/(\d+)!', $request, $matches): $this->makeMachineController($token)->getFlatRecordOnId((int)$matches[0]); break;
+			case preg_match('!GET /flat-record-on-id/([\+\-]?\d+)!', $request, $matches): $this->makeMachineController($token)->getFlatRecordOnId((int)$matches[0]); break;
 
 			// Human CRUD GUI:
 

@@ -16,13 +16,14 @@
 			<caption>flat</caption>
 			<tr>
 				<th colspan="2">Attribútumok</th>
-				<th colspan="4">Kommunikáció</th>
+				<th colspan="5">Kommunikáció</th>
 			</tr>
 			<tr>
 				<th>ID</th>
 				<th>address</th>
 				<th colspan="3">Parancs</th>
 				<th>Üzenet</th>
+				<th>Alaprajztervező vele</th>
 			</tr>
 <?php foreach ($flatsViewModel['records'] as $flatRecordViewModel): ?>
 			<tr>
@@ -43,6 +44,10 @@
 					<form method="POST" action="/index.php/flat/del/<?php echo $flatRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>"><input type="submit" value="-" title="Töröl"/></form>
 				</td>
 				<td class="error"><?php echo $flatRecordViewModel['error'] ?></td>
+				<td>
+					[<a href="http://localhost:8000/<?php echo $flatRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>">Oldalugrás</a>]
+					[<a href="http://localhost:8000/<?php echo $flatRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>" target="_blank">Új fülben</a>]
+				</td>
 			</tr>
 <?php endforeach; ?>
 			<tr>
@@ -52,6 +57,7 @@
 				<td><a href="/index.php/show-all?token=<?php echo $token; ?>" title="Újratölt (új adatok elvetése)">↻</a></td>
 				<td></td>
 				<td class="error"><?php echo $flatsViewModel['newRecord']['error']; ?></td>
+				<td></td>
 			</tr>
 		</table>
 		<h3>Szoba-prototípusok</h3>

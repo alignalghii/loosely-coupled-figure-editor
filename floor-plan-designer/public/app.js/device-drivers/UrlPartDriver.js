@@ -1,12 +1,17 @@
-function UrlPartDriver(aWindow)
+function UrlPartDriver(windowLocation, window, windowConsole)
 {
-	this.window = aWindow;
-	this.maybeToken = this.detectMaybeToken();
+	// Basic:
+	this.windowLocation = windowLocation;
+	this.window         = window;
+	this.windowConsole  = windowConsole;
+
+	// Derived:
+	this.maybeToken  = this.detectMaybeToken();
 }
 
 UrlPartDriver.prototype.detectMaybeToken = function ()
 {
-	const tokenOrNull = new URLSearchParams(this.window.location.search).get('token');
+	const tokenOrNull = new URLSearchParams(this.windowLocation.search).get('token');
 	return Maybe.asTruey(tokenOrNull);
 };
 
@@ -20,6 +25,6 @@ UrlPartDriver.prototype.addMaybeToken = function (url)
 
 UrlPartDriver.prototype.pipeToSM = function (dispatch)
 {
-	const urlHistoryPop = event => this.window.console.log('Pop state');
-	window.addEventListener('popstate', urlHistoryPop); // @TODO: not working
+	const urlHistoryPop = event => this.windowConsole.log('Pop state');
+	this.window.addEventListener('popstate', urlHistoryPop); // @TODO: not working
 };

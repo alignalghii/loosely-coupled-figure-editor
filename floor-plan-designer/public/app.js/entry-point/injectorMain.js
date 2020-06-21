@@ -60,7 +60,7 @@ onload = function (event)
 	const zoomDriver                 = new ZoomDriver(document);
 	const contextMenuDriver          = new ContextMenuDriver(document, state.mode);
 	const historyIODriver            = new HistoryDriver(document);
-	const urlPartDriver              = new UrlPartDriver(window);
+	const urlPartDriver              = new UrlPartDriver(window.location, window, window.console);
 
 	var widgetCollision = new WidgetCollision(audioODriver);
 

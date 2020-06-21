@@ -45,8 +45,8 @@ const deletePolygonChild = polygonChild => polygonChild.parentNode.removeChild(p
 SvgLowLevel.prototype.deleteAllPolygonChildren = function () // @TODO better function name
 {
 	if (this.svgRootElement.children.length) {
-		//(new Audio('assets-proper/drip.ogg')).play();
-		//document.getElementById('assets-proper/glass.ogg').play();
+		//(new Audio('/assets-proper/drip.ogg')).play();
+		//document.getElementById('/assets-proper/glass.ogg').play();
 		//setTimeout(() => alert("A művelet törli a munkavásznat, azon meg már van munkád. Biztosan akarod?"), 200);
 	}
 	// @TODO Vajon, amikor végigmegyünk az <svg> elem gyerekein, a <defs> miért nem számít annak? persze ez pont jól jön, mert kivételt dobna, ha `<image>`  `<polygon>` `<text>` -től különböző gyerekre futna rá (sőt tulajdonképp ezt szűrni is kellene!). Íme ld. alább:

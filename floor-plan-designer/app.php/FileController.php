@@ -2,7 +2,10 @@
 
 class FileController
 {
-	public function show(Maybe/*string*/ $maybeToken): void {$this->render('view.php', compact('maybeToken'));}
+	public function showWithPrefilledFlatIdField(Maybe/*string*/ $maybeToken, string $prefilledFlatIdField = ''): void
+	{
+		$this->render('view.php', compact('prefilledFlatIdField', 'maybeToken'));
+	}
 
 	public function updateJPEG(string $svgString): void
 	{

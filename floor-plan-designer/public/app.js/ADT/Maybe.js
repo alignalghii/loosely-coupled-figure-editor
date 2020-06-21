@@ -47,7 +47,10 @@ Maybe.prototype.fromJustWith = function (errorMsg)
 	);
 };
 
-Maybe.asTruey = value => value ? Maybe.just(value) : Maybe.nothing();
+
+Maybe.ifTrue  = (flag, value) => flag ? Maybe.just(value) : Maybe.nothing();
+Maybe.ifFalse = (flag, value) => Maybe.ifTrue(!flag, value);
+Maybe.asTruey = value => Maybe.ifTrue(value, value);
 
 Maybe.at = (arr, i) => i in arr ?
 	Maybe.just(arr[i]) :
@@ -56,7 +59,11 @@ Maybe.at = (arr, i) => i in arr ?
 Maybe.number = function (rep)
 {
 	const num = Number(rep); // @TODO `Number` is too tolerant, it accepts '' and ' ' and converts them to 0
-	return Number.isNaN(num) ?
-		Maybe.nothing()  :
-		Maybe.just(num);
+	return Maybe.ifFalse(Number.isNaN(num), num);
+};
+
+Maybe.toInt = function (rep)
+{
+	const isInt = /^[\+\-]?(0|[1-9]\d*)$/.test(rep);
+	return Maybe.ifTrue(isInt, Number(rep));
 };
