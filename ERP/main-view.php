@@ -8,9 +8,26 @@
 		<title>ERP: DB CRUD</title>
 	</head>
 	<body>
-		<a href="http://localhost:8000?token=<?php echo $token; ?>">Alaprajztervező &bdquo;üres&rdquo; megnyitása</a>
-		(<a href="http://localhost:8000?token=<?php echo $token; ?>" target="_blank">+</a>)
 		<h1>ERP: DB CRUD &mdash; A vállalatirányitási rendszer DB-admin felülete</h1>
+		<h2>Alaprajzszerkesztő üres vagy &bdquo;előre beégetett&rdquo; mintaszobás megnyitása</h2>
+		<ul>
+			<li>
+				<a href="http://localhost:8000?token=<?php echo $token; ?>">&bdquo;Üres&rdquo; megnyitás</a>
+				(<a href="http://localhost:8000?token=<?php echo $token; ?>" target="_blank">+</a>)
+			</li>
+			<li>
+				<a href="http://localhost:8000/-1?token=<?php echo $token; ?>">Mintaszobák 1</a>
+				(<a href="http://localhost:8000/-1?token=<?php echo $token; ?>" target="_blank">+</a>)
+			</li>
+			<li>
+				<a href="http://localhost:8000/-2?token=<?php echo $token; ?>">Mintaszobák 2</a>
+				(<a href="http://localhost:8000/-2?token=<?php echo $token; ?>" target="_blank">+</a>)
+			</li>
+			<li>
+				<a href="http://localhost:8000/-3?token=<?php echo $token; ?>">Mintaszobák 3</a>
+				(<a href="http://localhost:8000/-3?token=<?php echo $token; ?>" target="_blank">+</a>)
+			</li>
+		</ul>
 		<h2>Táblák</h2>
 		<h3>Lakások</h3>
 		<table>
