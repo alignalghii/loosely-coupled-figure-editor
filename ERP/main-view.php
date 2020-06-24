@@ -29,6 +29,122 @@
 			</li>
 		</ul>
 		<h2>Táblák</h2>
+		<h3>Felhasználók</h3>
+		<table>
+			<caption>user</caption>
+			<tr>
+				<th colspan="3">Attribútumok</th>
+				<th colspan="4">Kommunikáció</th>
+			</tr>
+			<tr>
+				<th>ID</th>
+				<th>name</th>
+				<th>password</th>
+				<th colspan="3">Parancs</th>
+				<th>Üzenet</th>
+			</tr>
+<?php foreach ($usersViewModel['records'] as $userRecordViewModel): ?>
+			<tr>
+				<td><?php echo $userRecordViewModel['data']['id']; ?></td>
+				<td>
+					<input form="updaterform-user-<?php echo $userRecordViewModel['data']['id']; ?>" type="text" name="name" value="<?php echo $userRecordViewModel['data']['name']; ?>"/>
+					<input type="submit" value="↻" disabled/>
+				</td>
+				<td>
+					<input form="updaterform-user-<?php echo $userRecordViewModel['data']['id']; ?>" type="text" name="password" value="<?php echo $userRecordViewModel['data']['password']; ?>"/>
+					<input type="submit" value="↻" disabled/>
+				</td>
+				<td>
+					<form id="updaterform-user-<?php echo $userRecordViewModel['data']['id']; ?>" method="POST" action="/index.php/user/update/<?php echo $userRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>">
+						<input type="submit" value="✍" title="Szerkeszt (változások érvényesítése)"/>
+					</form>
+				</td>
+				<td>
+					<a href="/index.php/show-all?token=<?php echo $token; ?>" title="Újratölt (változások elvetése)">↻</a>
+				</td>
+				<td>
+					<form method="POST" action="/index.php/user/del/<?php echo $userRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>"><input type="submit" value="-" title="Töröl"/></form>
+				</td>
+				<td class="error"><?php echo $userRecordViewModel['error'] ?></td>
+			</tr>
+<?php endforeach; ?>
+			<tr>
+				<th>NEW-ID</th>
+				<td><input type="text" form="insertorform-user" name="name" value="<?php echo $usersViewModel['newRecord']['data']['name']; ?>" /></td>
+				<td><input type="text" form="insertorform-user" name="password" value="<?php echo $usersViewModel['newRecord']['data']['password']; ?>" /></td>
+				<td><form id="insertorform-user" method="POST" action="/index.php/user/add?token=<?php echo $token; ?>"><input type="submit" value="+" title="Beszúr"/></form></td>
+				<td><a href="/index.php/show-all?token=<?php echo $token; ?>" title="Újratölt (új adatok elvetése)">↻</a></td>
+				<td></td>
+				<td class="error"><?php echo $usersViewModel['newRecord']['error']; ?></td>
+			</tr>
+		</table>
+		<h3>Munkamenetek</h3>
+		<table>
+			<caption>session2</caption>
+			<tr>
+				<th colspan="3">Attribútumok</th>
+				<th colspan="4">Kommunikáció</th>
+			</tr>
+			<tr>
+				<th>ID</th>
+				<th>user_id</th>
+				<th>token</th>
+				<th colspan="3">Parancs</th>
+				<th>Üzenet</th>
+			</tr>
+<?php foreach ($sessionsViewModel['records'] as $sessionRecordViewModel): ?>
+			<tr>
+				<td><?php echo $sessionRecordViewModel['data']['id']; ?></td>
+				<td>
+					<select form="updaterform-session-<?php echo $sessionRecordViewModel['data']['id']; ?>" name="user_id">
+<?php foreach ($usersViewModel['records'] as $userRecordViewModel): ?>
+						<option value="<?php echo $userRecordViewModel['data']['id']; ?>"<?php if($userRecordViewModel['data']['id'] == $sessionRecordViewModel['data']['user_id']): ?> selected<?php endif; ?>>
+							#<?php echo $userRecordViewModel['data']['id']; ?>:
+							<?php echo $userRecordViewModel['data']['name']; ?>
+
+						</option>
+<?php endforeach; ?>
+					</select>
+				</td>
+				<td>
+					<input form="updaterform-session-<?php echo $sessionRecordViewModel['data']['id']; ?>" type="number" min="1" step="1" name="token" value="<?php echo $sessionRecordViewModel['data']['token']; ?>"/>
+					<input type="submit" value="↻" disabled/>
+				</td>
+				<td>
+					<form id="updaterform-session-<?php echo $sessionRecordViewModel['data']['id']; ?>" method="POST" action="/index.php/session/update/<?php echo $sessionRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>">
+						<input type="submit" value="✍" title="Szerkeszt (változások érvényesítése)"/>
+					</form>
+				</td>
+				<td>
+					<a href="/index.php/show-all?token=<?php echo $token; ?>" title="Újratölt (változások elvetése)">↻</a>
+				</td>
+				<td>
+					<form method="POST" action="/index.php/session/del/<?php echo $sessionRecordViewModel['data']['id']; ?>?token=<?php echo $token; ?>"><input type="submit" value="-" title="Töröl"/></form>
+				</td>
+				<td class="error"><?php echo $sessionRecordViewModel['error'] ?></td>
+			</tr>
+<?php endforeach; ?>
+			<tr>
+				<th>NEW-ID</th>
+				<td>
+					<select form="insertorform-session" name="user_id">
+						<option>&mdash;VÁLASSZ&mdash;</option>
+<?php foreach ($usersViewModel['records'] as $userRecordViewModel): ?>
+						<option value="<?php echo $userRecordViewModel['data']['id']; ?>">
+							#<?php echo $userRecordViewModel['data']['id']; ?>:
+							<?php echo $userRecordViewModel['data']['name']; ?>
+
+						</option>
+<?php endforeach; ?>
+					</select>
+				</td>
+				<td><input type="number" min="1" step="1" form="insertorform-session" name="token" value="<?php echo $sessionsViewModel['newRecord']['data']['token']; ?>" /></td>
+				<td><form id="insertorform-session" method="POST" action="/index.php/session/add?token=<?php echo $token; ?>"><input type="submit" value="+" title="Beszúr"/></form></td>
+				<td><a href="/index.php/show-all?token=<?php echo $token; ?>" title="Újratölt (új adatok elvetése)">↻</a></td>
+				<td></td>
+				<td class="error"><?php echo $sessionsViewModel['newRecord']['error']; ?></td>
+			</tr>
+		</table>
 		<h3>Lakások</h3>
 		<table>
 			<caption>flat</caption>

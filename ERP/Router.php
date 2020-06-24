@@ -1,7 +1,7 @@
 <?php
 
 use controllers\{LoginController, MachineController, HumanController};
-use models\{FlatRelation, RoomPrototypeRelation, RoomShapeRelation, RoomRelation};
+use models\{UserRelation, SessionRelation, FlatRelation, RoomPrototypeRelation, RoomShapeRelation, RoomRelation};
 
 use algebraicDataTypes\Maybe;
 
@@ -71,6 +71,14 @@ class Router
 			case preg_match('!GET /($|\?)!'  , $this->request, $matches):
 			case preg_match('!GET /show-all!', $this->request, $matches): $this->makeHumanController($token)->showAll(); break;
 
+			case preg_match('!POST /user/add!', $request, $matches): $this->makeHumanController($token)->addUser($this->post); break;
+			case preg_match('!POST /user/update/(\d+)!', $request, $matches): $this->makeHumanController($token)->updateUser($matches[1], $this->post); break;
+			case preg_match('!POST /user/del/(\d+)!', $request, $matches): $this->makeHumanController($token)->deleteUser($matches[1]); break;
+
+			case preg_match('!POST /session/add!', $request, $matches): $this->makeHumanController($token)->addSession($this->post); break;
+			case preg_match('!POST /session/update/(\d+)!', $request, $matches): $this->makeHumanController($token)->updateSession($matches[1], $this->post); break;
+			case preg_match('!POST /session/del/(\d+)!', $request, $matches): $this->makeHumanController($token)->deleteSession($matches[1]); break;
+
 			case preg_match('!POST /flat/add!', $request, $matches): $this->makeHumanController($token)->addFlat($this->post); break;
 			case preg_match('!POST /flat/update/(\d+)!', $request, $matches): $this->makeHumanController($token)->updateFlat($matches[1], $this->post); break;
 			case preg_match('!POST /flat/del/(\d+)!', $request, $matches): $this->makeHumanController($token)->deleteFlat($matches[1]); break;
@@ -111,11 +119,13 @@ class Router
 	private function makeHumanController(int $token): HumanController
 	{
 		$dbh = new PDO('mysql:host=localhost;dbname=floor_plan_designer', 'floor_plan_designer_user', 'floor_plan_designer_user_password', [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"]);
+		$userRelation          = new UserRelation($dbh);
+		$sessionRelation       = new SessionRelation($dbh);
 		$flatRelation          = new FlatRelation($dbh);
 		$roomPrototypeRelation = new RoomPrototypeRelation($dbh);
 		$roomShapeRelation     = new RoomShapeRelation($dbh);
 		$roomRelation          = new RoomRelation($dbh);
-		return new HumanController($flatRelation, $roomPrototypeRelation, $roomShapeRelation, $roomRelation, $token);
+		return new HumanController($userRelation, $sessionRelation, $flatRelation, $roomPrototypeRelation, $roomShapeRelation, $roomRelation, $token);
 	}
 
 	private function makeMachineController(int $token): MachineController {return new MachineController($token);}

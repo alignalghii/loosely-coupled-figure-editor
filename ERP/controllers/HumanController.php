@@ -2,20 +2,29 @@
 
 namespace controllers;
 
-use models\{FlatRelation, RoomPrototypeRelation, RoomShapeRelation, RoomRelation};
+use models\{UserRelation, SessionRelation, FlatRelation, RoomPrototypeRelation, RoomShapeRelation, RoomRelation};
 use viewModels\{
+	UsersViewModel, SessionsViewModel,
 	FlatsViewModel, RoomPrototypesViewModel, RoomShapesViewModel, RoomsViewModel,
 	ViewModelMeta
 };
 
 class HumanController // @TODO wrong approach, turn it upside-down
 {
-	use TFlat, TRoomPrototype, TRoomShape, TRoom {
-		TFlat::add    insteadof TRoomPrototype, TRoomShape, TRoom;
-		TFlat::update insteadof TRoomPrototype, TRoomShape, TRoom;
-		TFlat::delete insteadof TRoomPrototype, TRoomShape, TRoom;
+	use TUser, TSession, TFlat, TRoomPrototype, TRoomShape, TRoom {
+		TUser::add    insteadof TSession, TFlat, TRoomPrototype, TRoomShape, TRoom;
+		TUser::update insteadof TSession, TFlat, TRoomPrototype, TRoomShape, TRoom;
+		TUser::delete insteadof TSession, TFlat, TRoomPrototype, TRoomShape, TRoom;
 
-		TFlat::add    as addFlat;
+		TUser::add    as addUser   ;
+		TUser::update as updateUser;
+		TUser::delete as deleteUser;
+
+		TSession::add    as addSession   ;
+		TSession::update as updateSession;
+		TSession::delete as deleteSession;
+
+		TFlat::add    as addFlat   ;
 		TFlat::update as updateFlat;
 		TFlat::delete as deleteFlat;
 
@@ -32,11 +41,13 @@ class HumanController // @TODO wrong approach, turn it upside-down
 		TRoom::delete as deleteRoom;
 	}
 
-	public $flatRelation, $roomPrototypeRelation, $roomShapeRelation, $roomRelation; // @TODO encapsulation
+	public $userRelation, $sessionRelation, $flatRelation, $roomPrototypeRelation, $roomShapeRelation, $roomRelation; // @TODO encapsulation
 	private $token;
 
-	public function __construct(FlatRelation $flatRelation, RoomPrototypeRelation $roomPrototypeRelation, RoomShapeRelation $roomShapeRelation, RoomRelation $roomRelation, int $token)
+	public function __construct(UserRelation $userRelation, SessionRelation $sessionRelation, FlatRelation $flatRelation, RoomPrototypeRelation $roomPrototypeRelation, RoomShapeRelation $roomShapeRelation, RoomRelation $roomRelation, int $token)
 	{
+		$this->userRelation          = $userRelation;
+		$this->sessionRelation       = $sessionRelation;
 		$this->flatRelation          = $flatRelation;
 		$this->roomPrototypeRelation = $roomPrototypeRelation;
 		$this->roomShapeRelation     = $roomShapeRelation;

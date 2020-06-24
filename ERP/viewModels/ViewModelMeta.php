@@ -7,16 +7,20 @@ use controllers\HumanController;
 
 class ViewModelMeta
 {
-	private $flatsViewModel, $roomPrototypesViewModel, $roomShapesViewModel, $roomsViewModel;
+	private $usersViewModel,  $sessionsViewModel, $flatsViewModel, $roomPrototypesViewModel, $roomShapesViewModel, $roomsViewModel;
 
 	public function __construct(HumanController $humanController)
 	{
+		$userRecords          = $humanController->userRelation->getAll();
+		$sessionRecords       = $humanController->sessionRelation->getAll();
 		$flatRecords          = $humanController->flatRelation->getAll();
 		$roomPrototypeRecords = $humanController->roomPrototypeRelation->getAll();
 		$roomShapeRecords     = $humanController->roomShapeRelation->getAll();
 		$roomRecords          = $humanController->roomRelation->getAll();
 
 		$this->assoc = [
+			'usersViewModel'          => new UsersViewModel($userRecords),
+			'sessionsViewModel'       => new SessionsViewModel($sessionRecords),
 			'flatsViewModel'          => new FlatsViewModel($flatRecords),
 			'roomPrototypesViewModel' => new RoomPrototypesViewModel($roomPrototypeRecords),
 			'roomShapesViewModel'     => new RoomShapesViewModel($roomShapeRecords),

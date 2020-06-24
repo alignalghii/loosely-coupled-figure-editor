@@ -10,6 +10,19 @@ FLUSH PRIVILEGES;
 
 USE `floor_plan_designer`;
 
+CREATE TABLE `user` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`name` VARCHAR(16) NOT NULL UNIQUE,
+	`password` VARCHAR(64) NOT NULL UNIQUE
+);
+
+CREATE TABLE `session` (
+	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`user_id` INT NOT NULL,
+	`token` INT NOT NULL,
+	FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+);
+
 CREATE TABLE `flat` (
 	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`address` VARCHAR(64) NOT NULL UNIQUE
@@ -46,6 +59,10 @@ CREATE TABLE `room` (
 	FOREIGN KEY (`prototype_id`) REFERENCES `room_prototype` (`id`),
 	FOREIGN KEY (`shape_id`) REFERENCES `room_shape` (`id`)
 );
+
+INSERT INTO `user`
+(`id`, `name` , `password`) VALUES
+(  1 , 'admin', 'admin0'  );
 
 INSERT INTO `flat`
 (`id`, `address`          ) VALUES
