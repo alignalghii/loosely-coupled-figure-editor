@@ -43,14 +43,33 @@ class Maybe
 	public static function yesPred($predicate, $arg): self {return self::yesVal($predicate($arg), $arg);}
 	public static function noPred ($predicate, $arg): self {return self::noVal ($predicate($arg), $arg);}
 
+	public static function yesVal_ref(bool $flag, &$arg): self {return  $flag ? self::just($arg) : self::nothing();}
+	public static function at(array $a, $i) {return self::yesVal_ref(array_key_exists($i, $a), $a[$i]);}
+
+
 	public static function ifAny(&$arg): self {return self::yesVal(isset($arg), $arg);} // @TODO note: `{return self::yes('isset', $arg);}` is wrong, `isset` is not lambdaized
 
+	public function isJust(): bool
+	{
+		return $this->maybe_val(
+			false,
+			function ($_): bool {return true;}
+		);
+	}
 
 	public function fromJustWithError(string $msg)
 	{
 		return $this->maybe_exec(
 			function () use ($msg) {die($msg);},
 			function ($a) {return $a;}
+		);
+	}
+
+	public function havingProperty(object/*a->bool*/ $property): Maybe/*a*/
+	{
+		return $this->maybe_val(
+			self::nothing(),
+			function ($a) use ($property): Maybe/*a*/ {return self::yesPred($property, $a);}
 		);
 	}
 

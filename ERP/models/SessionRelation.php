@@ -55,4 +55,12 @@ class SessionRelation
 		$flag = $sessionRelation->add($sessionEntity);
 		return Maybe::yesVal($flag, $sessionEntity);
 	}
+
+	public function maybeFindByToken(int $token): Maybe/*SessionEntity*/
+	{
+		$st = $this->dbh->prepare('SELECT `id`, `user_id`, `token` FROM `session` ORDER BY `id`');
+		$flag = $st->execute();
+		$recOrFalse = $st->fetch(\PDO::FETCH_ASSOC);
+		return Maybe::yesVal($flag && $recOrFalse, $recOrFalse);
+	}
 }

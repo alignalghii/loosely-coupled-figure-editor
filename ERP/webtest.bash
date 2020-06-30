@@ -33,6 +33,13 @@ function loopCommandThroughArgs
 	$isOK;
 }
 
+function cleanupAllSessions {
+	echo -ne '\t* Cleanup any earlier tokens from DB session table... ';
+	# For selective suppressing of warning, credit to https://stackoverflow.com/a/34817954
+	mysql -u floor_plan_designer_user -pfloor_plan_designer_user_password floor_plan_designer -e 'DELETE FROM `session`;' 2>&1 | grep -v 'command line';
+	echo 'done.';
+}
+
 
 
 errors=0;
@@ -50,8 +57,9 @@ if
 fi;
 echo ;
 echo '2. Tesztcsoport (Autentikáció hamisítása): token megléte de annak érvényességének hiánya esetében a főalkalmazási oldalra való önműködő átirányítás';
+cleanupAllSessions;
 if
-		loopCommandThroughArgs testRedirectSuccessfulAuthenticationToMainPage '/?token=100' '?token=100' '/show-all?token=100' '?token=105' '/?token=105' '/show-all?token=105';
+		loopCommandThroughArgs testRedirectFailedAuthenticationToLoginPage '/?token=100' '?token=100' '/show-all?token=100' '?token=105' '/?token=105' '/show-all?token=105';
 	then
 		echo '... siker.'
 		((successes++));
@@ -62,11 +70,9 @@ fi;
 echo;
 
 echo '3. Tesztcsoport (Autentikáció szabályos): érvényes token felmutatása';
+cleanupAllSessions;
+echo;
 echo -e '\tÉrvényes token megszerzése:';
-echo -ne '\t* Cleanup any earlier tokens from DB session table... ';
-# For selective suppressing of warning, credit to https://stackoverflow.com/a/34817954
-mysql -u floor_plan_designer_user -pfloor_plan_designer_user_password floor_plan_designer -e 'DELETE FROM `session`;' 2>&1 | grep -v 'command line';
-echo 'done.';
 echo -ne '\t* Retrive login data of a (the first) user from DB user table... ';
 logindata=$(mysql -u floor_plan_designer_user -pfloor_plan_designer_user_password floor_plan_designer -Ne 'SELECT * FROM `user` LIMIT 1;' 2>&1 | grep -v 'command line' | sed 's/^[0-9]\+\s\(\w\+\)\s\(\w\+\)$/export name=\1 password=\2/');
 $logindata;
@@ -86,7 +92,17 @@ if
 		((errors++));
 fi;
 echo;
-
+echo -e '\tToken tudatos érvénytelenítése, majd újratesztelés -- ezután persze elutasítást várunk el!'
+cleanupAllSessions;
+if
+		loopCommandThroughArgs testRedirectFailedAuthenticationToLoginPage "?token=$token" "/?token=$token" "/show-all?token=$token";
+	then
+		echo '... siker.'
+		((successes++));
+	else
+		echo '... kudarc';
+		((errors++));
+fi;
 echo;
 
 echo "Summary: Out of $((errors + successes)) cases, there are $((successes)) succeeded cases and $((errors)) errors";

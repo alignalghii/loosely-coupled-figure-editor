@@ -5,8 +5,6 @@ use models\{UserRelation, SessionRelation, FlatRelation, RoomPrototypeRelation, 
 
 use algebraicDataTypes\Maybe;
 
-use PDO;
-
 class Router
 {
 	private $server, $get, $post, $rawPost; // basic
@@ -32,16 +30,32 @@ class Router
 		// Authentication interceptor.
 		// Note: elfogad akármilyen request URI-t, mégha nem is szerepel a router route-jai között. Mert: illetéktelennek nem adunk ki infót még a route-ok puszta meglétéről sem!
 		$isLoginRequest  = preg_match('!(GET|POST) /login-(human|machine)!', $this->request);
-		$this->maybeToken()->maybe_exec(
+		$this->maybeValidToken()->maybe_exec(
 			function (             ) use ($isLoginRequest) {$isLoginRequest ? $this->dispatch_login()   : $this->dispatch_denyService();},
 			function (string $token) use ($isLoginRequest) {$isLoginRequest ? print 'Már be vagy lépve' : $this->dispatch_authenticated($token);}
 		);
 	}
 
-	private function maybeToken(): Maybe /*int*/
+	private function maybeToken(): Maybe/*int*/
 	{
-		$isAuthenticated = isset($this->get['token']) && preg_match('/\d+/', $this->get['token']) && $this->get['token'] > 100;
-		return $isAuthenticated ? Maybe::just($this->get['token']) : Maybe::nothing();
+		return Maybe::at($this->get, 'token')->havingProperty(
+			function ($n) {return preg_match('/^\d+$/', $n);}
+		)->map(
+			function ($n) {return (int) $n;}
+		);
+	}
+
+	private function maybeValidToken(): Maybe/*int*/
+	{
+		return $this->maybeToken()->havingProperty(
+			function (int $token): bool {return $this->isValidToken($token);}
+		);
+	}
+
+	private function isValidToken(int $token): bool
+	{
+		$sessionRelation = new SessionRelation($this->dbh);
+		return $sessionRelation->maybeFindByToken($token)->isJust();
 	}
 
 	private function dispatch_login(): void
