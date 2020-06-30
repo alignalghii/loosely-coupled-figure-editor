@@ -2,6 +2,8 @@
 
 namespace models;
 
+use algebraicDataTypes\Maybe;
+
 class SessionRelation
 {
 	function __construct(\PDO $dbh) {$this->dbh = $dbh;}
@@ -43,5 +45,14 @@ class SessionRelation
 		$st = $this->dbh->prepare('DELETE FROM `session` WHERE `id` = :id');
 		$st->bindValue('id', $id, \PDO::PARAM_INT);
 		return $st->execute();
+	}
+
+
+	public static function maybeOpenNewSessionForUser(int $userId, \PDO $dbh): Maybe/*SessionEntity*/
+	{
+		$sessionEntity = SessionEntity::fromUserId($userId);
+		$sessionRelation = new self($dbh);
+		$flag = $sessionRelation->add($sessionEntity);
+		return Maybe::yesVal($flag, $sessionEntity);
 	}
 }

@@ -20,6 +20,12 @@ class SessionEntity extends Entity
 		$id     = isset($post['id']) ? intval($post['id']) : null;
 		$userId = (int)$post['user_id'];
 		$token  = (int) $post['token'];
-		return Maybe::just(new SessionEntity($id, $userId, $token));
+		return Maybe::just(new self($id, $userId, $token));
+	}
+
+	public static function fromUserId(int $userId): self
+	{
+		$token = rand(10000000, 90000000);
+		return new self(null, $userId, $token);
 	}
 }

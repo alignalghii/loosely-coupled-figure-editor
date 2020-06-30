@@ -2,6 +2,8 @@
 
 namespace models;
 
+use Maybe;
+
 class UserRelation
 {
 	function __construct(\PDO $dbh) {$this->dbh = $dbh;}

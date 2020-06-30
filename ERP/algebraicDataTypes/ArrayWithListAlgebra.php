@@ -24,4 +24,15 @@ class ArrayWithListAlgebra
 		}
 		return $results;
 	}
+
+	function uncons(array $arr): Maybe2/*a, List<a>*/
+	{
+		if ($arr) {
+			$head = $arr[0];
+			$tail = array_splice($arr, 1);
+			return Maybe2::just2($head, $tail);
+		} else {
+			return Maybe2::nothing2();
+		}
+	}
 }

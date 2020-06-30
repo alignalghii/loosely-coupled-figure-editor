@@ -29,7 +29,7 @@ trait TUser
 
 	function delete(int $id): void
 	{
-		$maybeShowbackId = Maybe::no([$this->userRelation, 'delete'], $id);
+		$maybeShowbackId = Maybe::noPred([$this->userRelation, 'delete'], $id);
 		$viewModelMeta = new ViewModelMeta($this);
 		$viewModel = $viewModelMeta->delete('usersViewModel', $maybeShowbackId);
 		$this->render('main-view.php', $viewModel);

@@ -32,7 +32,7 @@ trait TFlat
 
 	function delete(int $id): void
 	{
-		$maybeShowbackId = Maybe::no([$this->flatRelation, 'delete'], $id);
+		$maybeShowbackId = Maybe::noPred([$this->flatRelation, 'delete'], $id);
 		$viewModelMeta = new ViewModelMeta($this);
 		$viewModel = $viewModelMeta->delete('flatsViewModel', $maybeShowbackId);
 		$this->render('main-view.php', $viewModel);

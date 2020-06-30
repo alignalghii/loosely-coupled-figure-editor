@@ -5,14 +5,17 @@ use models\{UserRelation, SessionRelation, FlatRelation, RoomPrototypeRelation, 
 
 use algebraicDataTypes\Maybe;
 
+use PDO;
+
 class Router
 {
 	private $server, $get, $post, $rawPost; // basic
 	private $request;                       // derived
 
-	public function __construct(array $server, array $get, array $post, string $rawPost)
+	public function __construct(PDO $dbh, array $server, array $get, array $post, string $rawPost)
 	{
 		// Basic:
+		$this->dbh     = $dbh;
 		$this->server  = $server;
 		$this->get     = $get;
 		$this->post    = $post;
@@ -50,7 +53,7 @@ class Router
 
 			// Human CRUD GUI:
 			case preg_match('!GET /login-human!' , $this->request, $matches): $this->makeLoginController()->getHuman (); break;
-			case preg_match('!POST /login-human!', $this->request, $matches): $this->makeLoginController()->postHuman($this->post['password']); break; // human API is justified to assume preconditions
+			case preg_match('!POST /login-human!', $this->request, $matches): $this->makeLoginController()->postHuman($this->post); break; // human API is justified to assume preconditions
 
 			default: $this->routerError();
 		}
@@ -114,17 +117,16 @@ class Router
 		}
 	}
 
-	private function makeLoginController(): LoginController {return new LoginController();}
+	private function makeLoginController(): LoginController {return new LoginController($this->dbh);}
 
 	private function makeHumanController(int $token): HumanController
 	{
-		$dbh = new PDO('mysql:host=localhost;dbname=floor_plan_designer', 'floor_plan_designer_user', 'floor_plan_designer_user_password', [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"]);
-		$userRelation          = new UserRelation($dbh);
-		$sessionRelation       = new SessionRelation($dbh);
-		$flatRelation          = new FlatRelation($dbh);
-		$roomPrototypeRelation = new RoomPrototypeRelation($dbh);
-		$roomShapeRelation     = new RoomShapeRelation($dbh);
-		$roomRelation          = new RoomRelation($dbh);
+		$userRelation          = new UserRelation($this->dbh);
+		$sessionRelation       = new SessionRelation($this->dbh);
+		$flatRelation          = new FlatRelation($this->dbh);
+		$roomPrototypeRelation = new RoomPrototypeRelation($this->dbh);
+		$roomShapeRelation     = new RoomShapeRelation($this->dbh);
+		$roomRelation          = new RoomRelation($this->dbh);
 		return new HumanController($userRelation, $sessionRelation, $flatRelation, $roomPrototypeRelation, $roomShapeRelation, $roomRelation, $token);
 	}
 

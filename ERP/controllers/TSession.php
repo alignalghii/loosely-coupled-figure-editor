@@ -29,7 +29,7 @@ trait TSession
 
 	function delete(int $id): void
 	{
-		$maybeShowbackId = Maybe::no([$this->sessionRelation, 'delete'], $id);
+		$maybeShowbackId = Maybe::noPred([$this->sessionRelation, 'delete'], $id);
 		$viewModelMeta = new ViewModelMeta($this);
 		$viewModel = $viewModelMeta->delete('sessionsViewModel', $maybeShowbackId);
 		$this->render('main-view.php', $viewModel);

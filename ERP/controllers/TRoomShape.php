@@ -35,7 +35,7 @@ trait TRoomShape
 
 	function delete(int $id): void
 	{
-		$maybeShowbackId = Maybe::no([$this->roomShapeRelation, 'delete'], $id);
+		$maybeShowbackId = Maybe::noPred([$this->roomShapeRelation, 'delete'], $id);
 		$viewModelMeta = new ViewModelMeta($this);
 		$viewModel = $viewModelMeta->delete('roomShapesViewModel', $maybeShowbackId);
 		$this->render('main-view.php', $viewModel);

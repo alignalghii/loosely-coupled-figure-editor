@@ -27,7 +27,7 @@ class Maybe2
 		}
 	}
 
-	public function map2(object $fun1, object $fun2): self
+	public function map2(object $fun1, object $fun2): self // @TODO wrong name, this is NOT what Haskell calls `lift2`
 	{
 		return $this->maybe_val(
 			self::nothing2(),
@@ -37,6 +37,24 @@ class Maybe2
 
 	public function mapFst(object $fun): self {return $this->map2($fun, self::getId());}
 	public function mapSnd(object $fun): self {return $this->map2(self::getId(), $fun);}
+
+
+	public function toMaybePair(): Maybe/*Pair<a, b>*/
+	{
+		return $this->maybe2_val(
+			Maybe::nothing(),
+			function ($a, $b) {return Maybe::just([$a, $b]);}
+		);
+	}
+
+	public function mapToMaybe(object $f): Maybe // @TODO: reconsider the function name
+	{
+		return $this->maybe2_val(
+			Maybe::nothing(),
+			function ($a, $b) use ($f): Maybe {return Maybe::just($f($a, $b));}
+		);
+	}
+
 
 	private static function getId(): object {return function ($a) {return $a;};}
 }

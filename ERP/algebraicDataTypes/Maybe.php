@@ -37,7 +37,28 @@ class Maybe
 		);
 	}
 
-	public static function yes($predicate, $arg): self {return  $predicate($arg) ? self::just($arg) : self::nothing();}
-	public static function no ($predicate, $arg): self {return !$predicate($arg) ? self::just($arg) : self::nothing();}
-	public static function ifAny(&$arg): self {return isset($arg) ? self::just($arg) : self::nothing();} // @TODO note: `{return self::yes('isset', $arg);}` is wrong, `isset` is not lambdaized
+	public static function yesVal(bool $flag, $arg): self {return  $flag ? self::just($arg) : self::nothing();}
+	public static function noVal (bool $flag, $arg): self {return self::yesVal(!$flag, $arg);}
+
+	public static function yesPred($predicate, $arg): self {return self::yesVal($predicate($arg), $arg);}
+	public static function noPred ($predicate, $arg): self {return self::noVal ($predicate($arg), $arg);}
+
+	public static function ifAny(&$arg): self {return self::yesVal(isset($arg), $arg);} // @TODO note: `{return self::yes('isset', $arg);}` is wrong, `isset` is not lambdaized
+
+
+	public function fromJustWithError(string $msg)
+	{
+		return $this->maybe_exec(
+			function () use ($msg) {die($msg);},
+			function ($a) {return $a;}
+		);
+	}
+
+	public function toEither($a): Either/*a, b*/
+	{
+		return $this->maybe_val(
+			Either::left($a),
+			function ($b) {return Either::right($b);}
+		);
+	}
 }

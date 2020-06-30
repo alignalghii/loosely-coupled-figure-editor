@@ -15,7 +15,7 @@ class UserEntity extends Entity
 		$this->password = $password;
 	}
 
-	public static function maybeImport(array $post): Maybe/*FlatEntity*/
+	public static function maybeImport(array $post): Maybe/*UserEntity*/
 	{
 		$id       = (int)$post['id'] ?? null;
 		$name     = trim($post['name']);

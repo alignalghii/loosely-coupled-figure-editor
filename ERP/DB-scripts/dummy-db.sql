@@ -18,8 +18,8 @@ CREATE TABLE `user` (
 
 CREATE TABLE `session` (
 	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`user_id` INT NOT NULL,
-	`token` INT NOT NULL,
+	`user_id` INT NOT NULL UNIQUE, #@TODO
+	`token` INT NOT NULL UNIQUE, #@TODO
 	FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 );
 

@@ -2,21 +2,92 @@
 
 namespace controllers;
 
-use algebraicDataTypes\Maybe;
+use PDO;
+use AlgebraicDataTypes\{Maybe, Either};
+use viewModels\LoginForm;
+use models\{LoginEntity, LoginEntityDenial, LoginRelation, SessionEntity, SessionRelation};
 
 class LoginController
 {
-	public function getHuman(): void {$this->render('login-view', ['error' => '']);}
-	public function postHuman(string $password): void
+	private $dbh;
+
+	public function __construct(PDO $dbh) {$this->dbh = $dbh;}
+
+
+	public function getHuman(): void
 	{
-		$isValid = \preg_match('/\w+/', $password) && $this->lengthBetween(1, 20, $password);
-		if ($isValid) {
-			header('Location: /?token=105');
-		} else {
-			$error = 'A jelszó csak szókarakterekből állhat 1-20 leütés hosszúságban';
-			$this->render('login-view', compact('error'));
-		}
+		$loginForm = LoginForm::empty();
+		$this->render('login-view', $loginForm->showBackViewModel());
 	}
+
+	public function postHuman(array $post): void
+	{
+		// READ: list($loginFrm, $eitherLoginDenialOrEntity) = $this->read(post);
+		$loginForm = LoginForm::fromPost($post);
+		$eitherLoginDenialOrEntity = $loginForm->encodeFromUI(
+			function ($name, $password) {return LoginEntity::decide($name, $password);},
+			$post
+		);
+		// MODEL:
+		$eitherFormChangeOrSessionEntity = $eitherLoginDenialOrEntity->either(
+			function (LoginEntityDenial $loginEntityDenial): Either/*LoginForm->LoginForm, SessionEntity*/ {
+				return Either::left(['addFieldLevelErrors', $loginEntityDenial]);
+			},
+			function (LoginEntity       $loginEntity      ): Either/*LoginForm->LoginForm, SessionEntity*/ {
+				$loginRelation = new LoginRelation($this->dbh);
+				return $loginRelation->searchExtensionally($loginEntity)->maybe_val( // SEARCH user
+					Either::left(['addMatchError']),
+					function (int $userId): Either/*LoginForm->LoginForm, SessionEntity*/ {
+						$maybeSessionEntity = SessionRelation::maybeOpenNewSessionForUser($userId, $this->dbh); // INSERT NEW SESSION
+						return $maybeSessionEntity->toEither(['addMultipleLoginError']);
+					}
+				);
+			}
+		);
+		// EXEC: $this->exec($eitherFormChangeOrSessionEntity, $loginForm):
+		$eitherFormChangeOrSessionEntity->either(
+			function (array $changer) use ($loginForm): void {
+				$this->render('login-view', $loginForm->apply($changer)->showBackViewModel());
+			},
+			function (SessionEntity $sessionEntity): void {
+				header("Location: /?token={$sessionEntity->token}");
+			}
+		);
+	}
+
+	private function validate(array $post): Either/*LoginViewModel, SessionEntity*/
+	{
+		$loginViewModel = LoginViewModel::fromPost($post);
+		$eitherLoginDenialOrEntity = LoginEntity::fromViewModel($loginViewModel);
+		$eitherLoginDenialOrEntity->map(
+			function (LoginEntity $loginEntity): void {
+				$loginRelation = new LoginRelation($this->dbh);
+				$loginEntity->searchedIn($loginRelation);
+			}
+		);
+		$maybeSessionEntity = $maybeLoginEntity->bind(
+			function (LoginEntity $loginEntity) use ($loginViewModel): Maybe/*SessionEntity*/ {
+				$loginRelation = new LoginRelation($this->dbh);
+				$loginEntity->idBy($loginRelation);
+				$loginViewModel->expectId($loginEntity);
+				return $this->loginToMaybeSessionEntity($loginEntity);
+			}
+		);
+		return $maybeSessionEntity->maybe_exec(
+			function () use ($loginViewModel)      : Either/*LoginViewModel, SessionEntity*/ {return Either::left($loginViewModel);},
+			function (SessionEntity $sessionEntity): Either/*LoginViewModel, SessionEntity*/ {return Either::right($sessionEntity);}
+		);
+	}
+
+	private function loginToMaybeSessionEntity(LoginEntity $loginEntity): Maybe/*SessionEntity*/
+	{
+		return $loginEntity->maybeId->map(
+			function (int $userId): SessionEntity {return new SessionEntity(null, $userId, rand(10000000, 90000000));}
+		);
+	}
+
+	public function read(array $fieldings, array &$error): bool {return true;}
+	public function write(int $userId): int {return rand(10000000, 90000000);}
 
 	public function getMachine(): void
 	{

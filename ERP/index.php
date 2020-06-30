@@ -13,5 +13,10 @@ use controllers\HumanController;
 
 require 'autoload.php';
 
-$router = new Router($_SERVER, $_GET, $_POST, file_get_contents('php://input'));
+
+
+$dbh = new PDO('mysql:host=localhost;dbname=floor_plan_designer', 'floor_plan_designer_user', 'floor_plan_designer_user_password', [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"]);
+$rawPost = file_get_contents('php://input');
+
+$router = new Router($dbh, $_SERVER, $_GET, $_POST, $rawPost);
 $router->run();

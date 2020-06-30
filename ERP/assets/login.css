@@ -1,0 +1,19 @@
+form {
+	display: grid;
+	grid-template-columns: auto auto 1fr;
+	grid-template-rows:    auto auto;
+	column-gap: 5px;
+	row-gap: 5px;
+}
+
+button {
+	grid-column-start: 2;
+	justify-self: start;
+}
+
+label {font-weight: bold;}
+
+.error {
+	color: red;
+	font-weight: bold;
+}

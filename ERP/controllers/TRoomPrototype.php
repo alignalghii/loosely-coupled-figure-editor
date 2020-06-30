@@ -13,7 +13,7 @@ trait TRoomPrototype
 {
 	function add(array $post): void // @TODO FlatEntity
 	{
-		$maybeShowback = RoomPrototypeEntity::maybePostback( //Maybe::no([$this->roomPrototypeRelation, 'add'], $post);
+		$maybeShowback = RoomPrototypeEntity::maybePostback( //Maybe::noPred([$this->roomPrototypeRelation, 'add'], $post);
 			$post,
 			[$this->roomPrototypeRelation, 'add']
 		);
@@ -35,7 +35,7 @@ trait TRoomPrototype
 
 	function delete(int $id): void
 	{
-		$maybeShowbackId = Maybe::no([$this->roomPrototypeRelation, 'delete'], $id);
+		$maybeShowbackId = Maybe::noPred([$this->roomPrototypeRelation, 'delete'], $id);
 		$viewModelMeta = new ViewModelMeta($this);
 		$viewModel = $viewModelMeta->delete('roomPrototypesViewModel', $maybeShowbackId);
 		$this->render('main-view.php', $viewModel);
