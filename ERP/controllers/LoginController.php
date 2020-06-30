@@ -3,7 +3,7 @@
 namespace controllers;
 
 use PDO;
-use AlgebraicDataTypes\{Maybe, Either};
+use algebraicDataTypes\{Pair, Maybe, Either};
 use viewModels\LoginForm;
 use models\{LoginEntity, LoginEntityDenial, LoginRelation, SessionEntity, SessionRelation};
 
@@ -31,22 +31,22 @@ class LoginController
 		// MODEL:
 		$eitherFormChangeOrSessionEntity = $eitherLoginDenialOrEntity->either(
 			function (LoginEntityDenial $loginEntityDenial): Either/*LoginForm->LoginForm, SessionEntity*/ {
-				return Either::left(['addFieldLevelErrors', $loginEntityDenial]);
+				return Either::left(new Pair('addFieldLevelErrors', [$loginEntityDenial]));
 			},
 			function (LoginEntity       $loginEntity      ): Either/*LoginForm->LoginForm, SessionEntity*/ {
 				$loginRelation = new LoginRelation($this->dbh);
 				return $loginRelation->searchExtensionally($loginEntity)->maybe_val( // SEARCH user
-					Either::left(['addMatchError']),
+					Either::left(new Pair('addMatchError', [])),
 					function (int $userId): Either/*LoginForm->LoginForm, SessionEntity*/ {
 						$maybeSessionEntity = SessionRelation::maybeOpenNewSessionForUser($userId, $this->dbh); // INSERT NEW SESSION
-						return $maybeSessionEntity->toEither(['addMultipleLoginError']);
+						return $maybeSessionEntity->toEither(new Pair('addMultipleLoginError', []));
 					}
 				);
 			}
 		);
 		// EXEC: $this->exec($eitherFormChangeOrSessionEntity, $loginForm):
 		$eitherFormChangeOrSessionEntity->either(
-			function (array $changer) use ($loginForm): void {
+			function (Pair/*string, array*/ $changer) use ($loginForm): void {
 				$this->render('login-view', $loginForm->apply($changer)->showBackViewModel());
 			},
 			function (SessionEntity $sessionEntity): void {

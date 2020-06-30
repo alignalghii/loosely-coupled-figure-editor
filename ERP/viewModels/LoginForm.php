@@ -4,7 +4,7 @@
 namespace viewModels;
 
 use models\{LoginEntity, LoginEntityDenial};
-use algebraicDataTypes\ArrayWithListAlgebra;
+use algebraicDataTypes\Pair;
 
 class LoginForm
 {
@@ -109,11 +109,11 @@ class LoginForm
 		return compact('name', 'password', 'error');
 	}
 
-	public function apply(array/*string, OPTIONAL: LoginEntityDenial*/ $changer): self
+	public function apply(Pair/*string, OPTIONAL: LoginEntityDenial*/ $changer): self
 	{
-		return ArrayWithListAlgebra::uncons($changer)->mapToMaybe(
+		return $changer->uncurry(
 			function (string $methodName, array $args): self {return call_user_func_array([$this, $methodName], $args);}
-		)->fromJustWithError('Wrong form error labeling code');
+		);
 	}
 
 	public function encodeFromUI(object $f, array $post) {return $f($post['name'], $post['password']);}
