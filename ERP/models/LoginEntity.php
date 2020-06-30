@@ -19,14 +19,21 @@ class LoginEntity
 
 	public static function decide(string $name, string $password)
 	{
-		$nameFlag     = preg_match('/^[a-zA-Z0-9]{1,20}$/', $name);
-		$passwordFlag = preg_match('/^[a-zA-Z0-9]{1,20}$/', $password);
-		switch (true) {
-			case  $nameFlag &&  $passwordFlag: return Either::right(new self             ( $name,               $password             ));
-			case !$nameFlag &&  $passwordFlag: return Either::left (new LoginEntityDenial([$name, ['regexp']], [$password, []        ]));
-			case  $nameFlag && !$passwordFlag: return Either::left (new LoginEntityDenial([$name, []        ], [$password, ['regexp']]));
-			case !$nameFlag && !$passwordFlag: return Either::left (new LoginEntityDenial([$name, ['regexp']], [$password, ['regexp']]));
-			default                          : die('Inpossible case');
-		}
+		$nameBills     = self::bill($name);
+		$passwordBills = self::bill($password);
+		if (!$nameBills && !$passwordBills) return Either::right(new self             ( $name    ,  $password    ));
+		else                                return Either::left (new LoginEntityDenial($nameBills, $passwordBills));
 	}
+
+	private static function bill(string $a): array/*string*/
+	{
+		$bills = [];
+		if ( self::empty($a)                    ) $bills[] = 'empty';
+		if (!self::empty($a) && self::nonVar($a)) $bills[] = 'non-var';
+		if ( self::tooLong($a)                  ) $bills[] = 'too-long';
+		return $bills;
+	}
+	private static function empty (string $a)  {return strlen($a) == 0;}
+	private static function nonVar(string $a)  {return !preg_match('/^[a-zA-Z][a-zA-Z0-9]*$/', $a);}
+	private static function tooLong(string $a) {return strlen($a) > 20;}
 }

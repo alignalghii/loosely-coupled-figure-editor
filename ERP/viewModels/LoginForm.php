@@ -53,20 +53,27 @@ class LoginForm
 
 	public function addFieldLevelErrors(LoginEntityDenial $loginEntityDenial): self
 	{
+		$dictionary = [
+			'empty'    => 'A %s nem lehet üres.',
+			'non-var'  => 'A %s csak név típusú jelekből állhat (angol ABC-vel keződik, és szintén ABC- vagy számjegyek)',
+			'too-long' => 'A % túl hosszú'
+		];
 		$form = $this->copy();
-		foreach ($loginEntityDenial->name[1] as $errorName) {
-			switch ($errorName) { // @TODO use assoc array and map functor instead of switch
-				case 'regexp': $form->nameError     = 'A név szintaktikailag nem megfelelő'; break;
-				default      : die('Unknown validation error symbol');
-			}
-		}
-		foreach ($loginEntityDenial->password[1] as $errorName) {
-			switch ($errorName) { // @TODO use assoc array and map functor instead of switch
-				case 'regexp': $form->passwordError = 'A név szintaktikailag nem megfelelő'; break;
-				default      : die('Unknown validation error symbol');
-			}
-		}
+		$form->nameError     = self::translate($loginEntityDenial->name    , $dictionary, 'név'   );
+		$form->passwordError = self::translate($loginEntityDenial->password, $dictionary, 'jelszó');
 		return $form;
+	}
+
+	private static function translate(array $errorNames, array $dictionary, string $label): string
+	{
+		foreach ($errorNames as $errorName) {
+			if (array_key_exists($errorName, $dictionary)) {
+				return sprintf($dictionary[$errorName], $label);
+			} else {
+				trigger_error("Unknown validation error symbol [$errorName]", E_USER_WARNING);
+			}
+		}
+		return '';
 	}
 
 	public function addMatchError(): self
