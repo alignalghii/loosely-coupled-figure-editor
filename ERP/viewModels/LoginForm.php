@@ -22,7 +22,7 @@ class LoginForm
 		$this->password      = $password;
 		$this->nameError     = $nameError;
 		$this->passwordError = $passwordError;
-		$this->globalError       = $globalError;
+		$this->globalError   = $globalError;
 	}
 
 	public function copy(): self
@@ -56,7 +56,7 @@ class LoginForm
 		$dictionary = [
 			'empty'    => 'A %s nem lehet üres.',
 			'non-var'  => 'A %s csak név típusú jelekből állhat (angol ABC-vel keződik, és szintén ABC- vagy számjegyek)',
-			'too-long' => 'A % túl hosszú'
+			'too-long' => 'A %s túl hosszú'
 		];
 		$form = $this->copy();
 		$form->nameError     = self::translate($loginEntityDenial->name    , $dictionary, 'név'   );
