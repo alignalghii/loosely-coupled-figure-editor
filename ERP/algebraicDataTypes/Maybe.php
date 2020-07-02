@@ -44,7 +44,8 @@ class Maybe
 	public static function noPred ($predicate, $arg): self {return self::noVal ($predicate($arg), $arg);}
 
 	public static function yesVal_ref(bool $flag, &$arg): self {return  $flag ? self::just($arg) : self::nothing();}
-	public static function at(array $a, $i) {return self::yesVal_ref(array_key_exists($i, $a), $a[$i]);}
+	public static function at(array/*a*/ $arr, $i): Maybe/*a*/ {return self::yesVal_ref(array_key_exists($i, $arr), $arr[$i]);}
+	public static function yesExec(bool $flag, object $constFunc): Maybe/*a*/ {return $flag ? self::just($constFunc()) : self::nothing();}
 
 
 	public static function ifAny(&$arg): self {return self::yesVal(isset($arg), $arg);} // @TODO note: `{return self::yes('isset', $arg);}` is wrong, `isset` is not lambdaized
@@ -78,6 +79,14 @@ class Maybe
 		return $this->maybe_val(
 			Either::left($a),
 			function ($b) {return Either::right($b);}
+		);
+	}
+
+	public function mplus(Maybe/*a*/ $maybeOther): Maybe/*a*/
+	{
+		return $this->maybe_exec(
+			function (  ) use ($maybeOther): Maybe/*a*/ {return $maybeOther   ;},
+			function ($a)                  : Maybe/*a*/ {return self::just($a);}
 		);
 	}
 }

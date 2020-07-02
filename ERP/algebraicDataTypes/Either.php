@@ -21,7 +21,7 @@ class Either
 		}
 	}
 
-	public function map($rightProcessor): Either
+	public function map($rightProcessor): Either/*a, b*/
 	{
 		return $this->either(
 			[self::class, 'fail'],
@@ -29,7 +29,16 @@ class Either
 		);
 	}
 
-	public function bind($inject): Either
+	public function leftMap(object $leftProcessor): Either/*a, b*/
+	{
+		return $this->either(
+			function ($a) use ($leftProcessor): Either/*a, b*/ {return self::left ($leftProcessor($a));},
+			function ($b)                     : Either/*a, b*/ {return self::right(               $b );}
+		);
+	}
+
+
+	public function bind($inject): Either/*$a, $b*/
 	{
 		return $this->either(
 			[self::class, 'fail'],
@@ -50,6 +59,9 @@ class Either
 			}
 		);
 	}
+
+	public static function yesVal(bool $flag, $a): Either/*a, a*/ {return $flag ? self::right($a) : self::left($a);}
+
 
 	//public function andMaybe(Maybe $leftContent)
 	//{

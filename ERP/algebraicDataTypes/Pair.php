@@ -12,6 +12,19 @@ class Pair
 		$this->b = $b;
 	}
 
-	public static function mkPair($a, $b): Pair/*a, b*/ {return new self($a, $b);}
-	public function uncurry($f) {return $f($this->a, $this->b);}
+	public function uncurry(object $f) {return $f($this->a, $this->b);}
+
+	public function mapFirst(object $f): Pair/*a, b*/
+	{
+		return $this->uncurry(
+			function ($a, $b) use ($f) {return new Pair($f($a), $b);}
+		);
+	}
+
+	public function mapSecond(object $f): Pair/*a, b*/
+	{
+		return $this->uncurry(
+			function ($a, $b) use ($f) {return new Pair($a, $f($b));}
+		);
+	}
 }

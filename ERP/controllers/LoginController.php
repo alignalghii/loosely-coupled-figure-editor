@@ -5,7 +5,7 @@ namespace controllers;
 use PDO;
 use algebraicDataTypes\{Pair, Maybe, Either};
 use viewModels\LoginForm;
-use models\{LoginEntity, LoginEntityDenial, LoginRelation, SessionEntity, SessionRelation};
+use models\{LoginEntity, LoginEntityDenial, LoginRelation, SessionEntity, SessionRelation, Authentication};
 
 class LoginController
 {
@@ -22,29 +22,39 @@ class LoginController
 
 	public function postHuman(array $post): void
 	{
-		// READ: list($loginFrm, $eitherLoginDenialOrEntity) = $this->read(post);
+		$this->readAndValidateLocally($post)->mapFirst(
+			function (Either/*LoginEntityDenial,LoginEntity*/ $localValidation): Either/*FormChange, SessionEntity*/ {return $this->sessionizeAndValidateGlobally($localValidation);}
+		)->uncurry(
+			function (Either/*FormChange, SessionEntity*/ $globalValidation, LoginForm $form): void {$this->executeOn($globalValidation, $form);}
+		);
+	}
+
+	private function readAndValidateLocally(array $post): Pair/*LoginForm, Either<LoginEntityDenial, LoginEntity>*/
+	{
 		$loginForm = LoginForm::fromPost($post);
 		$eitherLoginDenialOrEntity = $loginForm->encodeFromUI(
 			function ($name, $password) {return LoginEntity::decide($name, $password);},
 			$post
 		);
-		// MODEL:
-		$eitherFormChangeOrSessionEntity = $eitherLoginDenialOrEntity->either(
-			function (LoginEntityDenial $loginEntityDenial): Either/*LoginForm->LoginForm, SessionEntity*/ {
-				return Either::left(new Pair('addFieldLevelErrors', [$loginEntityDenial]));
-			},
+		return new Pair($eitherLoginDenialOrEntity, $loginForm);
+	}
+
+	private function sessionizeAndValidateGlobally(Either/*LoginEntityDenial, LoginEntity*/ $eitherLoginDenialOrEntity): Either/*FormChange, SessionEntity*/
+	{
+		return $eitherLoginDenialOrEntity->leftMap(
+			function (LoginEntityDenial $loginEntityDenial): Pair/*semantically: LoginForm->LoginForm*/ {
+				return new Pair('addFieldLevelErrors', [$loginEntityDenial]);
+			}
+		)->bind(
 			function (LoginEntity       $loginEntity      ): Either/*LoginForm->LoginForm, SessionEntity*/ {
-				$loginRelation = new LoginRelation($this->dbh);
-				return $loginRelation->searchExtensionally($loginEntity)->maybe_val( // SEARCH user
-					Either::left(new Pair('addMatchError', [])),
-					function (int $userId): Either/*LoginForm->LoginForm, SessionEntity*/ {
-						$maybeSessionEntity = SessionRelation::maybeOpenNewSessionForUser($userId, $this->dbh); // INSERT NEW SESSION
-						return $maybeSessionEntity->toEither(new Pair('addMultipleLoginError', []));
-					}
-				);
+				$authentication = new Authentication(new LoginRelation($this->dbh), new SessionRelation($this->dbh));
+				return $authentication->authenticate($loginEntity);
 			}
 		);
-		// EXEC: $this->exec($eitherFormChangeOrSessionEntity, $loginForm):
+	}
+
+	private function executeOn(Either/*LoginForm->LoginForm, SessionEntity*/ $eitherFormChangeOrSessionEntity, LoginForm $loginForm): void
+	{
 		$eitherFormChangeOrSessionEntity->either(
 			function (Pair/*string, array*/ $changer) use ($loginForm): void {
 				$this->render('login-view', $loginForm->apply($changer)->showBackViewModel());
@@ -55,39 +65,6 @@ class LoginController
 		);
 	}
 
-	private function validate(array $post): Either/*LoginViewModel, SessionEntity*/
-	{
-		$loginViewModel = LoginViewModel::fromPost($post);
-		$eitherLoginDenialOrEntity = LoginEntity::fromViewModel($loginViewModel);
-		$eitherLoginDenialOrEntity->map(
-			function (LoginEntity $loginEntity): void {
-				$loginRelation = new LoginRelation($this->dbh);
-				$loginEntity->searchedIn($loginRelation);
-			}
-		);
-		$maybeSessionEntity = $maybeLoginEntity->bind(
-			function (LoginEntity $loginEntity) use ($loginViewModel): Maybe/*SessionEntity*/ {
-				$loginRelation = new LoginRelation($this->dbh);
-				$loginEntity->idBy($loginRelation);
-				$loginViewModel->expectId($loginEntity);
-				return $this->loginToMaybeSessionEntity($loginEntity);
-			}
-		);
-		return $maybeSessionEntity->maybe_exec(
-			function () use ($loginViewModel)      : Either/*LoginViewModel, SessionEntity*/ {return Either::left($loginViewModel);},
-			function (SessionEntity $sessionEntity): Either/*LoginViewModel, SessionEntity*/ {return Either::right($sessionEntity);}
-		);
-	}
-
-	private function loginToMaybeSessionEntity(LoginEntity $loginEntity): Maybe/*SessionEntity*/
-	{
-		return $loginEntity->maybeId->map(
-			function (int $userId): SessionEntity {return new SessionEntity(null, $userId, rand(10000000, 90000000));}
-		);
-	}
-
-	public function read(array $fieldings, array &$error): bool {return true;}
-	public function write(int $userId): int {return rand(10000000, 90000000);}
 
 	public function getMachine(): void
 	{
@@ -107,7 +84,4 @@ class LoginController
 		\extract($viewModel);
 		require "$viewFileName.php";
 	}
-
-	private function lengthBetween(int $lowLimit, int $highLimit, string $text): bool {return $this->between($lowLimit, $highLimit, \strlen($text));}
-	private function between      (int $lowLimit, int $highLimit, int $n      ): bool {return $lowLimit <= $n && $n <= $highLimit;}
 }

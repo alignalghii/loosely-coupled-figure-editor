@@ -15,6 +15,8 @@ class SessionEntity extends Entity
 		$this->token  = $token;
 	}
 
+	public static function fromDBRecord(array $record): self {return new self($record['id'], $record['user_id'], $record['token']);}
+
 	public static function maybeImport(array $post): Maybe/*SessionEntity*/
 	{
 		$id     = isset($post['id']) ? intval($post['id']) : null;

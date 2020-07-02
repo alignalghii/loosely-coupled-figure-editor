@@ -31,10 +31,12 @@ class Router
 		// Note: elfogad akármilyen request URI-t, mégha nem is szerepel a router route-jai között. Mert: illetéktelennek nem adunk ki infót még a route-ok puszta meglétéről sem!
 		$isLoginRequest  = preg_match('!(GET|POST) /login-(human|machine)!', $this->request);
 		$this->maybeValidToken()->maybe_exec(
-			function (             ) use ($isLoginRequest) {$isLoginRequest ? $this->dispatch_login()   : $this->dispatch_denyService();},
-			function (string $token) use ($isLoginRequest) {$isLoginRequest ? print 'Már be vagy lépve' : $this->dispatch_authenticated($token);}
+			function (          ) use ($isLoginRequest) {$isLoginRequest ? $this->dispatch_login   (      ) : $this->dispatch_denyService();},
+			function (int $token) use ($isLoginRequest) {$isLoginRequest ? $this->fixInconsistency1($token) : $this->dispatch_authenticated($token);}
 		);
 	}
+
+	private function fixInconsistency1(int $token) {printf('Az URL-edben szereplő token érvényes, nincs szükség bejelentkezésre. <a href="/?token=%d">Javító link</a>', $token);}
 
 	private function maybeToken(): Maybe/*int*/
 	{
@@ -58,6 +60,7 @@ class Router
 		return $sessionRelation->maybeFindByToken($token)->isJust();
 	}
 
+	// @TODO remove superfluous token, if any
 	private function dispatch_login(): void
 	{
 		switch (true) {

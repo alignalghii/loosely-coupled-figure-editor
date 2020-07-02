@@ -18,7 +18,7 @@ class Maybe2
 		}
 	}
 
-	public function maybe2_exec(object $funNothing2, object $funjust2)
+	public function maybe2_exec(object $funNothing2, object $funJust2)
 	{
 		switch ($this->_internalRepresentation[0]) {
 			case 'nothing2': return $funNothing2();
@@ -52,6 +52,18 @@ class Maybe2
 		return $this->maybe2_val(
 			Maybe::nothing(),
 			function ($a, $b) use ($f): Maybe {return Maybe::just($f($a, $b));}
+		);
+	}
+
+	public static function fromMaybePair(Maybe/*Pair<a, b>*/ $maybePair): Maybe2/*a, b*/
+	{
+		return $maybePair->maybe_val(
+			Maybe2::nothing2(),
+			function (Pair/*a, b*/ $pair): Maybe2/*a, b*/ {
+				return $pair->uncurry(
+					function ($a, $b): Maybe2/*a, b*/ {return Maybe2::just2($a, $b);}
+				);
+			}
 		);
 	}
 

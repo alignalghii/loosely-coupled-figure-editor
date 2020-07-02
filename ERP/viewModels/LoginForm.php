@@ -83,10 +83,17 @@ class LoginForm
 		return $form;
 	}
 
-	public function addMultipleLoginError(): self
+	public function addMultipleLoginError(int $token): self
 	{
 		$form = $this->copy();
-		$form->globalError = 'Többszörösen vagy bejelenetkezve?';
+		$form->globalError = sprintf('Van egy árva tokened az adatbázisban. <a href="/?token=%d">Javító link</a>.', $token);
+		return $form;
+	}
+
+	public function addDoomsDayError(): self
+	{
+		$form = $this->copy();
+		$form->globalError = 'Külső eszköz hiba, vagy elenyészően véletlen tokengenerálás-egybeeesés';
 		return $form;
 	}
 

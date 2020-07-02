@@ -2,17 +2,18 @@
 
 namespace models;
 
-use algebraicDataTypes\Maybe;
+use algebraicDataTypes\{Pair, Maybe, Maybe2};
 
 class SessionRelation
 {
 	function __construct(\PDO $dbh) {$this->dbh = $dbh;}
 
+
 	function getAll(): array
 	{
 		$st = $this->dbh->prepare('SELECT `id`, `user_id`, `token` FROM `session` ORDER BY `id`');
 		$st->execute();
-		return $st->fetchAll(\PDO::FETCH_ASSOC);
+		return $st->fetchAll(\PDO::FETCH_ASSOC); // @TODO array_map(function (array $rec) {return SessionEntity::fromDBRecord($rec);}, ...)
 	}
 
 	function add(SessionEntity $entity): bool // @TODO `SessionEntity $rec`
@@ -48,19 +49,47 @@ class SessionRelation
 	}
 
 
-	public static function maybeOpenNewSessionForUser(int $userId, \PDO $dbh): Maybe/*SessionEntity*/
+	public function maybeOpenNewSessionForUserId(int $userId): Maybe/*SessionEntity*/
 	{
 		$sessionEntity = SessionEntity::fromUserId($userId);
-		$sessionRelation = new self($dbh);
-		$flag = $sessionRelation->add($sessionEntity);
+		$flag = $this->add($sessionEntity);
 		return Maybe::yesVal($flag, $sessionEntity);
+	}
+
+	public function openNewOrFindOldSessionForUserId(int $userId): Maybe2/*bool, SessionEntity*/
+	{
+		return Maybe2::fromMaybePair(
+			$this->maybeOpenNewSessionForUserId($userId)->map(
+					function (SessionEntity $sessionEntity): Pair/*bool, SessionEntity*/ {return new Pair(true , $sessionEntity);}
+			)->mplus(
+				$this->maybeFindByUserId($userId)->map(
+					function (SessionEntity $sessionEntity): Pair/*bool, SessionEntity*/ {return new Pair(false, $sessionEntity);}
+				)
+			)
+		);
 	}
 
 	public function maybeFindByToken(int $token): Maybe/*SessionEntity*/
 	{
-		$st = $this->dbh->prepare('SELECT `id`, `user_id`, `token` FROM `session` ORDER BY `id`');
+		$st = $this->dbh->prepare('SELECT `id`, `user_id`, `token` FROM `session` WHERE `token` = :token');
+		$st->bindValue('token', $token, \PDO::PARAM_INT);
 		$flag = $st->execute();
 		$recOrFalse = $st->fetch(\PDO::FETCH_ASSOC);
-		return Maybe::yesVal($flag && $recOrFalse, $recOrFalse);
+		return Maybe::yesExec(
+			$flag && $recOrFalse,
+			function () use ($recOrFalse) {return SessionEntity::fromDBRecord($recOrFalse);}
+		);
+	}
+
+	public function maybeFindByUserId(int $userId): Maybe/*SessionEntity*/
+	{
+		$st = $this->dbh->prepare('SELECT `id`, `user_id`, `token` FROM `session` WHERE `user_id` = :user_id');
+		$st->bindValue('user_id', $userId, \PDO::PARAM_INT);
+		$flag = $st->execute();
+		$recOrFalse = $st->fetch(\PDO::FETCH_ASSOC);
+		return Maybe::yesExec(
+			$flag && $recOrFalse,
+			function () use ($recOrFalse) {return SessionEntity::fromDBRecord($recOrFalse);}
+		);
 	}
 }
