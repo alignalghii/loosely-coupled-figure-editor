@@ -1,6 +1,6 @@
 <?php
 
-use controllers\{LoginController, MachineController, HumanController};
+use controllers\{LoginController, LogoutController, MachineController, HumanController};
 use models\{UserRelation, SessionRelation, FlatRelation, RoomPrototypeRelation, RoomShapeRelation, RoomRelation};
 
 use algebraicDataTypes\Maybe;
@@ -88,6 +88,8 @@ class Router
 
 			// Human CRUD GUI:
 
+			case preg_match('!POST /logout!', $this->request, $matches): $this->makeLogoutController($token)->logout(); break;
+
 			case preg_match('!GET /($|\?)!'  , $this->request, $matches):
 			case preg_match('!GET /show-all!', $this->request, $matches): $this->makeHumanController($token)->showAll(); break;
 
@@ -134,7 +136,8 @@ class Router
 		}
 	}
 
-	private function makeLoginController(): LoginController {return new LoginController($this->dbh);}
+	private function makeLoginController (          ): LoginController  {return new LoginController ($this->dbh        );}
+	private function makeLogoutController(int $token): LogoutController {return new LogoutController($this->dbh, $token);}
 
 	private function makeHumanController(int $token): HumanController
 	{

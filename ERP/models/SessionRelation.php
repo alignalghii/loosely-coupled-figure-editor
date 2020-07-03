@@ -48,6 +48,14 @@ class SessionRelation
 		return $st->execute();
 	}
 
+	function deleteByToken(int $token): bool
+	{
+		$st = $this->dbh->prepare('DELETE FROM `session` WHERE `token` = :token');
+		$st->bindValue('token', $token, \PDO::PARAM_INT);
+		return $st->execute();
+	}
+
+
 
 	public function maybeOpenNewSessionForUserId(int $userId): Maybe/*SessionEntity*/
 	{

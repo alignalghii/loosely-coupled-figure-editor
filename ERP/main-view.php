@@ -8,6 +8,7 @@
 		<title>ERP: DB CRUD</title>
 	</head>
 	<body>
+		<form method="POST" action="/logout?token=<?php echo $token; ?>"><button type="submit">Kilépés</button></form>
 		<h1>ERP: DB CRUD &mdash; A vállalatirányitási rendszer DB-admin felülete</h1>
 		<h2>Alaprajzszerkesztő üres vagy &bdquo;előre beégetett&rdquo; mintaszobás megnyitása</h2>
 		<ul>

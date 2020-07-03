@@ -17,7 +17,10 @@
 			<label for="password-field">Jelszavad</label>
 			<input type="text" id="password-field" name="password" value="<?php echo $password; ?>" placeholder="Csak szókarakterek 1-20 leütés"/>
 			<span class="error"><?php echo $error['password']; ?></span>
-			<button type="submit">Mehet!</button>
+			<span id="controls">
+				<button type="submit">Mehet!</button>
+				<a href="/login">Mezők törlése</a>
+			</span>
 			<span class="error"><?php echo $error['global']; ?></span>
 		</form>
 	</body>
