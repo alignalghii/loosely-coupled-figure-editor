@@ -11,7 +11,7 @@ function LoaderController (canvasPseudoWidgets, numberHelperAndValidator, loader
 	this.focusID();
 
 	if (this.loaderDriver.loaderIdField.value) {
-		this.run(this.loaderDriver.loaderIdField.value, false);
+		this.run(this.loaderDriver.loaderIdField.value);
 	}
 }
 
@@ -448,6 +448,7 @@ LoaderController.prototype.cancel     = function ()
 
 LoaderController.prototype.sendFlatIdsQueryToERP = function ()
 {
+	this.loaderDriver.loaderIdField.setAttribute('placeholder', '-1, -2, -3;');
 	UnfailableProgressingAjaj.get(
 		this.urlPartDriver.addMaybeToken('http://localhost:8001/nontrivial-flat-ids'),
 		response => this.loadFlatIdsFromERP(response),
@@ -457,8 +458,8 @@ LoaderController.prototype.sendFlatIdsQueryToERP = function ()
 
 LoaderController.prototype.loadFlatIdsFromERP = function (response) // @TODO DRY with `loadFlatFromERP`
 {
+	const field = this.loaderDriver.loaderIdField;
 	if (response.status) {
-		const field = this.loaderDriver.loaderIdField;
 		const placeholder0 = field.getAttribute('placeholder');
 		const placeholderPlus = response.flatIds.join(', ');
 		const placeholder = placeholder0.replace(/;.*/, `; ${placeholderPlus}`);
