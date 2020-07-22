@@ -330,3 +330,8 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - Maradhat a menüvásznak gördítősávos kialakítása, de akkor a `.scrollLeft` tulajdonság állításával kell a nyílászáró/bútor/típus választásnak megfelelő pozícióba göríttetni a kocsit.
 
  - Az alakzatszerkesztésnél az új csúcsok hozzáadása néha hibaüzementet ad. Eset: konkáv poligonok, pl. L-alakú szoba konkáv sarka közelébe kattintuk (kívülről). Nem mindig jön elsőre, ,,lövöldözni'' kell egy kicsit. a hibaüzenet: `Uncaught Invalid tour rotation value NaN for polygon vertices tour [[-6.799237430008577,-29.170137985134996],[10.241889293304059,-29.170137985134996],[10.241889293304059,-23.489762410697452],[1.2,-21.4],[-1.2,-22.4],[-1,-21.4],[-0.6,-20.2],[-1.8,-18.6],[-2.2,-20.6],[-2.4,-20.6],[-2.6,-20.4],[-3,-21],[-3,-21],[-2.6,-21.6],[-3,-21.6],[-3.959049642789804,-23.489762410697452],[-3.959049642789804,-14.969199049041134],[-6.799237430008577,-14.969199049041134]]`
+
+
+### További hibák
+
+ - A munkavászon levő bebútorzott, nyílászárós szoba egérrel visszavonszolható a menüvászonra, miközben nyílászáróit gazdátlanul a munkavásznon hagyja
