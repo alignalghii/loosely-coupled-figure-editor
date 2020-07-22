@@ -9,11 +9,11 @@ holy-grail.css
 floor-plan-designer/vendor/buy/*
 !floor-plan-designer/vendor/buy/README.md
 
-sonar.ogg
-bark.ogg
-drip.ogg
-dialog-error.ogg
-glass.ogg
+floor-plan-designer/public/assets-proper/sonar.ogg
+floor-plan-designer/public/assets-proper/bark.ogg
+floor-plan-designer/public/assets-proper/drip.ogg
+floor-plan-designer/public/assets-proper/dialog-error.ogg
+floor-plan-designer/public/assets-proper/glass.ogg
 
 floor-plan-designer/public/assets-proper/logo*.*
 floor-plan-designer/public/assets-proper/info*.png

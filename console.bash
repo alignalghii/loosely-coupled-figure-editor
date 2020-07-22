@@ -13,26 +13,34 @@ case "$1" in
 		fi;;
 	free-alternative)
 		if
-				pwd | grep -vq 'public\|free';
+				pwd | grep -q 'free' && ! test -f free-alternative-process-started.status
 			then
-				sed -i 's/\<door-attached2\>/door-attached/g' $(grep -l door-attached2 -nr --include='*.js' --exclude-dir=.git);
-		-		{
-					cd floor-plan-designer/public;
-					cp free-alternative-icons/* img-vendor/;
-					ln -s index.free.php  index.php;
-					{
-						cd assets-proper;
-						ln -s holy-grail.free.css  holy-grail.css;
-					}
-					sed -i 's!^\(\s*\)\([^/]*domHelper.*hide\)!\1// \2!' app.js/device-drivers/TabSelectorDriver.js;
-				}
+				touch free-alternative-process-started.status;
 				# .gitignore
 				sed -i 's!\<800\([0-9]\)-es\s\+port!801\1-es port!g;s!:800\([0-9]\)\>!:801\1!g' $(grep '\<800[0-9]-es\s\+port\|:800[0-9]\>' -lr .);
-				
+				(
+					cd floor-plan-designer;
+					sed -i 's/\<door-attached2\>/door-attached/g' $(grep door-attached2  -lr . --include='*.js' --exclude-dir=.git);
+					(
+						cd app.php;
+						ln -s view.free.php view.php;
+					);
+					(
+						cd public;
+						sed -i 's!^\(\s*\)\([^/]*domHelper.*hide\)!\1// \2!' app.js/device-drivers/TabSelectorDriver.js;
+						cp free-alternative-icons/*.png img-vendor/;
+						cp free-alternative-icons/{logo--transparent--hack,info-icon-bulb-recut-recolor,battering-ram,brick,pickaxe,bucket,window-attached,window-detached,door-attached,door-detached}.png assets-proper/;
+						cp free-alternative-icons/*.ogg assets-proper/;
+						(
+							cd assets-proper;
+							ln -s holy-grail.free.css holy-grail.css;
+						);
+					);
+				);
 			else
-				echo "It seems to be an already freed folder, at least by its name `pdw`!";
+				echo "Either it is not a folder named to be free (`pwd`), or the freeing process has been already done.";
 				false;
-		fi;
+		fi;;
 	*)
 		echo 'Usage: ./console.bash global-network|free-alternative';
 		false;;
