@@ -29,6 +29,7 @@ case "$1" in
 						cd public;
 						sed -i 's!^\(\s*\)\([^/]*domHelper.*hide\)!\1// \2!' app.js/device-drivers/TabSelectorDriver.js;
 						cp free-alternative-icons/*.png img-vendor/;
+						cp free-alternative-icons/floor-patterns/*.png img-vendor/floor-patterns/;
 						cp free-alternative-icons/{logo--transparent--hack,info-icon-bulb-recut-recolor,battering-ram,brick,pickaxe,bucket,window-attached,window-detached,door-attached,door-detached}.png assets-proper/;
 						cp free-alternative-icons/*.ogg assets-proper/;
 						(

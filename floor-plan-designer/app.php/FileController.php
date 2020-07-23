@@ -29,4 +29,17 @@ class FileController
 		extract($viewModel);
 		require $viewFileName;
 	}
+
+	// @TODO should be token protected
+	public function floorPatterns(): void
+	{
+		echo json_encode(
+			array_values(
+				array_filter(
+					scandir('img-vendor/floor-patterns'),
+					function (string $fileName): bool {return !preg_match('/^\./', $fileName);} // `.`, `..`, `.gitkeep` if any
+				)
+			)
+		);
+	}
 }

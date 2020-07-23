@@ -423,28 +423,28 @@
 			<svg id="svgRoot_workCanvas" width="1175" height="692" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 				<defs>
 					<pattern id="padlo1" width="25" height="25" patternUnits="userSpaceOnUse">
-						<image xlink:href="/img-vendor/padlo1.png"/>
+						<image xlink:href="/img-vendor/floor-patterns/padlo1.png"/>
 					</pattern>
 					<pattern id="padlo1_dark" width="25" height="25" patternUnits="userSpaceOnUse">
-						<image xlink:href="/img-vendor/padlo1_dark.png"/>
+						<image xlink:href="/img-vendor/floor-patterns/padlo1_dark.png"/>
 					</pattern>
 					<pattern id="padlo1_light" width="25" height="25" patternUnits="userSpaceOnUse">
-						<image xlink:href="/img-vendor/padlo1_light.png"/>
+						<image xlink:href="/img-vendor/floor-patterns/padlo1_light.png"/>
 					</pattern>
 					<pattern id="csempe1_dark_small" width="25" height="25" patternUnits="userSpaceOnUse">
-						<image xlink:href="/img-vendor/csempe1_dark_small.png"/>
+						<image xlink:href="/img-vendor/floor-patterns/csempe1_dark_small.png"/>
 					</pattern>
 					<pattern id="keramia" width="25" height="25" patternUnits="userSpaceOnUse">
-						<image xlink:href="/img-vendor/keramia.png"/>
+						<image xlink:href="/img-vendor/floor-patterns/keramia.png"/>
 					</pattern>
 					<pattern id="keramia_dark" width="25" height="25" patternUnits="userSpaceOnUse">
-						<image xlink:href="/img-vendor/keramia_dark.png"/>
+						<image xlink:href="/img-vendor/floor-patterns/keramia_dark.png"/>
 					</pattern>
 					<pattern id="keramia_light" width="25" height="25" patternUnits="userSpaceOnUse">
-						<image xlink:href="/img-vendor/keramia_light.png"/>
+						<image xlink:href="/img-vendor/floor-patterns/keramia_light.png"/>
 					</pattern>
 					<pattern id="keramia_normal" width="25" height="25" patternUnits="userSpaceOnUse">
-						<image xlink:href="/img-vendor/keramia_normal.png"/>
+						<image xlink:href="/img-vendor/floor-patterns/keramia_normal.png"/>
 					</pattern>
 				</defs>
 			</svg>
