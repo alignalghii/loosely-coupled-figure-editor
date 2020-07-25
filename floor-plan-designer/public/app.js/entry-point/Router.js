@@ -65,6 +65,9 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 				default    : throw 'Invalid history action';
 			}
 		}
+		if (eventType == 'click' && Eq.eq(inputSignature, ['string']) && 'floorPattern' in ird) {
+			this.figurePropertyEditorController.changeFloorPattern(ird.floorPattern);
+		}
 
 		if (this.state.mode == 'compact') {
 			switch (eventType) {

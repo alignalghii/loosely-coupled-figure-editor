@@ -4,7 +4,8 @@ class FileController
 {
 	public function showWithPrefilledFlatIdField(Maybe/*string*/ $maybeToken, string $prefilledFlatIdField = ''): void
 	{
-		$this->render('view.php', compact('prefilledFlatIdField', 'maybeToken'));
+		$floorPatterns = $this->floorPatternsArray();
+		$this->render('view.php', compact('prefilledFlatIdField', 'maybeToken', 'floorPatterns'));
 	}
 
 	public function updateJPEG(string $svgString): void
@@ -31,14 +32,14 @@ class FileController
 	}
 
 	// @TODO should be token protected
-	public function floorPatterns(): void
+	public function floorPatterns(): void {echo json_encode($this->floorPatternsArray());}
+
+	private function floorPatternsArray(): array/*string*/
 	{
-		echo json_encode(
-			array_values(
-				array_filter(
-					scandir('img-vendor/floor-patterns'),
-					function (string $fileName): bool {return !preg_match('/^\./', $fileName);} // `.`, `..`, `.gitkeep` if any
-				)
+		return array_values(
+			array_filter(
+				scandir('img-vendor/floor-patterns'),
+				function (string $fileName): bool {return !preg_match('/^\./', $fileName);} // `.`, `..`, `.gitkeep` if any
 			)
 		);
 	}

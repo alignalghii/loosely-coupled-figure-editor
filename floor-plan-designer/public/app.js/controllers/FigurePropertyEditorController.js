@@ -105,3 +105,14 @@ FigurePropertyEditorController.prototype.changeDasharray = function (attrName, a
 		this.state.maybeWidgetActualOnFigurePropertyEditor
 	);
 };
+
+FigurePropertyEditorController.prototype.changeFloorPattern = function (floorPattern)
+{
+	maybeMap(
+		widget => {
+			widget.low.setAttribute('fill', `url(#${/(.*)\.\w*/.exec(floorPattern)[1]})`);
+			this.statusBarDriver.report(`Padlóminta-változás erre: ${floorPattern}`);
+		},
+		this.state.maybeWidgetActualOnFigurePropertyEditor
+	);
+};

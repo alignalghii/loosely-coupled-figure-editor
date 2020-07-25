@@ -33,6 +33,15 @@ FigurePropertyEditorDriver.prototype.pipeToSM = function (dispatch)
 		if (checkFlags.length != 1) throw 'Change event piping bug';
 	}
 	this.figurePropertyEditor.addEventListener('change', changeInput);
+
+	this.figurePropertyEditor.addEventListener(
+		'click',
+		event => {
+			if (event.target.dataset.name) {
+				dispatch('click', ['string'], {floorPattern: event.target.dataset.name});
+			}
+		}
+	);
 };
 
 FigurePropertyEditorDriver.prototype.open = function (name, n, perimeter, area, edgeAndAngleMeasures, furnitureNames, svgAttributes)
@@ -136,6 +145,32 @@ FigurePropertyEditorDriver.prototype.open = function (name, n, perimeter, area, 
 		const li = this.document.createElement('li');
 		furnitureList.appendChild(li);
 		li.innerHTML = furnitureName;
+	}
+
+	if (!this.document.getElementById('floor-patterns-list')) {
+		UnfailableInstantAjaj.get(
+			'/floor-patterns',
+			response => {
+				const ul = this.document.createElement('ul');
+				ul.id = 'floor-patterns-list';
+				content.appendChild(ul);
+				for (let name of response) {
+					const li = this.document.createElement('li');
+					const img = this.document.createElement('img');
+					const span = this.document.createElement('span');
+					span.innerHTML= name;
+					span.dataset.name = name;
+					img.setAttribute('src', `/img-vendor/floor-patterns/${name}`);
+					img.setAttribute('width', 50);
+					img.setAttribute('height', 20);
+					img.dataset.name = name;
+					li.appendChild(img);
+					li.appendChild(span);
+					ul.appendChild(li)
+					li.dataset.name = name;
+				}
+			}
+		);
 	}
 
 	this.display();

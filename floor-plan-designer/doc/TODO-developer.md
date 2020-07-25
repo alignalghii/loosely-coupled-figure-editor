@@ -335,3 +335,8 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
 ### További hibák
 
  - A munkavászon levő bebútorzott, nyílászárós szoba egérrel visszavonszolható a menüvászonra, miközben nyílászáróit gazdátlanul a munkavásznon hagyja
+ - A padlóminta-csere nincs bekötve a todo-redo rendszerbe
+     - Egyébként alakzat törlésénél valószínűleg szintén hiányzik a history-ba bekötés
+ - A padlómitacsere egyszerre épít az AJAX-os fájlkekérésre, és arra, hogy a paldlóminták magába a fő HTML-be is rendre be vannak küldve a fő GET lekérdezéssel együtt. Ez szinkronizációs problémákat okohat. Jó ötlet, hogy az alakzattulajdonság-űrlap becsukása-újranyitása frissíti az űrlapon a padlómintalistát, de akkor ezzel szinronban frissülnie kéne a fő view-oldalon is az SCG-definícióknak.
+ - Halvény keretet kapjanak az alkzattulajdonsági űrlapon a padlómintakivonatocskaképek a listában: jobban nznének ki egy kis elhatárolással.
+ - Amikor megnyutjuk az alkzattulajdonsági űrlapot, és látjuk a lehetséges padlómintákat, az aktuális legyen megjelölve közülük.
