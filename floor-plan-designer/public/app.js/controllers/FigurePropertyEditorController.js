@@ -110,7 +110,9 @@ FigurePropertyEditorController.prototype.changeFloorPattern = function (floorPat
 {
 	maybeMap(
 		widget => {
-			widget.low.setAttribute('fill', `url(#${/(.*)\.\w*/.exec(floorPattern)[1]})`);
+			const idName = /(.*)\.\w*/.exec(floorPattern)[1];
+			widget.low.setAttribute('fill', `url(#${idName})`); // @TODO DRY, see below
+			if (widget.high.svgAttributes) widget.high.svgAttributes.fill = `url(#${idName})`; // @TODO DRY, see above
 			this.statusBarDriver.report(`Padlóminta-változás erre: ${floorPattern}`);
 		},
 		this.state.maybeWidgetActualOnFigurePropertyEditor
