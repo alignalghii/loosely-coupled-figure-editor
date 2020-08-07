@@ -21,6 +21,7 @@ class Router
 			case preg_match('!GET /([\+\-]?(0|[1-9]\\d*))($|\?|/)!', $request, $matches): $this->fileController->showWithPrefilledFlatIdField($this->maybeToken(), $matches[1]); break;
 			case preg_match('!POST /update-jpeg!', $request, $matches): $this->fileController->updateJPEG($this->rawPost); break;
 			case preg_match('!GET /floor-patterns!', $request, $matches): $this->fileController->floorPatterns(); break;
+			case preg_match('!POST /log!', $request, $matches): $this->fileController->log(); break;
 			default                                                   : echo "Router error [$request]"; break; // @TODO: `throw 'Router error'`?
 		}
 	}

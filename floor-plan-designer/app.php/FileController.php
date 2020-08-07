@@ -43,4 +43,15 @@ class FileController
 			)
 		);
 	}
+
+	public function log(): void
+	{
+		$txt1 = file_get_contents('php://input');
+		$json = json_decode($txt1, true);
+		$json['server-time'] = (array) new DateTime();
+		$txt2 = json_encode($json);
+		file_put_contents('var/log.log', "$txt2\n", FILE_APPEND);
+		header('Content-Type: application/json');
+		echo json_encode(['status' => true]);
+	}
 }

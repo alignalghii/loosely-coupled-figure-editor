@@ -42,7 +42,7 @@ Maybe.prototype.bind = function (f) // f: a -> Maybe<b> @TODO type check in Type
 Maybe.prototype.fromJustWith = function (errorMsg)
 {
 	return this.maybe_exec(
-		()  => {throw errorMsg;},
+		()  => Logger.write(errorMsg),
 		val => val
 	);
 };

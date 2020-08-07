@@ -42,7 +42,7 @@ const fromMaybe      = (defaultValue    , mX) => maybe     (defaultValue    , x 
       fromMaybe_exec = (defaultConstCall, mX) => maybe_exec(defaultConstCall, x => x, mX);
 
 
-function fromJust(mbX) {return maybe_exec(() => {throw "`fromJust` error";}, x => x, mbX);}
+function fromJust(mbX) {return maybe_exec(() => Logger.write("`fromJust` error"), x => x, mbX);}
 
 
 // const listToMaybe = list => list.length > 0 ? ['just', list[0]] : ['nothing'];

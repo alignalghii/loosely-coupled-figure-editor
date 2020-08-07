@@ -7,7 +7,7 @@ const SFIA =
 		SFIA._get(
 			url,
 			SFIA.toLow(processMaybeResponse, true ),
-			SFIA.toLow(processMaybeResponse, false).
+			SFIA.toLow(processMaybeResponse, false)
 		);
 	},
 

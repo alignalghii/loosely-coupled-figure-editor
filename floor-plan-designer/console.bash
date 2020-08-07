@@ -61,6 +61,10 @@ case "$1" in
 		echo '+-----------------+';
 		echo;
 		diff ../../loosely-coupled-figure-editor--vendor/vendor/sell/holy-grail.css vendor/sell/holy-grail.css;;
+	log)
+		[ -f public/var/log.log ] && cat public/var/log.log;;
+	clean-log)
+		[ -f public/var/log.log ] && > public/var/log.log;;
 	status)
 		echo ' ================================================';
 		echo '||                    D I F F                   ||';
@@ -73,6 +77,12 @@ case "$1" in
 		echo ' ================================================';
 		echo;
 		./console.bash syncstatus;
+		echo;
+		echo ' ================================================';
+		echo '||                     L O G                    ||';
+		echo ' ================================================';
+		echo;
+		./console.bash log;
 		echo;;
 	push)
 		cp app.php/view.php ../../loosely-coupled-figure-editor--vendor/vendor/sell/FPD-view.php;
