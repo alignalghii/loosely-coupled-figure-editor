@@ -66,6 +66,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 			}
 		}
 		if (eventType == 'click' && Eq.eq(inputSignature, ['string']) && 'floorPattern' in ird) {
+			this.figurePropertyEditorController.saveHistory(); // @TODO
 			this.figurePropertyEditorController.changeFloorPattern(ird.floorPattern);
 		}
 

@@ -8,6 +8,7 @@ function FigurePropertyEditorController(state, canvasPseudoWidgets, figureProper
 }
 
 Object.assign(FigurePropertyEditorController.prototype, ControllerMixinCanvasWidgetable);
+Object.assign(FigurePropertyEditorController.prototype, ControllerMixinHistoryFollowable);
 
 FigurePropertyEditorController.prototype.editEdge = function (edgeIndex, value)
 {
