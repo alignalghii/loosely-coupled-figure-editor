@@ -12,7 +12,7 @@ Object.assign(FigurePropertyEditorController.prototype, ControllerMixinHistoryFo
 
 FigurePropertyEditorController.prototype.editEdge = function (edgeIndex, value)
 {
-	maybeMap(
+	this.state.maybeWidgetActualOnFigurePropertyEditor.map(
 		widget => {
 			const board = this.canvasPseudoWidgetForEitherTarget(['right', widget]).board(); // @TODO make a `canvasPseudoWidgetForWidget` method in ancestor `Controller`
 			const oldValue = getEdgeMeasures(widget.high.vertices)[edgeIndex];
@@ -33,8 +33,7 @@ FigurePropertyEditorController.prototype.editEdge = function (edgeIndex, value)
 			}
 			this.open(widget);
 			this.statusBarDriver.report(indirect ? `Alakzattulajdonság szöveges szerkesztése közvetlenül sikeres: ${widget.businessObject.queryName()} alakzat ${this.figurePropertyEditorDriver.edgeNames[edgeIndex]} éle ${oldValue} -> ${validValue}` : `Alakzattulajdonság szöveges szerkesztése a kért ${value} értékkel ütközéshez vezetne, ezért interpolációval közelítünk: ${widget.businessObject.queryName()} alakzat ${this.figurePropertyEditorDriver.edgeNames[edgeIndex]} éle ${oldValue} -> ${validValue}`);
-		},
-		this.state.maybeWidgetActualOnFigurePropertyEditor
+		}
 	);
 };
 
@@ -67,7 +66,7 @@ FigurePropertyEditorController.prototype.openDriverWithCalculations = function (
 
 FigurePropertyEditorController.prototype.close = function ()
 {
-	this.state.maybeWidgetActualOnFigurePropertyEditor = ['nothing'];
+	this.state.maybeWidgetActualOnFigurePropertyEditor = Maybe.nothing();
 	this.figurePropertyEditorDriver.close();
 };
 
@@ -91,7 +90,7 @@ FigurePropertyEditorController.prototype.close = function ()
 
 FigurePropertyEditorController.prototype.changeDasharray = function (attrName, attrValue)
 {
-	maybeMap(
+	this.state.maybeWidgetActualOnFigurePropertyEditor.map(
 		widget => {
 			if (attrValue) {
 				widget.addSvgAttribute(attrName, attrValue); // @TODO should appear on an abstracter level of the widget
@@ -102,20 +101,18 @@ FigurePropertyEditorController.prototype.changeDasharray = function (attrName, a
 			}
 			//this.open(widget);
 			this.statusBarDriver.report(`Falréstulajdonság szöveges szerkesztése közvetlenül sikeres`);
-		},
-		this.state.maybeWidgetActualOnFigurePropertyEditor
+		}
 	);
 };
 
 FigurePropertyEditorController.prototype.changeFloorPattern = function (floorPattern)
 {
-	maybeMap(
+	this.state.maybeWidgetActualOnFigurePropertyEditor.map(
 		widget => {
 			const idName = /(.*)\.\w*/.exec(floorPattern)[1];
 			widget.low.setAttribute('fill', `url(#${idName})`); // @TODO DRY, see below
 			if (widget.high.svgAttributes) widget.high.svgAttributes.fill = `url(#${idName})`; // @TODO DRY, see above
 			this.statusBarDriver.report(`Padlóminta-változás erre: ${floorPattern}`);
-		},
-		this.state.maybeWidgetActualOnFigurePropertyEditor
+		}
 	);
 };

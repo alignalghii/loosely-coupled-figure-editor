@@ -80,7 +80,7 @@ onload = function (event)
 	const nativeLoaderController         = new NativeLoaderController(canvasPseudoWidgets, nativeLoaderIODriver, tabSelectorIODriver, statusBarODriver, audioODriver);
 	const zoomController                 = new ZoomController(canvasPseudoWidgets, statusBarODriver);
 	const contextMenuController          = new ContextMenuController(state, contextMenuDriver);
-	const historyController              = new HistoryController(state, canvasPseudoWidgets, historyIODriver, statusBarODriver);
+	const historyController              = new HistoryController(state, canvasPseudoWidgets, historyIODriver, /*@TODO*/figurePropertyEditorIODriver, statusBarODriver);
 
 	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuController, historyController); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(canvasPseudoWidgets, router); // @TODO: could it be regarded as a kind of device driver, and renamed + moved appropriately?

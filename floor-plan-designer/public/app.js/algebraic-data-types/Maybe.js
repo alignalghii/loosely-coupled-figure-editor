@@ -51,6 +51,7 @@ Maybe.prototype.fromJustWith = function (errorMsg)
 Maybe.ifTrue  = (flag, value) => flag ? Maybe.just(value) : Maybe.nothing();
 Maybe.ifFalse = (flag, value) => Maybe.ifTrue(!flag, value);
 Maybe.asTruey = value => Maybe.ifTrue(value, value);
+Maybe.ifTrue_lazy  = (flag, execute) => flag ? Maybe.just(execute()) : Maybe.nothing();
 
 Maybe.at = (arr, i) => i in arr ?
 	Maybe.just(arr[i]) :

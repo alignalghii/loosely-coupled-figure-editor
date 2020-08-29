@@ -166,6 +166,7 @@ FigureWidget.prototype.loseWall_ = function (controller, actorWidget, isModern =
 					controller.state.forgetDrag(); // `this.state.prevWidget = null` is not enough, the drag (mouseMove) state must be quitted in the state machine. An alternative solution: `this.state.prevWidget = eitherTarget = null`.
 				}
 
+				controller.saveHistory();
 				controller.statusBarDriver.report(`Falbontás: faltörő kos munkában!`);
 				controller.audioDriver.breakWall();
 				return just(circularSlit);
@@ -227,6 +228,7 @@ FigureWidget.prototype.regainWall_ = function (controller, actorWidget)
 			actorWidget.delete(); // `this.state.prevWidget = null` is not enough, the drag (mouseMove) state must be quitted in the state machine.  An alternative solution: `this.state.prevWidget = eitherTarget = null`.
 			actorWidget.restoreOn(controller.canvasPseudoWidgets[2]);
 
+			controller.saveHistory();
 			controller.state.forgetDrag();
 			controller.statusBarDriver.report(`Falvisszaépítés: Téglák és habarcs munkában!`);
 			controller.audioDriver.rebuildWall();
@@ -353,7 +355,7 @@ FigureWidget.prototype.beDescribedOnOpeningForm = function (figPropEdController)
 	const [name, subnames] = [room.queryName(), room.escorts.map(escort => escort.queryName())];
 	const [vertices, svgAttributes] = [this.high.vertices, this.high.svgAttributes]; // @TODO nasty design. In case of furniture, it probably becomes `undefined`
 	figPropEdController.openDriverWithCalculations(name, vertices, subnames, svgAttributes); // @TODO furniture shouldbe partly editable from the form directly
-	figPropEdController.state.maybeWidgetActualOnFigurePropertyEditor = ['just', this];
+	figPropEdController.state.maybeWidgetActualOnFigurePropertyEditor = Maybe.just(this);
 };
 
 FigureWidget.prototype.updateAndReport = function (currentWEPos, nearestFigure, template1, template2)

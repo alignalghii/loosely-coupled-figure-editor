@@ -1,12 +1,26 @@
-function HistoryController (state, canvasPseudoWidgets, historyDriver, statusBarDriver)
+/** @TODO
+ * - Egy amúgy elviselhető intenzionalitásátmentési hiányosság:
+ *   Ha nyitva az űrlap, csak padlóháttért módosítunk, majd visszamengyünk a munkatörténetben, akkor bezárja az űrlapot, pedig a padlómint-változást elvileg felismeri.
+ *   Fel is ismeri amúgy, de az első alakalommal még sem ismeri fel (a többinél már igen, nyitva hagyja az űrlapot, így a padlóminta-visszavonás kényelmes, nem kell újranyitni)
+ * - Valószínűleg a `this.status.focus` esetében ugyanolyen ,,intenzionális átmentést'' kell végezni az undo-zás konzisztenciája érdekében, mint a `this.status.maybeWidgetActualOnFigurePropertyEditor`-ra.
+ * - Csúnya a `HistoryController` függősége a `FigurePropertyEditorDriver`-től. Érdemes lenne kihasználni a `ControllerMixinIntensionalityTransducible` nyújtotta lazacsatolást:
+ *   az ott most elavultnak nyilvánított `transduceActualFormWidgetIntensionality` megoldást kellene visszahozni korszerűsített formában.
+ */
+function HistoryController (state, canvasPseudoWidgets, historyDriver, /*@TODO*/figurePropertyEditorDriver, statusBarDriver)
 {
+	this.state = state;
+
 	this.stack = state.history.stack; // @TODO
 	this.canvasPseudoWidget_work = canvasPseudoWidgets[4]; // @TODO
-	this.historyDriver       = historyDriver;
-	this.statusBarDriver = statusBarDriver;
+
+	this.historyDriver              = historyDriver;
+	this.figurePropertyEditorDriver = figurePropertyEditorDriver; // @TODO: reconsider
+	this.statusBarDriver            = statusBarDriver;
 
 	this.updateDisablings();
 }
+
+Object.assign(HistoryController.prototype, ControllerMixinIntensionalityTransducible);
 
 
 HistoryController.prototype.updateDisablings = function ()
@@ -19,10 +33,34 @@ HistoryController.prototype.undo = function ()
 {
 	this.stack.pop().maybe_exec(
 		()  => this.statusBarDriver.report('Üres history'), // @TODO statusbarDriver // @TODO should blanche out the history buttons at the terminal points of history
-		rep => {
-			this.statusBarDriver.report('History legutolsó állapota sikeresen detektálva');
-			this.canvasPseudoWidget_work.clear();
-			this.load(rep);
+		lastSavedWidgetsRepStr => {
+			const maybeActualWidgetOnFormRepStr = this.extensionalizeActualWidgetOnForm();
+
+			this.canvasPseudoWidget_work.clearHostlessWidgets(); // clear: title bug, hackFoolSafeClear: lost floor patterns
+			this.load(lastSavedWidgetsRepStr);
+
+			maybeActualWidgetOnFormRepStr.map(
+				actualWidgetOnFormRepStr => {
+					const maybeLastSavedCorrespondentOfActualWidgetOnForm = this.canvasPseudoWidget_work.hostlessWidgets().maybeFindFirst(
+						lastSavedWidget => lastSavedWidget.businessObject && lastSavedWidget.businessObject.serialize && this.versions(
+							lastSavedWidget.businessObject.serialize(),
+							actualWidgetOnFormRepStr
+						)
+					);
+					maybeLastSavedCorrespondentOfActualWidgetOnForm.maybe_exec(
+						() => {
+							this.statusBarDriver.report('A visszavonás ellentmondásmentessége érdekében a tulajdonságok űrlapja bezárul');
+							this.state.maybeWidgetActualOnFigurePropertyEditor = Maybe.nothing(); // @TODO is it more DRY if we contract it with the .driver.close() ?
+							this.figurePropertyEditorDriver.close();
+						},
+						lastSavedCorrespondentOfActualWidgetOnForm => {
+							this.statusBarDriver.report('A visszavonás során a tulajdonságok űrlapját nyitva hagyjuk, mert detektálható az űrlapi alakzat előtörténete');
+							this.state.maybeWidgetActualOnFigurePropertyEditor = Maybe.just(lastSavedCorrespondentOfActualWidgetOnForm);
+						}
+					);
+				}
+			);
+			// @TODO make a similar intensional save/redetect also with `this.state.focus`!
 		}
 	);
 	this.updateDisablings();

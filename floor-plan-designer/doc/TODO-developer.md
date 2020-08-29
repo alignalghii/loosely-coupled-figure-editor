@@ -336,7 +336,19 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
 
  - A munkavászon levő bebútorzott, nyílászárós szoba egérrel visszavonszolható a menüvászonra, miközben nyílászáróit gazdátlanul a munkavásznon hagyja
  - A padlóminta-csere nincs bekötve a todo-redo rendszerbe
+     - Az alkazattulajdonságszerkesztő űrlap oldalállító művelete (tán a többi is) be van, jól vonja vissza magát a vásznon, de az űrlapon ez nem frissül, csak ha becsukom és újranyitom (pl. nem íródik vissza a régi oldalhossz, noha a vásznon visszaáll).
      - Egyébként alakzat törlésénél valószínűleg szintén hiányzik a history-ba bekötés
  - A padlómitacsere egyszerre épít az AJAX-os fájlkekérésre, és arra, hogy a paldlóminták magába a fő HTML-be is rendre be vannak küldve a fő GET lekérdezéssel együtt. Ez szinkronizációs problémákat okohat. Jó ötlet, hogy az alakzattulajdonság-űrlap becsukása-újranyitása frissíti az űrlapon a padlómintalistát, de akkor ezzel szinronban frissülnie kéne a fő view-oldalon is az SCG-definícióknak.
+ - Meg kell nézni, hogy a szabadon (cégmentesen, üzleti jogok nélküli kötöttségek nélküli) változat jól készül-e el a szript által (ami bezavarhat, az az, hogy a padlómintáj saját fájlba kerültek) azóta. Hiba is lehetséges, az meg kifejezetten bizonyos, hogy a padlóminták mappájában nemcsak a png, hanem az odf fájlok is ott vannak, ami jelenleg megzavarja az alakzattulajdonság űrlap padlómintalistázójáz.
+ - Az alakzattulajdonság-űrlap jelenleg csak szobára aktiválható. Ez részben jó (nincsenek ezzel kacsolatos hibák), de viszont a megrendelői igény az volt, hogy az alakzattulajdonság űrlap értelemszerű változatban tetszőleges alakzatttípusra elővhívható legyen.
  - Halvény keretet kapjanak az alkzattulajdonsági űrlapon a padlómintakivonatocskaképek a listában: jobban nznének ki egy kis elhatárolással.
  - Amikor megnyutjuk az alkzattulajdonsági űrlapot, és látjuk a lehetséges padlómintákat, az aktuális legyen megjelölve közülük.
+
+### Intenzionalitás
+
+ - Egy amúgy elviselhető intenzionalitásátmentési hiányosság:
+   Ha nyitva az űrlap, csak padlóháttért módosítunk, majd visszamengyünk a munkatörténetben, akkor bezárja az űrlapot, pedig a padlómint-változást elvileg felismeri.
+   Fel is ismeri amúgy, de az első alakalommal még sem ismeri fel (a többinél már igen, nyitva hagyja az űrlapot, így a padlóminta-visszavonás kényelmes, nem kell újranyitni)
+ - Valószínűleg a `this.status.focus` esetében ugyanolyen ,,intenzionális átmentést'' kell végezni az undo-zás konzisztenciája érdekében, mint a `this.status.maybeWidgetActualOnFigurePropertyEditor`-ra.
+ - Csúnya a `HistoryController` függősége a `FigurePropertyEditorDriver`-től. Érdemes lenne kihasználni a `ControllerMixinIntensionalityTransducible` nyújtotta lazacsatolást:
+   az ott most elavultnak nyilvánított `transduceActualFormWidgetIntensionality` megoldást kellene visszahozni korszerűsített formában.
