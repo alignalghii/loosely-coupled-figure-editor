@@ -1,4 +1,4 @@
-function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuController, historyController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuController, historyController, magnet1Controller) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
 	this.state = state;
 
@@ -17,6 +17,7 @@ function Router(state, normalModeController, compactModeController, roomControll
 	this.zoomController = zoomController;
 	this.contextMenuController = contextMenuController;
 	this.historyController = historyController;
+	this.magnet1Controller = magnet1Controller;
 }
 
 Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // ird: inputRoledData
@@ -294,6 +295,14 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 				case 'mouseup':
 					this.figureEditorController.saveHistory(); // @TODO
 					this.figureNestingController.onOrOff(ird.currentWEPos, ird.eitherTarget);
+					break;
+			}
+		}
+		if (this.state.mode == 'magnet1') {
+			switch (eventType) {
+				case 'mouseup':
+					this.magnet1Controller.saveHistory();
+					this.magnet1Controller.guess(ird.currentWEPos, ird.eitherTarget);
 					break;
 			}
 		}

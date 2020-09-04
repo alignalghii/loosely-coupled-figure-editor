@@ -5,6 +5,8 @@ onload = function (event)
 	document.addEventListener('selectstart', e => {if (e.target.tagName == 'svg' || e.target.parentNode && e.target.parentNode.tagName == 'svg' || e.target.parentNode.parentNode && e.target.parentNode.parentNode.tagName == 'svg') {e.preventDefault(); console.log(`Selection prevented!`);}}); // @TODO: do it in a nicer way
 	document.addEventListener('dragstart', e => {if (e.target.tagName == 'image') e.preventDefault(); return false;}); // @LINK https://stackoverflow.com/questions/6259622/dragging-selecting-inside-svg-in-firefox @LINK https://www.redips.net/firefox/disable-image-dragging/
 
+	const gravity = new Gravity();
+
 
 	const svgLowLevel_menuCanvas   = new SvgLowLevel(document, 'svgRoot_menuCanvas'  ), // [250, 374] // [125, 374]
 	      svgLowLevel_menuCanvas_2 = new SvgLowLevel(document, 'svgRoot_menuCanvas_2'), // [250, 374] // [125, 374]
@@ -81,8 +83,9 @@ onload = function (event)
 	const zoomController                 = new ZoomController(canvasPseudoWidgets, statusBarODriver);
 	const contextMenuController          = new ContextMenuController(state, contextMenuDriver);
 	const historyController              = new HistoryController(state, canvasPseudoWidgets, historyIODriver, /*@TODO*/figurePropertyEditorIODriver, statusBarODriver);
+	const magnet1Controller              = new Magnet1Controller(state, canvasPseudoWidgets, gravity, statusBarODriver);
 
-	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuController, historyController); // @TODO make globalOriginFigure obsolete
+	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuController, historyController, magnet1Controller); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(canvasPseudoWidgets, router); // @TODO: could it be regarded as a kind of device driver, and renamed + moved appropriately?
 
 	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorIODriver, configIODriver, tabSelectorIODriver, loaderIODriver, saveIODriver, nativeLoaderIODriver, zoomDriver, contextMenuDriver, historyIODriver, urlPartDriver); // @TODO Law of Demeter, see inside

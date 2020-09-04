@@ -17,3 +17,17 @@ Object.defineProperty(
 			}
 	}
 );
+
+Object.defineProperty(
+	Array.prototype,
+	'maybeHeadPair',
+	{
+		value:
+		function () {
+			return Maybe.ifTrue_lazy(
+				this.length >= 2,
+				() => new Pair(this[0], this[1])
+			);
+		}
+	}
+);
