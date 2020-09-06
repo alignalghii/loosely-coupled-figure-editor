@@ -31,3 +31,54 @@ Object.defineProperty(
 		}
 	}
 );
+
+Object.defineProperty(
+	Array.prototype,
+	'maybeFindMinMeasurement', // [a] -> (a -> number) -> Maybe (a, number)
+	{
+		value:
+		function (measure)
+		{
+			return this.reduce(
+				(maybeMinMeasurement, currentValue, currentIndex) => new Measurement(
+					currentValue,
+					measure(currentValue),
+					currentIndex
+				).min_bias2_posInf(maybeMinMeasurement),
+				Maybe.nothing() // positive infinity as start value of accumulator
+			);
+		}
+	}
+);
+
+Object.defineProperty(
+	Array.prototype,
+	'maybeFindOnMeasureMin', // [a] -> (a -> number) -> Maybe a
+	{
+		value:
+		function (measure)
+		{
+			return this.maybeFindMinMeasurement(
+				measure
+			).map(
+				minMeasurement => minMeasurement.who
+			);
+		}
+	}
+);
+
+Object.defineProperty(
+	Array.prototype,
+	'maybeFindIndexOnMeasureMin', // [a] -> (a -> number) -> Maybe index
+	{
+		value:
+		function (measure)
+		{
+			return this.maybeFindMinMeasurement(
+				measure
+			).map(
+				minMeasurement => minMeasurement.where
+			);
+		}
+	}
+);

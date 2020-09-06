@@ -40,3 +40,9 @@ Magnet1Controller.prototype.guess = function (currentWEPos, eitherTarget)
 		)
 	);
 };
+
+/*
+descartesWith( angle2_0360,  rotationalEdgeVectors([[0,0], [1,0], [1,1], [0,1]]),       rotationalEdgeVectors([[1,0], [2,0], [2,1], [1,1]])  )
+@TODO: write a property findder: (a -> Bool) -> [a] -> index/reference. We wil use this to select widgets (ref indentity is important)
+@TODO: write another property finder: (a -> Bool) -> [a] -> a . Copy value is enough. We can use that to select the two nearmost sides of the polygon pair.
+*/
