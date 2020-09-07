@@ -3,6 +3,21 @@
 
 Object.defineProperty(
 	Array.prototype,
+	'maybeAt',
+	{
+		value:
+		function (i)
+		{
+			return Maybe.ifTrue_lazy(
+				i in this,
+				() => this[i]
+			);
+		}
+	}
+);
+
+Object.defineProperty(
+	Array.prototype,
 	'maybeFindFirst',
 	{
 		value:

@@ -25,4 +25,4 @@ ContextMenu.hash = // @TODO too tightly coupled to Router and ContextMenuDriver 
 		follow      : 'figurenesting'
 	});
 
-ContextMenu.associatedStateMode = idTag => Maybe.at(ContextMenu.hash, idTag).fromJustWith('Invalid contextMenu id');
+ContextMenu.associatedStateMode = idTag => ContextMenu.hash.maybeAt(idTag).fromJustWith('Invalid contextMenu id');

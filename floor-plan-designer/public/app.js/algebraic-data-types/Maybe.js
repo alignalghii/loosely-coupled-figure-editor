@@ -53,10 +53,6 @@ Maybe.ifFalse = (flag, value) => Maybe.ifTrue(!flag, value);
 Maybe.asTruey = value => Maybe.ifTrue(value, value);
 Maybe.ifTrue_lazy  = (flag, execute) => flag ? Maybe.just(execute()) : Maybe.nothing();
 
-Maybe.at = (arr, i) => i in arr ?
-	Maybe.just(arr[i]) :
-	Maybe.nothing();
-
 Maybe.number = function (rep)
 {
 	const num = Number(rep); // @TODO `Number` is too tolerant, it accepts '' and ' ' and converts them to 0

@@ -18,7 +18,7 @@ TransformRewriter.prototype.getMaybeRotationAngle = function ()
 	return this.maybeTransform().bind(
 		transform => {
 			const matches = /rotate\(([\+\-0-9\.]+)/.exec(transform),
-			      mbRep = Maybe.at(matches, 1);
+			      mbRep = matches.maybeAt(1);
 			return mbRep.bind(Maybe.number); // @TODO `Number` is too tolerant, it accepts '' and ' ' and converts them to 0
 		}
 	);
@@ -70,7 +70,7 @@ TransformRewriter.prototype.conjointVerticalDoorFlipRef = function () // @TODO g
 			const regexp = /(^|.*[^ ])\s*translate\(-?\d+(\.\d+)?[, ]\s*-?\d+(\.\d+)?\)\s*scale\(-1[, ]\s*1\)\s*translate\(-?\d+(\.\d+)?[, ]\s*-?\d+(\.\d+)?\)\s*$/;
 			if (regexp.test(transform)) {
 				const submatches = regexp.exec(transform);
-				return Maybe.at(submatches, 1).fromJustWith('Regexp bug');
+				return submatches.maybeAt(1).fromJustWith('Regexp bug');
 			} else {
 				return transform + ` translate(${x+w} ${y}) scale(-1, 1) translate(${-x-w} ${-y})`;
 			}
