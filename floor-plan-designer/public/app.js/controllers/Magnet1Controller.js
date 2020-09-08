@@ -28,13 +28,11 @@ Magnet1Controller.prototype.guess = function (currentWEPos, eitherTarget)
 				const F = this.gravity.force(polygon1, polygon2);
 				const a1a2 = this.gravity.accelerationPair(polygon1, polygon2);
 				console.log(`F = ${F} N`);
+				if (this.gravity.isSensible(a1a2)) {
+					console.log('Gravitational action triggers!');
+				}
 				a1a2.uncurry(
-					(a1, a2) => {
-						console.log(`a1 = ${a1}, a2 = ${a2}`);
-						if (gravity.isSensible(a1a2)) {
-							console.log('Gravitational action triggers!');
-						}
-					}
+					(a1, a2) => console.log(`a1 = ${a1}, a2 = ${a2}`)
 				);
 			}
 		)

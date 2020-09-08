@@ -35,5 +35,5 @@ Gravity.prototype.isSensible = function (accelerationPair)
 {
 	return accelerationPair.filter(
 		acceleration => acceleration >= this.limit
-	).length >= 0;
+	).length > 0;
 }
