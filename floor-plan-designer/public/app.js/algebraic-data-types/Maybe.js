@@ -1,41 +1,37 @@
-function Maybe (internalRepresentation) {this.internalRepresentation = internalRepresentation;};
+function Maybe () {}
+Maybe.nothing = () => new Nothing();
+Maybe.just    = a  => new Just(a);
 
-Maybe.just    = a  => new Maybe(['just', a]);
-Maybe.nothing = () => new Maybe(['nothing']);
+Maybe.ifTrue = (flag, a) => flag ? Maybe.just(a) : Maybe.nothing();
+Maybe.ifSuch = (prop, a) => Maybe.ifTrue(prop(a), a);
+Maybe.ifFalse = (flag, value) => Maybe.ifTrue(!flag, value);
+Maybe.asTruey = value => Maybe.ifTrue(value, value);
+Maybe.ifTrue_lazy  = (flag, execute) => flag ? Maybe.just(execute()) : Maybe.nothing();
 
-Maybe.prototype.maybe_val = function (nothingValue, justCase) // could be defined upon maybe_exec, but it is more optimized to hardcode
-{
-	const [tag, value] = this.internalRepresentation;
-	switch (tag) {
-		case 'nothing' : return nothingValue
-		case 'just'    : return justCase(value);
-		default        : throw 'Maybe ADT: internal representation error';
-	}
-};
-
-Maybe.prototype.maybe_exec = function (nothingCase, justCase)
-{
-	const [tag, value] = this.internalRepresentation;
-	switch (tag) {
-		case 'nothing' : return nothingCase();
-		case 'just'    : return justCase(value);
-		default        : throw 'Maybe ADT: internal representation error';
-	}
-};
+Maybe.return = Maybe.just;
+Maybe.fail   = Maybe.nothing;
 
 Maybe.prototype.map = function (f)
 {
-	return this.maybe_val(
-		Maybe.nothing(),
-		internRep => Maybe.just(f(internRep))
+	return this.maybe_exec(
+		() => Maybe.nothing(), // this
+		a  => Maybe.just(f(a))
 	);
 };
 
-Maybe.prototype.bind = function (f) // f: a -> Maybe<b> @TODO type check in TypeScript?
+Maybe.prototype.join = function ()
 {
-	return this.maybe_val(
-		Maybe.nothing(),
-		value => f(value)
+	return this.maybe_exec(
+		() => Maybe.nothing(), // this
+		ma => ma
+	);
+};
+
+Maybe.prototype.bind = function (mf) // Algebraic (non-optimized) def: `this.bind (mf)` = `this.map(mf).join()`
+{
+	return this.maybe_exec(
+		() => Maybe.nothing(), // this
+		mf
 	);
 };
 
@@ -47,11 +43,37 @@ Maybe.prototype.fromJustWith = function (errorMsg)
 	);
 };
 
+Maybe.prototype.filter = function (prop)
+{
+	return this.bind(
+		a => Maybe.ifSuch(prop, a)
+	);
+};
 
-Maybe.ifTrue  = (flag, value) => flag ? Maybe.just(value) : Maybe.nothing();
-Maybe.ifFalse = (flag, value) => Maybe.ifTrue(!flag, value);
-Maybe.asTruey = value => Maybe.ifTrue(value, value);
-Maybe.ifTrue_lazy  = (flag, execute) => flag ? Maybe.just(execute()) : Maybe.nothing();
+/** Nothing: */
+
+function Nothing () {Maybe.call(this);}
+Nothing.prototype = Object.create(Maybe.prototype);
+Nothing.prototype.constructor = Nothing;
+
+Nothing.prototype.maybe_exec = function (nothing, just) {return nothing();}; // typing differs
+Nothing.prototype.maybe_val  = function (nothing, just) {return nothing  ;}; // typing differs
+
+/** Just: */
+
+function Just(a)
+{
+	Maybe.call(this);
+	this.a = a;
+}
+
+Just.prototype = Object.create(Maybe.prototype);
+Just.prototype.constructor = Just;
+
+Just.prototype.maybe_exec = function (nothing, just) {return just(this.a);}; // typing differs
+Just.prototype.maybe_val  = function (nothing, just) {return Just(this.a);}; // typing differs
+
+/** Other aux functions */
 
 Maybe.number = function (rep)
 {

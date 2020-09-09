@@ -1,22 +1,41 @@
-function Either(internalRepresentation) {this.internalRepresentation = internalRepresentation;}
+function Either() {}
 
-Either.left  = a => new Either(['left' , a]);
-Either.right = b => new Either(['right', b]);
+Either.left  = a => new Left (a);
+Either.right = b => new Right(b);
 
-Either.prototype.either = function (leftCase, rightCase)
-{
-	const [tag, value] = this.internalRepresentation;
-	switch (tag) {
-		case 'left' : return leftCase (value);
-		case 'right': return rightCase(value);
-		default     : throw `Internal representation error: invalid tag ${tag}`;
-	}
-};
+Either.return = Either.right;
+Either.fail   = Either.left;
 
 Either.prototype.map = function (f)
 {
 	return this.either(
-		a => Either.left(a),
-		b => Either.right(f(b))
+		e => Either.left(e), // this
+		x => Either.right(f(x))
 	);
 };
+
+/** Left: */
+
+function Left(a)
+{
+	Either.call(this); // here only for selfdoc of typing
+	this.a = a;
+}
+
+Left.prototype = Object.create(Either.prototype);
+Left.prototype.constructor = Left;
+
+Left.prototype.either = function (left, right) {return left(this.a);};
+
+/** Right: */
+
+function Right(b)
+{
+	Either.call(this); // here only for selfdoc of typing
+	this.b = b;
+}
+
+Right.prototype = Object.create(Either.prototype);
+Right.prototype.constructor = Right;
+
+Right.prototype.either = function (left, right) {return right(this.b);};
