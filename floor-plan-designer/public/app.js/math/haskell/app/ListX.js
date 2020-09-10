@@ -1,4 +1,4 @@
-function descartesProduct(as, bs)
+function descartesProduct(as, bs) // @TODO put it into `Array.prototype.descartesProduct`?
 {
 	var resultSet = [];
 	for (let i = 0; i < as.length; i++)

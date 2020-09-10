@@ -47,6 +47,12 @@ Object.defineProperty(
 	}
 );
 
+
+/** Measure finders based on mimimazing a measure:
+ * extensional finder: (a -> Bool) -> [a] -> index/reference. We wil use this to select widgets (ref indentity is important)
+ * intensional finder: (a -> Bool) -> [a] -> a . Copy value is enough. We can use that to select the two nearmost sides of the polygon pair.
+ */
+
 Object.defineProperty(
 	Array.prototype,
 	'maybeFindMinMeasurement', // [a] -> (a -> number) -> Maybe (a, number)

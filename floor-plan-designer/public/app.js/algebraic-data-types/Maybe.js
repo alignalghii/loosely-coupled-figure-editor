@@ -50,6 +50,16 @@ Maybe.prototype.filter = function (prop)
 	);
 };
 
+// @TODO: Control.Monad.liftM2
+Maybe.prototype.liftM2 = function (f, mb)
+{
+	return this.bind(
+		a => mb.map(
+			b => f(a, b)
+		)
+	);
+};
+
 /** Nothing: */
 
 function Nothing () {Maybe.call(this);}
@@ -71,7 +81,7 @@ Just.prototype = Object.create(Maybe.prototype);
 Just.prototype.constructor = Just;
 
 Just.prototype.maybe_exec = function (nothing, just) {return just(this.a);}; // typing differs
-Just.prototype.maybe_val  = function (nothing, just) {return Just(this.a);}; // typing differs
+Just.prototype.maybe_val  = function (nothing, just) {return just(this.a);}; // typing differs
 
 /** Other aux functions */
 

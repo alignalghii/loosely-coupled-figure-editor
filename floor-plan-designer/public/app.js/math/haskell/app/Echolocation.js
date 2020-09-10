@@ -53,13 +53,23 @@ const nearestVerticesHence = (vertices, point) =>
 
 const maybeNearestVertexHence = (vertices, point) => maybeUnambiguityByEq(ccVecEq, nearestVerticesHence(vertices, point));
 
+
 const nearestEdgesHence = (vertices, point) => maybe(
 	[],
 	({distance: minDistTillNow, selectedEdges: selectedEdges}) => selectedEdges,
 	verticePathReshapedMinimalEchoHence(vertices, point)
 );
 
+/** @TODO: `maybeNearestEdge` is a much simpler implementation than this: */
 const maybeNearestEdgeHence = (vertices, point) => maybeUnambiguityByEq(ccTreeEq, nearestEdgesHence(vertices, point));
+
+/** @TODO: this function is a much simpler implementation for `nearestVerticesHence`: */
+const maybeNearestEdgeOfFrom = (polygon, currentWEPos) =>
+	tour(
+		polygon
+	).maybeFindOnMeasureMin(
+		edge => distanceSegmentHence(edge, currentWEPos)
+	);
 
 
 const maybeMinimalDistanceOfEchos = figureEchos =>

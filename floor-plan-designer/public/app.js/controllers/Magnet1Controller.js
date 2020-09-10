@@ -9,6 +9,8 @@ function Magnet1Controller(state, canvasPseudoWidgets, gravity, statusBarDriver)
 Object.assign(Magnet1Controller.prototype, ControllerMixinHistoryFollowable);
 Object.assign(Magnet1Controller.prototype, ControllerMixinCanvasWidgetable);
 
+
+// @TODO: a less efficient approach: descartesWith( angle2_0360,  rotationalEdgeVectors([[0,0], [1,0], [1,1], [0,1]]),       rotationalEdgeVectors([[1,0], [2,0], [2,1], [1,1]])  )
 Magnet1Controller.prototype.guess = function (currentWEPos, eitherTarget)
 {
 	console.log(`Magnet1 controller guess at ${JSON.stringify(currentWEPos)}`);
@@ -30,6 +32,21 @@ Magnet1Controller.prototype.guess = function (currentWEPos, eitherTarget)
 				console.log(`F = ${F} N`);
 				if (this.gravity.isSensible(a1a2)) {
 					console.log('Gravitational action triggers!');
+					console.log(polygon1, polygon2);
+					const [maybeNearestEdge1, maybeNearestEdge2] = [polygon1, polygon2].map(polygon => maybeNearestEdgeOfFrom(polygon, currentWEPos));
+					const maybeAngle = maybeNearestEdge1.liftM2(
+						(nearestEdge1, nearestEdge2) => angle2_0360(
+							vectorOfSegment(nearestEdge1),
+							vectorOfSegment(nearestEdge2)
+						),
+						maybeNearestEdge2
+					);
+					maybeAngle.map(
+						angle => {
+							console.log(`Angle: ${angle}`);
+							widget1.rotate((angle-180)*Math.PI/180);
+						}
+					);
 				}
 				a1a2.uncurry(
 					(a1, a2) => console.log(`a1 = ${a1}, a2 = ${a2}`)
@@ -38,9 +55,3 @@ Magnet1Controller.prototype.guess = function (currentWEPos, eitherTarget)
 		)
 	);
 };
-
-/*
-descartesWith( angle2_0360,  rotationalEdgeVectors([[0,0], [1,0], [1,1], [0,1]]),       rotationalEdgeVectors([[1,0], [2,0], [2,1], [1,1]])  )
-@TODO: write a property findder: (a -> Bool) -> [a] -> index/reference. We wil use this to select widgets (ref indentity is important)
-@TODO: write another property finder: (a -> Bool) -> [a] -> a . Copy value is enough. We can use that to select the two nearmost sides of the polygon pair.
-*/
