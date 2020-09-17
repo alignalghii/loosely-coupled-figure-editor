@@ -306,6 +306,14 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 					break;
 			}
 		}
+		if (this.state.mode == 'magnet2') {
+			switch (eventType) {
+				case 'mouseup':
+					this.magnet1Controller.saveHistory();
+					this.magnet1Controller.guess2(ird.currentWEPos, ird.eitherTarget);
+					break;
+			}
+		}
 	}
 	if (eventType == 'contextmenu') { // @TODO consider why it is sometimes different condition: `mouseButton == 2`
 		return this.contextMenuController.rightClick(event, ird.eitherTarget);

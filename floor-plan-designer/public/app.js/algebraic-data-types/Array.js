@@ -3,6 +3,15 @@
 
 Object.defineProperty(
 	Array.prototype,
+	'toMaybe',
+	{
+		value:
+		function () {return this.maybeAt(0);}
+	}
+);
+
+Object.defineProperty(
+	Array.prototype,
 	'maybeAt',
 	{
 		value:

@@ -96,3 +96,5 @@ Maybe.toInt = function (rep)
 	const isInt = /^[\+\-]?(0|[1-9]\d*)$/.test(rep);
 	return Maybe.ifTrue(isInt, Number(rep));
 };
+
+Maybe.fromObsolete = obsoleteMaybeA => maybe_exec(Maybe.nothing, Maybe.just, obsoleteMaybeA);

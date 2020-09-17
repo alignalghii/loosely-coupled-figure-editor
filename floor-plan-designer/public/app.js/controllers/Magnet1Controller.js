@@ -55,3 +55,60 @@ Magnet1Controller.prototype.guess = function (currentWEPos, eitherTarget)
 		)
 	);
 };
+
+Magnet1Controller.prototype.guess2 = function (currentWEPos, eitherTarget)
+{
+	console.log(`Magnet1 controller guess at ${JSON.stringify(currentWEPos)}`);
+	const canvasPseudoWidget = this.canvasPseudoWidgetForEitherTarget(eitherTarget);
+	const figureWidgets = canvasPseudoWidget.figureWidgets();
+	const widgetToPolygon = widget => widget.high.vertices;
+	const nearestTwo = new NearestTwo(currentWEPos, figureWidgets, widgetToPolygon);
+	const sight = nearestTwo.inAscendingDistance();
+	sight.maybeHeadPair().map(
+		headPair => headPair.map(
+			widgetAndDistance => widgetAndDistance.fst()
+		).uncurry(
+			(widget1, widget2) => {
+				console.log('The two widgets:', widget1.businessObject.title.name, widget2.businessObject.title.name);
+				const polygon1 = widgetToPolygon(widget1);
+				const polygon2 = widgetToPolygon(widget2);
+				const F = this.gravity.force(polygon1, polygon2);
+				const a1a2 = this.gravity.accelerationPair(polygon1, polygon2);
+				console.log(`F = ${F} N`);
+				if (this.gravity.isSensible(a1a2)) {
+					console.log('Gravitational action triggers!');
+					console.log(polygon1, polygon2);
+					maybeNearestEdgeOfFrom(
+						polygon1,
+						currentWEPos
+					).map(
+						nearestEdge => {
+							const roughVector = fromTo(
+								centroid(nearestEdge),
+								currentWEPos
+							);
+							const normalVectors = ['positive-rotation', 'negative-rotation'].map(
+								rotDir => rotBy90(rotDir, edgeVector(nearestEdge))
+							);
+							console.log('NormalVectors', normalVectors);
+							const maybeFallVector = normalVectors.filter(
+								normalVector => 0 < scalarProduct(normalVector, roughVector)
+							).toMaybe().bind(
+								fallDirectionVector => Maybe.fromObsolete(
+									fallPolygonOnPolygon(fallDirectionVector, polygon1, polygon2)
+								)
+							);
+							console.log('maybeFallVector', maybeFallVector);
+							maybeFallVector.map(
+								fallVector => widget1.translate(fallVector)
+							);
+						}
+					);
+				}
+				a1a2.uncurry(
+					(a1, a2) => console.log(`a1 = ${a1}, a2 = ${a2}`)
+				);
+			}
+		)
+	);
+};
