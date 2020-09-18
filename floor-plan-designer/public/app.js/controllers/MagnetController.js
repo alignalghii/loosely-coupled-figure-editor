@@ -13,50 +13,55 @@ Object.assign(MagnetController.prototype, ControllerMixinCanvasWidgetable);
 // @TODO: a less efficient approach: descartesWith( angle2_0360,  rotationalEdgeVectors([[0,0], [1,0], [1,1], [0,1]]),       rotationalEdgeVectors([[1,0], [2,0], [2,1], [1,1]])  )
 MagnetController.prototype.guessRotation = function (currentWEPos, eitherTarget)
 {
-	console.log(`Magnet1 controller guess at ${JSON.stringify(currentWEPos)}`);
-	const canvasPseudoWidget = this.canvasPseudoWidgetForEitherTarget(eitherTarget);
-	const figureWidgets = canvasPseudoWidget.figureWidgets();
-	const widgetToPolygon = widget => widget.high.vertices;
-	const nearestTwo = new NearestTwo(currentWEPos, figureWidgets, widgetToPolygon);
-	const sight = nearestTwo.inAscendingDistance();
-	sight.maybeHeadPair().map(
-		headPair => headPair.map(
-			widgetAndDistance => widgetAndDistance.fst()
-		).uncurry(
-			(widget1, widget2) => {
-				console.log('The two widgets:', widget1.businessObject.title.name, widget2.businessObject.title.name);
-				const polygon1 = widgetToPolygon(widget1);
-				const polygon2 = widgetToPolygon(widget2);
-				const F = this.gravity.force(polygon1, polygon2);
-				const a1a2 = this.gravity.accelerationPair(polygon1, polygon2);
-				console.log(`F = ${F} N`);
-				if (this.gravity.isSensible(a1a2)) {
-					console.log('Gravitational action triggers!');
-					console.log(polygon1, polygon2);
-					const [maybeNearestEdge1, maybeNearestEdge2] = [polygon1, polygon2].map(polygon => maybeNearestEdgeOfFrom(polygon, currentWEPos));
-					const maybeAngle = maybeNearestEdge1.liftM2(
-						(nearestEdge1, nearestEdge2) => angle2_0360(
-							vectorOfSegment(nearestEdge1),
-							vectorOfSegment(nearestEdge2)
-						),
-						maybeNearestEdge2
+	this.getMaybeGuess(currentWEPos, eitherTarget).map(
+		guess => guess.maybeNearestEdgeFromPolygon1.map(
+			nearestEdge1 => maybeNearestEdgeOfFrom(
+				guess.polygon2,
+				currentWEPos
+			).map(
+				nearestEdge2 => {
+					const angle = angle2_0360(
+						vectorOfSegment(nearestEdge1),
+						vectorOfSegment(nearestEdge2)
 					);
-					maybeAngle.map(
-						angle => {
-							console.log(`Angle: ${angle}`);
-							widget1.rotate((angle-180)*Math.PI/180);
-						}
-					);
+					console.log(`Angle: ${angle}`);
+					guess.widget1.rotate((angle-180)*Math.PI/180);
 				}
-				a1a2.uncurry(
-					(a1, a2) => console.log(`a1 = ${a1}, a2 = ${a2}`)
+			)
+		)
+	);
+};
+
+MagnetController.prototype.guessTranslation = function (currentWEPos, eitherTarget)
+{
+	this.getMaybeGuess(currentWEPos, eitherTarget).map(
+		guess => guess.maybeNearestEdgeFromPolygon1.map(
+			nearestEdge1 => {
+				const roughVector = fromTo(
+					centroid(nearestEdge1),
+					currentWEPos
+				);
+				const normalVectors = ['positive-rotation', 'negative-rotation'].map(
+					rotDir => rotBy90(rotDir, edgeVector(nearestEdge1))
+				);
+				console.log('NormalVectors', normalVectors);
+				const maybeFallVector = normalVectors.filter(
+					normalVector => 0 < scalarProduct(normalVector, roughVector)
+				).toMaybe().bind(
+					fallDirectionVector => Maybe.fromObsolete(
+						fallPolygonOnPolygon(fallDirectionVector, guess.polygon1, guess.polygon2)
+					)
+				);
+				console.log('maybeFallVector', maybeFallVector);
+				maybeFallVector.map(
+					fallVector => guess.widget1.translate(fallVector)
 				);
 			}
 		)
 	);
 };
 
-MagnetController.prototype.guessTranslation = function (currentWEPos, eitherTarget)
+MagnetController.prototype.getMaybeGuess = function (currentWEPos, eitherTarget)
 {
 	console.log(`Magnet1 controller guess at ${JSON.stringify(currentWEPos)}`);
 	const canvasPseudoWidget = this.canvasPseudoWidgetForEitherTarget(eitherTarget);
@@ -64,7 +69,7 @@ MagnetController.prototype.guessTranslation = function (currentWEPos, eitherTarg
 	const widgetToPolygon = widget => widget.high.vertices;
 	const nearestTwo = new NearestTwo(currentWEPos, figureWidgets, widgetToPolygon);
 	const sight = nearestTwo.inAscendingDistance();
-	sight.maybeHeadPair().map(
+	return sight.maybeHeadPair().bind(
 		headPair => headPair.map(
 			widgetAndDistance => widgetAndDistance.fst()
 		).uncurry(
@@ -75,40 +80,24 @@ MagnetController.prototype.guessTranslation = function (currentWEPos, eitherTarg
 				const F = this.gravity.force(polygon1, polygon2);
 				const a1a2 = this.gravity.accelerationPair(polygon1, polygon2);
 				console.log(`F = ${F} N`);
-				if (this.gravity.isSensible(a1a2)) {
-					console.log('Gravitational action triggers!');
-					console.log(polygon1, polygon2);
-					maybeNearestEdgeOfFrom(
-						polygon1,
-						currentWEPos
-					).map(
-						nearestEdge => {
-							const roughVector = fromTo(
-								centroid(nearestEdge),
-								currentWEPos
-							);
-							const normalVectors = ['positive-rotation', 'negative-rotation'].map(
-								rotDir => rotBy90(rotDir, edgeVector(nearestEdge))
-							);
-							console.log('NormalVectors', normalVectors);
-							const maybeFallVector = normalVectors.filter(
-								normalVector => 0 < scalarProduct(normalVector, roughVector)
-							).toMaybe().bind(
-								fallDirectionVector => Maybe.fromObsolete(
-									fallPolygonOnPolygon(fallDirectionVector, polygon1, polygon2)
-								)
-							);
-							console.log('maybeFallVector', maybeFallVector);
-							maybeFallVector.map(
-								fallVector => widget1.translate(fallVector)
-							);
-						}
-					);
-				}
-				a1a2.uncurry(
-					(a1, a2) => console.log(`a1 = ${a1}, a2 = ${a2}`)
+				return Maybe.ifTrue_lazy(
+					this.gravity.isSensible(a1a2),
+					() => new Guess(
+						polygon1, polygon2,
+						maybeNearestEdgeOfFrom(polygon1, currentWEPos),
+						widget1
+					)
 				);
 			}
 		)
 	);
 };
+
+
+function Guess(polygon1, polygon2, maybeNearestEdgeFromPolygon1, widget1) // @TODO DRY redundancy
+{
+	this.polygon1 = polygon1;
+	this.polygon2 = polygon2;
+	this.maybeNearestEdgeFromPolygon1 = maybeNearestEdgeFromPolygon1;
+	this.widget1 = widget1; // @TODO DRY redundancy
+}
