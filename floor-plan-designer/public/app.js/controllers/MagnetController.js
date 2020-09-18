@@ -1,4 +1,4 @@
-function Magnet1Controller(state, canvasPseudoWidgets, gravity, statusBarDriver)
+function MagnetController(state, canvasPseudoWidgets, gravity, statusBarDriver)
 {
 	this.state               = state;
 	this.gravity             = gravity;
@@ -6,12 +6,12 @@ function Magnet1Controller(state, canvasPseudoWidgets, gravity, statusBarDriver)
 	this.statusBarDriver     = statusBarDriver;
 }
 
-Object.assign(Magnet1Controller.prototype, ControllerMixinHistoryFollowable);
-Object.assign(Magnet1Controller.prototype, ControllerMixinCanvasWidgetable);
+Object.assign(MagnetController.prototype, ControllerMixinHistoryFollowable);
+Object.assign(MagnetController.prototype, ControllerMixinCanvasWidgetable);
 
 
 // @TODO: a less efficient approach: descartesWith( angle2_0360,  rotationalEdgeVectors([[0,0], [1,0], [1,1], [0,1]]),       rotationalEdgeVectors([[1,0], [2,0], [2,1], [1,1]])  )
-Magnet1Controller.prototype.guess = function (currentWEPos, eitherTarget)
+MagnetController.prototype.guessRotation = function (currentWEPos, eitherTarget)
 {
 	console.log(`Magnet1 controller guess at ${JSON.stringify(currentWEPos)}`);
 	const canvasPseudoWidget = this.canvasPseudoWidgetForEitherTarget(eitherTarget);
@@ -56,7 +56,7 @@ Magnet1Controller.prototype.guess = function (currentWEPos, eitherTarget)
 	);
 };
 
-Magnet1Controller.prototype.guess2 = function (currentWEPos, eitherTarget)
+MagnetController.prototype.guessTranslation = function (currentWEPos, eitherTarget)
 {
 	console.log(`Magnet1 controller guess at ${JSON.stringify(currentWEPos)}`);
 	const canvasPseudoWidget = this.canvasPseudoWidgetForEitherTarget(eitherTarget);
