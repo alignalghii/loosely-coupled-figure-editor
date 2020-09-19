@@ -32,15 +32,16 @@ MagnetController.prototype.getMaybeBiFigCxt = function (currentWEPos, eitherTarg
 	console.log(`Magnet controller biFigCxt at ${JSON.stringify(currentWEPos)}`);
 	const canvasPseudoWidget = this.canvasPseudoWidgetForEitherTarget(eitherTarget);
 	const figureWidgets = canvasPseudoWidget.figureWidgets();
+	const widgetToPolygon = widget => widget.high.vertices;
 	const nearestTwo = new NearestTwo(currentWEPos, figureWidgets, widgetToPolygon);
 	return nearestTwo.inAscendingDistance().maybeHeadPair().map(
 		headPair => headPair.map(
 			widgetAndDistance => widgetAndDistance.fst()
 		).uncurry(
 			(widget1, widget2) => new BiFigCxt(
-				widget => widget.high.vertices, this.gravity, // depInj
-				widget1, widget2,                             // base
-				currentWEPos                                  // arg
+				widgetToPolygon, this.gravity, // depInj
+				widget1, widget2,              // base
+				currentWEPos                   // arg
 			)
 		)
 	);
