@@ -60,6 +60,17 @@ Maybe.prototype.liftM2 = function (f, mb)
 	);
 };
 
+Maybe.prototype.assoc = function ()
+{
+	return this.maybe_exec(
+		() => Either.left(false),
+		maybeA => maybeA.maybe_exec(
+			() => Either.left(true),
+			Either.right
+		)
+	);
+};
+
 /** Nothing: */
 
 function Nothing () {Maybe.call(this);}

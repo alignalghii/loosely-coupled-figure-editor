@@ -14,87 +14,34 @@ Object.assign(MagnetController.prototype, ControllerMixinCanvasWidgetable);
 MagnetController.prototype.guessRotation = function (currentWEPos, eitherTarget)
 {
 	this.getMaybeBiFigCxt(currentWEPos, eitherTarget).map( // @TODO move to `BiFigCxt` as `maybeFactory`? Main principle: try to make `BiFigCxt` an algebraic datatype, or at least a model!
-		biFigCxt => this.maybeRotateWithBiFigCxt(currentWEPos, eitherTarget, biFigCxt) // @TODO move to be a method of `BiFigCxt`
+		biFigCxt => biFigCxt.maybeRotate(currentWEPos)
 	);
 };
 
 MagnetController.prototype.guessTranslation = function (currentWEPos, eitherTarget)
 {
 	this.getMaybeBiFigCxt(currentWEPos, eitherTarget).map( // @TODO move to `BiFigCxt` as `maybeFactory`? Main principle: try to make `BiFigCxt` an algebraic datatype, or at least a model!
-		biFigCxt => this.maybeTranslateWithBiFigCxt(currentWEPos, eitherTarget, biFigCxt) // @TODO move to be a method of `BiFigCxt`
+		biFigCxt => biFigCxt.maybeTranslate(currentWEPos)
 	);
 };
 
-MagnetController.prototype.maybeTranslateWithBiFigCxt = (currentWEPos, eitherTarget, biFigCxt) =>
-	biFigCxt.maybeNearestEdgeFromPolygon1.map(
-		nearestEdge1 => {
-			const roughVector = fromTo(
-				centroid(nearestEdge1),
-				currentWEPos
-			);
-			const normalVectors = ['positive-rotation', 'negative-rotation'].map(
-				rotDir => rotBy90(rotDir, edgeVector(nearestEdge1))
-			);
-			console.log('NormalVectors', normalVectors);
-			const maybeFallVector = normalVectors.filter(
-				normalVector => 0 < scalarProduct(normalVector, roughVector)
-			).toMaybe().bind(
-				fallDirectionVector => Maybe.fromObsolete(
-					fallPolygonOnPolygon(fallDirectionVector, biFigCxt.polygon1, biFigCxt.polygon2)
-				)
-			);
-			console.log('maybeFallVector', maybeFallVector);
-			maybeFallVector.map(
-				fallVector => biFigCxt.widget1.translate(fallVector)
-			);
-		}
-	);
 
-MagnetController.prototype.maybeRotateWithBiFigCxt = (currentWEPos, eitherTarget, biFigCxt) =>
-	biFigCxt.maybeNearestEdgeFromPolygon1.map(
-		nearestEdge1 => maybeNearestEdgeOfFrom(
-			biFigCxt.polygon2,
-			currentWEPos
-		).map(
-			nearestEdge2 => {
-				const angle = angle2_0360(
-					vectorOfSegment(nearestEdge1),
-					vectorOfSegment(nearestEdge2)
-				);
-				console.log(`Angle: ${angle}`);
-				biFigCxt.widget1.rotate((angle-180)*Math.PI/180);
-			}
-		)
-	);
 
 MagnetController.prototype.getMaybeBiFigCxt = function (currentWEPos, eitherTarget) // @TODO move to `BiFigCxt` as `maybeFactory`? Main principle: try to make `BiFigCxt` an algebraic datatype, or at least a model!
 {
 	console.log(`Magnet controller biFigCxt at ${JSON.stringify(currentWEPos)}`);
 	const canvasPseudoWidget = this.canvasPseudoWidgetForEitherTarget(eitherTarget);
 	const figureWidgets = canvasPseudoWidget.figureWidgets();
-	const widgetToPolygon = widget => widget.high.vertices;
 	const nearestTwo = new NearestTwo(currentWEPos, figureWidgets, widgetToPolygon);
-	const sight = nearestTwo.inAscendingDistance();
-	return sight.maybeHeadPair().bind(
+	return nearestTwo.inAscendingDistance().maybeHeadPair().map(
 		headPair => headPair.map(
 			widgetAndDistance => widgetAndDistance.fst()
 		).uncurry(
-			(widget1, widget2) => {
-				console.log('The two widgets:', widget1.businessObject.title.name, widget2.businessObject.title.name);
-				const polygon1 = widgetToPolygon(widget1);
-				const polygon2 = widgetToPolygon(widget2);
-				const F = this.gravity.force(polygon1, polygon2);
-				const a1a2 = this.gravity.accelerationPair(polygon1, polygon2);
-				console.log(`F = ${F} N`);
-				return Maybe.ifTrue_lazy(
-					this.gravity.isSensible(a1a2),
-					() => new BiFigCxt(
-						polygon1, polygon2,
-						maybeNearestEdgeOfFrom(polygon1, currentWEPos),
-						widget1
-					)
-				);
-			}
+			(widget1, widget2) => new BiFigCxt(
+				widget => widget.high.vertices, this.gravity, // depInj
+				widget1, widget2,                             // base
+				currentWEPos                                  // arg
+			)
 		)
 	);
 };
