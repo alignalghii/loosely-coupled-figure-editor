@@ -25,6 +25,17 @@ MagnetController.prototype.guessTranslation = function (currentWEPos, eitherTarg
 	);
 };
 
+MagnetController.prototype.guessRotationAndTranslation = function (currentWEPos, eitherTarget)
+{
+	this.guessRotation(currentWEPos, eitherTarget);
+	this.guessTranslation(currentWEPos, eitherTarget); // @TODO: not accurate: the midpoint of nearest edge can rotate behind the currentWEPos
+	/*this.getMaybeBiFigCxt(currentWEPos, eitherTarget).map( // @TODO move to `BiFigCxt` as `maybeFactory`? Main principle: try to make `BiFigCxt` an algebraic datatype, or at least a model!
+		biFigCxt => {
+			biFigCxt.maybeRotate   (currentWEPos);
+			biFigCxt.maybeTranslate(currentWEPos); // @TODO does not touch: probably biFigCxt should update
+		}
+	);*/
+};
 
 
 MagnetController.prototype.getMaybeBiFigCxt = function (currentWEPos, eitherTarget) // @TODO move to `BiFigCxt` as `maybeFactory`? Main principle: try to make `BiFigCxt` an algebraic datatype, or at least a model!
