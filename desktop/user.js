@@ -1,19 +1,24 @@
-window.onload = e => {
+window.addEventListener('load',  main);
+
+function main(e)
+{
 	const img = document.getElementById('work-svg'); // @TODO DRY
-	img.onclick = e => {
-		const xhr = new XMLHttpRequest;
-		//xhr.responseType = 'json';
-		xhr.addEventListener('load', react);
-		xhr.open('POST', '/');
-		xhr.send(
-			JSON.stringify(
-				{x: e.clientX, y: e.clientY}
-			)
-		);
-	};
+	img.addEventListener('click', communicate);
 };
 
-function react(e)
+function communicate(e)
+{	const xhr = new XMLHttpRequest;
+	//xhr.responseType = 'json';
+	xhr.addEventListener('load', updateDOM);
+	xhr.open('POST', '/');
+	xhr.send(
+		JSON.stringify(
+			{x: e.clientX, y: e.clientY}
+		)
+	);
+}
+
+function updateDOM(e)
 {
 	const name = e.target.response;
 	console.log(name);
