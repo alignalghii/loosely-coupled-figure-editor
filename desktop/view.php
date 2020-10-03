@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="UTF-8"/>
 		<script src="user.js"></script>
+		<script src="Maybe.js"></script>
 		<title>Desktop prototype</title>
 	</head>
 	<body>
