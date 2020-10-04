@@ -2,8 +2,12 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<script src="user.js"></script>
-		<script src="Maybe.js"></script>
+		<script src="main-dependency-injector.js"></script>
+		<script src="Router.js"></script>
+		<script src="DiagramController.js"></script>
+		<script src="device-drivers/WorkCanvasDeviceDriver.js"></script>
+		<script src="device-drivers/DiagramServerDeviceDriver.js"></script>
+		<script src="algebraic-datatypes/Maybe.js"></script>
 		<title>Desktop prototype</title>
 	</head>
 	<body>
