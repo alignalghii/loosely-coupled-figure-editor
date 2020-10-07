@@ -13,7 +13,9 @@ import Text.Blaze.Html (Html)
 import Text.Blaze.Html.Renderer.Pretty (renderHtml)
 import Data.Text.Lazy (Text, pack)
 
-import Shelly
+import Shelly (shelly, test_f, cp)
+
+import Control.Monad (unless)
 import Data.Bool (bool)
 
 viewAction :: ActionM()
