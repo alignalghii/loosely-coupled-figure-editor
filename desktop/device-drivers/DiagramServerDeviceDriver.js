@@ -17,6 +17,7 @@ DiagramServerDeviceDriver.prototype.send = function (x, y)
 		router => xhr.addEventListener('load', e => router.loadDiagramUpdater(e.target.responseText))
 	);
 	xhr.open('POST', '/');
+	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.send(
 		JSON.stringify({x, y})
 	);
