@@ -7,6 +7,7 @@ function FigureNestingController(state, canvasPseudoWidgets, statusBarDriver)
 }
 
 Object.assign(FigureNestingController.prototype, ControllerMixinCanvasWidgetable);
+Object.assign(FigureNestingController.prototype, ControllerMixinHistoryFollowable);
 
 FigureNestingController.prototype.onOrOff = function (currentWEPos, eitherTarget)
 {

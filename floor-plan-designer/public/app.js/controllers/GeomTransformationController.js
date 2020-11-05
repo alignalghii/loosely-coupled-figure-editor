@@ -6,6 +6,7 @@ function GeomTransformationController(state, canvasPseudoWidgets, statusBarDrive
 }
 
 Object.assign(GeomTransformationController.prototype, ControllerMixinCanvasWidgetable);
+Object.assign(GeomTransformationController.prototype, ControllerMixinHistoryFollowable);
 
 /** Rotation: */
 

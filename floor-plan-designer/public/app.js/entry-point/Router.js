@@ -26,7 +26,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (eventType == 'change') {
 			if (Eq.eq(inputSignature, ['string', 'string']) && 'mode' in ird) this.normalModeController.changeMode(ird.mode); // @TODO common
 			if (Eq.eq(inputSignature, ['edge'  , 'number'])) {
-				this.figureEditorController.saveHistory(); // @TODO
+				this.figurePropertyEditorController.saveHistory(); // @TODO
 				this.figurePropertyEditorController.editEdge  (ird.edge, ird.value);
 			}
 			if (Eq.eq(inputSignature, ['string', 'checkbox']) && ('optionName' in ird)) {
@@ -83,7 +83,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 			switch (eventType) {
 					case 'mousedown':
 						if (this.normalModeController.canvasPseudoWidgets[4].arbitrary.svgLowLevel.svgRootElement, canvasOfEitherTarget(ird.eitherTarget) == this.normalModeController.canvasPseudoWidgets[4].arbitrary.svgLowLevel.svgRootElement) {
-							this.figureEditorController.saveHistory(); // @TODO
+							this.normalModeController.saveHistory(); // @TODO
 						}
 						if (isGraphicalEvent) this.normalModeController.mouseDown(ird.currentWEPos, ird.eitherTarget);
 						break;
@@ -239,7 +239,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (this.state.mode == 'geomtransformationrotation') { // @TODO: should not use the same `State` as `NormalModeController`
 			switch (eventType) {
 				case 'mousedown': // @TODO: reuse: almost the same algorithm exists in `FigureEditorController`.
-					this.figureEditorController.saveHistory(); // @TODO
+					this.geomTransformationController.saveHistory(); // @TODO
 					this.geomTransformationController.openRotationArcSpan(ird.currentWEPos, ird.eitherTarget);
 					break;
 				case 'mousemove': // @TODO: reuse: almost the same algorithm exists in `FigureEditorController`. @TODO: Ha a vásznan belül lenyomott egérgombot vásznonkívül engedem fel: dragbanragad
@@ -259,7 +259,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 				geomtransformationscaley        : ['doScaleY'                    , 'scaleY'                    ],
 			};
 			if (this.state.mode in scaleCases) {
-				if (eventType == 'mousedown') this.figureEditorController.saveHistory(); // @TODO
+				if (eventType == 'mousedown') this.geomTransformationController.saveHistory(); // @TODO
 				const commands = scaleCases[this.state.mode];
 				this.routeDragCasesOpen3Sustain1Close0ScaleStressSpan(commands, eventType, ird.currentWEPos, ird.eitherTarget);
 			}
@@ -269,7 +269,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (this.state.mode == 'geomtransformationreflectionhorizontally') { // @TODO: should not use the same `State` as `NormalModeController`
 			switch (eventType) {
 				case 'mouseup':
-					this.figureEditorController.saveHistory(); // @TODO
+					this.geomTransformationController.saveHistory(); // @TODO
 					this.geomTransformationController.reflectionFlip(['doReflectHorizontally', 'reflectHorizontally'], ird.currentWEPos, ird.eitherTarget);
 					break;
 			}
@@ -277,7 +277,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (this.state.mode == 'geomtransformationreflectionvertically') { // @TODO: should not use the same `State` as `NormalModeController`
 			switch (eventType) {
 				case 'mouseup':
-					this.figureEditorController.saveHistory(); // @TODO
+					this.geomTransformationController.saveHistory(); // @TODO
 					this.geomTransformationController.reflectionFlip(['doReflectVertically', 'reflectVertically'], ird.currentWEPos, ird.eitherTarget);
 					break;
 			}
@@ -293,7 +293,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		if (this.state.mode == 'figurenesting') {
 			switch (eventType) {
 				case 'mouseup':
-					this.figureEditorController.saveHistory(); // @TODO
+					this.figureNestingController.saveHistory(); // @TODO
 					this.figureNestingController.onOrOff(ird.currentWEPos, ird.eitherTarget);
 					break;
 			}

@@ -15,6 +15,7 @@ function NormalModeController(state, canvasPseudoWidgets, statusBarDriver, audio
 }
 
 Object.assign(NormalModeController.prototype, ControllerMixinCanvasWidgetable);
+Object.assign(NormalModeController.prototype, ControllerMixinHistoryFollowable);
 
 // @TODO The GU API should introduce a Mouse object/interface? (like many APIs introduce a Context obejct)
 NormalModeController.prototype.mouseDown = function (position, eitherTarget)
