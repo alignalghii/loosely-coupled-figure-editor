@@ -86,7 +86,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
 							this.state.prevWidget.collisionActionSpecialty(this, canvasPseudoWidget, minFallTargetFigures[0], currentWEPos);
 					}
 
-					if (this.state.prevWidget.isActor()) { // @TODO OOP @TODO build the condition into `manageAttachments`
+					if (this.state.prevWidget && this.state.prevWidget.isActor()) { // @TODO OOP @TODO build the condition into `manageAttachments`
 						this.state.prevWidget.manageAttachments(this);
 					}
 				}
