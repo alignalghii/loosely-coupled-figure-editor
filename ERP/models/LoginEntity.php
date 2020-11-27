@@ -17,7 +17,7 @@ class LoginEntity
 		$this->password = $password;
 	}
 
-	public static function decide(string $name, string $password)
+	public static function decide(string $name, string $password): Either/*self, LoginEntityDenial*/
 	{
 		$nameBills     = self::bill($name);
 		$passwordBills = self::bill($password);
@@ -33,9 +33,9 @@ class LoginEntity
 		if ( self::tooLong($a)                  ) $bills[] = 'too-long';
 		return $bills;
 	}
-	private static function empty (string $a)  {return strlen($a) == 0;}
-	private static function nonVar(string $a)  {return !preg_match('/^[a-zA-Z][a-zA-Z0-9]*$/', $a);}
-	private static function tooLong(string $a) {return strlen($a) > 20;}
+	private static function empty (string $a)  : bool {return strlen($a) == 0;}
+	private static function nonVar(string $a)  : bool {return !preg_match('/^[a-zA-Z][a-zA-Z0-9]*$/', $a);}
+	private static function tooLong(string $a) : bool {return strlen($a) > 20;}
 
 	//private function lengthBetween(int $lowLimit, int $highLimit, string $text): bool {return $this->between($lowLimit, $highLimit, \strlen($text));}
 	//private function between      (int $lowLimit, int $highLimit, int $n      ): bool {return $lowLimit <= $n && $n <= $highLimit;}
