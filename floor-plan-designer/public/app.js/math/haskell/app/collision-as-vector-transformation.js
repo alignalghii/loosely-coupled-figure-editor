@@ -1,8 +1,8 @@
-const mbVectorTransformationForAllowance_ = (fallingFigure, board) => infinitezimalDisplacement => mbVectorTransformer_(fallingFigure, board, infinitezimalDisplacement);
+const mbVectorTransformationForAllowance_ = (fallingFigure, board, falsePositiveCollidingWidgets) => infinitezimalDisplacement => mbVectorTransformer_(fallingFigure, board, infinitezimalDisplacement, falsePositiveCollidingWidgets);
 
-function mbVectorTransformer_(fallingFigure, board, infinitezimalDisplacement)
+function mbVectorTransformer_(fallingFigure, board, infinitezimalDisplacement, falsePositiveCollidingWidgets)
 {
-	const [maybePIScale, minFallTargetFigures] = fallFigureOnBoard_allMins(fallingFigure, board, infinitezimalDisplacement);
+	const [maybePIScale, minFallTargetFigures] = fallFigureOnBoard_allMins(fallingFigure, board, infinitezimalDisplacement, falsePositiveCollidingWidgets);
 	return [
 		maybeMap(
 			pIScaleGovernedVectorTransformation(fallingFigure, board, infinitezimalDisplacement, minFallTargetFigures),

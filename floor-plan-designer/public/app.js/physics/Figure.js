@@ -41,7 +41,7 @@ Figure.prototype.exportToSerializableObjectBy = function (specialKey)
 };
 
 
-Figure.prototype.isCollidable_ = function () {return ['just', function (board) {return mbVectorTransformationForAllowance_(this, board);}];}; // @TODO should be raised to business object level?
+Figure.prototype.isCollidable_ = function () {return ['just', function (board, falsePositiveCollisionWidgets) {return mbVectorTransformationForAllowance_(this, board, falsePositiveCollisionWidgets);}];}; // @TODO should be raised to business object level?
 
 
 //Figure.prototype.mbVectorTransfomationForAllowance = function (board) {return mbVectorTransfomationForAllowance(this, board);}; // @TODO: reconsider

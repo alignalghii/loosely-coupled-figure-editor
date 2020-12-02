@@ -73,10 +73,11 @@ Widget.prototype.isHostless     = function () {throw 'This is an abstract method
 
 Widget.prototype.allowable_ = function (infinitezimalDisplacement)
 {
+	const falsePositiveCollisionWidgets = this.withEscortWidgets ? this.withEscortWidgets(x => x) : [];
 	return maybe(
 		[just(infinitezimalDisplacement), []],
 		mbVectorTransformationForAllowance_ => { // @TODO: !!!!
-			return mbVectorTransformationForAllowance_.call(this.high, this.factory().bijectionSvgToGeom)(infinitezimalDisplacement); // @TODO
+			return mbVectorTransformationForAllowance_.call(this.high, this.factory().bijectionSvgToGeom, falsePositiveCollisionWidgets)(infinitezimalDisplacement); // @TODO
 		},
 		this.high.isCollidable_()
 	);
