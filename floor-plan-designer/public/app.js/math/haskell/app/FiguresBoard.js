@@ -1,6 +1,6 @@
-function fallFigureOnBoard_allMins(fallingFigure, board, fallDirectionVector, falsePositiveCollidingWidgets)
+function fallFigureOnBoard_allMins(fallingFigure, board, fallDirectionVector, bodiesToBeIgnoredInCollisionDetection)
 {
-	const isAnOther    = (anotherFigure) => anotherFigure != fallingFigure && falsePositiveCollidingWidgets.every(widget => anotherFigure != widget.high);
+	const isAnOther    = (anotherFigure) => anotherFigure != fallingFigure && bodiesToBeIgnoredInCollisionDetection.every(body => anotherFigure != body);
 	const itsFallScale = (targetFigure ) => fallPolygonOnPolygon_IMPROVED(fallingFigure.vertices, targetFigure.vertices, fallDirectionVector);
 	const [pMIScale, minFigures]/*, nesting]*/ = boardMinSelectSet(isAnOther, itsFallScale, pMInfCompare, plusInfinity, board);
 	return [plusMinusInfinityExtensionToMaybePlusInfinityExtension(pMIScale), minFigures];

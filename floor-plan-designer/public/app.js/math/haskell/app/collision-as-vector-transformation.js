@@ -1,8 +1,8 @@
-const mbVectorTransformationForAllowance_ = (fallingFigure, board, falsePositiveCollidingWidgets) => infinitezimalDisplacement => mbVectorTransformer_(fallingFigure, board, infinitezimalDisplacement, falsePositiveCollidingWidgets);
+const mbVectorTransformationForAllowance_ = (fallingFigure, board, bodiesToBeIgnoredInCollisionDetection) => infinitezimalDisplacement => mbVectorTransformer_(fallingFigure, board, infinitezimalDisplacement, bodiesToBeIgnoredInCollisionDetection);
 
-function mbVectorTransformer_(fallingFigure, board, infinitezimalDisplacement, falsePositiveCollidingWidgets)
+function mbVectorTransformer_(fallingFigure, board, infinitezimalDisplacement, bodiesToBeIgnoredInCollisionDetection)
 {
-	const [maybePIScale, minFallTargetFigures] = fallFigureOnBoard_allMins(fallingFigure, board, infinitezimalDisplacement, falsePositiveCollidingWidgets);
+	const [maybePIScale, minFallTargetFigures] = fallFigureOnBoard_allMins(fallingFigure, board, infinitezimalDisplacement, bodiesToBeIgnoredInCollisionDetection);
 	return [
 		maybeMap(
 			pIScaleGovernedVectorTransformation(fallingFigure, board, infinitezimalDisplacement, minFallTargetFigures),
