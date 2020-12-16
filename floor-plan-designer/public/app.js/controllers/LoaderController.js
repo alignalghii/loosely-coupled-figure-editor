@@ -380,7 +380,7 @@ LoaderController.prototype.loadFlatRecord = function (flatIds, records, i)
 				}
 
 				figure.doScale(11);
-				figure.doTranslation([0, -15 * (counter - (goodRecords.length-1)/2)])
+				LoaderController.arrange_topDown(figure, counter, goodRecords.length);
 				let business = new Room (
 					goodRecord.name, figure,
 					[], ['nothing'],
@@ -396,6 +396,17 @@ LoaderController.prototype.loadFlatRecord = function (flatIds, records, i)
 		this.audioODriver.error(`Nincs #${i} rekord!`);
 	}
 };
+
+LoaderController.arrange_centerOut = function (figure, counter, allCount)
+{
+	figure.doTranslation([0, -15 * (counter - (allCount-1)/2)]);
+};
+
+LoaderController.arrange_topDown = function (figure, counter, allCount)
+{
+	figure.doTranslation([0, 25 -15 * counter]);
+};
+
 
 // @TODO DRY with `NativeLoaderController`: factor out to a `LoaderComponent`
 LoaderController.prototype.prepareAndConfirm = function ()
