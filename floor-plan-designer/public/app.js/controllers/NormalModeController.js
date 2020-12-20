@@ -21,11 +21,13 @@ Object.assign(NormalModeController.prototype, ControllerMixinHistoryFollowable);
 NormalModeController.prototype.mouseDown = function (position, eitherTarget)
 {
 	this.state.forgetDrag();
+	this.rememberPosition(position);
+	this.state.prevCanvas = canvasOfEitherTarget(eitherTarget);
+	this.state.isMouseDown = true;
 	either(
 		canvas => this.statusBarDriver.report('Üres helyhez vagy helypozícióhoz kötődő művelet várható...'),
 		currentWidget => {
 			this.rememberWidget(currentWidget);
-			this.rememberPosition(position);
 			currentWidget.showGlittering();
 			this.statusBarDriver.report('Adott alakzaton vagy vonszolás, vagy egyéb művelet várható...');
 		},
@@ -33,66 +35,79 @@ NormalModeController.prototype.mouseDown = function (position, eitherTarget)
 	);
 };
 
-NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget)
+NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget, event)
 {
-	if (this.state.prevWidgetHasNotCollidedYet()) {
-		var infinitezimalDisplacement  = fromTo(this.state.prevWEPos, currentWEPos);
-		if (vectorLength(infinitezimalDisplacement) > 0) { // drag event provides sometimes also 0-displacements, we filter them out for better clarity's sake
-			const targetCanvas = canvasOfEitherTarget(eitherTarget);
-			const canvasPseudoWidget = this.canvasPseudoWidgetForCanvas(targetCanvas);
+	if (this.state.prevWidget) {
+		if (!this.state.hasCollided) {
+			var infinitezimalDisplacement  = fromTo(this.state.prevWEPos, currentWEPos);
+			if (vectorLength(infinitezimalDisplacement) > 0) { // drag event provides sometimes also 0-displacements, we filter them out for better clarity's sake
+				const targetCanvas = canvasOfEitherTarget(eitherTarget);
+				const canvasPseudoWidget = this.canvasPseudoWidgetForCanvas(targetCanvas);
 
-			if (this.state.prevWidget) {
-				const jumpStatus = JumpStatus.detect(this.state.prevWidget, canvasPseudoWidget);
-				const jumpExecStatus = jumpStatus.executeIfSo(this.canvasPseudoWidgets, [[0, 1, 2], [4]]); // @TODO wrong synergy with collision detecton
-				jumpExecStatus.maybeAllow.map(
-					allow => this.statusBarDriver.report(allow ? 'Alakzat átugrasztása vásznak között!' : 'Gazdaobjektuma nélkül nem ugrasztható át!')
-				);
-				if (jumpExecStatus.releaseDrag) {
-					this.state.forgetDrag(); // it assigns null to `this.state.prevWidget`, thus it must come here at the end of the upper big if-block!
-				} else {
-					const [mbAllowable, minFallTargetFigures] = this.state.prevWidget.allowable_(infinitezimalDisplacement);
-					const allowable0 = fromMaybe_exec(
-						() => { // @TODO: an axception should be thrown rather
-							this.statusBarDriver.report('<span class="error">Tiltott zóna!</span>');
-							this.audioDriver.ouch();
-							return infinitezimalDisplacement;
-						},
-						mbAllowable
+				if (this.state.prevWidget) {
+					const jumpStatus = JumpStatus.detect(this.state.prevWidget, canvasPseudoWidget);
+					const jumpExecStatus = jumpStatus.executeIfSo(this.canvasPseudoWidgets, [[0, 1, 2], [4]]); // @TODO wrong synergy with collision detecton
+					jumpExecStatus.maybeAllow.map(
+						allow => this.statusBarDriver.report(allow ? 'Alakzat átugrasztása vásznak között!' : 'Gazdaobjektuma nélkül nem ugrasztható át!')
 					);
-					const {displacement: allowable, maybeAngle: maybeAngle} = this.state.prevWidget.isShapeshifter() ?
-						this.state.prevWidget.shapeshifterSlide(allowable0, currentWEPos)                        :
-						{displacement: allowable0, maybeAngle: Maybe.nothing()}; // @TODO design a standalone class for it, and delegete tasks to it @TODO use >>= as for a Maybe-monad
-						maybeAngle.map(
-							angle => angle // TransformRewriter.createAsRerotated_excp(this.state.prevWidget.low, angle-90) @TODO!!!!
+					if (jumpExecStatus.releaseDrag) {
+						this.state.forgetDrag(); // it assigns null to `this.state.prevWidget`, thus it must come here at the end of the upper big if-block!
+					} else {
+						const [mbAllowable, minFallTargetFigures] = this.state.prevWidget.allowable_(infinitezimalDisplacement);
+						const allowable0 = fromMaybe_exec(
+							() => { // @TODO: an axception should be thrown rather
+								this.statusBarDriver.report('<span class="error">Tiltott zóna!</span>');
+								this.audioDriver.ouch();
+								return infinitezimalDisplacement;
+							},
+							mbAllowable
 						);
+						const {displacement: allowable, maybeAngle: maybeAngle} = this.state.prevWidget.isShapeshifter() ?
+							this.state.prevWidget.shapeshifterSlide(allowable0, currentWEPos)                        :
+							{displacement: allowable0, maybeAngle: Maybe.nothing()}; // @TODO design a standalone class for it, and delegete tasks to it @TODO use >>= as for a Maybe-monad
+							maybeAngle.map(
+								angle => angle // TransformRewriter.createAsRerotated_excp(this.state.prevWidget.low, angle-90) @TODO!!!!
+							);
 
-					if ( // @TODO seems to be unnecessary: either condition always holds, or the action is not too important
-						!jumpStatus.explicitDeny() && // !vecEq(maybeAllowJump, ['just', false])
-						(
-							this.state.prevWidget.isShapeshifter() ||
-							!this.state.focus || this.state.focus.eq(this.state.prevWidget)
-						)
-					) { // @TODO contract with code hadling window and door actors, and use an OOP polymorphism approach
-						this.translatePrevWidgetAndRememberItsNewPosition(allowable);
-					}
+						if ( // @TODO seems to be unnecessary: either condition always holds, or the action is not too important
+							!jumpStatus.explicitDeny() && // !vecEq(maybeAllowJump, ['just', false])
+							(
+								this.state.prevWidget.isShapeshifter() ||
+								!this.state.focus || this.state.focus.eq(this.state.prevWidget)
+							)
+						) { // @TODO contract with code hadling window and door actors, and use an OOP polymorphism approach
+							this.translatePrevWidgetAndRememberItsNewPosition(allowable);
+						}
 
-					if (vectorLength(infinitezimalDisplacement) > 0 && vectorLength(allowable) == 0) {
-						this.statusBarDriver.report(`Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ${JSON.stringify(infinitezimalDisplacement)} irányban.`);
-					}
+						if (vectorLength(infinitezimalDisplacement) > 0 && vectorLength(allowable) == 0) {
+							this.statusBarDriver.report(`Vonszolás &bdquo;kifeszítése&rdquo; ütközőfogásból ${JSON.stringify(infinitezimalDisplacement)} irányban.`);
+						}
 
 
-					if (!ccVecEq(allowable, infinitezimalDisplacement)) {
-						if (minFallTargetFigures.length == 1)
-							this.state.prevWidget.collisionActionSpecialty(this, canvasPseudoWidget, minFallTargetFigures[0], currentWEPos);
-					}
+						if (!ccVecEq(allowable, infinitezimalDisplacement)) {
+							if (minFallTargetFigures.length == 1)
+								this.state.prevWidget.collisionActionSpecialty(this, canvasPseudoWidget, minFallTargetFigures[0], currentWEPos);
+						}
 
-					if (this.state.prevWidget && this.state.prevWidget.isActor()) { // @TODO OOP @TODO build the condition into `manageAttachments`
-						this.state.prevWidget.manageAttachments(this);
+						if (this.state.prevWidget && this.state.prevWidget.isActor()) { // @TODO OOP @TODO build the condition into `manageAttachments`
+							this.state.prevWidget.manageAttachments(this);
+						}
 					}
 				}
+				this.state.dragHasAlreadyBegun = true;
 			}
-
-			this.state.dragHasAlreadyBegun = true;
+		}
+	} else {
+		// Vászonmozgatás:
+		if (this.state.prevWEPos && event.buttons == 1) {
+			const v = fromTo(this.state.prevWEPos, currentWEPos);
+			const targetCanvas_ = canvasOfEitherTarget(eitherTarget);
+			const canvasPseudoWidget_ = this.canvasPseudoWidgetForCanvas(targetCanvas_);
+			if (targetCanvas_ == this.state.prevCanvas) {
+				console.log(canvasPseudoWidget_.hostlessWidgets().map(w => w.constructor.name));
+				canvasPseudoWidget_.hostlessWidgets().map(w => w.translate(v));
+				this.state.prevWEPos = currentWEPos;
+			}
 		}
 	}
 };
@@ -133,6 +148,8 @@ NormalModeController.prototype.translatePrevWidgetAndRememberItsNewPosition = fu
 
 NormalModeController.prototype.mouseUp = function (currentWEPos, eitherTarget)
 {
+	this.state.prevCanvas  = null;
+	this.state.isMouseDown = false;
 	either(
 		canvas => {
 			this.state.spaceFocus = {position: currentWEPos, canvasPseudoWidget: this.canvasPseudoWidgetForEitherTarget(eitherTarget)};

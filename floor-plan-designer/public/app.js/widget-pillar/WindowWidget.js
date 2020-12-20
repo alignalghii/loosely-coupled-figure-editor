@@ -46,7 +46,7 @@ WindowWidget.prototype.updateDownward = function ()
 	this.low.setAttribute('height', info.sizes_low [1]);
 };
 
-WindowWidget.prototype.isHostless = function () {return true;};
+WindowWidget.prototype.isHostless = function () {return this.hasBeenDetached();};
 
 WindowWidget.prototype.jumpTo = function (targetCanvasPseudoWidget)
 {

@@ -88,7 +88,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 						if (isGraphicalEvent) this.normalModeController.mouseDown(ird.currentWEPos, ird.eitherTarget);
 						break;
 					case 'mousemove':
-						if (isGraphicalEvent) this.normalModeController.mouseMove(ird.currentWEPos, ird.eitherTarget);
+						if (isGraphicalEvent) this.normalModeController.mouseMove(ird.currentWEPos, ird.eitherTarget, event);
 						break;
 					case 'mouseup'  :
 						if (isGraphicalEvent) this.normalModeController.mouseUp  (ird.currentWEPos, ird.eitherTarget);

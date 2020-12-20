@@ -63,7 +63,7 @@ DoorWidget.prototype.updateDownward = function ()
 	this.low.setAttribute('height', info.sizes_low [1]);
 };
 
-DoorWidget.prototype.isHostless = function () {return true;};
+DoorWidget.prototype.isHostless = function () {return this.hasBeenDetached();};
 
 DoorWidget.prototype.jumpTo = function (targetCanvasPseudoWidget)
 {
