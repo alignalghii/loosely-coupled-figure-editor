@@ -104,7 +104,6 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget,
 			const targetCanvas_ = canvasOfEitherTarget(eitherTarget);
 			const canvasPseudoWidget_ = this.canvasPseudoWidgetForCanvas(targetCanvas_);
 			if (targetCanvas_ == this.state.prevCanvas) {
-				console.log(canvasPseudoWidget_.hostlessWidgets().map(w => w.constructor.name));
 				canvasPseudoWidget_.hostlessWidgets().map(w => w.translate(v));
 				this.state.prevWEPos = currentWEPos;
 			}
