@@ -73,7 +73,7 @@ SvgLowLevel.prototype.subscribe = function (typeName, emptyCase, polygonCase) //
 		const target = event.target;
 		const svgPosition  = this.eventPosition(event);
 		const runCase = target == svgRootElement ? emptyCase : polygonCase;
-		return runCase(target, svgPosition, event.button, event);  // @TODO: use `Either` at the code parts that will call this
+		return runCase(target, svgPosition, event.buttons, event);  // @TODO: use `Either` at the code parts that will call this
 	};
 	svgRootElement.addEventListener(typeName, handler);
 };

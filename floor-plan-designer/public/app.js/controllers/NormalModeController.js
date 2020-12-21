@@ -35,7 +35,7 @@ NormalModeController.prototype.mouseDown = function (position, eitherTarget)
 	);
 };
 
-NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget, event)
+NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget, mouseButton)
 {
 	if (this.state.prevWidget) {
 		if (!this.state.hasCollided) {
@@ -99,7 +99,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget,
 		}
 	} else {
 		// Vászonmozgatás:
-		if (this.state.prevWEPos && event.buttons == 1) {
+		if (this.state.prevWEPos && mouseButton == 1) {
 			const v = fromTo(this.state.prevWEPos, currentWEPos);
 			const targetCanvas_ = canvasOfEitherTarget(eitherTarget);
 			const canvasPseudoWidget_ = this.canvasPseudoWidgetForCanvas(targetCanvas_);
