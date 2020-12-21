@@ -14,6 +14,8 @@ Either.prototype.map = function (f)
 	);
 };
 
+Either.fromObsolete = obsoleteEitherAB => either(Either.left, Either.right, obsoleteEitherAB);
+
 /** Left: */
 
 function Left(a)

@@ -102,6 +102,9 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 						}
 					}
 				break;
+				case 'dblclick':
+					this.normalModeController.doubleClick(ird.currentWEPos, Either.fromObsolete(ird.eitherTarget));
+					break;
 				case 'keydown':
 					if (Eq.eq(inputSignature, ['string']) && 'key' in ird) {
 						switch (ird.key) {

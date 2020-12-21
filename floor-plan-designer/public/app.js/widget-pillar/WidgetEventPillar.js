@@ -10,7 +10,7 @@ function WidgetEventPillar (canvasPseudoWidgets, routerInterface)
 
 WidgetEventPillar.prototype.pipeToSM = function ()
 {
-	['mousedown', 'mousemove', 'mouseup', 'contextmenu'].map(eventType => this.mergeAndPipeSubsribe(eventType));
+	['mousedown', 'mousemove', 'mouseup', 'contextmenu', 'dblclick'].map(eventType => this.mergeAndPipeSubsribe(eventType));
 };
 
 // In case of moucemove, the emptyCase probably never occurs due to dragging (maybe if very quick)
