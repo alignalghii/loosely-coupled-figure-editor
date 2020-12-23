@@ -103,7 +103,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 					}
 				break;
 				case 'dblclick':
-					this.normalModeController.doubleClick(ird.currentWEPos, Either.fromObsolete(ird.eitherTarget));
+					this.figureEditorController.addVertex(ird.currentWEPos, ird.eitherTarget); // @TODO reconsider: normal mode <-> FigureEditorController not NormalModeController
 					break;
 				case 'keydown':
 					if (Eq.eq(inputSignature, ['string']) && 'key' in ird) {

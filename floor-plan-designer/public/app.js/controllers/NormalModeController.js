@@ -179,19 +179,6 @@ NormalModeController.prototype.mouseUp = function (currentWEPos, eitherTarget)
 
 
 
-NormalModeController.prototype.doubleClick = function (currentWEPos, eitherTarget)
-{
-	this.statusBarDriver.report(
-		'Duplakattintás ' + eitherTarget.either(
-			cnv => 'üres vászonfelületen',
-			wdg => `${wdg.constructor.name} alakzaton`
-		) + '!'
-	);
-};
-
-
-
-
 NormalModeController.prototype.changeMode = function (mode)
 {
 	this.state.mode = mode;
