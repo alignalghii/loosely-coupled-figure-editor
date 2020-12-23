@@ -37,3 +37,12 @@ FigureEditorController.prototype.withProxFig = function (command, currentWEPos, 
 	);
 	this.statusBarDriver.report(editorMessage);
 };
+
+// @TODO: akármelyik vásznon érvényre jut, nemcsak a munkavásznon! Ez zavaró!
+FigureEditorController.prototype.deleteVertex_withConfirmation = function (point, eitherTarget)
+{
+	event.preventDefault();
+	if (confirm('Valóban törölni akarod a legközelebbi szoba legközelebbi sarokpontját?')) {
+		this.deleteVertex(point, eitherTarget);
+	}
+};

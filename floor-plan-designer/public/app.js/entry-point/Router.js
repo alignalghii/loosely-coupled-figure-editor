@@ -327,7 +327,12 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		}
 	}
 	if (eventType == 'contextmenu') { // @TODO consider why it is sometimes different condition: `mouseButton == 2`
-		return this.contextMenuController.rightClick(event, ird.eitherTarget);
+		/** Megoldás: contextMenuController.rightClick kapja meg, vagy egy kiemelt segédfv, , adjon vissza egy boolt. hogy közeli-e a sarokpont, ha igen, kapja meg a vezértlést a figureEditorController.deleteVertex
+		//switch (inputSignature[0]) {
+		//	case 'Canvas': return this.figureEditorController.deleteVertex_withConfirmation(ird.currentWEPos, ird.eitherTarget);
+			/*case 'Widget':*/ return this.contextMenuController.rightClick(event, ird.eitherTarget);
+		//	default: Logger.write('Jobbkattintási esemény-alútvonalválasztási hiba!'); // @TODO: consider also `preventDefault`
+		//}
 	}
 
 	this.historyController.updateDisablings();
