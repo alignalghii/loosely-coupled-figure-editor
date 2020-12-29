@@ -327,12 +327,23 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 		}
 	}
 	if (eventType == 'contextmenu') { // @TODO consider why it is sometimes different condition: `mouseButton == 2`
-		/** Megoldás: contextMenuController.rightClick kapja meg, vagy egy kiemelt segédfv, , adjon vissza egy boolt. hogy közeli-e a sarokpont, ha igen, kapja meg a vezértlést a figureEditorController.deleteVertex
-		//switch (inputSignature[0]) {
-		//	case 'Canvas': return this.figureEditorController.deleteVertex_withConfirmation(ird.currentWEPos, ird.eitherTarget);
-			/*case 'Widget':*/ return this.contextMenuController.rightClick(event, ird.eitherTarget);
-		//	default: Logger.write('Jobbkattintási esemény-alútvonalválasztási hiba!'); // @TODO: consider also `preventDefault`
-		//}
+		/** Megoldás: contextMenuController.rightClick kapja meg, vagy egy kiemelt segédfv, , adjon vissza egy boolt. hogy közeli-e a sarokpont, ha igen, kapja meg a vezértlést a figureEditorController.deleteVertex */
+		const board = this.normalModeController.canvasPseudoWidgets[4].board();
+		const boardHeuristics = new BoardHeuristics(board);
+		const {isNear: isForVertex} = boardHeuristics.isForVertex(ird.currentWEPos);
+		switch (inputSignature[0]) {
+			case 'Canvas':
+				event.preventDefault();
+				if (isForVertex) {
+					this.figureEditorController.deleteVertex_withConfirmation(ird.currentWEPos, ird.eitherTarget);
+				}
+				this.contextMenuController.close();
+				break;
+			case 'Widget':
+				this.contextMenuController.rightClick(event, ird.eitherTarget);
+				break;
+			default: Logger.write('Jobbkattintási esemény-alútvonalválasztási hiba!'); // @TODO: consider also `preventDefault`
+		}
 	}
 
 	this.historyController.updateDisablings();

@@ -11,6 +11,7 @@ Bijection.prototype.hasInverse = function (b) {return this.mapInverse .has(b);};
 Bijection.prototype.domain = function () {return this.mapStraight.keys();}
 Bijection.prototype.range  = function () {return this.mapInverse .keys();}
 Bijection.prototype.size   = function () {return this.mapStraight.size;}
+Bijection.prototype.isEmpty = function () {return this.size() == 0;};
 
 Bijection.prototype.delete        = function (a) {var b = this.mapStraight.get(a); this.mapStraight.delete(a); this.mapInverse.delete(b);}
 Bijection.prototype.deleteInverse = function (b) {var a = this.mapInverse .get(b); this.mapStraight.delete(a); this.mapInverse.delete(b);}
