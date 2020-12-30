@@ -103,7 +103,12 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 					}
 				break;
 				case 'dblclick':
-					this.figureEditorController.addVertex(ird.currentWEPos, ird.eitherTarget); // @TODO reconsider: normal mode <-> FigureEditorController not NormalModeController
+					const board = this.normalModeController.canvasPseudoWidgets[4].board();
+					const boardHeuristics = new BoardHeuristics(board);
+					const {isNear: isForEdge} = boardHeuristics.isForEdge(ird.currentWEPos);
+					if (isForEdge) {
+						this.figureEditorController.addVertex(ird.currentWEPos, ird.eitherTarget); // @TODO reconsider: normal mode <-> FigureEditorController not NormalModeController
+					}
 					break;
 				case 'keydown':
 					if (Eq.eq(inputSignature, ['string']) && 'key' in ird) {
