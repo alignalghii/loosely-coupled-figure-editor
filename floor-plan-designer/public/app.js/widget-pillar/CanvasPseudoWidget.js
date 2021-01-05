@@ -42,6 +42,7 @@ CanvasPseudoWidget.prototype.low = function () {return this.arbitrary.svgLowLeve
 CanvasPseudoWidget.prototype.coordSysTransformer = function () {return this.arbitrary.coordSysTransformer          ;}; // @TODO: rude arbitrariness
 CanvasPseudoWidget.prototype.board               = function () {return this.arbitrary.bijectionSvgToGeom           ;}; // @TODO: rude arbitrariness
 CanvasPseudoWidget.prototype.businessBoard       = function () {return this.arbitrary.partialFunctionGeomToBusiness;}; // @TODO: rude arbitrariness
+CanvasPseudoWidget.prototype.root                = function () {return this.arbitrary.svgLowLevel.svgRootElement   ;}; // @TODO: rude arbitrariness
 
 CanvasPseudoWidget.prototype.clear  = function () {this.arbitrary.clearAll(); }; // @TODO: rude arbitrariness
 CanvasPseudoWidget.prototype.clearHostlessWidgets  = function () {this.hostlessWidgets().map(w => w.delete());};

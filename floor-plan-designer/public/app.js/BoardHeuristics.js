@@ -16,7 +16,7 @@ BoardHeuristics.prototype.isNearestFiguresNearestVertexNear = function (point)
 				maybeFigure: just(nearestFigure)
 			},
 			nearestVertex => ({
-				isNear: distance(nearestVertex, point) < Math.sqrt(getArea(nearestFigure.vertices)) / 3,
+				isNear: distance(nearestVertex, point) < Math.sqrt(getArea(nearestFigure.vertices)) / 6,
 				maybeVertex: just(nearestVertex),
 				maybeFigure: just(nearestFigure)
 			}),
@@ -38,7 +38,7 @@ BoardHeuristics.prototype.isNearestFiguresNearestEdgeNear = function (point)
 				maybeFigure: just(nearestFigure)
 			},
 			nearestEdge => ({
-				isNear: distanceSegmentHence(nearestEdge, point) < Math.sqrt(getArea(nearestFigure.vertices)) / 3,
+				isNear: distanceSegmentHence(nearestEdge, point) < Math.sqrt(getArea(nearestFigure.vertices)) / 5,
 				maybeEdge: just(nearestEdge),
 				maybeFigure: just(nearestFigure)
 			}),

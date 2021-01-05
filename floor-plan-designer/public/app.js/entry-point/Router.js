@@ -82,7 +82,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 			const isGraphicalEvent = !('tabName' in ird); // @TODO refactor this condition jungle below:
 			switch (eventType) {
 					case 'mousedown':
-						if (this.normalModeController.canvasPseudoWidgets[4].arbitrary.svgLowLevel.svgRootElement, canvasOfEitherTarget(ird.eitherTarget) == this.normalModeController.canvasPseudoWidgets[4].arbitrary.svgLowLevel.svgRootElement) {
+						if (this.normalModeController.isWorkCanvasE(ird.eitherTarget)) {
 							this.normalModeController.saveHistory(); // @TODO
 						}
 						if (isGraphicalEvent) this.normalModeController.mouseDown(ird.currentWEPos, ird.eitherTarget);
@@ -174,7 +174,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 					break;
 			}
 		}
-		if (this.state.mode == 'figureeditormove') { // @TODO: delegate more responsibility from the router to the controller. @TODO: should not use the same `State` as `NormalModeController`
+		if (this.state.mode == 'figureeditormove' || this.state.mode == 'normal' && this.normalModeController.state.mouseDownForVertexOnWorkCanvas) { // @TODO: delegate more responsibility from the router to the controller. @TODO: should not use the same `State` as `NormalModeController`
 			switch (eventType) {
 				case 'mousedown':
 					this.figureEditorController.moveVertex(ird.currentWEPos, ird.eitherTarget); // Implies `this.figureEditorController.saveHistory()` automatically

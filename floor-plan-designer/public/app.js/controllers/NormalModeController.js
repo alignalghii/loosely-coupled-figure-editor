@@ -17,6 +17,35 @@ function NormalModeController(state, canvasPseudoWidgets, statusBarDriver, audio
 Object.assign(NormalModeController.prototype, ControllerMixinCanvasWidgetable);
 Object.assign(NormalModeController.prototype, ControllerMixinHistoryFollowable);
 
+
+
+NormalModeController.prototype.isForVertexOnWorkCanvas  = function (canvas, position) {return this.isWorkCanvas(canvas) && this.isForVertex(position);};
+NormalModeController.prototype.isForEdgeOnWorkCanvas    = function (canvas, position) {return this.isWorkCanvas(canvas) && this.isForEdge  (position);};
+NormalModeController.prototype.isWorkCanvasE = function (eitherTarget)     {return this.isWorkCanvas(canvasOfEitherTarget(eitherTarget));};
+
+
+NormalModeController.prototype.isWorkCanvas = function (canvas)
+{
+	const root  = this.canvasPseudoWidgets[4].root();
+	return canvas == root;
+};
+
+NormalModeController.prototype.isForVertex = function (position)
+{
+	const board = this.canvasPseudoWidgets[4].board();
+	const boardHeuristics = new BoardHeuristics(board);
+	return boardHeuristics.isForVertex(position).isNear;
+};
+
+NormalModeController.prototype.isForEdge = function (position)
+{
+	const board = this.canvasPseudoWidgets[4].board();
+	const boardHeuristics = new BoardHeuristics(board);
+	return boardHeuristics.isForEdge(position).isNear;
+};
+
+
+
 // @TODO The GU API should introduce a Mouse object/interface? (like many APIs introduce a Context obejct)
 NormalModeController.prototype.mouseDown = function (position, eitherTarget)
 {
@@ -25,7 +54,12 @@ NormalModeController.prototype.mouseDown = function (position, eitherTarget)
 	this.state.prevCanvas = canvasOfEitherTarget(eitherTarget);
 	this.state.isMouseDown = true;
 	either(
-		canvas => this.statusBarDriver.report('Üres helyhez vagy helypozícióhoz kötődő művelet várható...'),
+		canvas => {
+			this.statusBarDriver.report('Üres helyhez vagy helypozícióhoz kötődő művelet várható...');
+			if (this.isForVertexOnWorkCanvas(canvas, position)) {
+				this.state.mouseDownForVertexOnWorkCanvas = position;
+			}
+		},
 		currentWidget => {
 			this.rememberWidget(currentWidget);
 			currentWidget.showGlittering();
@@ -99,7 +133,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget,
 		}
 	} else {
 		// Vászonmozgatás:
-		if (this.state.prevWEPos && mouseButton == 1) {
+		if (this.state.prevWEPos && mouseButton == 1 && !this.state.mouseDownForVertexOnWorkCanvas) {
 			const v = fromTo(this.state.prevWEPos, currentWEPos);
 			const targetCanvas_ = canvasOfEitherTarget(eitherTarget);
 			const canvasPseudoWidget_ = this.canvasPseudoWidgetForCanvas(targetCanvas_);
@@ -149,6 +183,7 @@ NormalModeController.prototype.mouseUp = function (currentWEPos, eitherTarget)
 {
 	this.state.prevCanvas  = null;
 	this.state.isMouseDown = false;
+	this.state.mouseDownForVertexOnWorkCanvas = null;
 	either(
 		canvas => {
 			this.state.spaceFocus = {position: currentWEPos, canvasPseudoWidget: this.canvasPseudoWidgetForEitherTarget(eitherTarget)};
