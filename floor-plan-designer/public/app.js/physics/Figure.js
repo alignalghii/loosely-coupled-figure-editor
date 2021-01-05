@@ -184,6 +184,7 @@ Figure.prototype.doUnscaleXYArealInvariantRef = function (q)
 };
 
 Figure.prototype.perimeter = function () {return perimeter(this.vertices);};
+Figure.prototype.area      = function () {return getArea(this.vertices);};
 
 // @TODO: put to a spearate class? Figure is already a too large class. `addVertex`, `deleteVertex`, `moveVertex` by proximity heurietics should come directly into `Figure`, or should we use a spearate `FigureEditorByProximityHeuristic` class?
 
