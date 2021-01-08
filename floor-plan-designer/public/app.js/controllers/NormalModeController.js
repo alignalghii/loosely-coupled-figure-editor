@@ -59,6 +59,9 @@ NormalModeController.prototype.mouseDown = function (position, eitherTarget)
 			if (this.isForVertexOnWorkCanvas(canvas, position)) {
 				this.state.mouseDownForVertexOnWorkCanvas = position;
 			}
+			if (this.isForEdgeOnWorkCanvas(canvas, position)) {
+				this.state.mouseDownForEdgeOnWorkCanvas = position;
+			}
 		},
 		currentWidget => {
 			this.rememberWidget(currentWidget);
@@ -133,7 +136,7 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget,
 		}
 	} else {
 		// Vászonmozgatás:
-		if (this.state.prevWEPos && mouseButton == 1 && !this.state.mouseDownForVertexOnWorkCanvas) {
+		if (this.state.prevWEPos && mouseButton == 1 && !this.state.mouseDownForVertexOnWorkCanvas && !this.state.mouseDownForEdgeOnWorkCanvas) {
 			const v = fromTo(this.state.prevWEPos, currentWEPos);
 			const targetCanvas_ = canvasOfEitherTarget(eitherTarget);
 			const canvasPseudoWidget_ = this.canvasPseudoWidgetForCanvas(targetCanvas_);
@@ -184,6 +187,7 @@ NormalModeController.prototype.mouseUp = function (currentWEPos, eitherTarget)
 	this.state.prevCanvas  = null;
 	this.state.isMouseDown = false;
 	this.state.mouseDownForVertexOnWorkCanvas = null;
+	this.state.mouseDownForEdgeOnWorkCanvas   = null;
 	either(
 		canvas => {
 			this.state.spaceFocus = {position: currentWEPos, canvasPseudoWidget: this.canvasPseudoWidgetForEitherTarget(eitherTarget)};

@@ -190,7 +190,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 					break;
 			}
 		}
-		if (this.state.mode == 'figureeditorpush') {
+		if (this.state.mode == 'figureeditorpush' || this.state.mode == 'normal' && this.normalModeController.state.mouseDownForEdgeOnWorkCanvas) {
 			switch (eventType) {
 				case 'mousedown':
 					this.figureEditorController.saveHistory(); // @TODO
