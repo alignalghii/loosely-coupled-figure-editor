@@ -74,6 +74,16 @@ NormalModeController.prototype.mouseDown = function (position, eitherTarget)
 
 NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget, mouseButton)
 {
+	const targetCanvas_       = canvasOfEitherTarget(eitherTarget);
+	const canvasPseudoWidget_ = this.canvasPseudoWidgetForCanvas(targetCanvas_);
+	const board_              = canvasPseudoWidget_.board();
+	const boardHeuristics     = new BoardHeuristics(board_);
+	const scope = boardHeuristics.scope(currentWEPos, eitherTarget);
+	console.log(scope);
+
+
+
+
 	if (this.state.prevWidget) {
 		if (!this.state.hasCollided) {
 			var infinitezimalDisplacement  = fromTo(this.state.prevWEPos, currentWEPos);

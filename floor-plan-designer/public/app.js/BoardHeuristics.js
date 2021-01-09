@@ -50,3 +50,42 @@ BoardHeuristics.prototype.isNearestFiguresNearestEdgeNear = function (point)
 
 
 BoardHeuristics.prototype.maybeEitherFigVertexOrEdgeIsNear = function (point) {};
+
+
+BoardHeuristics.prototype.scope = function (point, eitherTarget)
+{
+	return either(
+		cvn => maybe_exec(
+			() => maybe_exec(
+				MouseHeuristicsType.Canvas,
+				MouseHeuristicsType.Edge,
+				heurMaybeNearEdge(this.isNearestFiguresNearestEdgeNear(point)) // @TODO: OOP
+			),
+			MouseHeuristicsType.Vertex,
+			heurMaybeNearVertex(this.isNearestFiguresNearestVertexNear(point)) // @TODO: OOP
+		),
+		wdg => MouseHeuristicsType.Interior(),
+		eitherTarget
+	);
+};
+/*{
+	return either(
+		cnv => fromMaybe(
+			MouseHeuristicsType.Canvas(),
+			maybeBind(
+				maybeNearestFigureHence(this.board, point),
+				nearestFigure => maybeBind(
+					maybeNearestVertexHence(nearestFigure.vertices, point),
+					nearestVertex => maybeBind(
+						maybeNearestEdgeHence  (nearestFigure.vertices, point),
+						nearestEdge => distance(nearesPoint, point) < distance(, point) ? MouseHeuristicsType.Canvas() : MouseHeuristicsType.Canvas()
+					)
+				)
+			)
+		),
+		wdg => MouseHeuristicsType.Interior()
+	);
+};*/
+
+const heurMaybeNearVertex = ({isNear, maybeVertex}) => isNear ? maybeVertex : nothing; // @TODO: OOP
+const heurMaybeNearEdge   = ({isNear, maybeEdge  }) => isNear ? maybeEdge   : nothing; // @TODO: OOP
