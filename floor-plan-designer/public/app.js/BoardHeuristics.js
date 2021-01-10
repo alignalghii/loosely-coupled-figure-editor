@@ -7,19 +7,11 @@ BoardHeuristics.prototype.isForEdge   = function (point) {return this.isNearestF
 
 BoardHeuristics.prototype.isNearestFiguresNearestVertexNear = function (point)
 {
-	return maybe(
-		{isNear: false, maybeVertex: nothing, maybeFigure: nothing},
+	return maybe_exec(
+		VertexNearness.fullNone,
 		nearestFigure => maybe(
-			{
-				isNear: false,
-				maybeVertex: nothing,
-				maybeFigure: just(nearestFigure)
-			},
-			nearestVertex => ({
-				isNear: distance(nearestVertex, point) < Math.sqrt(getArea(nearestFigure.vertices)) / 6,
-				maybeVertex: just(nearestVertex),
-				maybeFigure: just(nearestFigure)
-			}),
+			VertexNearness.onlyFigure(nearestFigure),
+			nearestVertex => VertexNearness.calculate(point, nearestVertex, nearestFigure),
 			maybeNearestVertexHence(nearestFigure.vertices, point)
 		),
 		maybeNearestFigureHence(this.board, point)
@@ -29,19 +21,11 @@ BoardHeuristics.prototype.isNearestFiguresNearestVertexNear = function (point)
 
 BoardHeuristics.prototype.isNearestFiguresNearestEdgeNear = function (point)
 {
-	return maybe(
-		{isNear: false, maybeEdge: nothing, maybeFigure: nothing},
+	return maybe_exec(
+		EdgeNearness.fullNone,
 		nearestFigure => maybe(
-			{
-				isNear: false,
-				maybeEdge: nothing,
-				maybeFigure: just(nearestFigure)
-			},
-			nearestEdge => ({
-				isNear: distanceSegmentHence(nearestEdge, point) < Math.sqrt(getArea(nearestFigure.vertices)) / 5,
-				maybeEdge: just(nearestEdge),
-				maybeFigure: just(nearestFigure)
-			}),
+			EdgeNearness.onlyFigure(nearestFigure),
+			nearestEdge => EdgeNearness.calculate(point, nearestEdge, nearestFigure),
 			maybeNearestEdgeHence(nearestFigure.vertices, point)
 		),
 		maybeNearestFigureHence(this.board, point)
@@ -59,33 +43,12 @@ BoardHeuristics.prototype.scope = function (point, eitherTarget)
 			() => maybe_exec(
 				MouseHeuristicsType.Canvas,
 				MouseHeuristicsType.Edge,
-				heurMaybeNearEdge(this.isNearestFiguresNearestEdgeNear(point)) // @TODO: OOP
+				this.isNearestFiguresNearestEdgeNear(point).maybeNear()
 			),
 			MouseHeuristicsType.Vertex,
-			heurMaybeNearVertex(this.isNearestFiguresNearestVertexNear(point)) // @TODO: OOP
+			this.isNearestFiguresNearestVertexNear(point).maybeNear()
 		),
 		wdg => MouseHeuristicsType.Interior(),
 		eitherTarget
 	);
 };
-/*{
-	return either(
-		cnv => fromMaybe(
-			MouseHeuristicsType.Canvas(),
-			maybeBind(
-				maybeNearestFigureHence(this.board, point),
-				nearestFigure => maybeBind(
-					maybeNearestVertexHence(nearestFigure.vertices, point),
-					nearestVertex => maybeBind(
-						maybeNearestEdgeHence  (nearestFigure.vertices, point),
-						nearestEdge => distance(nearesPoint, point) < distance(, point) ? MouseHeuristicsType.Canvas() : MouseHeuristicsType.Canvas()
-					)
-				)
-			)
-		),
-		wdg => MouseHeuristicsType.Interior()
-	);
-};*/
-
-const heurMaybeNearVertex = ({isNear, maybeVertex}) => isNear ? maybeVertex : nothing; // @TODO: OOP
-const heurMaybeNearEdge   = ({isNear, maybeEdge  }) => isNear ? maybeEdge   : nothing; // @TODO: OOP
