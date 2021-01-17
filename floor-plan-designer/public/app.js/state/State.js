@@ -21,6 +21,8 @@ function State(toBeDomainStamp)
 	this.isJPEG          = false;
 
 	this.history = new History(50);
+
+	this.maybeMouseScopeSvg = Maybe.nothing();
 }
 
 State.prototype.setDomainStampFrom = function (domainObject) /** MenuUI */

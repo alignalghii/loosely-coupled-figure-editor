@@ -79,7 +79,8 @@ NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget,
 	const board_              = canvasPseudoWidget_.board();
 	const boardHeuristics     = new BoardHeuristics(board_);
 	const scope = boardHeuristics.scope(currentWEPos, eitherTarget);
-	console.log(scope);
+	const showScope = new ShowScope(canvasPseudoWidget_, this.state);
+	showScope.show(scope);
 
 
 
