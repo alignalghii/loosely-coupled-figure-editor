@@ -26,26 +26,6 @@ SvgLowLevel.prototype.createPolygonChild = function (svgVertices, svgAttributes)
 	return polygonChild;
 };
 
-SvgLowLevel.prototype.createDot = function ([x, y], r)
-{
-	const dot = createElementWithAttributes('circle', {cx:x, cy: y, r: r, fill: "red"}, svgNS); //this.document.createElementNS(svgNS, 'polygon');
-	this.svgRootElement.appendChild(dot); // @TODO: in case of more canvases, an svg-polynomelement should be able to be added to more canvases (drag a furniture to be copied to the  fl
-	return dot;
-};
-
-SvgLowLevel.prototype.createSection = function (P, Q, d)
-{
-	const spine = fromTo(P, Q);
-	const halfBreast = slantScale(
-		d/2,
-		normalizeVector(
-			rotVec90CCW(spine)
-		)
-	);
-	const vertices = [pointwiseMinus(P, halfBreast), pointwisePlus(P, halfBreast), pointwisePlus(Q, halfBreast), pointwiseMinus(Q, halfBreast)];
-	return this.createPolygonChild(vertices, {fill: "red"});
-};
-
 SvgLowLevel.prototype.createImage = function (filePath, [width, height], [x, y])
 {
 	const imageElement = createElementWithAttributes('image', {width: width, height: height, x: x, y: y}, svgNS);

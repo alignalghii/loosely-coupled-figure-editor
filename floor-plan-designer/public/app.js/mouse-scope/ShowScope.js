@@ -6,26 +6,30 @@ function ShowScope(canvasPseudoWidget, state)
 
 ShowScope.prototype.show = function (mouseScope)
 {
+	this.resetSvg();
+		const sprite = new Sprite(this.canvasPseudoWidget.arbitrary.svgLowLevel, this.canvasPseudoWidget.coordSysTransformer(), 10);
+		const svg = mouseScope.mouseHeuristicsType_exec(
+			()     => console.log('interior'),
+			vertex => sprite.createDot(vertex), // cannot be variableless: it would interpret as `sprite.createDot.call(this, vertex)`, not `sprite.createDot.call(sprite, vertex)`!
+			edge   => sprite.createSection(edge), // --- || ---
+			()     => console.log('canvas')
+		);
+	this.rememberSvg(svg);
+};
+
+ShowScope.prototype.resetSvg = function ()
+{
 	this.state.maybeMouseScopeSvg.map(
 		svg => deletePolygonChild(svg)
 	);
 	this.state.maybeMouseScopeSvg = Maybe.nothing();
-	const svg = mouseScope.mouseHeuristicsType_exec(
-		()     => console.log('interior'),
-		vertex => {
-			const K = this.canvasPseudoWidget.coordSysTransformer().highToLow(vertex)
-			const dot = this.canvasPseudoWidget.arbitrary.svgLowLevel.createDot(K, 10);
-			return dot;
-		},
-		edge   => {
-			const [P, Q] = edge.map(
-				P => this.canvasPseudoWidget.coordSysTransformer().highToLow(P)
-			);
-			return section = this.canvasPseudoWidget.arbitrary.svgLowLevel.createSection(P, Q, 10);
-		},
-		()     => console.log('canvas')
-	);
-	if (svg) this.state.maybeMouseScopeSvg = Maybe.just(svg);
+};
+
+ShowScope.prototype.rememberSvg = function (svg)
+{
+	if (svg) {
+		this.state.maybeMouseScopeSvg = Maybe.just(svg);
+	}
 };
 
 //ShowScope.prototype.save      = function (mouseScope  )                                 {this.state.maybeMouseScopeSvg = Maybe.just(scope);};
