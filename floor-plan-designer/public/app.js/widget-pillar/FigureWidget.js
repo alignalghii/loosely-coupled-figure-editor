@@ -366,3 +366,11 @@ FigureWidget.prototype.updateAndReport = function (currentWEPos, nearestFigure, 
 };
 
 FigureWidget.prototype.contextMenu = () => new ContextMenu('Szoba', [[CMO('Mozgatás', 'move', 'Mozgatás és fókusz')], [CMO('Csúcs +', 'vertexAdd', 'Csúcs hozzáadása'), CMO('Csúcs -', 'vertexDel', 'Csúcs törlése'), CMO('Csúcs ⇌', 'vertexMove', 'Csúcs mozgatása')], [CMO('Él ↠', 'edgeSpan', 'Élnyújtás/kurtítás'), CMO('Él ≠', 'edgePushRail', 'Él „sínes” oldalrahúzása'), CMO('Él ↦', 'edgePushOrth', 'Él magára merőleges oldalrahúzása')], [CMO('Forgatás', 'rotate'), CMO('Átskálázás ⤢', 'scale', 'Aránytartó átméretezés'), CMO('Átskálázás ⇔', 'scaleX', 'Aránytorzítás - vízszintes'), CMO('Átskálázás ⇕', 'scaleY', 'Aránytorzítás - függőleges'), CMO('Tükrözés ⇹', 'flipY', 'Tükrözés - függőleges tengely körül'), CMO('Tükrözés ⤉', 'flipX', 'Tükrözés - vízszintes tengely körül')], [CMO('Űrlap', 'form', 'Objektumtulajdonságok űrlapja'), CMO('Követés', 'follow', 'Együttmozgó objektumok csatolása')]]);
+
+FigureWidget.prototype.emphasizeForMouseScopeOn = function (sprite)
+{
+	sprite.mouse('pointer');
+	return this.high.edges().map(
+		edge => sprite.auxSection(edge)
+	);
+};

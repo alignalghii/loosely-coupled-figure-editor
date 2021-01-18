@@ -136,6 +136,7 @@ Widget.prototype.hasBeenDetached = function () {return false;}; // overloaded in
 
 Widget.prototype.isActor        = function () {return false;};
 Widget.prototype.isShapeshifter = function () {return false;};
+Widget.prototype.emphasizeForMouseScopeOn = (sprite) => sprite.mouse('pointer');
 
 
 Widget.prototype.shapeshift = function (wallsBackRefSet)

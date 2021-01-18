@@ -86,3 +86,11 @@ TitleWidget.prototype.beDescribedOnOpeningForm = function (FigPropEdcontroller) 
 
 
 TitleWidget.prototype.contextMenu = () => new ContextMenu('Cím', [[CMO('Mozgatás')], [CMO('Átméretezés')]]);
+
+TitleWidget.prototype.emphasizeForMouseScopeOn = function (sprite)
+{
+	sprite.mouse('pointer');
+	this.low.style.fill = 'red';
+	this.low.style['font-weight'] = 'bold';
+	return [this.low];
+};

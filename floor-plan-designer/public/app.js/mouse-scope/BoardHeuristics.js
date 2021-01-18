@@ -48,7 +48,7 @@ BoardHeuristics.prototype.scope = function (point, eitherTarget)
 			MouseHeuristicsType.Vertex,
 			this.isNearestFiguresNearestVertexNear(point).maybeNear()
 		),
-		wdg => MouseHeuristicsType.Interior(),
+		wdg => MouseHeuristicsType.Interior(wdg),
 		eitherTarget
 	);
 };

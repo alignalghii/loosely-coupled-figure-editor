@@ -98,6 +98,8 @@ Figure.prototype.centering = function ()
 	return newFig;
 };
 
+Figure.prototype.edges = function () {return tour(this.vertices);};
+
 Figure.prototype.doRotation = function (phi)
 {
 	var rotate = makeRotate(phi, this.grasp);

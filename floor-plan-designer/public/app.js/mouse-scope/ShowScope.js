@@ -9,7 +9,7 @@ ShowScope.prototype.show = function (mouseScope)
 	this.resetSVGs();
 		const sprite = new Sprite(this.canvasPseudoWidget.arbitrary.svgLowLevel, this.canvasPseudoWidget.coordSysTransformer(), 10);
 		const SVGs = mouseScope.mouseHeuristicsType_exec(
-			()     => sprite.mouse('pointer'),
+			widget => widget.emphasizeForMouseScopeOn(sprite),
 			vertex => sprite.createDot(vertex), // cannot be variableless: it would interpret as `sprite.createDot.call(this, vertex)`, not `sprite.createDot.call(sprite, vertex)`!
 			edge   => sprite.createSection(edge), // --- || ---
 			loc    => sprite.createPinboard(loc)//sprite.mouse('wait')//this.log('canvas')
@@ -20,7 +20,7 @@ ShowScope.prototype.show = function (mouseScope)
 ShowScope.prototype.resetSVGs = function ()
 {
 	this.state.mouseScopeSVGs.map(
-		svg => deletePolygonChild(svg)
+		svg => svg.tagName == 'text' ? (() => {svg.style = null;})() : deletePolygonChild(svg)
 	);
 	this.state.mouseScopeSVGs = [];
 };
