@@ -41,7 +41,7 @@ BoardHeuristics.prototype.scope = function (point, eitherTarget)
 	return either(
 		cvn => maybe_exec(
 			() => maybe_exec(
-				MouseHeuristicsType.Canvas,
+				() => MouseHeuristicsType.Canvas(point),
 				MouseHeuristicsType.Edge,
 				this.isNearestFiguresNearestEdgeNear(point).maybeNear()
 			),

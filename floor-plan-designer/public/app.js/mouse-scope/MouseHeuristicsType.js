@@ -2,14 +2,15 @@ function MouseHeuristicsType() {Logger.write('Abstract class');}
 MouseHeuristicsType.Interior = ()     => new MouseHeuristicsType_Interior();
 MouseHeuristicsType.Vertex   = vertex => new MouseHeuristicsType_Vertex(vertex);
 MouseHeuristicsType.Edge     = edge   => new MouseHeuristicsType_Edge(edge);
-MouseHeuristicsType.Canvas   = ()     => new MouseHeuristicsType_Canvas();
+MouseHeuristicsType.Canvas   = loc    => new MouseHeuristicsType_Canvas(loc);
 MouseHeuristicsType.prototype.mouseHeuristicsType_exec = (interior, vertex, edge, canvas) => Logger.write('Abstract method');
 MouseHeuristicsType.prototype.mouseHeuristicsType_val = function (interior, vertex, edge, canvas)
 {
 	return this.mouseHeuristicsType_exec(
 		() => interior,
-		vertex, edge,
-		() => canvas
+		vertex,
+		edge,
+		canvas
 	);
 };
 
@@ -28,7 +29,7 @@ MouseHeuristicsType_Edge.prototype = Object.create(MouseHeuristicsType.prototype
 MouseHeuristicsType_Edge.prototype.constructor = MouseHeuristicsType_Edge;
 MouseHeuristicsType_Edge.prototype.mouseHeuristicsType_exec = function (interior, vertex, edge, canvas) {return edge(this.edge);};
 
-function MouseHeuristicsType_Canvas() {}
+function MouseHeuristicsType_Canvas(loc) {this.loc = loc;}
 MouseHeuristicsType_Canvas.prototype = Object.create(MouseHeuristicsType.prototype);
 MouseHeuristicsType_Canvas.prototype.constructor = MouseHeuristicsType_Canvas;
-MouseHeuristicsType_Canvas.prototype.mouseHeuristicsType_exec = (interior, vertex, edge, canvas) => canvas();
+MouseHeuristicsType_Canvas.prototype.mouseHeuristicsType_exec = function (interior, vertex, edge, canvas) {return canvas(this.loc);};

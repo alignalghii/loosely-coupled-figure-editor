@@ -22,7 +22,7 @@ function State(toBeDomainStamp)
 
 	this.history = new History(50);
 
-	this.maybeMouseScopeSvg = Maybe.nothing();
+	this.mouseScopeSVGs = [];
 }
 
 State.prototype.setDomainStampFrom = function (domainObject) /** MenuUI */

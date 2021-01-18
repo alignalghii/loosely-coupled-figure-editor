@@ -72,18 +72,22 @@ NormalModeController.prototype.mouseDown = function (position, eitherTarget)
 	);
 };
 
+NormalModeController.prototype.mouseScopeSpriting = function (currentWEPos, eitherTarget, mouseButton)
+{
+	const targetCanvas = canvasOfEitherTarget(eitherTarget);
+	if (this.isWorkCanvas(targetCanvas)) {
+		const canvasPseudoWidget = this.canvasPseudoWidgetForCanvas(targetCanvas);
+		const board              = canvasPseudoWidget.board();
+		const boardHeuristics    = new BoardHeuristics(board);
+		const scope              = boardHeuristics.scope(currentWEPos, eitherTarget);
+		const showScope          = new ShowScope(canvasPseudoWidget, this.state);
+		showScope.show(scope);
+	}
+};
+
 NormalModeController.prototype.mouseMove = function (currentWEPos, eitherTarget, mouseButton)
 {
-	const targetCanvas_       = canvasOfEitherTarget(eitherTarget);
-	const canvasPseudoWidget_ = this.canvasPseudoWidgetForCanvas(targetCanvas_);
-	const board_              = canvasPseudoWidget_.board();
-	const boardHeuristics     = new BoardHeuristics(board_);
-	const scope = boardHeuristics.scope(currentWEPos, eitherTarget);
-	const showScope = new ShowScope(canvasPseudoWidget_, this.state);
-	showScope.show(scope);
-
-
-
+	this.mouseScopeSpriting(currentWEPos, eitherTarget, mouseButton);
 
 	if (this.state.prevWidget) {
 		if (!this.state.hasCollided) {
