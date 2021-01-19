@@ -112,3 +112,47 @@ Object.defineProperty(
 		}
 	}
 );
+
+Array.fromThatMany = (i0, n) => Array(n).fill(0).map((_, i) => i0 + i);
+Array.base0 = n => Array.fromThatMany(0, n);
+Array.base1 = n => Array.fromThatMany(1, n);
+
+if (!('flatMap' in Array.prototype)) {
+	Object.defineProperty(
+		Array.prototype,
+		'flatMap',
+		{
+			value:
+			function (f)
+			{
+				return this.map(f).flat();
+			}
+		}
+	);
+}
+
+Object.defineProperty(
+	Array.prototype,
+	'descartesProduct',
+	{
+		value:
+		function (bs)
+		{
+			return this.flatMap(
+				x => bs.map(y => [x, y])
+			);
+		}
+	}
+);
+
+Object.defineProperty(
+	Array.prototype,
+	'descartesSquare',
+	{
+		value:
+		function ()
+		{
+			return this.descartesProduct(this);
+		}
+	}
+);

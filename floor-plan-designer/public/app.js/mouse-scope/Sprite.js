@@ -31,20 +31,13 @@ Sprite.prototype.createPinboard = function (loc)
 {
 	this.mouse('default');
 
-	const domain = Array(5).fill(0).map((_, i) => 10*(i - 2)); // [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 0], [0, 1], [1, -1], [1, 0], [1, 1]];
-	const pinVertices = domain.map(
-		x => domain.map(
-			y => [x, y]
-		)
-	).flat().map(pin => addVec(pin, loc));
-	const pinboard = pinVertices.map(vertex => this.auxPoint(vertex, 7));
-	const compass = [
-		this.auxSection([addVec(loc, [ 1,  1]), addVec(loc, [ 2,  2])]),
-		this.auxSection([addVec(loc, [-1, -1]), addVec(loc, [-2, -2])]),
-		this.auxSection([addVec(loc, [ 1, -1]), addVec(loc, [ 2, -2])]),
-		this.auxSection([addVec(loc, [-1,  1]), addVec(loc, [-2,  2])]),
-	];
-	return pinboard.concat(compass);
+	const pinBoard = new PinBoard(loc);
+	const compass  = new Compass (loc);
+	const pinBoardSVGs = pinBoard.points().map(point => this.auxPoint(point, 7));
+	const compassSVGs = compass.sections().map(
+		edge => this.auxSection(edge)
+	);
+	return pinBoardSVGs.concat(compassSVGs);
 };
 
 Sprite.prototype.auxPoint = function (vertex, minify)
