@@ -18,7 +18,9 @@ function State(toBeDomainStamp)
 	this.isRelative     = true;
 
 	this.isAdmin        = false;
-	this.isJPEG          = false;
+	this.isJPEG         = false;
+
+	this.maybeGridSpriteWidget = Maybe.nothing(); // Nasty solution from a type-theorist perspective: `State` module depends typologically on `Grid` and `Sprite` module
 
 	this.history = new History(50);
 

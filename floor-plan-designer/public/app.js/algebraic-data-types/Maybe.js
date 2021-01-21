@@ -35,6 +35,11 @@ Maybe.prototype.bind = function (mf) // Algebraic (non-optimized) def: `this.bin
 	);
 };
 
+
+Maybe.prototype.isJust    = function () {return this.maybe_val(false, _ => true );};
+Maybe.prototype.isNothing = function () {return this.maybe_val(true , _ => false);};
+
+
 Maybe.prototype.fromJustWith = function (errorMsg)
 {
 	return this.maybe_exec(

@@ -34,6 +34,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 					case 'areainvariance'           : this.configController.setAreaInvariance(ird.value); break;
 					case 'relativeinsteadofabsolute': this.configController.setIsRelative    (ird.value); break;
 					case 'admin'                    : this.configController.setIsAdmin       (ird.value); break;
+					case 'grid'                     : this.configController.setGrid          (ird.value); break;
 					default                         : throw 'Invalid option name'                       ; break;
 				}
 			}
