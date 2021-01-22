@@ -24,7 +24,7 @@ ShowScope.prototype.show = function (mouseScope)
 ShowScope.prototype.resetSVGs = function ()
 {
 	this.state.mouseScopeSVGs.map(
-		svg => svg.tagName == 'text' ? (() => {svg.style = null;})() : deletePolygonChild(svg)
+		svg => svg.dataset.havingQuitMouseScope == 'unstyle-only' ? (() => {svg.style = null;})() : deletePolygonChild(svg)
 	);
 	this.state.mouseScopeSVGs = [];
 };

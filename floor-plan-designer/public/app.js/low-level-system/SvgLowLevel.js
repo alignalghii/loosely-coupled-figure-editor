@@ -91,7 +91,7 @@ SvgLowLevel.prototype.subscribe = function (typeName, emptyCase, polygonCase) //
 	svgRootElement.addEventListener(typeName, handler);
 };
 
-SvgLowLevel.prototype.createText = function (name, [x, y])
+SvgLowLevel.prototype.createText = function (name, [x, y], resetAsUnstyle = true)
 {
 	const textChild = createElementWithAttributes('text', {x: x, y: y}, svgNS);
 	textChild.textContent = name;
@@ -99,6 +99,9 @@ SvgLowLevel.prototype.createText = function (name, [x, y])
 	const w = name.length*8;//textChild.getComputedTextLength(); // @TODO: no magical numbers
 	textChild.setAttribute('x', x -  w/2);
 	textChild.setAttribute('y', y +  4);
+	if (resetAsUnstyle) {
+		textChild.dataset.havingQuitMouseScope = 'unstyle-only';
+	}
 	return textChild;
 };
 
