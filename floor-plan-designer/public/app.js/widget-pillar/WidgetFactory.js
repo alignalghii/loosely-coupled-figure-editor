@@ -5,14 +5,16 @@
 
 /** Lifetimes methods: */
 
-function WidgetFactory(canvasPseudoWidget, svgLowLevel, coordSysTransformer, bijectionSvgToGeom)
+function WidgetFactory(canvasPseudoWidget, svgLowLevel, coordSysTransformer, bijectionSvgToGeom) // @TODO argument order oes not correspond to inheritation logic
 {
+	SituatedCanvas.call(this, svgLowLevel, coordSysTransformer);
 	this.canvasPseudoWidget  = canvasPseudoWidget;
-
-	this.svgLowLevel         = svgLowLevel;
-	this.coordSysTransformer = coordSysTransformer;
 	this.bijectionSvgToGeom  = bijectionSvgToGeom;
 }
+
+WidgetFactory.prototype = Object.create(SituatedCanvas.prototype);
+WidgetFactory.prototype.constructor = WidgetFactory;
+
 
 WidgetFactory.prototype.rawDelete = function (widget)
 {

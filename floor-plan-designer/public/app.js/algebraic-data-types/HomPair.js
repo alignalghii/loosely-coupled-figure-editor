@@ -10,7 +10,7 @@ HomPair.prototype.typevalid = function () {return typeof this.fst() == typeof th
 
 HomPair.prototype.typecheck = function ()
 {
-	if (!this.typevalid()) console.log('HomPair must have same-typed constituents');
+	if (!this.typevalid()) Logger.write('HomPair must have same-typed constituents');
 };
 
 HomPair.prototype.map = function (f)
@@ -21,10 +21,16 @@ HomPair.prototype.map = function (f)
 	);
 };
 
-HomPair.prototype.filter = function (prop)
+HomPair.prototype.toList = function ()
 {
 	this.typecheck();
 	return this.uncurry(
-		(a1, a2) => [a1, a2].filter(prop)
-	);
+		(a1, a2) => [a1, a2]
+	)
+};
+
+HomPair.prototype.filter = function (prop)
+{
+	this.typecheck();
+	return this.toList().filter(prop);
 };

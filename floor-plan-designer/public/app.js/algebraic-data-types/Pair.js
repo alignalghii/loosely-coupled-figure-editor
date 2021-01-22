@@ -4,7 +4,7 @@ function Pair(a, b)
 	this.b = b;
 }
 
-Pair.prototype.uncurry = function (f) {return f(this.a, this.b);};
+Pair.prototype.uncurry = function (f) {return f(this.a, this.b);}; // @TODO: this is not an uncurry in the Haskell sense, name it as `pair`, or `unpair`.
 
 Pair.prototype.fst = function () {return this.uncurry((a, b) => a);};
 Pair.prototype.snd = function () {return this.uncurry((a, b) => b);};

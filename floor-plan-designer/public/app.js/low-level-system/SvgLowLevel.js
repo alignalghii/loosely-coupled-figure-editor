@@ -18,6 +18,18 @@ SvgLowLevel.prototype.eventPosition = function (event)
 };
 
 
+SvgLowLevel.prototype.sizing = function ()
+{
+	return (
+		new HomPair('width', 'height')
+	).map(
+		axisName => Number(
+			this.svgRootElement.getAttribute(axisName)
+		)
+	);
+};
+
+
 SvgLowLevel.prototype.createPolygonChild = function (svgVertices, svgAttributes)
 {
 	var polygonChild = createElementWithAttributes('polygon', svgAttributes, svgNS); //this.document.createElementNS(svgNS, 'polygon');

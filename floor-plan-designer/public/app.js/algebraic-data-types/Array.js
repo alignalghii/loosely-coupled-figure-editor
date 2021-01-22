@@ -156,3 +156,56 @@ Object.defineProperty(
 		}
 	}
 );
+
+Object.defineProperty(
+	Array.prototype,
+	'directProduct',
+	{
+		value:
+		function (ys)
+		{
+			return this.flatMap(
+				x => ys.map(
+					y => new Pair(x, y)
+				)
+			);
+		}
+	}
+);
+
+Object.defineProperty(
+	Array.prototype,
+	'directSum',
+	{
+		value:
+		function (ys)
+		{
+			return this.map(
+				Either.left
+			).concat(
+				ys.map(
+					Either.right
+				)
+			);
+		}
+	}
+);
+
+Object.defineProperty(
+	Array.prototype,
+	'toHomPair',
+	{
+		value:
+		function ()
+		{
+			switch (this.length) {
+				case 0:
+				case 1: Logger.write('Array to be `toHomPair`ed is too short'); break;
+				case 2: return new HomPair(this[0], this[1]);
+				default:
+					Logger.warning('Array to be `toHomPair`ed is too long');
+					return new HomPair(this[0], this[1]);
+			}
+		}
+	}
+);

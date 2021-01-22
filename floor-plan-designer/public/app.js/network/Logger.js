@@ -2,7 +2,7 @@
 
 const Logger =
 {
-	write: function (report)
+	write: function (report, isWarning = false) // @TODO `write` be an aux method, and define `error` (and/or `fatal`a) longside with `warning`
 	{
 		Logger.post(
 			'/log',
@@ -14,8 +14,14 @@ const Logger =
 				)
 			)
 		);
-		throw report;
+		if (isWarning) {
+			console.log(report);
+		} else {
+			throw report;
+		}
 	},
+
+	warning: function (report) {Logger.write('Warning: ' + report, true);},
 
 	post: function (url, report, processMaybeResponse)
 	{

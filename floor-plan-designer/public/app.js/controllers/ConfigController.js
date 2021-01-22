@@ -13,14 +13,11 @@ function ConfigController(state, canvasPseudoWidgets, configDriver, tabSelectorD
 	this.configDriver.checkOrUncheckIsAdmin               (this.state.isAdmin       );
 	this.redesignByPrivileges                             (this.state.isAdmin       );
 
-	this.initGrid();
-	this.configDriver.checkOrUncheckGrid(
-		this.state.maybeGridSpriteWidget.maybe_val(
-			false,
-			gridSpriteWidget => gridSpriteWidget.isShown()
-		)
-	);
+	this.configDriver.checkOrUncheckGrid(this.state.flaggedGrid.a);
+	this.maybeSVGs = this.gridSpriteWidget().forceFillIf(this.state.flaggedGrid.a);
 }
+
+// Public:
 
 ConfigController.prototype.setAreaInvariance = function (flag) {this.state.areaInvariance = flag;};
 ConfigController.prototype.setIsRelative     = function (flag) {this.state.isRelative     = flag;};
@@ -33,23 +30,18 @@ ConfigController.prototype.redesignByPrivileges = function (flag)
 		this.tabSelectorDriver.switchTo('DB', flag);
 };
 
-ConfigController.prototype.initGrid = function ()
-{
-	this.state.maybeGridSpriteWidget.maybe_exec(
-		() => {
-			const grid             = new Grid(75, 55, 1);
-			const sprite           = new Sprite(this.canvasPseudoWidgets[4].arbitrary.svgLowLevel, this.canvasPseudoWidgets[4].coordSysTransformer(), 1);
-			const gridSpriteWidget = new GridSpriteWidget(grid, sprite);
-			this.state.maybeGridSpriteWidget = Maybe.just(gridSpriteWidget);
-		},
-		_ => Logger.write('Grid has not been yet initiated')
-	);
-};
-
 ConfigController.prototype.setGrid = function (flag)
 {
-	this.state.maybeGridSpriteWidget.maybe_exec(
-		() => Logger.write('Grid has not been yet initiated'),
-		gridSpriteWidget => gridSpriteWidget[flag ? 'show' : 'unshow']()
+	this.maybeSVGs           = this.gridSpriteWidget()[flag ? 'show' : 'unshow'](this.maybeSVGs);
+	this.state.flaggedGrid.a = flag;
+};
+
+// Private:
+
+ConfigController.prototype.gridSpriteWidget = function ()
+{
+	return new GridSpriteWidget(
+		this.state.flaggedGrid.b,
+		new Sprite(this.canvasPseudoWidgets[4].arbitrary.svgLowLevel, this.canvasPseudoWidgets[4].coordSysTransformer(), 1) // @TODO too complicated, pass simply CcanvasPseudoWidget
 	);
 };

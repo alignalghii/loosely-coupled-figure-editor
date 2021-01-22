@@ -1,36 +1,51 @@
 function GridSpriteWidget(grid, sprite)
 {
-	this.grid      = grid;
-	this.sprite    = sprite;
-	this.maybeSVGs = Maybe.nothing();
+	this.grid       = grid;
+	this.sprite     = sprite;
 }
 
-GridSpriteWidget.prototype.show   = function ()
+// Safe and public:
+
+GridSpriteWidget.prototype.toggle = function (maybeSVGs)
 {
-	this.maybeSVGs.maybe_exec(
-		() => {
-			this.maybeSVGs = Maybe.just(
-				this.grid.sections().map(
-					edge => this.sprite.auxSection(edge)
-				)
-			);
-		},
-		_  => Logger.write('It is discouraged to repeat a `SpriteWidget` `show`')
+	return maybeSVGs.maybe_exec(
+		() => Maybe.just(
+			this.forceFill()
+		),
+		SVGs => {
+			SVGs.map(deletePolygonChild);
+			return Maybe.nothing();
+		}
 	);
 };
 
-GridSpriteWidget.prototype.unshow = function ()
+GridSpriteWidget.prototype.show   = function (maybeSVGs)
 {
-	this.maybeSVGs.map(
-		SVGs => SVGs.map(deletePolygonChild)
-	);
-	this.maybeSVGs = Maybe.nothing();
+	return maybeSVGs.isNothing() ? this.toggle(maybeSVGs)
+                                     : Logger.warning('It is discouraged to repeat a `SpriteWidget` `show`');
 };
 
-GridSpriteWidget.prototype.isShown = function ()
+GridSpriteWidget.prototype.unshow = function (maybeSVGs)
 {
-	return this.maybeSVGs.maybe_val(
-		false,
-		SVGs => true
+	return maybeSVGs.isJust() ? this.toggle(maybeSVGs)
+	                          : Logger.warning('It is discouraged to repeat a `SpriteWidget` `hide`');
+};
+
+// Unsafe (but also public):
+
+GridSpriteWidget.prototype.forceFill = function ()
+{
+	return this.grid.bars(
+		this.sprite.samplingBrick()
+	).map(
+		bar => this.sprite.auxSection(bar)
+	);
+};
+
+GridSpriteWidget.prototype.forceFillIf = function (flag)
+{
+	return Maybe.ifTrue_lazy(
+		flag,
+		() => this.forceFill()
 	);
 };

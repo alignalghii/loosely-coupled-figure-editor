@@ -1,9 +1,12 @@
-function Sprite (svgLowLevel, coordSysTransformer, penSize)
+function Sprite (svgLowLevel, coordSysTransformer, penSize)  // @TODO too complicated, pass simply canvasPseudoWidget
 {
-	this.svgLowLevel         = svgLowLevel;
+	SituatedCanvas.call(this, svgLowLevel, coordSysTransformer);
 	this.coordSysTransformer = coordSysTransformer;
 	this.penSize             = penSize;
 }
+
+Sprite.prototype = Object.create(SituatedCanvas.prototype);
+Sprite.prototype.constructor = Sprite;
 
 
 Sprite.prototype.createDot = function (vertex) {this.mouse('default'); return [this.auxPoint(vertex, 1)];};

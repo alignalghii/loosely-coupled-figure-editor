@@ -20,11 +20,10 @@ function State(toBeDomainStamp)
 	this.isAdmin        = false;
 	this.isJPEG         = false;
 
-	this.maybeGridSpriteWidget = Maybe.nothing(); // Nasty solution from a type-theorist perspective: `State` module depends typologically on `Grid` and `Sprite` module
-
 	this.history = new History(50);
 
 	this.mouseScopeSVGs = [];
+	this.flaggedGrid = new Pair(false, Grid.unitAtOrigin()); // State` module depends typologically on `Grid` :-( Luckily `Grid` is luckily rather thin :-)
 }
 
 State.prototype.setDomainStampFrom = function (domainObject) /** MenuUI */

@@ -31,6 +31,7 @@ function CanvasPseudoWidget (figureWidgetFactory, titleWidgetFactory, imageWidge
 	this.arbitrary = figureWidgetFactory; // @TODO rude arbitrariness
 }
 
+
 CanvasPseudoWidget.prototype.correspondingWidgetFactory = function (foreignWidget) {return this[QuoteHelper.prototype.lcfirst(widget.factory().constructor.name)];};
 
 CanvasPseudoWidget.prototype.createFromBusiness = function (businessObject)
@@ -43,6 +44,8 @@ CanvasPseudoWidget.prototype.coordSysTransformer = function () {return this.arbi
 CanvasPseudoWidget.prototype.board               = function () {return this.arbitrary.bijectionSvgToGeom           ;}; // @TODO: rude arbitrariness
 CanvasPseudoWidget.prototype.businessBoard       = function () {return this.arbitrary.partialFunctionGeomToBusiness;}; // @TODO: rude arbitrariness
 CanvasPseudoWidget.prototype.root                = function () {return this.arbitrary.svgLowLevel.svgRootElement   ;}; // @TODO: rude arbitrariness
+
+CanvasPseudoWidget.prototype.situation           = function () {return this.arbitrary.situation();};
 
 CanvasPseudoWidget.prototype.clear  = function () {this.arbitrary.clearAll(); }; // @TODO: rude arbitrariness
 CanvasPseudoWidget.prototype.clearHostlessWidgets  = function () {this.hostlessWidgets().map(w => w.delete());};
