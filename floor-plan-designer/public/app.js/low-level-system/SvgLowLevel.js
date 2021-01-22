@@ -84,7 +84,7 @@ SvgLowLevel.prototype.subscribe = function (typeName, emptyCase, polygonCase) //
 	{
 		let target = event.target;
 		const svgPosition  = this.eventPosition(event);
-		if (target.getAttribute('fill') == 'red') target = svgRootElement; // mouse scopes are showed by eventless, orphan svgs, they are painted red
+		if (target.dataset.event == 'none') target = svgRootElement; // grids and mouse scopes are shown by eventless, orphan SVG-elems: distinguished by such a `data-event` attribute 'none'
 		const runCase = target == svgRootElement ? emptyCase : polygonCase;
 		return runCase(target, svgPosition, event.buttons, event);  // @TODO: use `Either` at the code parts that will call this
 	};

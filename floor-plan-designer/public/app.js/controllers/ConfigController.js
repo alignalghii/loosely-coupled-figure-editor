@@ -42,6 +42,10 @@ ConfigController.prototype.gridSpriteWidget = function ()
 {
 	return new GridSpriteWidget(
 		this.state.flaggedGrid.b,
-		new Sprite(this.canvasPseudoWidgets[4].arbitrary.svgLowLevel, this.canvasPseudoWidgets[4].coordSysTransformer(), 1) // @TODO too complicated, pass simply CcanvasPseudoWidget
+		new Sprite(  // @TODO too complicated, pass simply CcanvasPseudoWidget?
+			this.canvasPseudoWidgets[4].arbitrary.svgLowLevel,
+			this.canvasPseudoWidgets[4].coordSysTransformer(),
+			new Pen('blue', 1)
+		)
 	);
 };

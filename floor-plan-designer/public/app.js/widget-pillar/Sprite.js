@@ -1,8 +1,8 @@
-function Sprite (svgLowLevel, coordSysTransformer, penSize)  // @TODO too complicated, pass simply canvasPseudoWidget
+function Sprite (svgLowLevel, coordSysTransformer, pen)  // @TODO too complicated, pass simply canvasPseudoWidget
 {
 	SituatedCanvas.call(this, svgLowLevel, coordSysTransformer);
 	this.coordSysTransformer = coordSysTransformer;
-	this.penSize             = penSize;
+	this.pen                 = pen;
 }
 
 Sprite.prototype = Object.create(SituatedCanvas.prototype);
@@ -21,13 +21,15 @@ Sprite.prototype.auxSection = function (edge)
 	);
 	const spine = fromTo(P, Q);
 	const halfBreast = slantScale(
-		this.penSize / 2,
+		this.pen.size / 2,
 		normalizeVector(
 			rotVec90CCW(spine)
 		)
 	);
 	const vertices = [pointwiseMinus(P, halfBreast), pointwisePlus(P, halfBreast), pointwisePlus(Q, halfBreast), pointwiseMinus(Q, halfBreast)];
-	return this.svgLowLevel.createPolygonChild(vertices, {fill: "red"});
+	const elem = this.svgLowLevel.createPolygonChild(vertices, {fill: this.pen.color});
+	elem.dataset.event = 'none';
+	return elem;
 };
 
 Sprite.prototype.createPinboard = function (loc)
@@ -46,8 +48,9 @@ Sprite.prototype.createPinboard = function (loc)
 Sprite.prototype.auxPoint = function (vertex, minify)
 {
 	const [x, y] = this.coordSysTransformer.highToLow(vertex);
-	const dot = createElementWithAttributes('circle', {cx:x, cy: y, r: this.penSize/minify, fill: "red"}, svgNS); //this.document.createElementNS(svgNS, 'polygon');
+	const dot = createElementWithAttributes('circle', {cx:x, cy: y, r: this.pen.size/minify, fill: this.pen.color}, svgNS); //this.document.createElementNS(svgNS, 'polygon');
 	this.svgLowLevel.svgRootElement.appendChild(dot); // @TODO: in case of more canvases, an svg-polynomelement should be able to be added to more canvases (drag a furniture to be copied to the  fl
+	dot.dataset.event = 'none';
 	return dot;
 };
 
