@@ -352,3 +352,12 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
  - Valószínűleg a `this.status.focus` esetében ugyanolyen ,,intenzionális átmentést'' kell végezni az undo-zás konzisztenciája érdekében, mint a `this.status.maybeWidgetActualOnFigurePropertyEditor`-ra.
  - Csúnya a `HistoryController` függősége a `FigurePropertyEditorDriver`-től. Érdemes lenne kihasználni a `ControllerMixinIntensionalityTransducible` nyújtotta lazacsatolást:
    az ott most elavultnak nyilvánított `transduceActualFormWidgetIntensionality` megoldást kellene visszahozni korszerűsített formában.
+
+### 2021 újévwkor aktualitások
+
+ - Az egérhatókör-kijelző a szobában levő bútorok esetében is érzékeli a (bennfoglaló téglalap) csúcsait és éleit. Bár jelenleg erre hibásan reagál, de mégis átirányítható lehetne ez a viselkedés arra, hogy a bútorok kényelmesen átméretezhetőek legyenek.
+ - Amikor az egér elhagyja minden vászon területét (tehát a `document` ,,többi'' területére ketrül), nem váltódik ki ezt jelző külön esemény, hanem egész egszerűen az események hiánya vn iyenkor. Jó lenne `document` szintű esemény, esetleg külön egy `IdleController` (`NowhereController`) is (amely persze osztoznék a kontrollerek által közösen használt `State`-ben). Konkrét hasznok, funkcionalitások:
+    - a bútorok, akcióobjektumok Firefox alatt nem húzhatók át jól más vászinra. Ennek okát nem tudom (Chrome alatt működik), de egy hordozhatóbb megoldásban esetleg segíthet a fenti idle-érzékelés.
+    - amikor a munkavászonrol a documentum felé lehúzzuk az egeret, nem tűnik el az egérhatókör-kijelező, hanem a szélen hagyva marad.
+ - A vonalzó (esetleg a rács) a képernyő szélein (tehát pl. baloldalon és alul) kaphatna egy-egy számozást.
+ - A szoba falának nem annyira merőleges, mint inkább érintő irányú egeres ,,meghúzása'' hatására ne a `pushEdge`, hanem a `spanEdge` művelet süljön el.
