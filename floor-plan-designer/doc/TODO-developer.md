@@ -361,3 +361,6 @@ Az ütközésvizsgálat közben értelemszerűen működik (vagyis nem lehet ala
     - amikor a munkavászonrol a documentum felé lehúzzuk az egeret, nem tűnik el az egérhatókör-kijelező, hanem a szélen hagyva marad.
  - A vonalzó (esetleg a rács) a képernyő szélein (tehát pl. baloldalon és alul) kaphatna egy-egy számozást.
  - A szoba falának nem annyira merőleges, mint inkább érintő irányú egeres ,,meghúzása'' hatására ne a `pushEdge`, hanem a `spanEdge` művelet süljön el.
+ - invariancia-wrapperek elmélete dolgában az alábbi két dologra lenne szükség:
+     - A területállandóságot biztosító csomagolófüggvény (`FigureEditorByProximityHeuristic.prototype.withAreaInvariance` és `withAreaInvarianceIf`) nagyon ad-hoc jellegű, helyette legyen egy tisztal lambda-kalkulusos változat.
+     - A szoba nem-aránytartó szerkesztései során a falrés-szerkezet eltorzul. Ez matematikai függvényekkel javítható, amelyek legaláább ideiglenesen egy magasabb szintű, fal - és falfeolsztás-arány modellre konvertálnának és visszakonvertálnának. Ennek során invariancia legyen: az az arány, ahogy a falrés középpontja a falat mint szakaszt két részre vágja!
