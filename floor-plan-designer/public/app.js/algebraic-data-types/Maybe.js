@@ -55,6 +55,8 @@ Maybe.prototype.filter = function (prop)
 	);
 };
 
+Maybe.prototype.toList = function () {return this.maybe_val([], a => [a]);};
+
 // @TODO: Control.Monad.liftM2
 Maybe.prototype.liftM2 = function (f, mb)
 {

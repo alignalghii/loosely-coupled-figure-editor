@@ -19,7 +19,7 @@ FigureEditorController.prototype.pushEdge       = function (point, eitherTarget 
 FigureEditorController.prototype.pushnormalEdge = function (point, eitherTarget           ) {this.withProxFig('pushnormalEdge', point, eitherTarget, 'Élt tolok'    , 'alakzatnál', this.state.areaInvariance);};
 FigureEditorController.prototype.spanEdge       = function (point, eitherTarget, mouseDrag) {this.withProxFig('spanEdge'      , point, eitherTarget, 'Élt nyújtok'  , 'alakzatnál', mouseDrag, this.state.areaInvariance);};
 
-FigureEditorController.prototype.withProxFig = function (command, currentWEPos, eitherTarget, template1, template2, optArg, optArg2) // @TODO: reuse: almost the same algorithm exists in `GeomTransforamtionController` (or in its section in `Router`).
+FigureEditorController.prototype.withProxFig = function (command, currentWEPos, eitherTarget, template1, template2, ...restArgs) // @TODO: reuse: almost the same algorithm exists in `GeomTransforamtionController` (or in its section in `Router`).
 {
 	this.locker.lockIfNecessary();
 
@@ -29,8 +29,7 @@ FigureEditorController.prototype.withProxFig = function (command, currentWEPos, 
 		'Nem határozható meg egyértelműen legközelebbi alakzat.',
 		nearestFigure => {
 			const figureEditor  = new FigureEditorByProximityHeuristic(nearestFigure);
-			optArg2 == 'undefined' ? figureEditor.plainExec(command, currentWEPos, optArg)
-			                       : figureEditor[command](currentWEPos, optArg, optArg2);
+			figureEditor[command](currentWEPos, ...restArgs);
 			const widget = canvasPseudoWidget.arbitrary.detectTypeAndComposeFromHigh(nearestFigure); // @TODO arbitrary
 			return widget.updateAndReport(currentWEPos, nearestFigure, template1, template2); // Image's boxing figure should not be allowed to be edited!
 		},

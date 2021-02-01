@@ -131,6 +131,20 @@ if (!('flatMap' in Array.prototype)) {
 	);
 }
 
+Reflect.defineProperty(
+	Array.prototype,
+	'mapMaybe',
+	{
+		value:
+		function (mf)
+		{
+			return this.flatMap(
+				elem => mf(elem).toList()
+			);
+		}
+	}
+);
+
 Object.defineProperty(
 	Array.prototype,
 	'descartesProduct',
