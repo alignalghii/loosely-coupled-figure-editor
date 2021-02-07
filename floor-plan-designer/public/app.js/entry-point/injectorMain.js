@@ -90,6 +90,19 @@ onload = function (event)
 
 	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorIODriver, configIODriver, tabSelectorIODriver, loaderIODriver, saveIODriver, nativeLoaderIODriver, zoomDriver, contextMenuDriver, historyIODriver, urlPartDriver); // @TODO Law of Demeter, see inside
 
+
+	document.addEventListener(
+		'mousemove',
+		event => {
+			const deletionIsAlreadyInProgressBecauseMousemoveEventReshowsMousescopeindicatorDestructively = event.target.dataset.event == 'none';
+			// .. because an already in-progress deletion makes event.target.parentNode == null even if it belongs to the work canvas, so we must exclude it explicitely:
+			if (event.target != svgLowLevel_workCanvas.svgRootElement && event.target.parentNode != svgLowLevel_workCanvas.svgRootElement && !deletionIsAlreadyInProgressBecauseMousemoveEventReshowsMousescopeindicatorDestructively) {
+				const showScope = new ShowScope(canvasPseudoWidget_work, state);
+				showScope.resetSVGs();
+			}
+		}
+	);
+
 	//console.log('App: live run');
 	app.run();
 

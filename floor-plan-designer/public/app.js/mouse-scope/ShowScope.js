@@ -6,7 +6,7 @@ function ShowScope(canvasPseudoWidget, state)
 
 ShowScope.prototype.show = function (mouseScope)
 {
-	this.resetSVGs();
+	this.resetSVGs(); // destructive reshow
 		const sprite = new Sprite(
 			this.canvasPseudoWidget.arbitrary.svgLowLevel,
 			this.canvasPseudoWidget.coordSysTransformer(),
