@@ -85,7 +85,7 @@ onload = function (event)
 	const historyController              = new HistoryController(state, canvasPseudoWidgets, historyIODriver, /*@TODO*/figurePropertyEditorIODriver, statusBarODriver);
 	const magnetController              = new MagnetController(state, canvasPseudoWidgets, gravity, statusBarODriver);
 
-	var router              = new Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuController, historyController, magnetController); // @TODO make globalOriginFigure obsolete
+	var router              = new Router(modeIODriver, state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuController, historyController, magnetController); // @TODO make globalOriginFigure obsolete
 	var widgetEventPillar   = new WidgetEventPillar(canvasPseudoWidgets, router); // @TODO: could it be regarded as a kind of device driver, and renamed + moved appropriately?
 
 	var app                 = new App(router, widgetEventPillar, roomStampDriver, modeIODriver, operationDriver, keyboardDriver, figurePropertyEditorIODriver, configIODriver, tabSelectorIODriver, loaderIODriver, saveIODriver, nativeLoaderIODriver, zoomDriver, contextMenuDriver, historyIODriver, urlPartDriver); // @TODO Law of Demeter, see inside

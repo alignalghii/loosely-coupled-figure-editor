@@ -1,5 +1,7 @@
-function Router(state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuController, historyController, magnetController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
+function Router(modeDriver, state, normalModeController, compactModeController, roomController, figureEditorController, geomTransformationController, figurePropertyEditorController, configController, figureNestingController, tabSelectorController, loaderController, saveController, nativeLoaderController, zoomController, contextMenuController, historyController, magnetController) // @TODO at other places in source code, it may be still colled by obsolete name `originFigure`
 {
+	this.modeDriver = modeDriver;
+
 	this.state = state;
 
 	this.normalModeController  = normalModeController;
@@ -165,6 +167,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 			switch (eventType) {
 				case 'mouseup':
 					this.figureEditorController.addVertex(ird.currentWEPos, ird.eitherTarget);
+					this.returnToNormalMode();
 					break;
 			}
 		}
@@ -172,6 +175,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 			switch (eventType) {
 				case 'mouseup':
 					this.figureEditorController.deleteVertex(ird.currentWEPos, ird.eitherTarget);
+					this.returnToNormalMode();
 					break;
 			}
 		}
@@ -188,6 +192,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 				case 'mouseup':
 					this.figureEditorController.moveVertex(ird.currentWEPos, ird.eitherTarget);
 					this.figureEditorController.state.editorMoveFlag = false; // @TODO: should not use the same `State` as `NormalModeController`
+					this.returnToNormalMode();
 					break;
 			}
 		}
@@ -206,6 +211,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 					break;
 				case 'mouseup':
 					delete this.figureEditorController.state.pushEdge_start;
+					this.returnToNormalMode();
 					break;
 			}
 		}
@@ -224,6 +230,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 					break;
 				case 'mouseup':
 					delete this.figureEditorController.state.pushnormalEdge_start;
+					this.returnToNormalMode();
 					break;
 			}
 		}
@@ -242,6 +249,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 					break;
 				case 'mouseup':
 					delete this.figureEditorController.state.spanEdge_start;
+					this.returnToNormalMode();
 					break;
 			}
 		}
@@ -256,6 +264,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 					break;
 				case 'mouseup':
 					this.geomTransformationController.closeRotationArcSpan();
+					this.returnToNormalMode();
 					break;
 			}
 		}
@@ -280,6 +289,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 				case 'mouseup':
 					this.geomTransformationController.saveHistory(); // @TODO
 					this.geomTransformationController.reflectionFlip(['doReflectHorizontally', 'reflectHorizontally'], ird.currentWEPos, ird.eitherTarget);
+					this.returnToNormalMode();
 					break;
 			}
 		}
@@ -288,6 +298,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 				case 'mouseup':
 					this.geomTransformationController.saveHistory(); // @TODO
 					this.geomTransformationController.reflectionFlip(['doReflectVertically', 'reflectVertically'], ird.currentWEPos, ird.eitherTarget);
+					this.returnToNormalMode();
 					break;
 			}
 		}
@@ -296,6 +307,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 			switch (eventType) {
 				case 'mouseup':
 					this.figurePropertyEditorController.modeOn(ird.currentWEPos, ird.eitherTarget);
+					this.returnToNormalMode();
 					break;
 			}
 		}
@@ -304,6 +316,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 				case 'mouseup':
 					this.figureNestingController.saveHistory(); // @TODO
 					this.figureNestingController.onOrOff(ird.currentWEPos, ird.eitherTarget);
+					this.returnToNormalMode();
 					break;
 			}
 		}
@@ -312,6 +325,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 				case 'mouseup':
 					this.magnetController.saveHistory();
 					this.magnetController.guessRotation(ird.currentWEPos, ird.eitherTarget);
+					this.returnToNormalMode();
 					break;
 			}
 		}
@@ -320,6 +334,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 				case 'mouseup':
 					this.magnetController.saveHistory();
 					this.magnetController.guessTranslation(ird.currentWEPos, ird.eitherTarget);
+					this.returnToNormalMode();
 					break;
 			}
 		}
@@ -328,6 +343,7 @@ Router.prototype.dispatch = function (eventType, inputSignature, ird, event) // 
 				case 'mouseup':
 					this.magnetController.saveHistory();
 					this.magnetController.guessRotationAndTranslation(ird.currentWEPos, ird.eitherTarget);
+					this.returnToNormalMode();
 					break;
 			}
 		}
@@ -363,7 +379,7 @@ Router.prototype.routeCasesWithOptParamAndArgs = function (aritiesTuple, eventNa
 		if (eventType == eventName) {
 			console.log([arity, eventName, methodName]);
 			switch (arity) {
-				case 0: this.geomTransformationController[methodName](                        ); break;
+				case 0: this.geomTransformationController[methodName](                        ); this.returnToNormalMode(); break;
 				case 1: this.geomTransformationController[methodName](              arg1      ); break;
 				case 3: this.geomTransformationController[methodName](optParameter, arg1, arg2); break;
 				default: throw 'Invalid arity given in Router::routeCasesWithParamAndArgs)';
@@ -380,6 +396,12 @@ Router.prototype.routeDragCasesOpen3Sustain1Close0ScaleStressSpan = function (op
 
 Router.prototype.rememberWidget            = function (ird) {this.state.prevWidget = ird.currentWidget;};
 Router.prototype.rememberPosition          = function (ird) {this.state.prevWEPos = ird.currentWEPos;};
+
+Router.prototype.returnToNormalMode = function ()
+{
+	this.state.mode = 'normal';
+	this.modeDriver.checkNormal();
+};
 
 /** Conditions */
 

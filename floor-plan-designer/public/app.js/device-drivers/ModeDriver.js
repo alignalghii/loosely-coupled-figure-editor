@@ -2,8 +2,9 @@ function ModeDriver(aDocument)
 {
 	this.modeRadios = aDocument.getElementById('modes');
 	this.opSec = aDocument.getElementById('section-operations');
+	this.modeNormal = aDocument.getElementById('modeNormal');
 
-	aDocument.getElementById('modeNormal').checked = true;
+	this.checkNormal();
 }
 
 ModeDriver.prototype.pipeToSM = function (dispatch)
@@ -16,4 +17,9 @@ ModeDriver.prototype.pipeToSM = function (dispatch)
 		dispatch('change', ['string', 'string'], {input:target.name, mode:mode});
 	}
 	this.modeRadios.addEventListener('change', changeMode);
+};
+
+ModeDriver.prototype.checkNormal = function ()
+{
+	this.modeNormal.checked = true;
 };
