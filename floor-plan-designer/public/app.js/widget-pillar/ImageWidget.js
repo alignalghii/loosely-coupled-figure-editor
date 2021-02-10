@@ -149,11 +149,13 @@ ImageWidget.prototype.directlyOrViaTitle = function ()
 
 ImageWidget.prototype.beDescribedOnOpeningForm = figPropEdController => figPropEdController.statusBarDriver.report('Bútor szöveges szerkeszthetőségét még nem valósítottam meg'); // Image's boxing figure should not be allowed to be edited!
 
-ImageWidget.prototype.scale = function (q)
+ImageWidget.prototype.scale = function (q, O)
 {
-	this.high.doScale (q);
+	this.high.doScale (q, O);
 	this.updateDownward();
 };
+
+ImageWidget.prototype.centroid = function () {return this.high.centroid();};
 
 ImageWidget.prototype.contextMenu = () => new ContextMenu('Bútor', [[CMO('Mozgatás', 'move', 'Mozgatás és fókusz')], [CMO('Forgatás', 'rotate'), CMO('Átskálázás ⤢', 'scale', 'Aránytartó átméretezés'), CMO('Átskálázás ⇔', 'scaleX', 'Aránytorzítás - vízszintes'), CMO('Átskálázás ⇕', 'scaleY', 'Aránytorzítás - függőleges'), CMO('Tükrözés ⇹', 'flipY', 'Tükrözés - függőleges tengely körül'), CMO('Tükrözés ⤉', 'flipX', 'Tükrözés - vízszintes tengely körül')], [CMO('Űrlap', 'form', 'Objektumtulajdonságok űrlapja'), CMO('Követés', 'follow', 'Együttmozgó objektumok csatolása')]]);
 

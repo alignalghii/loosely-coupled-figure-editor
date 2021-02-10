@@ -317,6 +317,9 @@ FigureWidget.prototype.reflectHorizontally = function () {this.high.doReflectHor
 FigureWidget.prototype.reflectVertically   = function () {this.high.doReflectVertically();   this.updateDownward();};
 FigureWidget.prototype.scale  = function (q)
 {
+	this.businessObject.openings.map(
+		wdg => wdg.scale(q, this.centroid())
+	);
 	this.high.doScale (q);
 	this.businessObject.doScale(q);
 	this.updateSlitStructure();
@@ -374,3 +377,6 @@ FigureWidget.prototype.emphasizeForMouseScopeOn = function (sprite)
 		edge => sprite.auxSection(edge)
 	);
 };
+
+
+FigureWidget.prototype.centroid = function () {return this.high.centroid();};

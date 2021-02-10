@@ -21,9 +21,11 @@ WindowWidget.prototype.factory = function () {return this.canvasPseudoWidget.win
 WindowWidget.prototype.translate = function (displacement)
 {
 	this.high.doTranslation(displacement);
-	this.updateDownward();
+	this.updateDownward_alsoLowLocalTransform();
+};
 
-	// @TODO store important data on the high-level instead of hacking directly with low-level
+WindowWidget.prototype.updateLowLocalTransform = function () // @TODO store important data on the high-level instead of hacking directly with low-level
+{
 	const Ox = Number(this.low.getAttribute('x')) + Number(this.low.getAttribute('width' )) / 2,
 	      Oy = Number(this.low.getAttribute('y')) + Number(this.low.getAttribute('height')) / 2;
 	const transformString = this.low.getAttribute('transform');
@@ -39,11 +41,18 @@ WindowWidget.prototype.translate = function (displacement)
 WindowWidget.prototype.updateDownward = function ()
 {
 	this.high.size = segmentLength([this.high.vertices[0], this.high.vertices[1]]);
+	this.high.position = this.high.centroid();
 	const info = this.factory().calculate([this.high.size, this.high.size], this.high.position);
 	this.low.setAttribute('x', info.point_lowcorner[0]);
 	this.low.setAttribute('y', info.point_lowcorner[1]);
 	this.low.setAttribute('width' , info.sizes_low [0]);
 	this.low.setAttribute('height', info.sizes_low [1]);
+};
+
+WindowWidget.prototype.updateDownward_alsoLowLocalTransform = function ()
+{
+	this.updateDownward();
+	this.updateLowLocalTransform();
 };
 
 WindowWidget.prototype.isHostless = function () {return this.hasBeenDetached();};
@@ -63,10 +72,10 @@ WindowWidget.prototype.collisionActionSpecialty = function (controller, canvasPs
 };
 
 
-WindowWidget.prototype.scale = function (q)
+WindowWidget.prototype.scale = function (q, O)
 {
-	this.high.doScale (q);
-	this.updateDownward();
+	this.high.doScale (q, O);
+	this.updateDownward_alsoLowLocalTransform();
 };
 
 WindowWidget.prototype.reflectVerticallyRef   = function () {console.log('Flip window vertically (rel)'  );};
@@ -196,3 +205,6 @@ WindowWidget.prototype.isShapeshifter = function () {return true;};
 
 
 WindowWidget.prototype.contextMenu = () => new ContextMenu('Nyílászáró: ablak',  [[CMO('Mozgatás', 'move', 'Mozgatás és fókusz')], [CMO('Átméretezés', 'scale', 'Szabad ikonként aránytartóan, vagy nyújtás/zsugorítás kötötten a fal mentén')], [CMO('Űrlap', 'form', 'Objektumtulajdonságok űrlapja')]]);
+
+
+WindowWidget.prototype.centroid = function () {return this.high.centroid();}; // @TODO: OOP+DRY: should inherit from `ImageWidget`?

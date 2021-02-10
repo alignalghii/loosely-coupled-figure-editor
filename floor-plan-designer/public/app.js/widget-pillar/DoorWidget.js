@@ -21,9 +21,17 @@ DoorWidget.prototype.factory = function () {return this.canvasPseudoWidget.doorW
 DoorWidget.prototype.translate = function (displacement)
 {
 	this.high.doTranslation(displacement);
-	this.updateDownward();
+	this.updateDownward_alsoLowLocalTransform();
+};
 
-	// @TODO store important data on the high-level instead of hacking directly with low-level
+DoorWidget.prototype.updateDownward_alsoLowLocalTransform = function ()
+{
+	this.updateDownward();
+	this.updateLowLocalTransform();
+};
+
+DoorWidget.prototype.updateLowLocalTransform = function () // @TODO store important data on the high-level instead of hacking directly with low-level
+{
 	const x = Number(this.low.getAttribute('x')),
 	      y = Number(this.low.getAttribute('y'));
 	const w = Number(this.low.getAttribute('width')),
@@ -56,6 +64,7 @@ DoorWidget.prototype.translate = function (displacement)
 DoorWidget.prototype.updateDownward = function ()
 {
 	this.high.size = segmentLength([this.high.vertices[0], this.high.vertices[1]]);
+	this.high.position = this.high.centroid();
 	const info = this.factory().calculate([this.high.size, this.high.size], this.high.position);
 	this.low.setAttribute('x', info.point_lowcorner[0]);
 	this.low.setAttribute('y', info.point_lowcorner[1]);
@@ -80,11 +89,13 @@ DoorWidget.prototype.collisionActionSpecialty = function (controller, canvasPseu
 };
 
 
-DoorWidget.prototype.scale = function (q)
+DoorWidget.prototype.scale = function (q, O)
 {
-	this.high.doScale (q);
-	this.updateDownward();
+	this.high.doScale (q, O);
+	this.updateDownward_alsoLowLocalTransform();
 };
+
+DoorWidget.prototype.centroid = function () {return this.high.centroid();}; // @TODO: OOP+DRY: should inherit from `ImageWidget`?
 
 DoorWidget.prototype.reflectVerticallyRef = function ()
 {

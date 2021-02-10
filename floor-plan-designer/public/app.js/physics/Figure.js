@@ -120,9 +120,9 @@ Figure.prototype.doReflectVertically = function ()
 	this.referenceAngle = Math.PI - this.referenceAngle;
 };
 
-Figure.prototype.doScale = function (q)
+Figure.prototype.doScale = function (q, O = this.grasp)
 {
-	var scale = makeScale(q, this.grasp);
+	var scale = makeScale(q, O);
 	this.vertices = this.vertices.map(scale);
 };
 
@@ -187,6 +187,7 @@ Figure.prototype.doUnscaleXYArealInvariantRef = function (q)
 
 Figure.prototype.perimeter = function () {return perimeter(this.vertices);};
 Figure.prototype.area      = function () {return getArea(this.vertices);};
+Figure.prototype.centroid  = function () {return centroid(this.vertices);};
 
 // @TODO: put to a spearate class? Figure is already a too large class. `addVertex`, `deleteVertex`, `moveVertex` by proximity heurietics should come directly into `Figure`, or should we use a spearate `FigureEditorByProximityHeuristic` class?
 
