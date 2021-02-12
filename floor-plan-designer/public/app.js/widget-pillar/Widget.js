@@ -117,7 +117,7 @@ Widget.prototype.regainWall_              = function () {};
 
 Widget.prototype.restoreOn = canvasPseudoWidget => {throw '@TODO: make immediate inheritance chain (Widget > ActorWidget), and let it be an abstract class there';}; // @TODO: make immediate inheritance chain (Widget > ActorWidget), and let it be an abstract class there
 
-Widget.prototype.scale = function (q) {throw 'Abstract method!';};
+Widget.prototype.scale = function (q, O) {}; // Dependent widgets of a room get scaled together with room, so a neutral scale ancestor method is beneficial and roboust
 
 
 /*********

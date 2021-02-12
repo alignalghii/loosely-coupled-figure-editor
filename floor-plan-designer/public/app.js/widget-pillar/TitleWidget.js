@@ -54,7 +54,11 @@ TitleWidget.prototype.translate = function (displacement)
 TitleWidget.prototype.rotate    = function (phi) {};
 TitleWidget.prototype.reflectHorizontally = function () {};
 TitleWidget.prototype.reflectVertically   = function () {};
-TitleWidget.prototype.scale  = function (q) {};
+TitleWidget.prototype.scale  = function (q, O)
+{
+	this.high.doScale(q, O);
+	this.updateDownward();
+};
 TitleWidget.prototype.scaleX = function (q) {};
 TitleWidget.prototype.scaleY = function (q) {};
 TitleWidget.prototype.scaleXYArealInvariant = function (q) {};

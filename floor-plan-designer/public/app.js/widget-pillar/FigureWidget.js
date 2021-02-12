@@ -315,13 +315,16 @@ FigureWidget.prototype.rotate = function (phi) // @TODO: DRY
 
 FigureWidget.prototype.reflectHorizontally = function () {this.high.doReflectHorizontally(); this.updateDownward();};
 FigureWidget.prototype.reflectVertically   = function () {this.high.doReflectVertically();   this.updateDownward();};
-FigureWidget.prototype.scale  = function (q)
+FigureWidget.prototype.scale  = function (q, O = this.centroid())
 {
 	this.businessObject.openings.map(
-		wdg => wdg.scale(q, this.centroid())
+		wdg => wdg.scale(q, O)
+	);
+	this.withDependentWidgets(
+		widget => widget.scale(q, O)
 	);
 	this.high.doScale (q);
-	this.businessObject.doScale(q);
+	this.businessObject.doScale(q, O);
 	this.updateSlitStructure();
 	this.updateDasharray();
 	this.updateDownward();
