@@ -32,6 +32,22 @@ function couldTeleport(fallingFigure, board, infinitezimalDisplacement)
 	return !invalidSituationOnBoardBut(probeFigure, fallingFigure, board);
 }
 
+function couldTeleportByFigTransformCommand_unlessOtherExceptions(fallingFigure, board, figTransformCommand, otherExceptions)
+{
+	const probeFigure = fallingFigure.translation([0, 0]);
+	figTransformCommand(probeFigure);
+	return !invalidSituationOnBoardButExceptions(probeFigure, [fallingFigure, ...otherExceptions], board);
+};
+
+function couldTeleportByFigTransformCommand_unlessOtherExceptions_(fallingFigure, board, figTransformCommand, args, otherExceptions)
+{
+	const probeFigure = fallingFigure.translation([0, 0]);
+	probeFigure[figTransformCommand].apply(probeFigure, args);
+	return !invalidSituationOnBoardButExceptions(probeFigure, [fallingFigure, ...otherExceptions], board);
+
+};
+
+
 function couldTeleportByFigTransformCommand(fallingFigure, board, figTransformCommand)
 {
 	const probeFigure = fallingFigure.translation([0, 0]);

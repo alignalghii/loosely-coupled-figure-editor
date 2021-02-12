@@ -18,6 +18,12 @@ function invalidSituationOnBoardBut(probeFigure, fallingFigure, board)
 	return boardAnyColliding(affects, board);
 }
 
+function invalidSituationOnBoardButExceptions(probeFigure, exceptionFigures, board)
+{
+	const affects = targetFigure => !exceptionFigures.includes(targetFigure) && invalidSituation(probeFigure.vertices, targetFigure.vertices);
+	return boardAnyColliding(affects, board);
+}
+
 /** @TODO: it is very ineffective to use a separate function call to check nesting status. Try to rewrite the functions such that it can be done simultaneously with falling or collision check! */
 
 function nestingStatus(egoFigure, board)
