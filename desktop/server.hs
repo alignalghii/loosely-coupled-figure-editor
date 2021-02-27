@@ -10,11 +10,11 @@ import Control.Monad.IO.Class (liftIO)
 
 
 main :: IO ()
-main = scotty 3000 router
+main = scotty 3002 router
 
 router :: ScottyM ()
 router = do
     middleware static
-    middleware logStdoutDev
+    -- middleware logStdoutDev -- it causes 500 internal server error, if the process detaches from closed terminal
     get "/" viewAction
     post "/" ajaxAction
