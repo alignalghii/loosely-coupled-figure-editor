@@ -59,6 +59,21 @@ ImageWidget.prototype.updateDownwardAll = function ()
 	this.updateDownward();
 };
 
+// @TODO: can be raised to abstract Widget class?
+ImageWidget.prototype.updateUpAndDownward = function ()
+{
+	this.businessObject.goUpdatedByOwnFigure(); // the business object is `Furniture`, but it does not really need an update from its figure (essentially it is a mere filename, without size data other than figure itself)
+	this.updateDownward();
+};
+
+ImageWidget.prototype.updateAndReport = function (currentWEPos, nearestFigure, template1, template2)
+{
+	const oldVertices = JSON.stringify(nearestFigure.vertices);
+	this.updateUpAndDownward();
+	return 'Alakzatszerkesztő. ' + template1 + ' a ' + JSON.stringify(currentWEPos) + ' pontot a legközelebbi ' + template2 + '. Ennek változása: ' + oldVertices + ' --> ' + JSON.stringify(nearestFigure.vertices) + '.';
+};
+
+
 ImageWidget.prototype.isHostless = function () {return isNothing(this.businessObject.maybeHost);};
 
 ImageWidget.prototype.jumpTo = function (targetCanvasPseudoWidget)

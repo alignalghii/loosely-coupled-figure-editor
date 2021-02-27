@@ -40,7 +40,7 @@ SvgLowLevel.prototype.createPolygonChild = function (svgVertices, svgAttributes)
 
 SvgLowLevel.prototype.createImage = function (filePath, [width, height], [x, y])
 {
-	const imageElement = createElementWithAttributes('image', {width: width, height: height, x: x, y: y}, svgNS);
+	const imageElement = createElementWithAttributes('image', {width: width, height: height, x: x, y: y, preserveAspectRatio: 'none'}, svgNS);
 	imageElement.setAttributeNS('http://www.w3.org/1999/xlink', 'href', filePath);
 	this.svgRootElement.appendChild(imageElement);
 	return imageElement;

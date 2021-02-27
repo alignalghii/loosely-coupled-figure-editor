@@ -10,7 +10,7 @@ WindowWidgetFactory.prototype.createFromBusiness = function (businessObject) {th
 WindowWidgetFactory.prototype.createFromHigh = function (window)
 {
 	const {size: size, position: position} = window;
-	const info = this.calculate([size, size], position);//console.log(info);
+	const info = this.calculate([size, size], position);//console.log(info);//
 	const imageElem = this.svgLowLevel.createImage('/assets-proper/window-attached.png', info.sizes_low, info.point_lowcorner);
 	const windowWidget = new WindowWidget(this.canvasPseudoWidget, imageElem, window);
 	this.bijectionSvgToGeom.set(imageElem, window);
@@ -19,7 +19,7 @@ WindowWidgetFactory.prototype.createFromHigh = function (window)
 
 WindowWidgetFactory.prototype.create = function (size, position) // @TODO DRY: same as in ImageWidgetFactory
 {
-	const info = this.calculate([size, size], position);//console.log(info);
+	const info = this.calculate([size, size], position);//console.log(info);//
 	const window = new Window(size, position), // @TODO
 	      imageElem = this.svgLowLevel.createImage('/assets-proper/window-detached.png', info.sizes_low, info.point_lowcorner);
 	const windowWidget = new WindowWidget(this.canvasPseudoWidget, imageElem, window);

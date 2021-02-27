@@ -9,7 +9,7 @@
 function Window (size, position)
 {
 	const [x, y] = position;
-	Figure.call(this, [[x-size/2, y-size/2], [x+size/2, y-size/2], [x+size/2, y+size/2], [x-size/2, y+size/2]]);
+	Figure.call(this, [[x-size/2, y-size/2], [x+size/2, y-size/2], [x+size/2, y+size/2], [x-size/2, y+size/2]]);//
 	this.size     = size;
 	this.position = position;
 }
