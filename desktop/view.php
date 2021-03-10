@@ -12,6 +12,6 @@
 	</head>
 	<body>
 		<h1>Desktop prototype</h1>
-		<img id="work-svg" src="work.svg" alt="Work canvas"/>
+		<img id="work-image" src="work.png" alt="Work canvas"/>
 	</body>
 </html>

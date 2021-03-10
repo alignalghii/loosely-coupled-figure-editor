@@ -2,7 +2,7 @@
 
 switch ($_SERVER['REQUEST_METHOD']) {
 	case 'GET':
-		`if ! test -f work.svg; then cp donkey.svg work.svg; fi`;
+		`if ! test -f work.png; then cp image-to-load-upon-x-greater-than-y.png work.png; fi`;
 		require 'view.php';
 		break;
 	case 'POST':
@@ -11,10 +11,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
 		);
 		$flag = $model->x > $model->y;
 		if ($flag) {
-			`cp favicon.svg work.svg`;
+			`cp image-to-load-upon-x-greater-than-y.png work.png`;
 		} else {
-			`cp donkey.svg work.svg`;
+			`cp image-to-load-upon-y-greater-than-x.png work.png`;
 		}
-		echo $flag ? 'favicon' : 'donkey';
+		echo $flag ? 'x-greater-than-y' : 'y-greater-than-x';
 		break;
 }

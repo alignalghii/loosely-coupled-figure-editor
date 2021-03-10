@@ -7,18 +7,18 @@ import Data.Bool (bool)
 
 data Coord = Coord {x :: Float, y :: Float} deriving Generic
 
-data Name = Donkey | Favicon
+data Name = XGreaterThanY | YGreaterThanX
 
 instance Show Name where
-    showsPrec _ Donkey = (++) "donkey"
-    showsPrec _ Favicon = (++) "favicon"
+    showsPrec _ XGreaterThanY = (++) "x-greater-than-y"
+    showsPrec _ YGreaterThanX = (++) "y-greater-than-x"
 
 
 instance FromJSON Coord
 
 model :: Coord -> Name
-model Coord {x = x, y = y} = bool Donkey Favicon (x > y)
+model Coord {x = x, y = y} = bool YGreaterThanX XGreaterThanY (x > y)
 
 indName :: a -> a -> Name -> a
-indName donkey _       Donkey  = donkey
-indName _      favicon Favicon = favicon
+indName xGreaterThanY _ XGreaterThanY = xGreaterThanY
+indName _ yGreaterThanX YGreaterThanX = yGreaterThanX

@@ -2,7 +2,7 @@ window.addEventListener('load',  injectDependencies);
 
 function injectDependencies(e)
 {
-	const workCanvas = document.getElementById('work-svg'); // @TODO DRY
+	const workCanvas = document.getElementById('work-image'); // @TODO DRY
 
 	const workCanvasDeviceDriver    = new WorkCanvasDeviceDriver(workCanvas);
 	const diagramServerDeviceDriver = new DiagramServerDeviceDriver(); // @TODO let it be local?

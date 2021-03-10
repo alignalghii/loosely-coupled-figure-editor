@@ -19,7 +19,7 @@ view = docTypeHtml $ do
         title "Desktop prototype"
     body $ do
         h1 "Desktop prototype"
-        img ! id "work-svg" ! src "work.svg" ! alt "Work canvas"
+        img ! id "work-image" ! src "work.png" ! alt "Work canvas"
 
 script0 :: Html
 script0 = script mempty

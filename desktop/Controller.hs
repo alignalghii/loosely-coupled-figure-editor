@@ -20,7 +20,7 @@ import Data.Bool (bool)
 
 viewAction :: ActionM()
 viewAction = do
-    existsIt >>= flip unless (cpIt Donkey)
+    existsIt >>= flip unless (cpIt XGreaterThanY)
     html $ render view
 
 ajaxAction :: ActionM()
@@ -33,7 +33,7 @@ render :: Html -> Text
 render = pack . renderHtml
 
 cpIt :: Name -> ActionM ()
-cpIt name = shelly $ cp (indName "donkey.svg" "favicon.svg" name) "work.svg" -- !! not the same (lazy) Text -- !! No need for liftIO, as shelly returns MonadIO => ...
+cpIt name = shelly $ cp (indName "image-to-load-upon-x-greater-than-y.png" "image-to-load-upon-y-greater-than-x.png" name) "work.png" -- !! not the same (lazy) Text -- !! No need for liftIO, as shelly returns MonadIO => ...
 
 existsIt :: ActionM Bool
-existsIt = shelly $ test_f "work.svg" -- !! not the same (lazy) Text -- !! No need for liftIO, as shelly returns MonadIO => ...
+existsIt = shelly $ test_f "work.png" -- !! not the same (lazy) Text -- !! No need for liftIO, as shelly returns MonadIO => ...
