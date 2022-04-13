@@ -59,7 +59,7 @@ In summary:
 
 * to do collision detection in the narrow sense, simply do the Fourier-Motzkin elimination for 2D polygons. To do the anticipation of falling, parametrize Your inequality systems with a time parameter, and do the Fourier-Motzkin elimination in 3D.
 
-### the natural sliding effect
+### The natural sliding effect
 
 With all these principles. You can make a complete collision detection application. The only facility still missing is: sliding. You cannot model yet the natural sliding effect of an object pressed slantly towards another object. So I made this effect by mixed heuristical means. I would prefer a more united solution, still, it works well.
 
