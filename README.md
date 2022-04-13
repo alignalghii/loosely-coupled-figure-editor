@@ -20,6 +20,13 @@ The editor must be custom software specifically designed for the specific featur
 - collision detection must be both realistic and practical:
     - a room's collision toward another room must be detected correctly, to ease putting two rooms side-by-side each other
     - pices of furniture also detect collision into each other or to the wall of a room: so the arrangement of them along a line or putting them along a wall or in a corner is easier
+- a room's shape must be able to get re-shaped freely: walls moved, made wider open, new corners etc.
+- There must be geometrical transformations, mirrorings, rescalings of most  objects
+
+
+Of course, besides floor-plan-specific or real-estate-specific features, also common vector algebra graphics features must be implemented, like
+
+- scale of the whole drawing, just like on geographical maps, providing the unit of measure, the zoom, the undo/redo-history etc.
 
 ## Collision detection
 
