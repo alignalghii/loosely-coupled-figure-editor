@@ -8,7 +8,7 @@ Make a simple EPR system for a real estate agency. Actors: an admin, several emp
 
 But the EPR part is the simpler part of the task.
 
-The second part of the task is to hep the work of the employees by providing a nice graphics editor to them for drawing the floor plans easily and storing these along with the other data of the flats:
+The second part of the task is to help the work of the employees by providing a nice graphics editor to them for drawing the floor plans easily and storing these along with the other data of the flats:
 
 ![Floor plan designer graphics editor](doc-common/assets/floorplan-editor-original1440x815.png "Floor plan designer graphics editor")
 
@@ -18,7 +18,7 @@ The editor must be custom software specifically designed for the specific featur
 - movable doors and windows
 - a hole must be hit into the wall automatically when a window or door is dragged to it
 - doors, windows, pieces of furniture must „attach” to the room and move together with it after being attached
-- doors can have a „direction” (opening inward vs outward) and a „handedness” (left-hand-opening vs right-hand-opening): this poroerty must be easily changeble with mouse
+- doors can have a „direction” (opening inward vs outward) and a „handedness” (left-hand-opening vs right-hand-opening): this property must be easily changeble with mouse
 - collision detection must be both realistic and practical:
     - a room's collision toward another room must be detected correctly, to ease putting two rooms side-by-side each other
     - pices of furniture also detect collision into each other or to the wall of a room: so the arrangement of them along a line or putting them along a wall or in a corner is easier
