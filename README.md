@@ -8,7 +8,9 @@ Make a simple EPR system for a real estate agency. Actors: an admin, several emp
 
 But the EPR part is the simpler part of the task.
 
-The second part of the task is to hep the work of the employees by providing a nice graphics editor to them for drawing the floor plans easily and storing these along with the other data of the flats.
+The second part of the task is to hep the work of the employees by providing a nice graphics editor to them for drawing the floor plans easily and storing these along with the other data of the flats:
+
+![Floor plan designer graphics editor](doc-common/assets/floorplan-editor-original1440x815.png "Floor plan designer graphics editor")
 
 The editor must be custom software specifically designed for the specific features a floor plan can make:
 
