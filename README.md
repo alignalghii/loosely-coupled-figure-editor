@@ -63,7 +63,9 @@ In summary:
 
 ### The natural sliding effect
 
-With all these principles. You can make a complete collision detection application. The only facility still missing is: sliding. You cannot model yet the natural sliding effect of an object pressed slantly towards another object. So I made this effect by mixed heuristical means. I would prefer a more united solution, still, it works well.
+With all these principles. You can make a complete collision detection application. The only facility still missing is: sliding. You cannot model yet the natural sliding effect of an object pressed slantly towards another object. So I made this effect by mixed heuristical means. I would prefer a more united solution, still, it works well:
+
+![Natural sliding](doc-common/assets/collision-detection-350.gif "Natural sliding")
 
 ## Architecture, design patterns, current state of development
 
