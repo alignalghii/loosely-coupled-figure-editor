@@ -45,15 +45,15 @@ Implementation details:
 
 Is this enough? No. A polygon can be also non-convex:
 
-- A non-convex polygon can be regarded as the union of convex polygonals.
+- A non-convex polygon can be regarded as the union of convex polygons.
 
 ### Anticipation of falling
 
-That seems to be enough for collision detection. But no. Computers do not know real numbers intheir infinitezima continuity, computers are know only discrete things. whenever we are dragging a figure with the mouse, it is not moving in continuously, instead, it makes small but finite-sized jumps. When we are bumping, colliding a figure agains another one, mst probably we will not be so lucky to have that jump that exactly touches the target figure. we will simply have a pre-jump position woth the two figures stading apart by a certain distance, and a post-jump position with the two figures intersecting and having a certain intrusion into each other. Thus, in a practical collision detection, the computer has to interpolate and compute the exact „time point” when a figure „falling” onto another figure „reaches”, „hits”, „touches” the target figure. It must do a „anticipation of falling” along a given „direction of falling”.
+That seems to be enough for collision detection. But no. Computers do not know real numbers in their infinitezimal continuity, computers are know only discrete things. whenever we are dragging a figure with the mouse, it is not moving in continuously, instead, it makes small but finite-sized jumps. When we are bumping, colliding a figure against another one, most probably we will not be so lucky to have that jump that exactly touches the target figure. we will simply have a pre-jump position with the two figures standing apart by a certain distance, and a post-jump position with the two figures intersecting and having a certain intrusion into each other. Thus, in a practical collision detection, the computer has to interpolate and compute the exact „time point” when a figure „falling” onto another figure „reaches”, „hits”, „touches” the target figure. It must do a „anticipation of falling” along a given „direction of falling”.
 
-There is a geometrcally very intuitive way to do that! Let us step out from the plane into the space: let us take an axis perpedicular to our working plane, and let this be a „time axis”. Now, a falling polygon can be modelled as an *oblique prism* whose base is the given polygon, and whose inclination angle can model the speed. We do not need the magnitude of speed now, but the inclination also provides the direction of the fall. Thus, the complete process of a collision event can be modelled completely by a static 3D world: a moving polygon collinding into a standing polygon is simply an oblique prism  and a perpendicular prism, whose bases may be distinct, but whose „towers” get intersected a certain height.
+There is a geometrically very intuitive way to do that! Let us step out from the plane into the space: let us take an axis perpendicular to our working plane, and let this be a „*time axis*”. Now, a falling polygon can be modeled as an *oblique prism* whose base is the given polygon, and whose inclination angle can model the speed. Of course a „standing” polygon gets modelled as a *right prism*. We do not need the magnitude of speed now, but the inclination also provides the direction of the fall. Thus, the complete process of a collision event can be modelled completely by a static 3D world: a moving polygon colliding into a standing polygon is simply an oblique prism  and a right prism, whose bases may be distinct, but whose „towers” get intersected a certain height.
 
-This model is static and expressive and intuitive, but the real good news is that it is also easy to calculate with it. The problem is modelled as intersection of (possible oblique) prisms. A prism is nothing more than a polygonal in 3D space. Fourier-Motzkin elimination can be done in spaces in any number of dimension.
+This model is static and expressive and intuitive, but the real good news is that it is also easy to calculate with it. The problem is modelled as intersection of (possible oblique) prisms. And fortunately a prism is nothing more than a polygon itself: a polygon in 3D space. Fourier-Motzkin elimination can be done in spaces in any number of dimension: a system of inequalities with the number of the variables corresponding to the dimension of the space.
 
 In summary:
 
@@ -65,15 +65,15 @@ With all these principles. You can make a complete collision detection applicati
 
 ## Architecture, design patterns, current state of development
 
-Fourier-Motzkin elimination, and all the other supplementary features described above were written in Haskell by me, then I translated them into JavaScript. Algebraic datatypes (Maybe, Either) were also used in th Haskell way and implemented in JavaScript, using the idea of **case objects** of Scala (and Smalltalk), and the familiat prototypal inheritance technique.
+Fourier-Motzkin elimination, and all the other supplementary features described above were written in Haskell by me, then I translated them into JavaScript. Algebraic datatypes (`Maybe`, `Either`) were also used in th Haskell way and implemented in JavaScript, using the idea of **case objects** of Scala (and Smalltalk), and the familiar *prototypal inheritance* technique.
 
-Despite of these components made clear, the other business logic components of the program got stuck in bad design, now the project is somewhat stuck. In future, I plan to rewrite these parts using a declarative functional programming technique, probalby monad transformers and some models from the design patterns of some of the effect-modelling Haskell  libraries.
+Despite of these components made clear, the other business logic components of the program got stuck in bad design: now the project is somewhat stuck. In future, I plan to rewrite these parts using a declarative functional programming technique, probably monad transformers and some models from the design patterns of some of the effect-modelling Haskell  libraries.
 
 ### Used languages (currently)
 
 - Backend: the little EPR has been written in PHP
 - The editor itself is entirely done by client-side JavaScript
-- Haskell is used as a documantation only, but many parts of the JavaScript are translation from originally implemented and tested in Haskell.
+- Haskell is used as a documentation/analysing/checking tool only, but many parts of the JavaScript are almost direct translation from originally implemented and tested in Haskell.
     - The client-side has a cc. 20% of Haskell features
     - The PHP backend also has some Haskell-influenced designs
 - Agda is a future plan only: to represent the collision detection „engine” in it, especially the Fourier-Motzkin elimination, and also some supplentary features. There are yet some consstency problems with modelling degenerated polygons.
