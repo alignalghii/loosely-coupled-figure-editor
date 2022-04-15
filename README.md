@@ -32,9 +32,13 @@ Of course, besides floor-plan-specific or real-estate-specific features, also co
 
 ## Collision detection
 
-The heart of this floor plan designer graphics editor is the *collision detection*.
+The heart of this floor plan designer graphics editor is the *collision detection*. Collision detection manifeests itself in the „jumpover” effect:
 
-Implementation details:
+![Jump over collision](doc-common/assets/jumpover-collision-500.gif "Jump over collision")
+
+and in the „natural sliding” effect (shown later).
+
+Implementation details about collision detection:
 
 ### Most basic ideas:
 

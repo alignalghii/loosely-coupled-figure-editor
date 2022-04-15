@@ -5,4 +5,6 @@
 
 size=500;
 
-ffmpeg -i collision-detection.mp4 -r 15 -vf scale=$size:-1 -ss 00:00:01 -to 00:00:08 collision-detection-$size.gif
+ffmpeg -i collision-detection.mp4 -r 15 -vf scale=$size:-1 -ss 00:00:01 -to 00:00:08 collision-detection-$size.gif;
+
+ffmpeg -i jumpover-collision.mp4  -r 15 -vf scale=$size:-1 -ss 00:00:01 -to 00:00:07 jumpover-collision-$size.gif;
