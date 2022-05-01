@@ -1,4 +1,7 @@
-[(Back to central personal homepage)](https://alignalghii.github.io)
+---
+[[To project source]](#top) •|||• [[Back to central personal homepage]](https://alignalghii.github.io)
+
+---
 
 # Floor plan designer
 
