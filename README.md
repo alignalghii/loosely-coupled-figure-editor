@@ -43,6 +43,11 @@ Of course, besides floor-plan-specific or real-estate-specific features, also co
 
 - scale of the whole drawing, just like on geographical maps, providing the unit of measure, the zoom, the undo/redo-history etc.
 
+---
+[[To the top of this README]](#readme) •|||• [[To project source]](#top) •|||• [[Back to central personal homepage]](https://alignalghii.github.io)
+
+---
+
 ## Collision detection
 
 The heart of this floor plan designer graphics editor is the *collision detection*. Collision detection manifeests itself in the „jumpover” effect:
@@ -66,6 +71,11 @@ Is this enough? No. A polygon can be also non-convex:
 
 - A non-convex polygon can be regarded as the union of convex polygons.
 
+---
+[[To the top of this README]](#readme) •|||• [[To project source]](#top) •|||• [[Back to central personal homepage]](https://alignalghii.github.io)
+
+---
+
 ### Anticipation of falling
 
 That seems to be enough for collision detection. But no. Computers do not know real numbers in their infinitezimal continuity, computers are know only discrete things. whenever we are dragging a figure with the mouse, it is not moving in continuously, instead, it makes small but finite-sized jumps. When we are bumping, colliding a figure against another one, most probably we will not be so lucky to have that jump that exactly touches the target figure. we will simply have a pre-jump position with the two figures standing apart by a certain distance, and a post-jump position with the two figures intersecting and having a certain intrusion into each other. Thus, in a practical collision detection, the computer has to interpolate and compute the exact „time point” when a figure „falling” onto another figure „reaches”, „hits”, „touches” the target figure. It must do a „anticipation of falling” along a given „direction of falling”.
@@ -79,6 +89,11 @@ This model is static and expressive and intuitive, but the real good news is tha
 In summary:
 
 * to do collision detection in the narrow sense, simply do the Fourier-Motzkin elimination for 2D polygons. To do the anticipation of falling, parametrize Your inequality systems with a time parameter, and do the Fourier-Motzkin elimination in 3D.
+
+---
+[[To the top of this README]](#readme) •|||• [[To project source]](#top) •|||• [[Back to central personal homepage]](https://alignalghii.github.io)
+
+---
 
 ### The natural sliding effect
 
@@ -100,3 +115,8 @@ Despite of these components made clear, the other business logic components of t
     - The client-side has a cc. 20% of Haskell features
     - The PHP backend also has some Haskell-influenced designs
 - Agda is a future plan only: to represent the collision detection „engine” in it, especially the Fourier-Motzkin elimination, and also some supplentary features. There are yet some consistency problems with modelling degenerated polygons. The beginning phase of the intended Agda project can be seen here as “[Vector algebra in Agda](https://github.com/alignalghii/vector-algebra-in-Agda)” together with its own [README doc](https://github.com/alignalghii/vector-algebra-in-Agda#readme).
+
+---
+[[To the top of this README]](#readme) •|||• [[To project source]](#top) •|||• [[Back to central personal homepage]](https://alignalghii.github.io)
+
+---
