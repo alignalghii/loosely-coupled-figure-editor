@@ -5,6 +5,16 @@
 
 # Floor plan designer
 
+## Table of contents
+
+- [Project goal](#project-goal)
+- [Collision detection](#collision-detection)
+    - [Most basic ideas:](#most-basic-ideas)
+    - [Anticipation of falling](#anticipation-of-falling)
+    - [The natural sliding effect](#the-natural-sliding-effect)
+- [Architecture, design patterns, current state of development](#architecture-design-patterns-current-state-of-development)
+    - [Used languages (currently)](#used-languages-currently)
+
 ## Project goal
 
 Make a simple EPR system for a real estate agency. Actors: an admin, several employees (real estate agents) each managing his/her own customers and their flats. The employee can manage his/her customer's data in the common database.
