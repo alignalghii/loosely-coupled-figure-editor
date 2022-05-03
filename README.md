@@ -99,4 +99,4 @@ Despite of these components made clear, the other business logic components of t
 - Haskell is used as a documentation/analysing/checking tool only, but many parts of the JavaScript are almost direct translation from originally implemented and tested in Haskell.
     - The client-side has a cc. 20% of Haskell features
     - The PHP backend also has some Haskell-influenced designs
-- Agda is a future plan only: to represent the collision detection „engine” in it, especially the Fourier-Motzkin elimination, and also some supplentary features. There are yet some consstency problems with modelling degenerated polygons.
+- Agda is a future plan only: to represent the collision detection „engine” in it, especially the Fourier-Motzkin elimination, and also some supplentary features. There are yet some consistency problems with modelling degenerated polygons. The beginning phase of the intended Agda project can be seen here as “[Vector algebra in Agda](https://github.com/alignalghii/vector-algebra-in-Agda)” together with its own [README doc](https://github.com/alignalghii/vector-algebra-in-Agda#readme).
